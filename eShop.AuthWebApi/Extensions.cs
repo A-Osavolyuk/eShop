@@ -1,5 +1,6 @@
 ﻿using eShop.Application;
 using eShop.AuthWebApi.Data;
+using eShop.Domain.Options;
 using Microsoft.AspNetCore.Identity;
 
 namespace eShop.AuthWebApi
@@ -15,6 +16,8 @@ namespace eShop.AuthWebApi
             builder.AddDependencyInjection();
 
             builder.AddSqlServerDbContext<AuthDbContext>("SqlServer");
+
+            builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOptions"));   
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
