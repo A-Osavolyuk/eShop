@@ -1,14 +1,11 @@
+using eShop.AuthWebApi;
 using eShop.AuthWebApi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.AddSqlServerDbContext<AuthDbContext>("SqlServer");
+builder.AddApiServices();
 
 var app = builder.Build();
 
@@ -18,6 +15,12 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    using (var scope = app.Services.CreateScope())
+    {
+        var context = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
+        context.Database.EnsureCreated();
+    }
 }
 
 app.UseHttpsRedirection();
