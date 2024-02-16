@@ -3,8 +3,6 @@ using eShop.AuthWebApi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddServiceDefaults();
-
 builder.AddApiServices();
 
 var app = builder.Build();

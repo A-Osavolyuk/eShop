@@ -1,7 +1,7 @@
 ﻿using eShop.Domain.DTOs.Requests;
 using FluentValidation;
 
-namespace eShop.Application.Validations
+namespace eShop.Application.Validation
 {
     public class RegistrationValidator : AbstractValidator<RegistrationRequestDto>
     {
