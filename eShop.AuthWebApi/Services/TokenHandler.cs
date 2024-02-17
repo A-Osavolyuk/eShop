@@ -42,21 +42,60 @@ namespace eShop.AuthWebApi.Services
 
         public string RefreshToken(string token)
         {
-            throw new NotImplementedException();
+            if (!string.IsNullOrEmpty(token))
+            {
+                var handler = new JwtSecurityTokenHandler();
+
+                var signingCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(key: Encoding.UTF8.GetBytes(jwtOptions.Key)),
+                    algorithm: SecurityAlgorithms.HmacSha256Signature);
+
+                var newToken = handler.WriteToken(new JwtSecurityToken(
+                    audience: jwtOptions.Audience,
+                    issuer: jwtOptions.Issuer,
+                    claims: DecryptToken(token),
+                    expires: DateTime.Now.AddSeconds(jwtOptions.ExpirationSeconds),
+                    signingCredentials: signingCredentials));
+
+                return newToken;
+            }
+
+            return "";
         }
 
         private List<Claim> SetClaims(AppUser user)
         {
             if (user is not null)
             {
-                var list = new List<Claim>() 
+                var claims = new List<Claim>() 
                 {
                     new Claim(JwtRegisteredClaimNames.Name, user.Name),
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
                     new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 };
 
-                return list;
+                return claims;
+            }
+
+            return new List<Claim>();
+        }
+        
+        private List<Claim> DecryptToken(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+
+            if (!string.IsNullOrEmpty(token) && handler.CanReadToken(token))
+            {
+                var rawToken = handler.ReadJwtToken(token);
+
+                var claims = new List<Claim>() 
+                { 
+                    new Claim(JwtRegisteredClaimNames.Name, rawToken.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Name).Value),
+                    new Claim(JwtRegisteredClaimNames.Email, rawToken.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email).Value),
+                    new Claim(JwtRegisteredClaimNames.Sub, rawToken.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Sub).Value),
+                };
+
+                return claims;
             }
 
             return new List<Claim>();
