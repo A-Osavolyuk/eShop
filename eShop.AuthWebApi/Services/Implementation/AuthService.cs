@@ -53,10 +53,11 @@ namespace eShop.AuthWebApi.Services.Implementation
 
             if (registrationResult.Succeeded)
             {
-                return new Result<RegistrationResponseDto>(new RegistrationResponseDto($"User with email: {registrationRequest.Email} have been successfully registered."));
+                return new Result<RegistrationResponseDto>(
+                    new RegistrationResponseDto($"User with email: {registrationRequest.Email} have been successfully registered."));
             }
 
-            return new Result<RegistrationResponseDto>(new UserAlreadyExistsException(Email: registrationRequest.Email));
+            return new Result<RegistrationResponseDto>(new IdentityException("Identity Errors", registrationResult.Errors));
         }
     }
 }
