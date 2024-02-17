@@ -11,13 +11,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{08130BE3
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microservices", "Microservices", "{074D3F96-0865-438D-9379-D836D9C5A13D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eShop.Domain", "eShop.Domain\eShop.Domain.csproj", "{D3B29859-B464-435F-8F59-B30E91D0104C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.Domain", "eShop.Domain\eShop.Domain.csproj", "{D3B29859-B464-435F-8F59-B30E91D0104C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eShop.Application", "eShop.Application\eShop.Application.csproj", "{4906C186-914E-4639-AB52-FB98B3B16729}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.Application", "eShop.Application\eShop.Application.csproj", "{4906C186-914E-4639-AB52-FB98B3B16729}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eShop.Infrastucture", "eShop.Infrastucture\eShop.Infrastucture.csproj", "{EE98FE03-5928-4E87-A072-ADD40873AC9E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.Infrastructure", "eShop.Infrastucture\eShop.Infrastructure.csproj", "{EE98FE03-5928-4E87-A072-ADD40873AC9E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eShop.AppHost", "eShop\eShop\eShop.AppHost\eShop.AppHost.csproj", "{A4DA6270-2E86-4D14-A8D9-0E2E3283807E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.AppHost", "eShop\eShop\eShop.AppHost\eShop.AppHost.csproj", "{A4DA6270-2E86-4D14-A8D9-0E2E3283807E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.ServiceDefaults", "eShop\eShop\eShop.ServiceDefaults\eShop.ServiceDefaults.csproj", "{A099A8C6-A1D6-4BEB-8597-2F775BAE70D9}"
 EndProject
