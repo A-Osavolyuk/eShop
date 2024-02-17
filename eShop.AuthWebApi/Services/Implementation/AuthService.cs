@@ -2,6 +2,7 @@
 using eShop.AuthWebApi.Data;
 using eShop.AuthWebApi.Services.Interfaces;
 using eShop.Domain.Common;
+using eShop.Domain.DTOs;
 using eShop.Domain.DTOs.Requests;
 using eShop.Domain.DTOs.Responses;
 using eShop.Domain.Exceptions;
@@ -17,25 +18,47 @@ namespace eShop.AuthWebApi.Services.Implementation
         private readonly SignInManager<AppUser> signInManager;
         private readonly UserManager<AppUser> userManager;
         private readonly IValidator<RegistrationRequestDto> registrationValidator;
+        private readonly IValidator<LoginRequestDto> loginValidator;
         private readonly IMapper mapper;
 
         public AuthService(
             ITokenHandler tokenHandler,
             SignInManager<AppUser> signInManager,
             UserManager<AppUser> userManager, 
-            IValidator<RegistrationRequestDto> registrationValidator, 
+            IValidator<RegistrationRequestDto> registrationValidator,
+            IValidator<LoginRequestDto> loginValidator,
             IMapper mapper)
         {
             this.tokenHandler = tokenHandler;
             this.signInManager = signInManager;
             this.userManager = userManager;
             this.registrationValidator = registrationValidator;
+            this.loginValidator = loginValidator;
             this.mapper = mapper;
         }
 
-        public ValueTask<Result<LoginResponseDto>> LoginAsync(LoginRequestDto loginRequest)
+        public async ValueTask<Result<LoginResponseDto>> LoginAsync(LoginRequestDto loginRequest)
         {
-            throw new NotImplementedException();
+            var validationResult = await loginValidator.ValidateAsync(loginRequest);
+
+            if (loginRequest is null)
+                return new Result<LoginResponseDto>(new NullRequestException(type: loginRequest.GetType()));
+
+            if (!validationResult.IsValid)
+                return new Result<LoginResponseDto>(new ValidationException("Validation Error(s)", validationResult.Errors));
+
+            var loginResult = await signInManager.PasswordSignInAsync(loginRequest.Email, loginRequest.Password, false, false);
+
+            if (loginResult.Succeeded)
+            {
+                var user = await userManager.FindByEmailAsync(loginRequest.Email);
+                var token = tokenHandler.GenerateToken(user);
+                var userDto = new UserDto(user.Email, user.Name, user.Id);
+
+                return new Result<LoginResponseDto>(new LoginResponseDto(userDto, token));
+            }
+
+            return new Result<LoginResponseDto>(new InvalidLoginAttemptException());
         }
 
         public async ValueTask<Result<RegistrationResponseDto>> RegisterAsync(RegistrationRequestDto registrationRequest)
