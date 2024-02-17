@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using eShop.AuthWebApi.Data;
 using eShop.AuthWebApi.Services.Interfaces;
 using eShop.Domain.Common;
 using eShop.Domain.DTOs;
@@ -24,7 +23,7 @@ namespace eShop.AuthWebApi.Services.Implementation
         public AuthService(
             ITokenHandler tokenHandler,
             SignInManager<AppUser> signInManager,
-            UserManager<AppUser> userManager, 
+            UserManager<AppUser> userManager,
             IValidator<RegistrationRequestDto> registrationValidator,
             IValidator<LoginRequestDto> loginValidator,
             IMapper mapper)
@@ -80,7 +79,7 @@ namespace eShop.AuthWebApi.Services.Implementation
                     new RegistrationResponseDto($"User with email: {registrationRequest.Email} have been successfully registered."));
             }
 
-            return new Result<RegistrationResponseDto>(new IdentityException("Identity Errors", registrationResult.Errors));
+            return new Result<RegistrationResponseDto>(new IdentityException("Identity Error(s)", registrationResult.Errors));
         }
     }
 }
