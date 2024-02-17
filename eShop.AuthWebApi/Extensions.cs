@@ -33,7 +33,6 @@ namespace eShop.AuthWebApi
         {
             builder.Services.AddIdentity<AppUser, IdentityRole>()
                 .AddDefaultTokenProviders()
-                .AddSignInManager<AppUser>()
                 .AddEntityFrameworkStores<AuthDbContext>();
 
             return builder;

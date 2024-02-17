@@ -44,7 +44,8 @@ namespace eShop.AuthWebApi.Services.Implementation
                 return new Result<LoginResponseDto>(new NullRequestException(type: loginRequest.GetType()));
 
             if (!validationResult.IsValid)
-                return new Result<LoginResponseDto>(new ValidationException("Validation Error(s)", validationResult.Errors));
+                return new Result<LoginResponseDto>(new FailedValidationException("Validation Error(s)",
+                    validationResult.Errors.Select(x => x.ErrorMessage)));
 
             var loginResult = await signInManager.PasswordSignInAsync(loginRequest.Email, loginRequest.Password, false, false);
 
@@ -68,7 +69,8 @@ namespace eShop.AuthWebApi.Services.Implementation
                 return new Result<RegistrationResponseDto>(new NullRequestException(type: registrationRequest.GetType()));
 
             if (!validationResult.IsValid)
-                return new Result<RegistrationResponseDto>(new ValidationException("Validation Error(s)", validationResult.Errors));
+                return new Result<RegistrationResponseDto>(new FailedValidationException("Validation Error(s)",
+                    validationResult.Errors.Select(x => x.ErrorMessage)));
 
             var user = mapper.Map<AppUser>(registrationRequest);
             var registrationResult = await userManager.CreateAsync(user, registrationRequest.Password);
@@ -79,7 +81,8 @@ namespace eShop.AuthWebApi.Services.Implementation
                     new RegistrationResponseDto($"User with email: {registrationRequest.Email} have been successfully registered."));
             }
 
-            return new Result<RegistrationResponseDto>(new IdentityException("Identity Error(s)", registrationResult.Errors));
+            return new Result<RegistrationResponseDto>(
+                new InvalidRegisterAttemptException("Invalid registration attempt.", registrationResult.Errors.Select(x => x.Description)));
         }
     }
 }

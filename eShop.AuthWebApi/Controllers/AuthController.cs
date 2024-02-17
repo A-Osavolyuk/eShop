@@ -1,10 +1,15 @@
 ﻿using eShop.AuthWebApi.Services.Interfaces;
+using eShop.Domain.DTOs.Requests;
+using eShop.Domain.DTOs.Responses;
+using eShop.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace eShop.AuthWebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService authService;
@@ -12,6 +17,43 @@ namespace eShop.AuthWebApi.Controllers
         public AuthController(IAuthService authService)
         {
             this.authService = authService;
+        }
+
+        [HttpPost("register")]
+        public async ValueTask<ActionResult<ResponseDto>> Register([FromBody] RegistrationRequestDto registrationRequest)
+        {
+            var result = await authService.RegisterAsync(registrationRequest);
+
+            return result.Match<ActionResult<ResponseDto>>(
+                succ =>
+                {
+                    return Ok(new ResponseBuilder()
+                        .Succeeded()
+                        .AddResultMessage(succ.Message)
+                        .Build());
+                },
+                fail =>
+                {
+                    if (fail is FailedValidationException validationException)
+                        return BadRequest(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(validationException.Message)
+                            .AddErrors(validationException.Errors.ToList())
+                            .Build());
+
+                    if (fail is NullReferenceException referenceException)
+                        return BadRequest(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(referenceException.Message)
+                            .Build());
+
+                    var identityException = fail as InvalidRegisterAttemptException;
+                    return BadRequest(new ResponseBuilder()
+                        .Failed()
+                        .AddErrorMessage(identityException.ErrorType)
+                        .AddErrors(identityException.Errors.ToList())
+                        .Build());
+                });
         }
     }
 }

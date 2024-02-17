@@ -1,8 +1,9 @@
 ﻿namespace eShop.Domain.Options;
 
-public record JwtOptions(
-    int ExpirationSeconds,
-    string Key = "",
-    string Audience = "",
-    string Issuer = ""
-    );
+public class JwtOptions
+{
+    public int ExpirationSeconds { get; set; }
+    public string Key { get; set; } = "";
+    public string Audience { get; set; } = "";
+    public string Issuer { get; set; } = "";
+}
