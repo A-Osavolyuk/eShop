@@ -1,5 +1,6 @@
 ﻿using eShop.Application;
 using eShop.AuthWebApi.Data;
+using eShop.Domain.Common;
 using eShop.Domain.Options;
 using Microsoft.AspNetCore.Identity;
 
@@ -10,7 +11,7 @@ namespace eShop.AuthWebApi
         public static IHostApplicationBuilder AddApiServices(this IHostApplicationBuilder builder)
         {
             builder.AddServiceDefaults();
-            builder.AddUserValidation();
+            builder.AddApplicationLayer();
 
             builder.AddAuth();
             builder.AddDependencyInjection();

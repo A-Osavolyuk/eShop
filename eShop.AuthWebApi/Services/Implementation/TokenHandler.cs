@@ -1,4 +1,5 @@
-﻿using eShop.AuthWebApi.Data;
+﻿using eShop.AuthWebApi.Services.Interfaces;
+using eShop.Domain.Common;
 using eShop.Domain.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -6,7 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace eShop.AuthWebApi.Services
+namespace eShop.AuthWebApi.Services.Implementation
 {
     public class TokenHandler : ITokenHandler
     {
@@ -67,7 +68,7 @@ namespace eShop.AuthWebApi.Services
         {
             if (user is not null)
             {
-                var claims = new List<Claim>() 
+                var claims = new List<Claim>()
                 {
                     new Claim(JwtRegisteredClaimNames.Name, user.Name),
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
@@ -79,7 +80,7 @@ namespace eShop.AuthWebApi.Services
 
             return new List<Claim>();
         }
-        
+
         private List<Claim> DecryptToken(string token)
         {
             var handler = new JwtSecurityTokenHandler();
@@ -88,8 +89,8 @@ namespace eShop.AuthWebApi.Services
             {
                 var rawToken = handler.ReadJwtToken(token);
 
-                var claims = new List<Claim>() 
-                { 
+                var claims = new List<Claim>()
+                {
                     new Claim(JwtRegisteredClaimNames.Name, rawToken.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Name).Value),
                     new Claim(JwtRegisteredClaimNames.Email, rawToken.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email).Value),
                     new Claim(JwtRegisteredClaimNames.Sub, rawToken.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Sub).Value),

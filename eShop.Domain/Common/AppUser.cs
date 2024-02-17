@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace eShop.AuthWebApi.Data
+namespace eShop.Domain.Common
 {
     public class AppUser : IdentityUser
     {
