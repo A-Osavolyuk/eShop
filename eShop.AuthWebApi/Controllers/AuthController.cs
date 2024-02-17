@@ -3,7 +3,6 @@ using eShop.Domain.DTOs.Requests;
 using eShop.Domain.DTOs.Responses;
 using eShop.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 
 namespace eShop.AuthWebApi.Controllers
 {
@@ -50,8 +49,45 @@ namespace eShop.AuthWebApi.Controllers
                     var identityException = fail as InvalidRegisterAttemptException;
                     return BadRequest(new ResponseBuilder()
                         .Failed()
-                        .AddErrorMessage(identityException.ErrorType)
+                        .AddErrorMessage(identityException!.ErrorType)
                         .AddErrors(identityException.Errors.ToList())
+                        .Build());
+                });
+        }
+
+        [HttpPost("login")]
+        public async ValueTask<ActionResult<ResponseDto>> Login([FromBody] LoginRequestDto loginRequest)
+        {
+            var result = await authService.LoginAsync(loginRequest);
+
+            return result.Match<ActionResult<ResponseDto>>(
+                succ =>
+                {
+                    return Ok(new ResponseBuilder()
+                        .Succeeded()
+                        .AddResult(succ)
+                        .AddResultMessage("Successfully logged id.")
+                        .Build());
+                },
+                fail =>
+                {
+                    if (fail is NullRequestException nullRequest)
+                        return BadRequest(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(nullRequest.Message)
+                            .Build());
+
+                    if (fail is FailedValidationException validationException)
+                        return BadRequest(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(validationException.Message)
+                            .AddErrors(validationException.Errors.ToList())
+                            .Build());
+
+                    var loginException = fail as InvalidLoginAttemptException;
+                    return BadRequest(new ResponseBuilder()
+                        .Failed()
+                        .AddErrorMessage(loginException!.Message)
                         .Build());
                 });
         }
