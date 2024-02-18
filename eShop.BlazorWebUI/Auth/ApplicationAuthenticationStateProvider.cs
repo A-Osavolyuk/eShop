@@ -80,15 +80,15 @@ namespace eShop.BlazorWebUI.Auth
             {
                 var claims = new List<Claim>()
                 {
-                    new Claim(ClaimTypes.Name, token.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Name).Value),
-                    new Claim(ClaimTypes.Email, token.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email).Value),
-                    new Claim("Id", token.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Sub).Value),
+                    new(ClaimTypes.Name, token.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Name).Value),
+                    new(ClaimTypes.Email, token.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email).Value),
+                    new("Id", token.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Sub).Value),
                 };
 
                 return claims;
             }
 
-            return new List<Claim>();
+            return [];
         }
     }
 }

@@ -6,7 +6,7 @@ public class ResponseDto
     public string ErrorMessage { get; set; } = "";
     public object? Result { get; set; }
     public bool IsSucceeded { get; set; } = false;
-    public List<string> Errors { get; set; } = new List<string>();
+    public List<string> Errors { get; set; } = [];
 }
 
 public class ResponseBuilder
@@ -15,7 +15,7 @@ public class ResponseBuilder
     private string _ErrorMessage = "";
     private object? _Result;
     private bool _IsSucceeded = false;
-    private List<string> _Errors = new List<string>();
+    private List<string> _Errors = [];
 
     public ResponseBuilder AddResult(object? Result)
     {
