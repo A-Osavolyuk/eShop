@@ -37,6 +37,7 @@ namespace eShop.Infrastructure.Services
         {
             await tokenProvider.RemoveTokenAsync();
             (authenticationState as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState("");
+
         }
     }
 }

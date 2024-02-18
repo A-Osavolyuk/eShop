@@ -1,7 +1,7 @@
-﻿@using eShop.Domain.Interfaces
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
 
 @inject IAuthenticationService authenticationService
+@inject NavigationManager navigationManger
 
 <MudThemeProvider IsDarkMode/>
 <MudDialogProvider />
@@ -43,5 +43,6 @@
     private async Task LogoutClick()
     {
         await authenticationService.LogOutAsync();
+        navigationManger.NavigateTo("/account/login");
     }
 }

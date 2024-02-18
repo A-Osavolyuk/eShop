@@ -1,5 +1,7 @@
 ﻿namespace eShop.Domain.DTOs.Requests;
 
-public record LoginRequestDto(
-    string Email = "",
-    string Password = "");
+public class LoginRequestDto
+{
+    public string Email { get; set; } = "";
+    public string Password { get; set; } = "";
+}

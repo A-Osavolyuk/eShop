@@ -1,0 +1,49 @@
+﻿@page "/account/login"
+@using eShop.Domain.DTOs
+@using eShop.Domain.DTOs.Responses
+@using eShop.Infrastructure.Account
+@using Newtonsoft.Json
+
+@inject NavigationManager navigationManager
+@inject IAuthenticationService authenticationService
+@inject AuthenticationStateProvider authenticationStateProvider
+@inject IValidator<LoginRequestDto> validator
+
+<PageTitle>Login</PageTitle>
+
+<MudGrid Justify="Justify.Center">
+    <MudItem xs="4">
+        <MudPaper Outlined Class="pa-3">
+            <EditForm FormName="login-form" Model="loginRequest" OnValidSubmit="LoginClick">
+                <FluentValidationValidator Validator="validator"/>
+
+                <MudText Align="Align.Center" Typo="Typo.h4">Log In</MudText>
+                <MudTextField @bind-Value="loginRequest.Email" For="(() => loginRequest.Email)" 
+                    InputType="InputType.Email" Label="Email" Immediate Variant="Variant.Outlined"/>
+                <MudTextField @bind-Value="loginRequest.Password" For="(() => loginRequest.Password)" 
+                    Label="Password" InputType="InputType.Password" Immediate Variant="Variant.Outlined"/>
+
+                <MudButton ButtonType="ButtonType.Submit" StartIcon="@Icons.Material.Filled.Login" 
+                    Variant="Variant.Filled" Color="Color.Primary" Class="mt-3">
+                    Log In
+                </MudButton>
+            </EditForm>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    [SupplyParameterFromForm] private LoginRequestDto loginRequest { get; set; } = new();
+
+    private async Task LoginClick()
+    {
+        var result = await authenticationService.LoginAsync(loginRequest);
+
+        if (result.IsSucceeded)
+        {
+            var data = JsonConvert.DeserializeObject<LoginResponseDto>(result.Result!.ToString()!);
+            (authenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(data!.Token);
+            navigationManager.NavigateTo("/");
+        }
+    }
+}

@@ -1,0 +1,48 @@
+﻿@page "/account/register"
+
+@inject NavigationManager navigationManager
+@inject IAuthenticationService authenticationService
+@inject IValidator<RegistrationRequestDto> validator
+
+<PageTitle>Register</PageTitle>
+
+<MudGrid Justify="Justify.Center">
+    <MudItem xs="4">
+        <MudPaper Outlined Class="pa-3">
+            <EditForm FormName="register-form" Model="registrationRequest" OnValidSubmit="RegisterUser">
+                <FluentValidationValidator Validator="validator" />
+
+                <MudText Align="Align.Center" Typo="Typo.h4">Register</MudText>
+                <MudTextField @bind-Value="registrationRequest.Email" For="(() => registrationRequest.Email)"
+                              InputType="InputType.Email" Label="Email" Immediate Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="registrationRequest.Name" For="(() => registrationRequest.Name)"
+                              Label="User Name" Immediate Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="registrationRequest.Password" For="(() => registrationRequest.Password)"
+                              Label="Password" InputType="InputType.Password" Immediate Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="registrationRequest.ConfirmPassword" For="(() => registrationRequest.ConfirmPassword)"
+                              Label="Confirm Password" InputType="InputType.Password" Immediate Variant="Variant.Outlined" />
+
+                <MudButton ButtonType="ButtonType.Submit" StartIcon="@Icons.Material.Filled.AppRegistration"
+                           Variant="Variant.Filled" Color="Color.Primary" Class="mt-3">
+                    Register
+                </MudButton>
+            </EditForm>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    [SupplyParameterFromForm] private RegistrationRequestDto registrationRequest { get; set; } = new();
+
+    private async Task RegisterUser()
+    {
+        var result = await authenticationService.RegisterAsync(registrationRequest);
+
+        if (result.IsSucceeded)
+        {
+            navigationManager.NavigateTo("/account/login");
+        }
+
+        registrationRequest = new();
+    }
+}
