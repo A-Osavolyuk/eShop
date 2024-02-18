@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using eShop.Domain.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -8,6 +9,12 @@ namespace eShop.BlazorWebUI.Auth
     public class ApplicationAuthenticationStateProvider : AuthenticationStateProvider
     {
         private readonly AuthenticationState anonymous = new(new ClaimsPrincipal());
+        private readonly ITokenProvider tokenProvider;
+
+        public ApplicationAuthenticationStateProvider(ITokenProvider tokenProvider)
+        {
+            this.tokenProvider = tokenProvider;
+        }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
@@ -34,6 +41,24 @@ namespace eShop.BlazorWebUI.Auth
             {
                 return await Task.FromResult(anonymous);
             }
+        }
+
+        public async void UpdateAuthenticationState(string token)
+        {
+            var claimsPrincipal = new ClaimsPrincipal();
+            if (!string.IsNullOrEmpty(token))
+            {
+                JwtHandler.Token = token;
+                await tokenProvider.SetTokenAsync(token);
+
+                var rawToken = DecryptToken(token)!;
+                var claims = SetClaims(rawToken)!;
+                claimsPrincipal = new (new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme));
+            }
+            else
+                JwtHandler.Token = "";
+                
+            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(claimsPrincipal)));
         }
 
         private JwtSecurityToken? DecryptToken(string token)
