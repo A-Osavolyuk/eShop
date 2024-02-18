@@ -1,8 +1,11 @@
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace eShop.Application;
 
@@ -43,6 +46,30 @@ public static class Extensions
             options.DefaultApiVersion = ApiVersion.Default;
             options.SubstituteApiVersionInUrl = true;
             options.GroupNameFormat = "'v'V";
+        });
+
+        return builder;
+    }
+
+    public static IHostApplicationBuilder AddJwtAuthentication(this IHostApplicationBuilder builder)
+    {
+        builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters()
+            {
+                ValidateAudience = true,
+                ValidateIssuer = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidAudience = builder.Configuration["JwtOptions:Audience"],
+                ValidIssuer = builder.Configuration["JwtOptions:Issuer"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtOptions:Key"]!))
+            };
         });
 
         return builder;
