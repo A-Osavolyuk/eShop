@@ -24,6 +24,11 @@ namespace eShop.Infrastructure.Services
             return string.Empty;
         }
 
+        public async ValueTask RemoveTokenAsync()
+        {
+            await localStorage.RemoveItemAsync("jwt-access-token");
+        }
+
         public async ValueTask SetTokenAsync(string token)
         {
             if (!string.IsNullOrEmpty(token))
@@ -31,5 +36,7 @@ namespace eShop.Infrastructure.Services
                 await localStorage.SetItemAsStringAsync("jwt-access-token", token);
             }
         }
+
+
     }
 }
