@@ -25,6 +25,12 @@
                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
             </NavLink>
         </div>
+
+        <AuthorizeView>
+            <Authorized>
+                @context.User.Identity.Name
+            </Authorized>
+        </AuthorizeView>
     </nav>
 </div>
 

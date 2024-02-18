@@ -1,14 +1,20 @@
 using eShop.Application;
+using eShop.BlazorWebUI.Auth;
 using eShop.BlazorWebUI.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCascadingAuthenticationState();
 
 builder.AddServiceDefaults();
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.AddApiApplicationLayer();
+builder.AddApplicationLayer();
+
+builder.Services.AddScoped<AuthenticationStateProvider, ApplicationAuthenticationStateProvider>();
 
 var app = builder.Build();
 
@@ -22,11 +28,11 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseStaticFiles();
-app.UseAntiforgery();
-
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseStaticFiles();
+app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();

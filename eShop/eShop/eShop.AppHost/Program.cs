@@ -6,6 +6,6 @@ var sqlServer = builder.AddSqlServerContainer("eShopSqlServer", "Password_2024",
 builder.AddProject<Projects.eShop_AuthWebApi>("eShopAuthWebApi")
     .WithReference(sqlServer);
 
-builder.AddProject<Projects.eShop_BlazorWebUI>("eshop.blazorwebui");
+builder.AddProject<Projects.eShop_BlazorWebUI>("eShopBlazorWebUI");
 
 builder.Build().Run();
