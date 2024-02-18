@@ -15,6 +15,7 @@ public static class Extensions
     {
         builder.Services.AddValidatorsFromAssemblyContaining(typeof(Extensions));
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        builder.AddJwtAuthentication();
 
         return builder;
     }
