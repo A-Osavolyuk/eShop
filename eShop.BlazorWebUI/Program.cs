@@ -1,6 +1,8 @@
+using Blazored.Toast;
 using eShop.Application;
 using eShop.BlazorWebUI.Components;
 using eShop.Infrastructure;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,9 @@ builder.Services.AddRazorComponents()
 
 builder.AddApplicationLayer();
 builder.AddInfrastructureLayer();
+
+builder.Services.AddMudServices();
+builder.Services.AddBlazoredToast();
 
 var app = builder.Build();
 

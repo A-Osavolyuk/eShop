@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazored.FluentValidation" Version="2.1.0" />
+    <PackageReference Include="Blazored.Toast" Version="4.1.0" />
+    <PackageReference Include="MudBlazor" Version="6.15.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\eShop.Application\eShop.Application.csproj" />
     <ProjectReference Include="..\eShop.Domain\eShop.Domain.csproj" />
     <ProjectReference Include="..\eShop.Infrastucture\eShop.Infrastructure.csproj" />

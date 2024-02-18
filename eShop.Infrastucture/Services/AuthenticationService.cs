@@ -33,7 +33,7 @@ namespace eShop.Infrastructure.Services
         public ValueTask<ResponseDto> RegisterAsync(RegistrationRequestDto registrationRequest) => clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/register", Method: ApiMethod.POST, Data: registrationRequest));
 
-        public async ValueTask LogOut()
+        public async ValueTask LogOutAsync()
         {
             await tokenProvider.RemoveTokenAsync();
             (authenticationState as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState("");

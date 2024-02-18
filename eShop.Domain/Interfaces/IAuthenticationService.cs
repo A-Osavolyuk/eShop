@@ -7,6 +7,6 @@ namespace eShop.Domain.Interfaces
     {
         public ValueTask<ResponseDto> LoginAsync(LoginRequestDto loginRequestDto);
         public ValueTask<ResponseDto> RegisterAsync(RegistrationRequestDto registrationRequest);
-        public ValueTask LogOut();
+        public ValueTask LogOutAsync();
     }
 }
