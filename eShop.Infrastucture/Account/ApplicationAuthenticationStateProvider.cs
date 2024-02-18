@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace eShop.BlazorWebUI.Auth
+namespace eShop.Infrastructure.Account
 {
     public class ApplicationAuthenticationStateProvider : AuthenticationStateProvider
     {

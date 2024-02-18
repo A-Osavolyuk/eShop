@@ -1,4 +1,4 @@
-﻿namespace eShop.BlazorWebUI.Auth
+﻿namespace eShop.Infrastructure.Account
 {
     public static class JwtHandler
     {

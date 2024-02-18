@@ -1,8 +1,6 @@
 using eShop.Application;
-using eShop.BlazorWebUI.Auth;
 using eShop.BlazorWebUI.Components;
 using eShop.Infrastructure;
-using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,8 +13,6 @@ builder.Services.AddRazorComponents()
 
 builder.AddApplicationLayer();
 builder.AddInfrastructureLayer();
-
-builder.Services.AddScoped<AuthenticationStateProvider, ApplicationAuthenticationStateProvider>();
 
 var app = builder.Build();
 

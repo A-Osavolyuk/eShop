@@ -1,6 +1,8 @@
 ﻿using Blazored.LocalStorage;
 using eShop.Domain.Interfaces;
+using eShop.Infrastructure.Account;
 using eShop.Infrastructure.Services;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -19,11 +21,16 @@ namespace eShop.Infrastructure
 
         public static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
         {
-            builder.Services.AddHttpClient();
+            builder.Services.AddScoped<AuthenticationStateProvider, ApplicationAuthenticationStateProvider>();
+
             builder.Services.AddHttpContextAccessor();
+
+            builder.Services.AddHttpClient();
+            builder.Services.AddHttpClient<IAuthenticationService, AuthenticationService>();
 
             builder.Services.AddScoped<IHttpClientService, HttpClientService>();
             builder.Services.AddScoped<ITokenProvider, TokenProvider>();
+            builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             return builder;
         }
