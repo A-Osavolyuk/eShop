@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\eShop.AuthWebApi\eShop.AuthWebApi.csproj" />
+    <ProjectReference Include="..\..\..\eShop.BlazorWebUI\eShop.BlazorWebUI.csproj" />
   </ItemGroup>
 
 </Project>
