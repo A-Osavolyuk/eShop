@@ -1,13 +1,17 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
 var sqlServer = builder.AddSqlServerContainer("eShopSqlServer", "Password_2024", 8500)
-    .AddDatabase("AuthDB");
+    .AddDatabase("AuthDB")
+    .AddDatabase("ProductDB");
 
-builder.AddProject<Projects.eShop_AuthWebApi>("eShopAuthWebApi")
+var authApi = builder.AddProject<Projects.eShop_AuthWebApi>("eShopAuthWebApi")
     .WithReference(sqlServer);
 
-builder.AddProject<Projects.eShop_BlazorWebUI>("eShopBlazorWebUI");
+var productApi = builder.AddProject<Projects.eShop_ProductWebApi>("eShopProductWebApi")
+    .WithReference(sqlServer)
+    .WithReference(authApi);
 
-builder.AddProject<Projects.eShop_ProductWebApi>("eshop.productwebapi");
+builder.AddProject<Projects.eShop_BlazorWebUI>("eShopBlazorWebUI")
+    .WithReference(authApi);
 
 builder.Build().Run();
