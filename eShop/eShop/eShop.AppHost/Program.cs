@@ -8,4 +8,6 @@ builder.AddProject<Projects.eShop_AuthWebApi>("eShopAuthWebApi")
 
 builder.AddProject<Projects.eShop_BlazorWebUI>("eShopBlazorWebUI");
 
+builder.AddProject<Projects.eShop_ProductWebApi>("eshop.productwebapi");
+
 builder.Build().Run();

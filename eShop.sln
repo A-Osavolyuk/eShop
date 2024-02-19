@@ -29,6 +29,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{F98374CC-05C3-
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.BlazorWebUI", "eShop.BlazorWebUI\eShop.BlazorWebUI.csproj", "{5B1B4D1B-55A3-481D-90AE-626F42801DD5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.ProductWebApi", "eShop.ProductWebApi\eShop.ProductWebApi.csproj", "{628C7868-F50E-4BF1-893B-62F87114E29F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{5B1B4D1B-55A3-481D-90AE-626F42801DD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B1B4D1B-55A3-481D-90AE-626F42801DD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B1B4D1B-55A3-481D-90AE-626F42801DD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{628C7868-F50E-4BF1-893B-62F87114E29F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{628C7868-F50E-4BF1-893B-62F87114E29F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{628C7868-F50E-4BF1-893B-62F87114E29F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{628C7868-F50E-4BF1-893B-62F87114E29F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,6 +85,7 @@ Global
 		{B613A38A-075A-4881-905E-BB3BBBF2E7BD} = {C738A752-84CC-4456-BD72-B31A8BBCA7C2}
 		{F98374CC-05C3-4332-9C94-8340FA0F30AE} = {C738A752-84CC-4456-BD72-B31A8BBCA7C2}
 		{5B1B4D1B-55A3-481D-90AE-626F42801DD5} = {F98374CC-05C3-4332-9C94-8340FA0F30AE}
+		{628C7868-F50E-4BF1-893B-62F87114E29F} = {074D3F96-0865-438D-9379-D836D9C5A13D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EFA1E0D7-C795-49E5-BC36-F86C4991E09D}
