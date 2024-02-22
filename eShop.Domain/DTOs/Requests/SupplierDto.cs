@@ -1,8 +1,7 @@
-﻿namespace eShop.Domain.Entities
+﻿namespace eShop.Domain.DTOs.Requests
 {
-    public class Supplier
+    public class SupplierDto
     {
-        public Guid SupplierId { get; set; }
         public string Name { get; set; } = string.Empty;
         public string ContactEmail { get; set; } = string.Empty;
     }
