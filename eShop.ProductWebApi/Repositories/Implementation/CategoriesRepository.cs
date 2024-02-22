@@ -7,14 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace eShop.ProductWebApi.Repositories.Implementation
 {
-    public class CategoriesRepository : ICategoriesRepository
+    public class CategoriesRepository(ProductDbContext dbContext) : ICategoriesRepository
     {
-        private readonly ProductDbContext dbContext;
-
-        public CategoriesRepository(ProductDbContext dbContext)
-        {
-            this.dbContext = dbContext;
-        }
+        private readonly ProductDbContext dbContext = dbContext;
 
         public async ValueTask<Result<CategoryEntity>> CreateCategoryAsync(CategoryEntity category)
         {
@@ -34,34 +29,99 @@ namespace eShop.ProductWebApi.Repositories.Implementation
             }
         }
 
-        public ValueTask<Result<bool>> DeleteCategoryByIdAsync(Guid id)
+        public async ValueTask<Result<bool>> DeleteCategoryByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var category = await dbContext.Categories.FirstOrDefaultAsync(_ => _.CategoryId == id);
+
+                if (category is not null)
+                {
+                    dbContext.Categories.Remove(category);
+                    var result = await dbContext.SaveChangesAsync();
+
+                    return result > 0 ? new(true) : new (new NotDeletedCategoryException(id));
+                }
+
+                return new(new NotFoundCategoryException(id));
+            }
+            catch (Exception ex)
+            { 
+                return new(ex);
+            }
         }
 
-        public ValueTask<bool> ExistsAsync(Guid id)
+        public async ValueTask<Result<IEnumerable<CategoryEntity>>> GetAllCategoriesAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var categories = await dbContext.Categories.ToListAsync();
+
+                return new (categories);
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
         }
 
-        public ValueTask<Result<IEnumerable<CategoryEntity>>> GetAllCategoriesAsync()
+        public async ValueTask<Result<CategoryEntity>> GetCategoryByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var category = await dbContext.Categories.FirstOrDefaultAsync(_ => _.CategoryId == id);
+
+                if(category is not null)
+                    return new(category);
+
+                return new(new NotFoundCategoryException(id));
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
         }
 
-        public ValueTask<Result<CategoryEntity>> GetCategoryByIdAsync(Guid id)
+        public async ValueTask<Result<CategoryEntity>> GetCategoryByNameAsync(string name)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var category = await dbContext.Categories.FirstOrDefaultAsync(_ => _.Name == name);
+
+                if (category is not null)
+                    return new(category);
+
+                return new(new NotFoundCategoryException(name));
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
         }
 
-        public ValueTask<Result<CategoryEntity>> GetCategoryByNameAsync(string name)
+        public async ValueTask<Result<CategoryEntity>> UpdateCategoryAsync(CategoryEntity newData, Guid id)
         {
-            throw new NotImplementedException();
-        }
+            try
+            {
+                var category = await dbContext.Categories
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(_ => _.CategoryId == id);
 
-        public ValueTask<Result<CategoryEntity>> UpdateCategoryAsync(CategoryEntity category, Guid id)
-        {
-            throw new NotImplementedException();
+                if (category is not null)
+                {
+                    newData.CategoryId = id;
+                    dbContext.Categories.Update(newData);
+                    var result = await dbContext.SaveChangesAsync();
+
+                    return result > 0 ? new(newData) : new(new NotUpdatedCategoryException());
+                }
+
+                return new(new NotFoundCategoryException(id));
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
         }
     }
 }

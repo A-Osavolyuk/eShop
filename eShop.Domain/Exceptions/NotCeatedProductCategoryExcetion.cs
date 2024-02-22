@@ -1,4 +1,4 @@
 ﻿namespace eShop.Domain.Exceptions
 {
-    public class NotCreatedProductCategoryException() : Exception("ProductCategory was not created due to DB error.");
+    public class NotCreatedProductCategoryException() : Exception("Category was not created due to DB error.");
 }
