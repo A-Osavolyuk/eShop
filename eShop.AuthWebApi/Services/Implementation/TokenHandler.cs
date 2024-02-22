@@ -1,5 +1,5 @@
 ﻿using eShop.AuthWebApi.Services.Interfaces;
-using eShop.Domain.Common;
+using eShop.Domain.Entities;
 using eShop.Domain.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

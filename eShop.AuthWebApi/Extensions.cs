@@ -2,7 +2,7 @@
 using eShop.AuthWebApi.Data;
 using eShop.AuthWebApi.Services.Implementation;
 using eShop.AuthWebApi.Services.Interfaces;
-using eShop.Domain.Common;
+using eShop.Domain.Entities;
 using eShop.Domain.Options;
 using Microsoft.AspNetCore.Identity;
 

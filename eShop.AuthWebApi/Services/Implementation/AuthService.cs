@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using eShop.AuthWebApi.Services.Interfaces;
-using eShop.Domain.Common;
 using eShop.Domain.DTOs;
 using eShop.Domain.DTOs.Requests;
 using eShop.Domain.DTOs.Responses;
+using eShop.Domain.Entities;
 using eShop.Domain.Exceptions;
 using FluentValidation;
 using LanguageExt.Common;

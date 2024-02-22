@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using eShop.Domain.Common;
 using eShop.Domain.DTOs.Requests;
+using eShop.Domain.Entities;
 
 namespace eShop.Application.MappingProfiles
 {

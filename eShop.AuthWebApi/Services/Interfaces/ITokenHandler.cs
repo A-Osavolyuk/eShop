@@ -1,5 +1,5 @@
 ﻿using eShop.AuthWebApi.Data;
-using eShop.Domain.Common;
+using eShop.Domain.Entities;
 
 namespace eShop.AuthWebApi.Services.Interfaces
 {
