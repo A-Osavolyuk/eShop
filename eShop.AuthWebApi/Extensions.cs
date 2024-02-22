@@ -13,7 +13,9 @@ namespace eShop.AuthWebApi
         public static IHostApplicationBuilder AddApiServices(this IHostApplicationBuilder builder)
         {
             builder.AddServiceDefaults();
-            builder.AddApiApplicationLayer();
+            builder.ConfigureVersioning();
+            builder.AddMapping();
+            builder.AddValidation();
 
             builder.AddAuth();
             builder.AddDependencyInjection();

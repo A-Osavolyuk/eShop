@@ -13,7 +13,9 @@ builder.AddServiceDefaults();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.AddApplicationLayer();
+builder.AddValidation();
+builder.AddMapping();
+builder.AddJwtAuthentication();
 builder.AddInfrastructureLayer();
 
 builder.Services.AddMudServices();

@@ -11,21 +11,15 @@ namespace eShop.Application;
 
 public static class Extensions
 {
-    public static IHostApplicationBuilder AddApplicationLayer(this IHostApplicationBuilder builder)
+    public static IHostApplicationBuilder AddValidation(this IHostApplicationBuilder builder)
     {
         builder.Services.AddValidatorsFromAssemblyContaining(typeof(Extensions));
-        builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-        builder.AddJwtAuthentication();
-
         return builder;
     }
 
-    public static IHostApplicationBuilder AddApiApplicationLayer(this IHostApplicationBuilder builder)
+    public static IHostApplicationBuilder AddMapping(this IHostApplicationBuilder builder)
     {
-        builder.Services.AddValidatorsFromAssemblyContaining(typeof(Extensions));
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-        builder.ConfigureVersioning();
-
         return builder;
     }
 
