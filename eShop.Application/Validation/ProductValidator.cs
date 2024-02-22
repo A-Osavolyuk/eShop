@@ -9,8 +9,8 @@ namespace eShop.Application.Validation
         {
             RuleFor(p => p.Name)
                 .NotEmpty().WithMessage("Name is must!")
-                .MaximumLength(32).WithMessage("Name cannot be longer then 32 characters")
-                .MinimumLength(3).WithMessage("Name must contain at least 3 characters");
+                .MaximumLength(32).WithMessage("Name cannot be longer then 32 characters.")
+                .MinimumLength(3).WithMessage("Name must contain at least 3 characters.");
 
             RuleFor(p => p.Price)
                 .LessThan(10000).WithMessage("Price cannot higher then 10000.")
@@ -26,13 +26,13 @@ namespace eShop.Application.Validation
 
             RuleFor(p => p.ProductDescription.ShortDescription)
                 .NotEmpty().WithMessage("Short Description is must!")
-                .MaximumLength(128).WithMessage("Short Description cannot be longer then 128 characters")
-                .MinimumLength(16).WithMessage("Short Description must contain at least 16 characters");
+                .MaximumLength(128).WithMessage("Short Description cannot be longer then 128 characters.")
+                .MinimumLength(16).WithMessage("Short Description must contain at least 16 characters.");
 
             RuleFor(p => p.ProductDescription.LongDescription)
                 .NotEmpty().WithMessage("Long Description is must!")
-                .MaximumLength(512).WithMessage("Long Description cannot be longer then 512 characters")
-                .MinimumLength(16).WithMessage("Long Description must contain at least 16 characters");
+                .MaximumLength(512).WithMessage("Long Description cannot be longer then 512 characters.")
+                .MinimumLength(16).WithMessage("Long Description must contain at least 16 characters.");
 
         }
     }
