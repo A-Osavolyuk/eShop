@@ -10,7 +10,7 @@ namespace eShop.Domain.Entities
         [JsonIgnore] public Guid CategoryId { get; set; }
         [JsonIgnore] public Guid SupplierId { get; set; }
         public ProductDescription ProductDescription { get; set; } = null!;
-        public ProductCategoryEntity Category { get; set; } = null!;
+        public CategoryEntity Category { get; set; } = null!;
         public Supplier Supplier { get; set; } = null!;
     }
 }

@@ -7,12 +7,12 @@ namespace eShop.ProductWebApi.Data
     {
         public DbSet<ProductEntity> Products => Set<ProductEntity>();
         public DbSet<Supplier> Suppliers => Set<Supplier>();
-        public DbSet<ProductCategoryEntity> Categories => Set<ProductCategoryEntity>();
+        public DbSet<CategoryEntity> Categories => Set<CategoryEntity>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ProductEntity>().HasKey(x => x.Id);
-            modelBuilder.Entity<ProductCategoryEntity>().HasKey(x => x.CategoryId);
+            modelBuilder.Entity<CategoryEntity>().HasKey(x => x.CategoryId);
             modelBuilder.Entity<Supplier>().HasKey(x => x.SupplierId);
 
             modelBuilder.Entity<ProductEntity>()
