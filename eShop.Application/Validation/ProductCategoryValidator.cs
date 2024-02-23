@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace eShop.Application.Validation
 {
-    public class ProductCategoryValidator : AbstractValidator<ProductCategoryDto>
+    public class ProductCategoryValidator : AbstractValidator<CategoryDto>
     {
         public ProductCategoryValidator()
         {
