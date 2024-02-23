@@ -22,6 +22,8 @@
 
         public static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
         {
+            builder.Services.AddScoped<ICategoriesRepository, CategoriesRepository>();
+
             return builder;
         }
     }

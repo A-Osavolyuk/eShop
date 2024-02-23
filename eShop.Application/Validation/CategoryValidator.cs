@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace eShop.Application.Validation
 {
-    public class ProductCategoryValidator : AbstractValidator<CategoryDto>
+    public class CategoryValidator : AbstractValidator<CategoryDto>
     {
-        public ProductCategoryValidator()
+        public CategoryValidator()
         {
             RuleFor(p => p.Name)
                 .NotEmpty().WithMessage("Name is must!")
