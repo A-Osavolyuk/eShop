@@ -15,7 +15,7 @@
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddMediatR(c => c.RegisterServicesFromAssemblyContaining<Program>());
+            builder.Services.AddMediatR(c => c.RegisterServicesFromAssemblyContaining<IAssemblyMarker>());
 
             return builder;
         }
