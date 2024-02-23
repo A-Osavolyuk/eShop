@@ -13,7 +13,7 @@
 
         public async Task<Result<CategoryEntity>> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
         {
-            var result = await repository.GetCategoryByIdAsync(request.id);
+            var result = await repository.GetCategoryByIdAsync(request.Id);
 
             return result.Match<Result<CategoryEntity>>(s => new(s), f => new(f));
         }
