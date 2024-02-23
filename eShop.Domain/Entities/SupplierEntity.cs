@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.Entities
 {
-    public class Supplier
+    public class SupplierEntity
     {
         public Guid SupplierId { get; set; }
         public string Name { get; set; } = string.Empty;
