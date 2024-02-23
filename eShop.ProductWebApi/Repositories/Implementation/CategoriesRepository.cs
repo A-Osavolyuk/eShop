@@ -1,11 +1,4 @@
-﻿using eShop.Domain.Entities;
-using eShop.Domain.Exceptions;
-using eShop.ProductWebApi.Data;
-using eShop.ProductWebApi.Repositories.Interfaces;
-using LanguageExt.Common;
-using Microsoft.EntityFrameworkCore;
-
-namespace eShop.ProductWebApi.Repositories.Implementation
+﻿namespace eShop.ProductWebApi.Repositories.Implementation
 {
     public class CategoriesRepository(ProductDbContext dbContext) : ICategoriesRepository
     {
@@ -40,13 +33,13 @@ namespace eShop.ProductWebApi.Repositories.Implementation
                     dbContext.Categories.Remove(category);
                     var result = await dbContext.SaveChangesAsync();
 
-                    return result > 0 ? new(true) : new (new NotDeletedCategoryException(id));
+                    return result > 0 ? new(true) : new(new NotDeletedCategoryException(id));
                 }
 
                 return new(new NotFoundCategoryException(id));
             }
             catch (Exception ex)
-            { 
+            {
                 return new(ex);
             }
         }
@@ -57,7 +50,7 @@ namespace eShop.ProductWebApi.Repositories.Implementation
             {
                 var categories = await dbContext.Categories.ToListAsync();
 
-                return new (categories);
+                return new(categories);
             }
             catch (Exception ex)
             {
@@ -71,7 +64,7 @@ namespace eShop.ProductWebApi.Repositories.Implementation
             {
                 var category = await dbContext.Categories.FirstOrDefaultAsync(_ => _.CategoryId == id);
 
-                if(category is not null)
+                if (category is not null)
                     return new(category);
 
                 return new(new NotFoundCategoryException(id));

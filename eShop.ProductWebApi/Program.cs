@@ -1,5 +1,4 @@
 using eShop.ProductWebApi;
-using eShop.ProductWebApi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

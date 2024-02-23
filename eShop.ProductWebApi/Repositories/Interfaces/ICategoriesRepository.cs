@@ -1,7 +1,4 @@
-﻿using eShop.Domain.Entities;
-using LanguageExt.Common;
-
-namespace eShop.ProductWebApi.Repositories.Interfaces
+﻿namespace eShop.ProductWebApi.Repositories.Interfaces
 {
     public interface ICategoriesRepository
     {

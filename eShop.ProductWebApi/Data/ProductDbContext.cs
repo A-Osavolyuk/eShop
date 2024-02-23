@@ -1,7 +1,4 @@
-﻿using eShop.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
-
-namespace eShop.ProductWebApi.Data
+﻿namespace eShop.ProductWebApi.Data
 {
     public class ProductDbContext(DbContextOptions<ProductDbContext> options) : DbContext(options)
     {
@@ -26,7 +23,7 @@ namespace eShop.ProductWebApi.Data
                     .HasColumnName("LongDescription")
                     .HasMaxLength(512);
                 });
-                
+
             modelBuilder.Entity<ProductEntity>()
                 .HasOne(x => x.Supplier)
                 .WithMany()

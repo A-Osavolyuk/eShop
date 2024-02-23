@@ -1,7 +1,4 @@
-﻿using eShop.Application;
-using eShop.ProductWebApi.Data;
-
-namespace eShop.ProductWebApi
+﻿namespace eShop.ProductWebApi
 {
     public static class Extensions
     {
