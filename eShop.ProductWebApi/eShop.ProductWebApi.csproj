@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Categories\Update\" />
     <Folder Include="Controllers\" />
   </ItemGroup>
 
