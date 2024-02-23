@@ -6,6 +6,7 @@
         {
             builder.AddServiceDefaults();
             builder.AddJwtAuthentication();
+            builder.AddDependencyInjection();
             builder.ConfigureVersioning();
             builder.AddMapping();
             builder.AddValidation();
