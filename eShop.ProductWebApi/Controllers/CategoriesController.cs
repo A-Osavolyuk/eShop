@@ -1,4 +1,5 @@
-﻿using eShop.ProductWebApi.Categories.Get;
+﻿using eShop.ProductWebApi.Categories.Create;
+using eShop.ProductWebApi.Categories.Get;
 
 namespace eShop.ProductWebApi.Controllers
 {
@@ -55,6 +56,32 @@ namespace eShop.ProductWebApi.Controllers
                     .Failed()
                     .AddErrorMessage(f.Message)
                     .Build()));
+        }
+
+        [HttpPost]
+        public async ValueTask<ActionResult<ResponseDto>> CreateCategory([FromBody] CategoryDto category)
+        {
+            var result = await sender.Send(new CreateProductCategoryCommand(category));
+
+            return result.Match<ActionResult<ResponseDto>>(
+                s => CreatedAtAction("GetCategoryById", new { Id = s.CategoryId }, new ResponseBuilder()
+                    .Succeeded()
+                    .AddResult(s)
+                    .Build()),
+                f =>
+                {
+                    if (f is FailedValidationException exception)
+                        return BadRequest(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(exception.Message)
+                            .AddErrors(exception.Errors.ToList())
+                            .Build());
+                    
+                    return StatusCode(500, new ResponseBuilder()
+                        .Failed()
+                        .AddErrorMessage(f.Message)
+                        .Build());
+                });
         }
     }
 }
