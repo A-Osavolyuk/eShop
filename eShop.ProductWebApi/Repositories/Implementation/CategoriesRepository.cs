@@ -12,13 +12,13 @@
                 var creationResult = await dbContext.SaveChangesAsync();
 
                 if (creationResult > 0)
-                    return new Result<CategoryEntity>(entity.Entity);
+                    return new (entity.Entity);
 
-                return new Result<CategoryEntity>(new NotCreatedProductCategoryException());
+                return new (new NotCreatedCategoryException());
             }
             catch (Exception ex)
             {
-                return new Result<CategoryEntity>(ex);
+                return new (ex);
             }
         }
 

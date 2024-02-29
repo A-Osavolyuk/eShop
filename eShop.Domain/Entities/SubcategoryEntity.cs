@@ -6,7 +6,7 @@ namespace eShop.Domain.Entities
     {
         public Guid SubcategoryId { get; set; }
         public string Name { get; set; } = string.Empty;
-        public Guid CategoryId { get; set; }
+        [JsonIgnore]public Guid CategoryId { get; set; }
         public CategoryEntity Category { get; set; } = null!;
     }
 }

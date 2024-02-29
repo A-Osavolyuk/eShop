@@ -1,6 +1,6 @@
 ﻿namespace eShop.ProductWebApi.Repositories.Interfaces
 {
-    public interface ISubSubcategoryRepository
+    public interface ISubcategoriesRepository
     {
         public ValueTask<Result<IEnumerable<SubcategoryEntity>>> GetAllCategoriesAsync();
         public ValueTask<Result<SubcategoryEntity>> GetSubcategoryByIdAsync(Guid id);
