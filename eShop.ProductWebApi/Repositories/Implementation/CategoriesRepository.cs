@@ -48,7 +48,21 @@
         {
             try
             {
-                var categories = await dbContext.Categories.ToListAsync();
+                var categories = await dbContext.Categories
+                    .Include(x => x.Subcategories)
+                    .Select(x => new CategoryEntity()
+                    {
+                        CategoryId = x.CategoryId,
+                        Name = x.Name,
+                        Subcategories = x.Subcategories
+                            .Select(x => new SubcategoryEntity() 
+                                { 
+                                SubcategoryId = x.SubcategoryId, 
+                                Name = x.Name,
+                                CategoryId = x.CategoryId,
+                                Category = null!
+                            }).ToList()
+                    }).ToListAsync();
 
                 return new(categories);
             }
@@ -62,7 +76,20 @@
         {
             try
             {
-                var category = await dbContext.Categories.FirstOrDefaultAsync(_ => _.CategoryId == id);
+                var category = await dbContext.Categories.Include(x => x.Subcategories)
+                    .Select(x => new CategoryEntity()
+                    {
+                        CategoryId = x.CategoryId,
+                        Name = x.Name,
+                        Subcategories = x.Subcategories
+                            .Select(x => new SubcategoryEntity()
+                            {
+                                SubcategoryId = x.SubcategoryId,
+                                Name = x.Name,
+                                CategoryId = x.CategoryId,
+                                Category = null!
+                            }).ToList()
+                    }).FirstOrDefaultAsync(_ => _.CategoryId == id);
 
                 if (category is not null)
                     return new(category);
@@ -79,7 +106,20 @@
         {
             try
             {
-                var category = await dbContext.Categories.FirstOrDefaultAsync(_ => _.Name == name);
+                var category = await dbContext.Categories.Include(x => x.Subcategories)
+                    .Select(x => new CategoryEntity()
+                    {
+                        CategoryId = x.CategoryId,
+                        Name = x.Name,
+                        Subcategories = x.Subcategories
+                            .Select(x => new SubcategoryEntity()
+                            {
+                                SubcategoryId = x.SubcategoryId,
+                                Name = x.Name,
+                                CategoryId = x.CategoryId,
+                                Category = null!
+                            }).ToList()
+                    }).FirstOrDefaultAsync(_ => _.Name == name);
 
                 if (category is not null)
                     return new(category);

@@ -20,7 +20,7 @@ namespace eShop.Application.Validation
                 .NotEmpty().WithMessage("SuppliedId is must!")
                 .IsValidGuid().WithMessage("Invalid Guid format. SuppliedId length must be 36 characters.");
 
-            RuleFor(p => p.CategoryId)
+            RuleFor(p => p.SubcategoryId)
                 .NotEmpty().WithMessage("CategoryId is must!")
                 .IsValidGuid().WithMessage("Invalid Guid format. CategoryId length must be 36 characters.");
 

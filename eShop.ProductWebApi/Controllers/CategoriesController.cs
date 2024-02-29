@@ -1,4 +1,5 @@
 ﻿using eShop.ProductWebApi.Categories.Create;
+using eShop.ProductWebApi.Categories.Delete;
 using eShop.ProductWebApi.Categories.Get;
 
 namespace eShop.ProductWebApi.Controllers
@@ -42,7 +43,7 @@ namespace eShop.ProductWebApi.Controllers
                     .Build()));
         }
 
-        [HttpGet("getByName/{Name:alpha}")]
+        [HttpGet("getByName/{Name}")]
         public async ValueTask<ActionResult<ResponseDto>> GetCategoryByName(string Name)
         {
             var result = await sender.Send(new GetCategoryByNameQuery(Name));
@@ -66,6 +67,7 @@ namespace eShop.ProductWebApi.Controllers
             return result.Match<ActionResult<ResponseDto>>(
                 s => CreatedAtAction("GetCategoryById", new { Id = s.CategoryId }, new ResponseBuilder()
                     .Succeeded()
+                    .AddResultMessage("Category was successfully created.")
                     .AddResult(s)
                     .Build()),
                 f =>
@@ -76,7 +78,32 @@ namespace eShop.ProductWebApi.Controllers
                             .AddErrorMessage(exception.Message)
                             .AddErrors(exception.Errors.ToList())
                             .Build());
-                    
+
+                    return StatusCode(500, new ResponseBuilder()
+                        .Failed()
+                        .AddErrorMessage(f.Message)
+                        .Build());
+                });
+        }
+
+        [HttpDelete("{Id:guid}")]
+        public async ValueTask<ActionResult<ResponseDto>> DeleteCategoryById(Guid Id)
+        {
+            var result = await sender.Send(new DeleteCategoryByIdCommand(Id));
+
+            return result.Match<ActionResult<ResponseDto>>(
+                s => Ok(new ResponseBuilder()
+                    .Succeeded()
+                    .AddResultMessage($"Category was successfully deleted.")
+                    .Build()),
+                f =>
+                {
+                    if (f is NotFoundCategoryException exception)
+                        return NotFound(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(exception.Message)
+                            .Build());
+
                     return StatusCode(500, new ResponseBuilder()
                         .Failed()
                         .AddErrorMessage(f.Message)

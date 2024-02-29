@@ -32,11 +32,6 @@
                 .HasForeignKey(x => x.SupplierId);
 
             modelBuilder.Entity<ProductEntity>()
-                .HasOne(x => x.Category)
-                .WithMany()
-                .HasForeignKey(x => x.CategoryId);
-
-            modelBuilder.Entity<ProductEntity>()
                 .HasOne(x => x.Subcategory)
                 .WithMany()
                 .HasForeignKey(x => x.SubcategoryId);
@@ -44,7 +39,7 @@
             modelBuilder.Entity<CategoryEntity>()
                 .HasMany(x => x.Subcategories)
                 .WithOne(x => x.Category)
-                .HasForeignKey(x => x.CategoryId).OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(x => x.CategoryId);
 
             modelBuilder.Entity<CategoryEntity>().HasData(
                 new CategoryEntity { CategoryId = Guid.Parse("d1fd53bd-1279-4537-98f5-8074d420e373"), Name = "Electronics" },
