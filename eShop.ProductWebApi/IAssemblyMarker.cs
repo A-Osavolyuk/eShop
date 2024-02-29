@@ -1,6 +1,4 @@
 ﻿namespace eShop.ProductWebApi
 {
-    public interface IAssemblyMarker
-    {
-    }
+    public interface IAssemblyMarker;
 }
