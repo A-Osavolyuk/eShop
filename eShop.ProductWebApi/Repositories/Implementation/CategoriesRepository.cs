@@ -22,7 +22,7 @@
             }
         }
 
-        public async ValueTask<Result<bool>> DeleteCategoryByIdAsync(Guid id)
+        public async ValueTask<Result<Unit>> DeleteCategoryByIdAsync(Guid id)
         {
             try
             {
@@ -33,7 +33,7 @@
                     dbContext.Categories.Remove(category);
                     var result = await dbContext.SaveChangesAsync();
 
-                    return result > 0 ? new(true) : new(new NotDeletedCategoryException(id));
+                    return result > 0 ? new(new Unit()) : new(new NotDeletedCategoryException(id));
                 }
 
                 return new(new NotFoundCategoryException(id));
@@ -49,17 +49,17 @@
             try
             {
                 var categories = await dbContext.Categories
-                    .Include(x => x.Subcategories)
-                    .Select(x => new CategoryEntity()
+                    .Include(category => category.Subcategories)
+                    .Select(category => new CategoryEntity()
                     {
-                        CategoryId = x.CategoryId,
-                        Name = x.Name,
-                        Subcategories = x.Subcategories
-                            .Select(x => new SubcategoryEntity() 
-                                { 
-                                SubcategoryId = x.SubcategoryId, 
-                                Name = x.Name,
-                                CategoryId = x.CategoryId,
+                        CategoryId = category.CategoryId,
+                        Name = category.Name,
+                        Subcategories = category.Subcategories
+                            .Select(subcategory => new SubcategoryEntity() 
+                            { 
+                                SubcategoryId = subcategory.SubcategoryId, 
+                                Name = subcategory.Name,
+                                CategoryId = subcategory.CategoryId,
                                 Category = null!
                             }).ToList()
                     }).ToListAsync();
@@ -77,16 +77,16 @@
             try
             {
                 var category = await dbContext.Categories.Include(x => x.Subcategories)
-                    .Select(x => new CategoryEntity()
+                    .Select(category => new CategoryEntity()
                     {
-                        CategoryId = x.CategoryId,
-                        Name = x.Name,
-                        Subcategories = x.Subcategories
-                            .Select(x => new SubcategoryEntity()
+                        CategoryId = category.CategoryId,
+                        Name = category.Name,
+                        Subcategories = category.Subcategories
+                            .Select(subcategory => new SubcategoryEntity()
                             {
-                                SubcategoryId = x.SubcategoryId,
-                                Name = x.Name,
-                                CategoryId = x.CategoryId,
+                                SubcategoryId = subcategory.SubcategoryId,
+                                Name = subcategory.Name,
+                                CategoryId = subcategory.CategoryId,
                                 Category = null!
                             }).ToList()
                     }).FirstOrDefaultAsync(_ => _.CategoryId == id);
@@ -107,16 +107,16 @@
             try
             {
                 var category = await dbContext.Categories.Include(x => x.Subcategories)
-                    .Select(x => new CategoryEntity()
+                    .Select(category => new CategoryEntity()
                     {
-                        CategoryId = x.CategoryId,
-                        Name = x.Name,
-                        Subcategories = x.Subcategories
-                            .Select(x => new SubcategoryEntity()
+                        CategoryId = category.CategoryId,
+                        Name = category.Name,
+                        Subcategories = category.Subcategories
+                            .Select(subcategory => new SubcategoryEntity()
                             {
-                                SubcategoryId = x.SubcategoryId,
-                                Name = x.Name,
-                                CategoryId = x.CategoryId,
+                                SubcategoryId = subcategory.SubcategoryId,
+                                Name = subcategory.Name,
+                                CategoryId = subcategory.CategoryId,
                                 Category = null!
                             }).ToList()
                     }).FirstOrDefaultAsync(_ => _.Name == name);
@@ -155,6 +155,24 @@
             {
                 return new(ex);
             }
+        }
+
+        public async ValueTask<Result<Unit>> Exists(Guid id)
+        {
+            try
+            {
+                var category = await dbContext.Categories.FirstOrDefaultAsync(_ => _.CategoryId == id);
+
+                if (category is not null)
+                    return new(new Unit());
+
+                return new(new NotFoundCategoryException(id));
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
+
         }
     }
 }

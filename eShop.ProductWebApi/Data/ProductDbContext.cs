@@ -27,19 +27,19 @@
                 });
 
             modelBuilder.Entity<ProductEntity>()
-                .HasOne(x => x.Supplier)
+                .HasOne(product => product.Supplier)
                 .WithMany()
-                .HasForeignKey(x => x.SupplierId);
+                .HasForeignKey(product => product.SupplierId);
 
             modelBuilder.Entity<ProductEntity>()
-                .HasOne(x => x.Subcategory)
+                .HasOne(product => product.Subcategory)
                 .WithMany()
-                .HasForeignKey(x => x.SubcategoryId);
+                .HasForeignKey(product => product.SubcategoryId);
 
             modelBuilder.Entity<CategoryEntity>()
-                .HasMany(x => x.Subcategories)
-                .WithOne(x => x.Category)
-                .HasForeignKey(x => x.CategoryId);
+                .HasMany(category => category.Subcategories)
+                .WithOne(subcategory => subcategory.Category)
+                .HasForeignKey(subcategory => subcategory.CategoryId);
 
             modelBuilder.Entity<CategoryEntity>().HasData(
                 new CategoryEntity { CategoryId = Guid.Parse("d1fd53bd-1279-4537-98f5-8074d420e373"), Name = "Electronics" },

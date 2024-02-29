@@ -12,3 +12,6 @@ global using eShop.Application;
 global using Microsoft.AspNetCore.Mvc;
 global using eShop.Domain.DTOs.Responses;
 global using eShop.ProductWebApi.Repositories.Implementation;
+global using LanguageExt;
+global using Unit = LanguageExt.Unit;
+global using MUnit = MediatR.Unit;

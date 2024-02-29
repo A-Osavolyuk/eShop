@@ -61,9 +61,9 @@ namespace eShop.ProductWebApi.Controllers
         }
 
         [HttpPost]
-        public async ValueTask<ActionResult<ResponseDto>> CreateCategory([FromBody] CategoryDto category)
+        public async ValueTask<ActionResult<ResponseDto>> CreateCategory([FromBody] CategoryDto Category)
         {
-            var result = await sender.Send(new CreateProductCategoryCommand(category));
+            var result = await sender.Send(new CreateProductCategoryCommand(Category));
 
             return result.Match<ActionResult<ResponseDto>>(
                 s => CreatedAtAction("GetCategoryById", new { Id = s.CategoryId }, new ResponseBuilder()
