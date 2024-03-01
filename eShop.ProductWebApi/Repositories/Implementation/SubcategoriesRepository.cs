@@ -9,13 +9,22 @@ namespace eShop.ProductWebApi.Repositories.Implementation
         {
             try
             {
-                var entity = await dbContext.Subcategories.AddAsync(Subcategory);
-                var creationResult = await dbContext.SaveChangesAsync();
+                var category = await dbContext.Categories
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(_ => _.CategoryId == Subcategory.CategoryId);
 
-                if (creationResult > 0)
-                    return new (entity.Entity);
+                if (category is not null)
+                {
+                    var entity = await dbContext.Subcategories.AddAsync(Subcategory);
+                    var creationResult = await dbContext.SaveChangesAsync();
 
-                return new (new NotCreatedSubcategoryException());
+                    if (creationResult > 0)
+                        return new(entity.Entity);
+
+                    return new(new NotCreatedSubcategoryException());
+                }
+
+                return new(new NotFoundCategoryException(Subcategory.CategoryId));
             }
             catch (Exception ex)
             {
@@ -49,7 +58,9 @@ namespace eShop.ProductWebApi.Repositories.Implementation
         {
             try
             {
-                var category = await dbContext.Subcategories.FirstOrDefaultAsync(_ => _.CategoryId == id);
+                var category = await dbContext.Subcategories
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(_ => _.CategoryId == id);
 
                 if (category is not null)
                     return new(new Unit());
@@ -151,11 +162,20 @@ namespace eShop.ProductWebApi.Repositories.Implementation
 
                 if (subcategory is not null)
                 {
-                    newData.SubcategoryId = id;
-                    dbContext.Subcategories.Update(newData);
-                    var result = await dbContext.SaveChangesAsync();
+                    var category = await dbContext.Categories
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(_ => _.CategoryId == newData.CategoryId);
 
-                    return result > 0 ? new(newData) : new(new NotUpdatedSubcategoryException());
+                    if (category is not null)
+                    {
+                        newData.SubcategoryId = id;
+                        dbContext.Subcategories.Update(newData);
+                        var result = await dbContext.SaveChangesAsync();
+
+                        return result > 0 ? new(newData) : new(new NotUpdatedSubcategoryException());
+                    }
+
+                    return new(new NotFoundCategoryException(newData.CategoryId));
                 }
 
                 return new(new NotFoundSubcategoryException(id));

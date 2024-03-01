@@ -161,7 +161,9 @@
         {
             try
             {
-                var category = await dbContext.Categories.FirstOrDefaultAsync(_ => _.CategoryId == id);
+                var category = await dbContext.Categories
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(_ => _.CategoryId == id);
 
                 if (category is not null)
                     return new(new Unit());
