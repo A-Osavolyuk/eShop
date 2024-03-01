@@ -20,7 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Subcategories\Delete\" />
     <Folder Include="Subcategories\Update\" />
   </ItemGroup>
 

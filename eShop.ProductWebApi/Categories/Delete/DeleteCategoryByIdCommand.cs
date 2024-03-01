@@ -1,8 +1,8 @@
 ﻿namespace eShop.ProductWebApi.Categories.Delete
 {
-    public record DeleteCategoryByIdCommand(Guid Id) : IRequest<Result<LanguageExt.Unit>>;
+    public record DeleteCategoryByIdCommand(Guid Id) : IRequest<Result<Unit>>;
 
-    public class DeleteCategoryByIdCommandHandler : IRequestHandler<DeleteCategoryByIdCommand, Result<LanguageExt.Unit>>
+    public class DeleteCategoryByIdCommandHandler : IRequestHandler<DeleteCategoryByIdCommand, Result<Unit>>
     {
         private readonly ICategoriesRepository repository;
 

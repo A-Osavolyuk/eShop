@@ -1,4 +1,6 @@
-﻿namespace eShop.ProductWebApi.Controllers
+﻿using eShop.ProductWebApi.Subcategories.Delete;
+
+namespace eShop.ProductWebApi.Controllers
 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
@@ -97,6 +99,31 @@
                             .Failed()
                             .AddErrorMessage(ex.Message)
                             .AddErrors(ex.Errors.ToList())
+                            .Build());
+
+                    return StatusCode(500, new ResponseBuilder()
+                        .Failed()
+                        .AddErrorMessage(f.Message)
+                        .Build());
+                });
+        }
+
+        [HttpDelete("{Id:guid}")]
+        public async ValueTask<ActionResult<ResponseDto>> DeleteSubcategoryById(Guid Id)
+        {
+            var result = await sender.Send(new DeleteSubcategoryByIdCommand(Id));
+
+            return result.Match<ActionResult<ResponseDto>>(
+                s => Ok(new ResponseBuilder()
+                    .Succeeded()
+                    .AddResultMessage("Subcategory was successfully deleted.")
+                    .Build()),
+                f =>
+                {
+                    if (f is NotFoundSubcategoryException ex)
+                        return NotFound(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(ex.Message)
                             .Build());
 
                     return StatusCode(500, new ResponseBuilder()

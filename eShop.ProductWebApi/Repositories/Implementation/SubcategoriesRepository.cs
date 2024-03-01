@@ -36,7 +36,7 @@ namespace eShop.ProductWebApi.Repositories.Implementation
         {
             try
             {
-                var subcategory = await dbContext.Subcategories.FirstOrDefaultAsync(_ => _.CategoryId == id);
+                var subcategory = await dbContext.Subcategories.FirstOrDefaultAsync(_ => _.SubcategoryId == id);
 
                 if (subcategory is not null)
                 {
