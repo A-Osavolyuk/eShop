@@ -42,7 +42,7 @@
                                 .Build());
 
                     return StatusCode(500, new ResponseBuilder()
-                            .Succeeded()
+                            .Failed()
                             .AddErrorMessage(f.Message)
                             .Build());
                 });
@@ -67,9 +67,42 @@
                                 .Build());
 
                     return StatusCode(500, new ResponseBuilder()
-                            .Succeeded()
+                            .Failed()
                             .AddErrorMessage(f.Message)
                             .Build());
+                });
+        }
+
+        [HttpPost]
+        public async ValueTask<ActionResult<ResponseDto>> CreateSubcategory([FromBody] SubcategoryDto Subcategory)
+        {
+            var result = await sender.Send(new CreateSubcategoryCommand(Subcategory));
+
+            return result.Match<ActionResult<ResponseDto>>(
+                s => Ok(new ResponseBuilder()
+                    .Succeeded()
+                    .AddResultMessage("Subcategory was successfully created.")
+                    .AddResult(s)
+                    .Build()),
+                f =>
+                {
+                    if (f is NotFoundSubcategoryException || f is NotFoundCategoryException)
+                        return NotFound(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(f.Message)
+                            .Build());
+
+                    if (f is FailedValidationException ex)
+                        return BadRequest(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(ex.Message)
+                            .AddErrors(ex.Errors.ToList())
+                            .Build());
+
+                    return StatusCode(500, new ResponseBuilder()
+                        .Failed()
+                        .AddErrorMessage(f.Message)
+                        .Build());
                 });
         }
     }

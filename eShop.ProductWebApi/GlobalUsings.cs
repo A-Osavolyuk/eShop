@@ -18,5 +18,5 @@ global using MUnit = MediatR.Unit;
 
 global using eShop.ProductWebApi.Subcategories.Get;
 //global using eShop.ProductWebApi.Subcategories.Delete;
-//global using eShop.ProductWebApi.Subcategories.Create;
+global using eShop.ProductWebApi.Subcategories.Create;
 //global using eShop.ProductWebApi.Subcategories.Update;

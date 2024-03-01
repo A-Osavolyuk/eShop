@@ -17,7 +17,7 @@
 
             if (!validationResult.IsValid)
                 return new(new FailedValidationException("Validation Error(s).",
-                    validationResult.Errors.Select(x => x.ErrorMessage).ToList()));
+                    validationResult.Errors.Select(x => x.ErrorMessage)));
 
             var category = mapper.Map<CategoryEntity>(request.CategoryDto);
 

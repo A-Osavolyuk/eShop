@@ -47,7 +47,7 @@ namespace eShop.ProductWebApi.Controllers
                                 .Build());
 
                     return StatusCode(500, new ResponseBuilder()
-                            .Succeeded()
+                            .Failed()
                             .AddErrorMessage(f.Message)
                             .Build());
                 });
@@ -72,7 +72,7 @@ namespace eShop.ProductWebApi.Controllers
                                 .Build());
 
                     return StatusCode(500, new ResponseBuilder()
-                            .Succeeded()
+                            .Failed()
                             .AddErrorMessage(f.Message)
                             .Build());
                 });
