@@ -22,5 +22,55 @@
                             .AddErrorMessage(f.Message)
                             .Build()));
         }
+
+        [HttpGet("getById/{Id:guid}")]
+        public async ValueTask<ActionResult<ResponseDto>> GetSubcategoryById(Guid Id)
+        {
+            var result = await sender.Send(new GetSubcategoryByIdQuery(Id));
+
+            return result.Match<ActionResult<ResponseDto>>(
+                s => Ok(new ResponseBuilder()
+                        .Succeeded()
+                        .AddResult(s)
+                        .Build()),
+                f =>
+                {
+                    if (f is NotFoundSubcategoryException ex)
+                        return NotFound(new ResponseBuilder()
+                                .Failed()
+                                .AddErrorMessage(ex.Message)
+                                .Build());
+
+                    return StatusCode(500, new ResponseBuilder()
+                            .Succeeded()
+                            .AddErrorMessage(f.Message)
+                            .Build());
+                });
+        }
+
+        [HttpGet("getByName/{Name}")]
+        public async ValueTask<ActionResult<ResponseDto>> GetSubcategoryByName(string Name)
+        {
+            var result = await sender.Send(new GetSubcategoryByNameQuery(Name));
+
+            return result.Match<ActionResult<ResponseDto>>(
+                s => Ok(new ResponseBuilder()
+                        .Succeeded()
+                        .AddResult(s)
+                        .Build()),
+                f =>
+                {
+                    if (f is NotFoundSubcategoryException ex)
+                        return NotFound(new ResponseBuilder()
+                                .Failed()
+                                .AddErrorMessage(ex.Message)
+                                .Build());
+
+                    return StatusCode(500, new ResponseBuilder()
+                            .Succeeded()
+                            .AddErrorMessage(f.Message)
+                            .Build());
+                });
+        }
     }
 }

@@ -22,7 +22,7 @@ namespace eShop.ProductWebApi.Controllers
                     .Succeeded()
                     .AddResult(s)
                     .Build()),
-                f => BadRequest(new ResponseBuilder()
+                f => StatusCode(500, new ResponseBuilder()
                     .Failed()
                     .AddErrorMessage(f.Message)
                     .Build()));
@@ -38,10 +38,19 @@ namespace eShop.ProductWebApi.Controllers
                     .Succeeded()
                     .AddResult(s)
                     .Build()),
-                f => BadRequest(new ResponseBuilder()
-                    .Failed()
-                    .AddErrorMessage(f.Message)
-                    .Build()));
+                f =>
+                {
+                    if (f is NotFoundCategoryException ex)
+                        return NotFound(new ResponseBuilder()
+                                .Failed()
+                                .AddErrorMessage(ex.Message)
+                                .Build());
+
+                    return StatusCode(500, new ResponseBuilder()
+                            .Succeeded()
+                            .AddErrorMessage(f.Message)
+                            .Build());
+                });
         }
 
         [HttpGet("getByName/{Name}")]
@@ -54,10 +63,19 @@ namespace eShop.ProductWebApi.Controllers
                     .Succeeded()
                     .AddResult(s)
                     .Build()),
-                f => BadRequest(new ResponseBuilder()
-                    .Failed()
-                    .AddErrorMessage(f.Message)
-                    .Build()));
+                f =>
+                {
+                    if (f is NotFoundCategoryException ex)
+                        return NotFound(new ResponseBuilder()
+                                .Failed()
+                                .AddErrorMessage(ex.Message)
+                                .Build());
+
+                    return StatusCode(500, new ResponseBuilder()
+                            .Succeeded()
+                            .AddErrorMessage(f.Message)
+                            .Build());
+                });
         }
 
         [HttpPost]
