@@ -1,4 +1,5 @@
 ﻿using eShop.ProductWebApi.Subcategories.Delete;
+using eShop.ProductWebApi.Subcategories.Update;
 
 namespace eShop.ProductWebApi.Controllers
 {
@@ -124,6 +125,39 @@ namespace eShop.ProductWebApi.Controllers
                         return NotFound(new ResponseBuilder()
                             .Failed()
                             .AddErrorMessage(ex.Message)
+                            .Build());
+
+                    return StatusCode(500, new ResponseBuilder()
+                        .Failed()
+                        .AddErrorMessage(f.Message)
+                        .Build());
+                });
+        }
+
+        [HttpPut("{Id:guid}")]
+        public async ValueTask<ActionResult<ResponseDto>> UpdateSubcategory(Guid Id, [FromBody] SubcategoryDto Subcategory)
+        {
+            var result = await sender.Send(new UpdateSubcategoryCommand(Subcategory, Id));
+
+            return result.Match<ActionResult<ResponseDto>>(
+                s => Ok(new ResponseBuilder()
+                    .Succeeded()
+                    .AddResultMessage("Subcategory was successfully updated.")
+                    .AddResult(s)
+                    .Build()),
+                f =>
+                {
+                    if (f is NotFoundSubcategoryException || f is NotFoundCategoryException)
+                        return NotFound(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(f.Message)
+                            .Build());
+
+                    if (f is FailedValidationException ex)
+                        return BadRequest(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(ex.Message)
+                            .AddErrors(ex.Errors.ToList())
                             .Build());
 
                     return StatusCode(500, new ResponseBuilder()
