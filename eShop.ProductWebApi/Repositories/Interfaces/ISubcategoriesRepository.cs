@@ -2,7 +2,7 @@
 {
     public interface ISubcategoriesRepository
     {
-        public ValueTask<Result<IEnumerable<SubcategoryEntity>>> GetAllCategoriesAsync();
+        public ValueTask<Result<IEnumerable<SubcategoryEntity>>> GetAllSubcategoriesAsync();
         public ValueTask<Result<SubcategoryEntity>> GetSubcategoryByIdAsync(Guid id);
         public ValueTask<Result<SubcategoryEntity>> GetSubcategoryByNameAsync(string name);
         public ValueTask<Result<SubcategoryEntity>> CreateSubcategoryAsync(SubcategoryEntity Subcategory);

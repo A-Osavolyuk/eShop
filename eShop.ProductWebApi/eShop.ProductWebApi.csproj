@@ -19,4 +19,10 @@
     <ProjectReference Include="..\eShop\eShop\eShop.ServiceDefaults\eShop.ServiceDefaults.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Subcategories\Create\" />
+    <Folder Include="Subcategories\Delete\" />
+    <Folder Include="Subcategories\Update\" />
+  </ItemGroup>
+
 </Project>

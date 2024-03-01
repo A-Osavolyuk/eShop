@@ -157,7 +157,7 @@
             }
         }
 
-        public async ValueTask<Result<Unit>> Exists(Guid id)
+        public async ValueTask<Result<Unit>> ExistsAsync(Guid id)
         {
             try
             {

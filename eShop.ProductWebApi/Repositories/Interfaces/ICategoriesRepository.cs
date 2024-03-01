@@ -8,6 +8,6 @@
         public ValueTask<Result<CategoryEntity>> CreateCategoryAsync(CategoryEntity category);
         public ValueTask<Result<CategoryEntity>> UpdateCategoryAsync(CategoryEntity category, Guid id);
         public ValueTask<Result<Unit>> DeleteCategoryByIdAsync(Guid id);
-        public ValueTask<Result<Unit>> Exists(Guid id);
+        public ValueTask<Result<Unit>> ExistsAsync(Guid id);
     }
 }

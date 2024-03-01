@@ -73,7 +73,7 @@ namespace eShop.ProductWebApi.Repositories.Implementation
             }
         }
 
-        public async ValueTask<Result<IEnumerable<SubcategoryEntity>>> GetAllCategoriesAsync()
+        public async ValueTask<Result<IEnumerable<SubcategoryEntity>>> GetAllSubcategoriesAsync()
         {
             try
             {
@@ -83,6 +83,7 @@ namespace eShop.ProductWebApi.Repositories.Implementation
                     {
                         SubcategoryId = subcategory.SubcategoryId,
                         Name = subcategory.Name,
+                        CategoryId = subcategory.CategoryId,
                         Category = new CategoryEntity()
                         {
                             CategoryId = subcategory.Category.CategoryId,   
@@ -110,6 +111,7 @@ namespace eShop.ProductWebApi.Repositories.Implementation
                     {
                         SubcategoryId = subcategory.SubcategoryId,
                         Name = subcategory.Name,
+                        CategoryId = subcategory.CategoryId,
                         Category = new CategoryEntity()
                         {
                             CategoryId = subcategory.Category.CategoryId,
@@ -136,6 +138,7 @@ namespace eShop.ProductWebApi.Repositories.Implementation
                     {
                         SubcategoryId = subcategory.SubcategoryId,
                         Name = subcategory.Name,
+                        CategoryId = subcategory.CategoryId,
                         Category = new CategoryEntity()
                         {
                             CategoryId = subcategory.Category.CategoryId,
