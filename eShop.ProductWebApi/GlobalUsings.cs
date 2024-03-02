@@ -23,3 +23,9 @@ global using eShop.ProductWebApi.Subcategories.Get;
 global using eShop.ProductWebApi.Subcategories.Delete;
 global using eShop.ProductWebApi.Subcategories.Create;
 global using eShop.ProductWebApi.Subcategories.Update;
+
+global using eShop.ProductWebApi.Suppliers.Create;
+global using eShop.ProductWebApi.Suppliers.Delete;
+global using eShop.ProductWebApi.Suppliers.Get;
+global using eShop.ProductWebApi.Suppliers.Update;
+

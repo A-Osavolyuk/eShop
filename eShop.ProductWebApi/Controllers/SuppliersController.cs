@@ -1,8 +1,4 @@
-﻿using eShop.ProductWebApi.Suppliers.Create;
-using eShop.ProductWebApi.Suppliers.Delete;
-using eShop.ProductWebApi.Suppliers.Get;
-
-namespace eShop.ProductWebApi.Controllers
+﻿namespace eShop.ProductWebApi.Controllers
 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
@@ -122,6 +118,39 @@ namespace eShop.ProductWebApi.Controllers
                         return NotFound(new ResponseBuilder()
                             .Failed()
                             .AddErrorMessage(ex.Message)
+                            .Build());
+
+                    return StatusCode(500, new ResponseBuilder()
+                        .Failed()
+                        .AddResultMessage(f.Message)
+                        .Build());
+                });
+        }
+
+        [HttpPut("{Id:guid}")]
+        public async ValueTask<ActionResult<ResponseDto>> UpdateSupplier(Guid Id, [FromBody] SupplierDto supplier)
+        {
+            var result = await sender.Send(new UpdateSupplierCommand(Id, supplier));
+
+            return result.Match<ActionResult<ResponseDto>>(
+                s => Ok(new ResponseBuilder()
+                    .Succeeded()
+                    .AddResult(s)
+                    .AddResultMessage("Supplier was successfully updated.")
+                    .Build()),
+                f =>
+                {
+                    if (f is NotFoundSupplierException ex)
+                        return NotFound(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(ex.Message)
+                            .Build());
+
+                    if (f is FailedValidationException validationException)
+                        return NotFound(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(validationException.Message)
+                            .AddErrors(validationException.Errors.ToList())
                             .Build());
 
                     return StatusCode(500, new ResponseBuilder()
