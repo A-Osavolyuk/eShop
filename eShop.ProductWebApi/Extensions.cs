@@ -25,6 +25,7 @@
         {
             builder.Services.AddScoped<ICategoriesRepository, CategoriesRepository>();
             builder.Services.AddScoped<ISubcategoriesRepository, SubcategoriesRepository>();
+            builder.Services.AddScoped<ISuppliersRepository, SuppliersRepository>();
 
             return builder;
         }
