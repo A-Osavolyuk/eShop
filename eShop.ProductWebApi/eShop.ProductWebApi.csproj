@@ -20,7 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Suppliers\Create\" />
     <Folder Include="Suppliers\Delete\" />
     <Folder Include="Suppliers\Get\" />
     <Folder Include="Suppliers\Update\" />

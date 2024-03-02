@@ -85,7 +85,7 @@ namespace eShop.ProductWebApi.Controllers
             var result = await sender.Send(new CreateProductCategoryCommand(Category));
 
             return result.Match<ActionResult<ResponseDto>>(
-                s => CreatedAtAction("GetCategoryById", new { Id = s.CategoryId }, new ResponseBuilder()
+                s => CreatedAtAction(nameof(GetCategoryById), new { Id = s.CategoryId }, new ResponseBuilder()
                     .Succeeded()
                     .AddResultMessage("Category was successfully created.")
                     .AddResult(s)

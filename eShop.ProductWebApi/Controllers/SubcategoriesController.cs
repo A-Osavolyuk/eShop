@@ -82,7 +82,7 @@ namespace eShop.ProductWebApi.Controllers
             var result = await sender.Send(new CreateSubcategoryCommand(Subcategory));
 
             return result.Match<ActionResult<ResponseDto>>(
-                s => Ok(new ResponseBuilder()
+                s => CreatedAtAction(nameof(GetSubcategoryById), new { Id = s.SubcategoryId } ,new ResponseBuilder()
                     .Succeeded()
                     .AddResultMessage("Subcategory was successfully created.")
                     .AddResult(s)
