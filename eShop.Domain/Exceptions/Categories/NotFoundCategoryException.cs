@@ -1,4 +1,4 @@
-﻿namespace eShop.Domain.Exceptions
+﻿namespace eShop.Domain.Exceptions.Categories
 {
     public class NotFoundCategoryException : Exception
     {

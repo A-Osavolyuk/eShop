@@ -1,5 +1,5 @@
-﻿using eShop.ProductWebApi.Subcategories.Delete;
-using eShop.ProductWebApi.Subcategories.Update;
+﻿using eShop.Domain.Exceptions.Categories;
+using eShop.Domain.Exceptions.Subcategories;
 
 namespace eShop.ProductWebApi.Controllers
 {

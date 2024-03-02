@@ -8,13 +8,10 @@
         {
             try
             {
-                var entity = await dbContext.Categories.AddAsync(category);
+                var entity = (await dbContext.Categories.AddAsync(category)).Entity;
                 var creationResult = await dbContext.SaveChangesAsync();
 
-                if (creationResult > 0)
-                    return new (entity.Entity);
-
-                return new (new NotCreatedCategoryException());
+                return creationResult > 0 ? new(entity) : new(new NotCreatedCategoryException());
             }
             catch (Exception ex)
             {

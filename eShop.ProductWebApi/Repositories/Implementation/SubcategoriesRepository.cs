@@ -15,13 +15,10 @@ namespace eShop.ProductWebApi.Repositories.Implementation
 
                 if (category is not null)
                 {
-                    var entity = await dbContext.Subcategories.AddAsync(Subcategory);
+                    var entity = (await dbContext.Subcategories.AddAsync(Subcategory)).Entity;
                     var creationResult = await dbContext.SaveChangesAsync();
 
-                    if (creationResult > 0)
-                        return new(entity.Entity);
-
-                    return new(new NotCreatedSubcategoryException());
+                    return creationResult > 0 ? new(entity) : new(new NotCreatedSubcategoryException());
                 }
 
                 return new(new NotFoundCategoryException(Subcategory.CategoryId));
