@@ -1,4 +1,5 @@
 ﻿using eShop.ProductWebApi.Suppliers.Create;
+using eShop.ProductWebApi.Suppliers.Get;
 
 namespace eShop.ProductWebApi.Controllers
 {
@@ -12,19 +13,67 @@ namespace eShop.ProductWebApi.Controllers
         [HttpGet]
         public async ValueTask<ActionResult<ResponseDto>> GetSuppliersList()
         {
-            return Ok();
+            var result = await sender.Send(new GetSuppliersListQuery());
+
+            return result.Match<ActionResult<ResponseDto>>(
+                s => Ok(new ResponseBuilder()
+                    .Succeeded()
+                    .AddResult(s)
+                    .Build()),
+                f => StatusCode(500, new ResponseBuilder()
+                    .Failed()
+                    .AddErrorMessage(f.Message)
+                    .Build()));
         }
 
         [HttpGet("getSupplierById/{Id:guid}")]
         public async ValueTask<ActionResult<ResponseDto>> GetSupplierById(Guid Id)
         {
-            return Ok();
+            var result = await sender.Send(new GetSupplierByIdQuery(Id));
+
+            return result.Match<ActionResult<ResponseDto>>(
+                s => Ok(new ResponseBuilder()
+                    .Succeeded()
+                    .AddResult(s)
+                    .Build()),
+                f =>
+                {
+                    if (f is NotFoundSupplierException ex)
+                        return NotFound(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(ex.Message)
+                            .Build());
+
+                    return StatusCode(500, new ResponseBuilder()
+                        .Failed()
+                        .AddResultMessage(f.Message)
+                        .Build());
+                });
         }
 
         [HttpGet("getSupplierById/{Name}")]
         public async ValueTask<ActionResult<ResponseDto>> GetSupplierByName(string Name)
         {
-            return Ok();
+            var result = await sender.Send(new GetSupplierByNameQuery(Name));
+
+            return result.Match<ActionResult<ResponseDto>>(
+                s => Ok(new ResponseBuilder()
+                    .Succeeded()
+                    .AddResult(s)
+                    .Build()),
+                f =>
+                {
+                    if (f is NotFoundSupplierException ex)
+                        return NotFound(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(ex.Message)
+                            .Build());
+
+                    return StatusCode(500, new ResponseBuilder()
+                        .Failed()
+                        .AddResultMessage(f.Message)
+                        .Build());
+                });
         }
 
         [HttpPost]

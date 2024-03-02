@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <Folder Include="Suppliers\Delete\" />
-    <Folder Include="Suppliers\Get\" />
     <Folder Include="Suppliers\Update\" />
   </ItemGroup>
 
