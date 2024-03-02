@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using eShop.Domain.DTOs.Requests;
+using eShop.Domain.Entities;
 
 namespace eShop.Application.MappingProfiles
 {
@@ -7,7 +8,7 @@ namespace eShop.Application.MappingProfiles
     {
         public SupplierProfile()
         {
-            CreateMap<SupplierDto, SupplierProfile>();
+            CreateMap<SupplierDto, SupplierEntity>();
         }
     }
 }

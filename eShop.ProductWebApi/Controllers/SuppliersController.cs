@@ -1,4 +1,5 @@
 ﻿using eShop.ProductWebApi.Suppliers.Create;
+using eShop.ProductWebApi.Suppliers.Delete;
 using eShop.ProductWebApi.Suppliers.Get;
 
 namespace eShop.ProductWebApi.Controllers
@@ -97,6 +98,31 @@ namespace eShop.ProductWebApi.Controllers
                             .AddErrors(exception.Errors.ToList())
                             .Build());
                     }
+
+                    return StatusCode(500, new ResponseBuilder()
+                        .Failed()
+                        .AddResultMessage(f.Message)
+                        .Build());
+                });
+        }
+
+        [HttpDelete("{Id:guid}")]
+        public async ValueTask<ActionResult<ResponseDto>> DeleteSupplierById(Guid Id)
+        {
+            var result = await sender.Send(new DeleteSupplierByIdCommand(Id));
+
+            return result.Match<ActionResult<ResponseDto>>(
+                s => Ok(new ResponseBuilder()
+                    .Succeeded()
+                    .AddResultMessage("Supplier was successfully deleted.")
+                    .Build()),
+                f =>
+                {
+                    if (f is NotFoundSupplierException ex)
+                        return NotFound(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(ex.Message)
+                            .Build());
 
                     return StatusCode(500, new ResponseBuilder()
                         .Failed()
