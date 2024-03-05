@@ -48,7 +48,7 @@
                 });
         }
 
-        [HttpGet("getSupplierById/{Name}")]
+        [HttpGet("getSupplierByName/{Name}")]
         public async ValueTask<ActionResult<ResponseDto>> GetSupplierByName(string Name)
         {
             var result = await sender.Send(new GetSupplierByNameQuery(Name));

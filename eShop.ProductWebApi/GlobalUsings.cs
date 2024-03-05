@@ -9,6 +9,7 @@ global using eShop.Domain.Exceptions;
 global using eShop.Domain.Exceptions.Categories;
 global using eShop.Domain.Exceptions.Subcategories;
 global using eShop.Domain.Exceptions.Suppliers;
+global using eShop.Domain.Exceptions.Products;
 global using Microsoft.EntityFrameworkCore;
 global using eShop.ProductWebApi.Data;
 global using eShop.Application;
