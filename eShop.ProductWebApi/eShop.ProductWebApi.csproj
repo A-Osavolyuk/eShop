@@ -19,8 +19,4 @@
     <ProjectReference Include="..\eShop\eShop\eShop.ServiceDefaults\eShop.ServiceDefaults.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Products\Update\" />
-  </ItemGroup>
-
 </Project>

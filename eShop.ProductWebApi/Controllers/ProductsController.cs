@@ -1,6 +1,7 @@
 ﻿using eShop.ProductWebApi.Products.Create;
 using eShop.ProductWebApi.Products.Delete;
 using eShop.ProductWebApi.Products.Get;
+using eShop.ProductWebApi.Products.Update;
 
 namespace eShop.ProductWebApi.Controllers
 {
@@ -120,6 +121,39 @@ namespace eShop.ProductWebApi.Controllers
                         return NotFound(new ResponseBuilder()
                             .Failed()
                             .AddErrorMessage(exception.Message)
+                            .Build());
+
+                    return StatusCode(500, new ResponseBuilder()
+                        .Failed()
+                        .AddErrorMessage(f.Message)
+                        .Build());
+                });
+        }
+
+        [HttpPut("{Id:Guid}")]
+        public async ValueTask<ActionResult<ResponseDto>> UpdateProduct(Guid Id, [FromBody] ProductDto Product)
+        {
+            var result = await sender.Send(new UpdateProductCommand(Id, Product));
+
+            return result.Match<ActionResult<ResponseDto>>(
+                s => Ok(new ResponseBuilder()
+                    .Succeeded()
+                    .AddResult(s)
+                    .AddResultMessage("Product was successfully updated.")
+                    .Build()),
+                f =>
+                {
+                    if (f is NotFoundProductException exception)
+                        return NotFound(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(exception.Message)
+                            .Build());
+
+                    if (f is FailedValidationException validationException)
+                        return NotFound(new ResponseBuilder()
+                            .Failed()
+                            .AddErrors(validationException.Errors.ToList())
+                            .AddErrorMessage(validationException.Message)
                             .Build());
 
                     return StatusCode(500, new ResponseBuilder()
