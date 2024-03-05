@@ -1,4 +1,5 @@
 ﻿using eShop.ProductWebApi.Products.Create;
+using eShop.ProductWebApi.Products.Delete;
 using eShop.ProductWebApi.Products.Get;
 
 namespace eShop.ProductWebApi.Controllers
@@ -94,6 +95,31 @@ namespace eShop.ProductWebApi.Controllers
                             .Failed()
                             .AddErrorMessage(exception.Message)
                             .AddErrors(exception.Errors.ToList())
+                            .Build());
+
+                    return StatusCode(500, new ResponseBuilder()
+                        .Failed()
+                        .AddErrorMessage(f.Message)
+                        .Build());
+                });
+        }
+
+        [HttpDelete("{Id:Guid}")]
+        public async ValueTask<ActionResult<ResponseDto>> DeleteProductById(Guid Id)
+        {
+            var result = await sender.Send(new DeleteProductByIdCommand(Id));
+
+            return result.Match<ActionResult<ResponseDto>>(
+                s => Ok(new ResponseBuilder()
+                    .Succeeded()
+                    .AddResultMessage("Product was successfully deleted.")
+                    .Build()),
+                f =>
+                {
+                    if (f is NotFoundProductException exception)
+                        return NotFound(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(exception.Message)
                             .Build());
 
                     return StatusCode(500, new ResponseBuilder()
