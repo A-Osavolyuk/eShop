@@ -62,7 +62,9 @@ namespace eShop.ProductWebApi.Repositories.Implementation
         {
             try
             {
-                var suppliers = await dbContext.Suppliers.ToListAsync();
+                var suppliers = await dbContext.Suppliers
+                    .AsNoTracking()
+                    .ToListAsync();
                 return new(suppliers);
             }
             catch (Exception ex)
@@ -75,7 +77,9 @@ namespace eShop.ProductWebApi.Repositories.Implementation
         {
             try
             {
-                var supplier = await dbContext.Suppliers.FirstOrDefaultAsync(_ => _.SupplierId == Id);
+                var supplier = await dbContext.Suppliers
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(_ => _.SupplierId == Id);
 
                 return supplier is not null ? new(supplier) : new(new NotFoundSupplierException(Id));
             }
@@ -89,7 +93,9 @@ namespace eShop.ProductWebApi.Repositories.Implementation
         {
             try
             {
-                var supplier = await dbContext.Suppliers.FirstOrDefaultAsync(_ => _.Name == Name);
+                var supplier = await dbContext.Suppliers
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(_ => _.Name == Name);
 
                 return supplier is not null ? new(supplier) : new(new NotFoundSupplierException(Name));
             }

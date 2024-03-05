@@ -110,6 +110,9 @@
                 new SubcategoryEntity { SubcategoryId = Guid.NewGuid(), CategoryId = Guid.Parse("6de0ac2a-1f47-4af5-8095-3470f1f80dfb"), Name = "Drama" },
                 new SubcategoryEntity { SubcategoryId = Guid.NewGuid(), CategoryId = Guid.Parse("5f4f58ca-f69e-4913-af64-6e7bd91ccd09"), Name = "Handmade Jewelry" },
                 new SubcategoryEntity { SubcategoryId = Guid.NewGuid(), CategoryId = Guid.Parse("5f4f58ca-f69e-4913-af64-6e7bd91ccd09"), Name = "Handmade Home Decor" });
+
+            modelBuilder.Entity<SupplierEntity>().HasData(
+                new SupplierEntity() { SupplierId = Guid.NewGuid(), Name = "Motorola Inc.", ContactEmail = "motorola@gmail.com" });
         }
     }
 }

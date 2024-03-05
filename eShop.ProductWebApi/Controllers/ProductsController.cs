@@ -24,7 +24,7 @@ namespace eShop.ProductWebApi.Controllers
                     .Build()),
                 f => StatusCode(500, new ResponseBuilder()
                     .Failed()
-                    .AddResultMessage(f.Message)
+                    .AddErrorMessage(f.Message)
                     .Build()));
         }
 

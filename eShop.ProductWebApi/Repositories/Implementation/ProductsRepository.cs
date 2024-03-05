@@ -63,6 +63,7 @@ namespace eShop.ProductWebApi.Repositories.Implementation
             try
             {
                 var products = await dbContext.Products
+                    .AsNoTracking()
                     .Include(product => product.Supplier)
                     .Include(product => product.Subcategory)
                     .Select(product => new ProductEntity()
@@ -97,6 +98,7 @@ namespace eShop.ProductWebApi.Repositories.Implementation
             try
             {
                 var product = await dbContext.Products
+                    .AsNoTracking()
                     .Include(product => product.Supplier)
                     .Include(product => product.Subcategory)
                     .Select(product => new ProductEntity()
@@ -131,6 +133,7 @@ namespace eShop.ProductWebApi.Repositories.Implementation
             try
             {
                 var product = await dbContext.Products
+                    .AsNoTracking()
                     .Include(product => product.Supplier)
                     .Include(product => product.Subcategory)
                     .Select(product => new ProductEntity()

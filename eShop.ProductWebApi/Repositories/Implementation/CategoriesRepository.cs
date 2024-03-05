@@ -46,6 +46,7 @@
             try
             {
                 var categories = await dbContext.Categories
+                    .AsNoTracking()
                     .Include(category => category.Subcategories)
                     .Select(category => new CategoryEntity()
                     {
@@ -73,7 +74,9 @@
         {
             try
             {
-                var category = await dbContext.Categories.Include(x => x.Subcategories)
+                var category = await dbContext.Categories
+                    .AsNoTracking()
+                    .Include(x => x.Subcategories)
                     .Select(category => new CategoryEntity()
                     {
                         CategoryId = category.CategoryId,
@@ -103,7 +106,9 @@
         {
             try
             {
-                var category = await dbContext.Categories.Include(x => x.Subcategories)
+                var category = await dbContext.Categories
+                    .AsNoTracking()
+                    .Include(x => x.Subcategories)
                     .Select(category => new CategoryEntity()
                     {
                         CategoryId = category.CategoryId,

@@ -75,6 +75,7 @@ namespace eShop.ProductWebApi.Repositories.Implementation
             try
             {
                 var subcategories = await dbContext.Subcategories
+                    .AsNoTracking()
                     .Include(subcategory => subcategory.Category)
                     .Select(subcategory => new SubcategoryEntity()
                     {
@@ -103,6 +104,7 @@ namespace eShop.ProductWebApi.Repositories.Implementation
             try
             {
                 var subcategory = await dbContext.Subcategories
+                    .AsNoTracking()
                     .Include(subcategory => subcategory.Category)
                     .Select(subcategory => new SubcategoryEntity()
                     {
@@ -130,6 +132,7 @@ namespace eShop.ProductWebApi.Repositories.Implementation
             try
             {
                 var subcategory = await dbContext.Subcategories
+                    .AsNoTracking()
                     .Include(subcategory => subcategory.Category)
                     .Select(subcategory => new SubcategoryEntity()
                     {
