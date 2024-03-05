@@ -11,7 +11,7 @@ namespace eShop.ProductWebApi.Controllers
         private readonly ISender sender = sender;
 
         [HttpGet]
-        public async ValueTask<ActionResult<ProductEntity>> GetProductsList()
+        public async ValueTask<ActionResult<ResponseDto>> GetProductsList()
         {
             var result = await sender.Send(new GetProductsListQuery());
 
@@ -19,7 +19,7 @@ namespace eShop.ProductWebApi.Controllers
                 s => Ok(new ResponseBuilder()
                     .Succeeded()
                     .AddResult(s)
-                    .Build())
+                    .Build()),
                 f => StatusCode(500, new ResponseBuilder()
                     .Failed()
                     .AddResultMessage(f.Message)
