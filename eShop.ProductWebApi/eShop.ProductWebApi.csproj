@@ -19,4 +19,10 @@
     <ProjectReference Include="..\eShop\eShop\eShop.ServiceDefaults\eShop.ServiceDefaults.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Products\Get\" />
+    <Folder Include="Products\Delete\" />
+    <Folder Include="Products\Update\" />
+  </ItemGroup>
+
 </Project>
