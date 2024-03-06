@@ -70,11 +70,10 @@ namespace eShop.AuthWebApi.Services.Implementation
             {
                 var claims = new List<Claim>()
                 {
-                    new Claim(JwtRegisteredClaimNames.Name, user.Name),
+                    new Claim(JwtRegisteredClaimNames.Name, (!string.IsNullOrEmpty(user.Name))? user.Name! : user.Email! ),
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
                     new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-                };
-
+                }; 
                 return claims;
             }
 

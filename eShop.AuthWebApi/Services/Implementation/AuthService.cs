@@ -53,7 +53,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             {
                 var user = await userManager.FindByEmailAsync(loginRequest.Email);
                 var token = tokenHandler.GenerateToken(user);
-                var userDto = new UserDto(user.Email, user.Name, user.Id);
+                var userDto = new UserDto(user.Email, string.IsNullOrEmpty(user.Name)? user.Email! : user.Name!, user.Id);
 
                 return new Result<LoginResponseDto>(new LoginResponseDto(userDto, token));
             }
@@ -78,7 +78,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             if (registrationResult.Succeeded)
             {
                 return new Result<RegistrationResponseDto>(
-                    new RegistrationResponseDto($"User with email: {registrationRequest.Email} have been successfully registered."));
+                    new RegistrationResponseDto($"Successfully registered."));
             }
 
             return new Result<RegistrationResponseDto>(

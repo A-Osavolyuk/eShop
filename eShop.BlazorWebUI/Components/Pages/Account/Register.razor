@@ -1,5 +1,6 @@
 ﻿@page "/account/register"
 
+@inject ISnackbar Snackbar
 @inject NavigationManager navigationManager
 @inject IAuthenticationService authenticationService
 @inject IValidator<RegistrationRequestDto> validator
@@ -15,8 +16,6 @@
                 <MudText Align="Align.Center" Typo="Typo.h4">Register</MudText>
                 <MudTextField @bind-Value="registrationRequest.Email" For="(() => registrationRequest.Email)"
                               InputType="InputType.Email" Label="Email" Immediate Variant="Variant.Outlined" />
-                <MudTextField @bind-Value="registrationRequest.Name" For="(() => registrationRequest.Name)"
-                              Label="User Name" Immediate Variant="Variant.Outlined" />
                 <MudTextField @bind-Value="registrationRequest.Password" For="(() => registrationRequest.Password)"
                               Label="Password" InputType="InputType.Password" Immediate Variant="Variant.Outlined" />
                 <MudTextField @bind-Value="registrationRequest.ConfirmPassword" For="(() => registrationRequest.ConfirmPassword)"
@@ -49,8 +48,11 @@
 
         if (result.IsSucceeded)
         {
+            Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
             navigationManager.NavigateTo("/account/login");
         }
+        else
+            Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
 
         registrationRequest = new();
     }

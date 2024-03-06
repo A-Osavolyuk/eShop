@@ -4,6 +4,7 @@
 @using eShop.Infrastructure.Account
 @using Newtonsoft.Json
 
+@inject ISnackbar Snackbar
 @inject NavigationManager navigationManager
 @inject IAuthenticationService authenticationService
 @inject AuthenticationStateProvider authenticationStateProvider
@@ -54,6 +55,9 @@
             var data = JsonConvert.DeserializeObject<LoginResponseDto>(result.Result!.ToString()!);
             (authenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(data!.Token);
             navigationManager.NavigateTo("/");
+            Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
         }
+        else 
+            Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
     }
 }

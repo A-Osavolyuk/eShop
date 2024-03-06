@@ -14,12 +14,40 @@
         <MudSpacer />
         <AuthorizeView>
             <NotAuthorized>
-                <MudButton StartIcon="@Icons.Material.Filled.Login" Color="Color.Primary" Href="/account/login">Log In</MudButton>
-                <MudButton StartIcon="@Icons.Material.Filled.AppRegistration" Color="Color.Primary" Href="/account/register">Register</MudButton>
+                <MudButton StartIcon="@Icons.Material.Filled.Login"
+                    Color="Color.Primary" Href="/account/login">Log In</MudButton>
+                <MudButton StartIcon="@Icons.Material.Filled.AppRegistration"
+                    Color="Color.Primary" Href="/account/register" Class="ml-3">Register</MudButton>
             </NotAuthorized>
             <Authorized>
-                <MudText Typo="Typo.body2">@context.User.Identity.Name</MudText>
-                <MudButton StartIcon="@Icons.Material.Filled.Logout" Color="Color.Primary" OnClick="LogoutClick">Log Out</MudButton>
+                <MudMenu AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.BottomLeft" ActivationEvent="MouseEvent.MouseOver">
+                    <ActivatorContent>
+                        <MudAvatar>@(context.User.Identity.Name[0].ToString().ToUpper())</MudAvatar>
+                    </ActivatorContent>
+                    <ChildContent>
+                        <MudMenuItem>
+                            <MudButton StartIcon="@Icons.Material.Filled.ShoppingCart" Color="Color.Primary" Href="shop/user-cart">
+                                Your Cart
+                            </MudButton>
+                        </MudMenuItem>
+                        <MudMenuItem >
+                            <MudButton StartIcon="@Icons.Material.Filled.ManageAccounts" Color="Color.Primary" Href="profile">
+                                Profile
+                            </MudButton>
+                        </MudMenuItem>
+                        <MudMenuItem>
+                            <MudButton StartIcon="@Icons.Material.Filled.Settings" Color="Color.Primary" Href="profile/settings">
+                                Settings
+                            </MudButton>
+                        </MudMenuItem>
+                        <MudDivider />
+                        <MudMenuItem>
+                            <MudButton StartIcon="@Icons.Material.Filled.Logout" Color="Color.Primary" OnClick="LogoutClick">
+                                Log Out
+                            </MudButton>
+                        </MudMenuItem>
+                    </ChildContent>
+                </MudMenu>
             </Authorized>
         </AuthorizeView>
     </MudAppBar>
