@@ -19,7 +19,7 @@ namespace eShop.Infrastructure
             return builder;
         }
 
-        public static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
+        private static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
         {
             builder.Services.AddScoped<AuthenticationStateProvider, ApplicationAuthenticationStateProvider>();
 
@@ -31,6 +31,7 @@ namespace eShop.Infrastructure
             builder.Services.AddScoped<IHttpClientService, HttpClientService>();
             builder.Services.AddScoped<ITokenProvider, TokenProvider>();
             builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+            builder.Services.AddScoped<ISuppliersService, SuppliersService>();
 
             return builder;
         }

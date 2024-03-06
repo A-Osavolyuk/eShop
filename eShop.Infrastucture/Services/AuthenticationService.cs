@@ -8,24 +8,16 @@ using Microsoft.AspNetCore.Components.Authorization;
 
 namespace eShop.Infrastructure.Services
 {
-    public class AuthenticationService : IAuthenticationService
+    public class AuthenticationService(
+        IHttpClientService clientService,
+        ITokenProvider tokenProvider,
+        IConfiguration configuration,
+        AuthenticationStateProvider authenticationState) : IAuthenticationService
     {
-        private readonly IHttpClientService clientService;
-        private readonly ITokenProvider tokenProvider;
-        private readonly IConfiguration configuration;
-        private readonly AuthenticationStateProvider authenticationState;
-
-        public AuthenticationService(
-            IHttpClientService clientService, 
-            ITokenProvider tokenProvider,
-            IConfiguration configuration,
-            AuthenticationStateProvider authenticationState)
-        {
-            this.clientService = clientService;
-            this.tokenProvider = tokenProvider;
-            this.configuration = configuration;
-            this.authenticationState = authenticationState;
-        }
+        private readonly IHttpClientService clientService = clientService;
+        private readonly ITokenProvider tokenProvider = tokenProvider;
+        private readonly IConfiguration configuration = configuration;
+        private readonly AuthenticationStateProvider authenticationState = authenticationState;
 
         public ValueTask<ResponseDto> LoginAsync(LoginRequestDto loginRequestDto) => clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/login", Method: ApiMethod.POST, Data: loginRequestDto));
