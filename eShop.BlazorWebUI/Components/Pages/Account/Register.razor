@@ -8,7 +8,7 @@
 
 <MudGrid Justify="Justify.Center">
     <MudItem xs="4">
-        <MudPaper Outlined Class="pa-3">
+        <MudPaper Outlined Style="margin-top: 20%;" Class="pa-3">
             <EditForm FormName="register-form" Model="registrationRequest" OnValidSubmit="RegisterUser">
                 <FluentValidationValidator Validator="validator" />
 
@@ -22,11 +22,20 @@
                 <MudTextField @bind-Value="registrationRequest.ConfirmPassword" For="(() => registrationRequest.ConfirmPassword)"
                               Label="Confirm Password" InputType="InputType.Password" Immediate Variant="Variant.Outlined" />
 
-                <MudButton ButtonType="ButtonType.Submit" StartIcon="@Icons.Material.Filled.AppRegistration"
-                           Variant="Variant.Filled" Color="Color.Primary" Class="mt-3">
-                    Register
-                </MudButton>
+                <MudGrid Justify="Justify.Center">
+                    <MudItem xs="8">
+                        <MudButton ButtonType="ButtonType.Submit" StartIcon="@Icons.Material.Filled.AppRegistration"
+                                   Variant="Variant.Filled" Color="Color.Primary" Class="mt-3" FullWidth>
+                            Register
+                        </MudButton>
+                    </MudItem>
+                </MudGrid>
             </EditForm>
+        </MudPaper>
+        <MudPaper Outlined Class="mt-3 pa-3">
+            <MudText Align="Align.Center">Already have an account? 
+                <MudLink Href="account/login">Log In</MudLink>
+                </MudText>
         </MudPaper>
     </MudItem>
 </MudGrid>

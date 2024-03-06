@@ -13,7 +13,7 @@
 
 <MudGrid Justify="Justify.Center">
     <MudItem xs="4">
-        <MudPaper Outlined Class="pa-3">
+        <MudPaper Outlined Style="margin-top: 30%;" Class="pa-3">
             <EditForm FormName="login-form" Model="loginRequest" OnValidSubmit="LoginClick">
                 <FluentValidationValidator Validator="validator"/>
 
@@ -23,11 +23,21 @@
                 <MudTextField @bind-Value="loginRequest.Password" For="(() => loginRequest.Password)" 
                     Label="Password" InputType="InputType.Password" Immediate Variant="Variant.Outlined"/>
 
-                <MudButton ButtonType="ButtonType.Submit" StartIcon="@Icons.Material.Filled.Login" 
-                    Variant="Variant.Filled" Color="Color.Primary" Class="mt-3">
-                    Log In
-                </MudButton>
+                <MudGrid Justify="Justify.Center">
+                    <MudItem xs="8">
+                        <MudButton ButtonType="ButtonType.Submit" StartIcon="@Icons.Material.Filled.Login"
+                                   Variant="Variant.Filled" Color="Color.Primary" Class="mt-3" FullWidth>
+                            Log In
+                        </MudButton>
+                    </MudItem>
+                </MudGrid>
             </EditForm>
+        </MudPaper>
+        <MudPaper Outlined Class="mt-3 pa-3">
+            <MudText Align="Align.Center">
+                Do not have an account?
+                <MudLink Href="account/register">Register</MudLink>
+            </MudText>
         </MudPaper>
     </MudItem>
 </MudGrid>

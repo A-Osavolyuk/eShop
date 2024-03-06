@@ -32,6 +32,9 @@ namespace eShop.Infrastructure
             builder.Services.AddScoped<ITokenProvider, TokenProvider>();
             builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
             builder.Services.AddScoped<ISuppliersService, SuppliersService>();
+            builder.Services.AddScoped<IProductsService, ProductsService>();
+            builder.Services.AddScoped<ICategoriesService, CategoriesService>();
+            builder.Services.AddScoped<ISubcategoriesService, SubcategoriesService>();
 
             return builder;
         }
