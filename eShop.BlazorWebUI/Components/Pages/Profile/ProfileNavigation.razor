@@ -1,0 +1,24 @@
+﻿<MudStack>
+    <MudButton ButtonType="ButtonType.Button" Color="Color.Primary" Size="Size.Large" Style="height: 80px" FullWidth
+               Variant="@(IsProfilePage ? Variant.Filled : Variant.Outlined)" StartIcon="@Icons.Material.Filled.ManageAccounts" Href="/profile">
+        Profile
+    </MudButton>
+@*     <MudButton ButtonType="ButtonType.Button" Color="Color.Primary" Size="Size.Large" Style="height: 80px" FullWidth
+               Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.PrivacyTip">
+        User Data
+    </MudButton> *@
+    <MudButton ButtonType="ButtonType.Button" Color="Color.Primary" Size="Size.Large" Style="height: 80px" FullWidth
+               Variant="@(IsSecurityPage ? Variant.Filled : Variant.Outlined)" StartIcon="@Icons.Material.Filled.Security" Href="/profile/security">
+        Security
+    </MudButton>
+    <MudButton ButtonType="ButtonType.Button" Color="Color.Primary" Size="Size.Large" Style="height: 80px" FullWidth
+               Variant="@(IsSettingsPage ? Variant.Filled : Variant.Outlined)" StartIcon="@Icons.Material.Filled.Settings" Href="/profile/settings">
+        Settings
+    </MudButton>
+</MudStack>
+
+@code {
+    [Parameter] public bool IsProfilePage { get; set; } = false;
+    [Parameter] public bool IsSecurityPage { get; set; } = false;
+    [Parameter] public bool IsSettingsPage { get; set; } = false;
+}

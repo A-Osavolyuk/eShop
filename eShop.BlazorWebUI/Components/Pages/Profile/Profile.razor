@@ -6,28 +6,8 @@
 <AuthorizeView>
     <Authorized>
         <MudGrid>
-            <MudItem xs="3" Style="margin-top: 10%;">
-                <MudStack>
-                    <MudButton ButtonType="ButtonType.Button" Color="Color.Primary" Size="Size.Large" Style="height: 80px" FullWidth
-                               Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ManageAccounts">
-                        Profile
-                    </MudButton>
-                    <MudButton ButtonType="ButtonType.Button" Color="Color.Primary" Size="Size.Large" Style="height: 80px" FullWidth
-                               Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.PrivacyTip">
-                        User Data
-                    </MudButton>
-                    <MudButton ButtonType="ButtonType.Button" Color="Color.Primary" Size="Size.Large" Style="height: 80px" FullWidth
-                               Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Security">
-                        Security
-                    </MudButton>
-                    <MudButton ButtonType="ButtonType.Button" Color="Color.Primary" Size="Size.Large" Style="height: 80px" FullWidth
-                               Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Settings">
-                        Settings
-                    </MudButton>
-                </MudStack>
-            </MudItem>
             <MudItem xs="9">
-                <MudPaper Outlined Class="pa-3" Height="100%">
+                <MudPaper Outlined Class="pa-3">
                     <MudGrid>
                         <MudItem xs="2">
                             <MudPaper Outlined Class="pa-1">
@@ -44,7 +24,18 @@
                                                 User ID: 
                                             </MudText>
                                         </MudPaper>
-                                        <MudPaper Outlined Class="pa-3 mt-3">
+                                    </MudItem>
+                                    <MudItem xs="10">
+                                        <MudPaper Outlined Class="pa-3">
+                                            <MudText Typo="Typo.h6">
+                                                @(context.User.Claims.FirstOrDefault(x => x.Type == "Id").Value)
+                                            </MudText>
+                                        </MudPaper>
+                                    </MudItem>
+                                </MudGrid>
+                                <MudGrid>
+                                    <MudItem xs="2">
+                                        <MudPaper Outlined Class="pa-3">
                                             <MudText Typo="Typo.h6">
                                                 Email:
                                             </MudText>
@@ -53,12 +44,23 @@
                                     <MudItem xs="10">
                                         <MudPaper Outlined Class="pa-3">
                                             <MudText Typo="Typo.h6">
-                                                @(context.User.Claims.FirstOrDefault(x => x.Type == "Id").Value)
+                                                @(context.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value)
                                             </MudText>
                                         </MudPaper>
-                                        <MudPaper Outlined Class="pa-3 mt-3">
+                                    </MudItem>
+                                </MudGrid>
+                                <MudGrid>
+                                    <MudItem xs="2">
+                                        <MudPaper Outlined Class="pa-3">
                                             <MudText Typo="Typo.h6">
-                                                @(context.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value)
+                                                User Name:
+                                            </MudText>
+                                        </MudPaper>
+                                    </MudItem>
+                                    <MudItem xs="10">
+                                        <MudPaper Outlined Class="pa-3">
+                                            <MudText Typo="Typo.h6">
+                                                @(context.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name).Value)
                                             </MudText>
                                         </MudPaper>
                                     </MudItem>
@@ -67,6 +69,9 @@
                         </MudItem>
                     </MudGrid>
                 </MudPaper>
+            </MudItem>
+            <MudItem xs="3">
+                <ProfileNavigation IsProfilePage />
             </MudItem>
         </MudGrid>
     </Authorized>
