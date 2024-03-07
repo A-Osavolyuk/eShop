@@ -1,0 +1,49 @@
+﻿@inject IAuthenticationService authenticationService
+@inject NavigationManager navigationManger
+
+<AuthorizeView>
+    <NotAuthorized>
+        <MudButton StartIcon="@Icons.Material.Filled.Login"
+                   Color="Color.Primary" Href="/account/login">Log In</MudButton>
+        <MudButton StartIcon="@Icons.Material.Filled.AppRegistration"
+                   Color="Color.Primary" Href="/account/register" Class="ml-3">Register</MudButton>
+    </NotAuthorized>
+    <Authorized>
+        <MudMenu AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.BottomLeft" ActivationEvent="MouseEvent.MouseOver">
+            <ActivatorContent>
+                <MudAvatar>@(context.User.Identity.Name[0].ToString().ToUpper())</MudAvatar>
+            </ActivatorContent>
+            <ChildContent>
+                <MudMenuItem>
+                    <MudButton StartIcon="@Icons.Material.Filled.ShoppingCart" Color="Color.Primary" Href="shop/user-cart">
+                        Your Cart
+                    </MudButton>
+                </MudMenuItem>
+                <MudMenuItem>
+                    <MudButton StartIcon="@Icons.Material.Filled.ManageAccounts" Color="Color.Primary" Href="profile">
+                        Profile
+                    </MudButton>
+                </MudMenuItem>
+                <MudMenuItem>
+                    <MudButton StartIcon="@Icons.Material.Filled.Settings" Color="Color.Primary" Href="profile/settings">
+                        Settings
+                    </MudButton>
+                </MudMenuItem>
+                <MudDivider />
+                <MudMenuItem>
+                    <MudButton StartIcon="@Icons.Material.Filled.Logout" Color="Color.Primary" OnClick="LogoutClick">
+                        Log Out
+                    </MudButton>
+                </MudMenuItem>
+            </ChildContent>
+        </MudMenu>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    private async Task LogoutClick()
+    {
+        await authenticationService.LogOutAsync();
+        navigationManger.NavigateTo("/account/login");
+    }
+}

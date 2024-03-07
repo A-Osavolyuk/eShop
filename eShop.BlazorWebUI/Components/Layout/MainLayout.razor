@@ -1,8 +1,5 @@
 ﻿@inherits LayoutComponentBase
 
-@inject IAuthenticationService authenticationService
-@inject NavigationManager navigationManger
-
 <MudThemeProvider IsDarkMode />
 <MudDialogProvider />
 <MudSnackbarProvider />
@@ -12,44 +9,7 @@
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         <MudText Typo="Typo.h5" Class="ml-3">Application</MudText>
         <MudSpacer />
-        <AuthorizeView>
-            <NotAuthorized>
-                <MudButton StartIcon="@Icons.Material.Filled.Login"
-                    Color="Color.Primary" Href="/account/login">Log In</MudButton>
-                <MudButton StartIcon="@Icons.Material.Filled.AppRegistration"
-                    Color="Color.Primary" Href="/account/register" Class="ml-3">Register</MudButton>
-            </NotAuthorized>
-            <Authorized>
-                <MudMenu AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.BottomLeft" ActivationEvent="MouseEvent.MouseOver">
-                    <ActivatorContent>
-                        <MudAvatar>@(context.User.Identity.Name[0].ToString().ToUpper())</MudAvatar>
-                    </ActivatorContent>
-                    <ChildContent>
-                        <MudMenuItem>
-                            <MudButton StartIcon="@Icons.Material.Filled.ShoppingCart" Color="Color.Primary" Href="shop/user-cart">
-                                Your Cart
-                            </MudButton>
-                        </MudMenuItem>
-                        <MudMenuItem >
-                            <MudButton StartIcon="@Icons.Material.Filled.ManageAccounts" Color="Color.Primary" Href="profile">
-                                Profile
-                            </MudButton>
-                        </MudMenuItem>
-                        <MudMenuItem>
-                            <MudButton StartIcon="@Icons.Material.Filled.Settings" Color="Color.Primary" Href="profile/settings">
-                                Settings
-                            </MudButton>
-                        </MudMenuItem>
-                        <MudDivider />
-                        <MudMenuItem>
-                            <MudButton StartIcon="@Icons.Material.Filled.Logout" Color="Color.Primary" OnClick="LogoutClick">
-                                Log Out
-                            </MudButton>
-                        </MudMenuItem>
-                    </ChildContent>
-                </MudMenu>
-            </Authorized>
-        </AuthorizeView>
+        <Menu />
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
         <NavMenu/>
@@ -66,11 +26,5 @@
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
-    }
-
-    private async Task LogoutClick()
-    {
-        await authenticationService.LogOutAsync();
-        navigationManger.NavigateTo("/account/login");
     }
 }
