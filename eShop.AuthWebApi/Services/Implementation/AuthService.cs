@@ -66,7 +66,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             var validationResult = await registrationValidator.ValidateAsync(registrationRequest);
 
             if (registrationRequest is null)
-                return new Result<RegistrationResponseDto>(new NullRequestException(type: registrationRequest.GetType()));
+                return new Result<RegistrationResponseDto>(new NullRequestException(type: registrationRequest!.GetType()));
 
             if (!validationResult.IsValid)
                 return new Result<RegistrationResponseDto>(new FailedValidationException("Validation Error(s)",
