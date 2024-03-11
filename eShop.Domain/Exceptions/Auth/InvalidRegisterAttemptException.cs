@@ -1,4 +1,4 @@
-﻿namespace eShop.Domain.Exceptions
+﻿namespace eShop.Domain.Exceptions.Auth
 {
     public class InvalidRegisterAttemptException : Exception
     {

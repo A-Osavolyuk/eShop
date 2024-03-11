@@ -20,48 +20,38 @@
                                 <MudGrid>
                                     <MudItem xs="2">
                                         <MudPaper Outlined Class="pa-3">
-                                            <MudText Typo="Typo.h6">
-                                                User ID: 
-                                            </MudText>
+                                            <MudText Typo="Typo.h6"> User Id </MudText>
                                         </MudPaper>
                                     </MudItem>
                                     <MudItem xs="10">
                                         <MudPaper Outlined Class="pa-3">
-                                            <MudText Typo="Typo.h6">
-                                                @(context.User.Claims.FirstOrDefault(x => x.Type == "Id").Value)
-                                            </MudText>
+                                            <MudText Typo="Typo.h6"> @(context.User.Claims.FirstOrDefault(x => x.Type == "Id").Value) </MudText>
                                         </MudPaper>
                                     </MudItem>
                                 </MudGrid>
+
                                 <MudGrid>
                                     <MudItem xs="2">
                                         <MudPaper Outlined Class="pa-3">
-                                            <MudText Typo="Typo.h6">
-                                                Email:
-                                            </MudText>
+                                            <MudText Typo="Typo.h6"> Email </MudText>
                                         </MudPaper>
                                     </MudItem>
                                     <MudItem xs="10">
                                         <MudPaper Outlined Class="pa-3">
-                                            <MudText Typo="Typo.h6">
-                                                @(context.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value)
-                                            </MudText>
+                                            <MudText Typo="Typo.h6"> @(context.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value) </MudText>
                                         </MudPaper>
                                     </MudItem>
                                 </MudGrid>
+
                                 <MudGrid>
                                     <MudItem xs="2">
                                         <MudPaper Outlined Class="pa-3">
-                                            <MudText Typo="Typo.h6">
-                                                User Name:
-                                            </MudText>
+                                            <MudText Typo="Typo.h6"> User Name </MudText>
                                         </MudPaper>
                                     </MudItem>
                                     <MudItem xs="10">
                                         <MudPaper Outlined Class="pa-3">
-                                            <MudText Typo="Typo.h6">
-                                                @(context.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name).Value)
-                                            </MudText>
+                                            <MudText Typo="Typo.h6"> @(context.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name).Value) </MudText>
                                         </MudPaper>
                                     </MudItem>
                                 </MudGrid>

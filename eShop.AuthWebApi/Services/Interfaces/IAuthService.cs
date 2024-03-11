@@ -8,5 +8,7 @@ namespace eShop.AuthWebApi.Services.Interfaces
     {
         public ValueTask<Result<LoginResponseDto>> LoginAsync(LoginRequestDto loginRequest);
         public ValueTask<Result<RegistrationResponseDto>> RegisterAsync(RegistrationRequestDto registrationRequest);
+
+        public ValueTask<Result<ChangePersonalDataResponseDto>> ChangePersonalInformation(string Id, string Token, ChangePersonalDataRequestDto changePersonalDataRequest);
     }
 }

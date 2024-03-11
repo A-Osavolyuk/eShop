@@ -1,0 +1,135 @@
+﻿@page "/profile/user-data"
+
+@inject IDialogService DialogService
+
+<PageTitle>User Data</PageTitle>
+
+<AuthorizeView Context="authContext">
+    <Authorized>
+        <MudGrid>
+            <MudItem xs="9">
+                <MudPaper Outlined Class="pa-3">
+                    <MudGrid>
+                        <MudItem xs="2">
+                            <MudPaper Outlined Class="pa-3">
+                                <MudText Typo="Typo.h6"> First Name </MudText>
+                            </MudPaper>
+                        </MudItem>
+                        <MudItem xs="10">
+                            <MudPaper Outlined Class="pa-3">
+                                <MudText Typo="Typo.h6"> @(string.IsNullOrEmpty(model.FirstName) ? "None" : model.FirstName) </MudText>
+                            </MudPaper>
+                        </MudItem>
+                    </MudGrid>
+
+                    <MudGrid Class="mt-1">
+                        <MudItem xs="2">
+                            <MudPaper Outlined Class="pa-3">
+                                <MudText Typo="Typo.h6"> Last Name </MudText>
+                            </MudPaper>
+                        </MudItem>
+                        <MudItem xs="10">
+                            <MudPaper Outlined Class="pa-3">
+                                <MudText Typo="Typo.h6"> @(string.IsNullOrEmpty(model.FirstName) ? "None" : model.LastName) </MudText>
+                            </MudPaper>
+                        </MudItem>
+                    </MudGrid>
+
+                    <MudGrid Class="mt-1">
+                        <MudItem xs="2">
+                            <MudPaper Outlined Class="pa-3">
+                                <MudText Typo="Typo.h6"> Middle Name </MudText>
+                            </MudPaper>
+                        </MudItem>
+                        <MudItem xs="10">
+                            <MudPaper Outlined Class="pa-3">
+                                <MudText Typo="Typo.h6"> @(string.IsNullOrEmpty(model.FirstName) ? "None" : model.MiddleName) </MudText>
+                            </MudPaper>
+                        </MudItem>
+                    </MudGrid>
+
+                    <MudGrid Class="mt-1">
+                        <MudItem xs="2">
+                            <MudPaper Outlined Class="pa-3">
+                                <MudText Typo="Typo.h6"> Phone Number </MudText>
+                            </MudPaper>
+                        </MudItem>
+                        <MudItem xs="4">
+                            <MudPaper Outlined Class="pa-3">
+                                <MudText Typo="Typo.h6"> @(string.IsNullOrEmpty(model.FirstName) ? "None" : model.PhoneNumber) </MudText>
+                            </MudPaper>
+                        </MudItem>
+
+                        <MudItem xs="2">
+                            <MudPaper Outlined Class="pa-3">
+                                <MudText Typo="Typo.h6"> Email </MudText>
+                            </MudPaper>
+                        </MudItem>
+                        <MudItem xs="4">
+                            <MudPaper Outlined Class="pa-3">
+                                <MudText Typo="Typo.h6"> @(string.IsNullOrEmpty(model.FirstName) ? "None" : model.Email) </MudText>
+                            </MudPaper>
+                        </MudItem>
+                    </MudGrid>
+
+                    <MudGrid Class="mt-1">
+                        <MudItem xs="2">
+                            <MudPaper Outlined Class="pa-3">
+                                <MudText Typo="Typo.h6"> Date of Birth </MudText>
+                            </MudPaper>
+                        </MudItem>
+                        <MudItem xs="4">
+                            <MudPaper Outlined Class="pa-3">
+                                <MudText Typo="Typo.h6"> @(string.IsNullOrEmpty(model.FirstName) ? "None" : model.DateOfBirth) </MudText>
+                            </MudPaper>
+                        </MudItem>
+                        <MudItem xs="2">
+                            <MudPaper Outlined Class="pa-3">
+                                <MudText Typo="Typo.h6"> Gender </MudText>
+                            </MudPaper>
+                        </MudItem>
+                        <MudItem xs="4">
+                            <MudPaper Outlined Class="pa-3">
+                                <MudText Typo="Typo.h6"> @(string.IsNullOrEmpty(model.FirstName) ? "None" : model.Gender) </MudText>
+                            </MudPaper>
+                        </MudItem>
+                    </MudGrid>
+
+                    <MudGrid>
+                        <MudItem xs="12">
+                            <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary"
+                                       Size="Size.Large" StartIcon="@Icons.Material.Filled.ChangeCircle" OnClick="ShowChangeDataForm">
+                                Change personal data
+                            </MudButton>
+                        </MudItem>
+                    </MudGrid>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="3">
+                <ProfileNavigation IsUserDataPage />
+            </MudItem>
+        </MudGrid>
+    </Authorized>
+</AuthorizeView>
+
+
+
+@code {
+    private PersonalInformationDto model { get; set; }
+    private bool ShowDialog { get; set; } = false; 
+
+    override protected void OnInitialized()
+    {
+        model = new();
+    }
+
+    private void ShowChangeDataForm()
+    {
+        DialogService.Show<ChangePersonalInfoDialog>("Change personal data", new DialogOptions()
+            {
+                DisableBackdropClick = true,
+                ClassBackground = "blured",
+            });
+    }
+
+}

@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using eShop.Application.Validation;
 using eShop.AuthWebApi.Services.Interfaces;
 using eShop.Domain.DTOs;
 using eShop.Domain.DTOs.Requests;
 using eShop.Domain.DTOs.Responses;
 using eShop.Domain.Entities;
 using eShop.Domain.Exceptions;
+using eShop.Domain.Exceptions.Auth;
 using FluentValidation;
 using LanguageExt.Common;
 using Microsoft.AspNetCore.Identity;
@@ -18,6 +20,7 @@ namespace eShop.AuthWebApi.Services.Implementation
         private readonly UserManager<AppUser> userManager;
         private readonly IValidator<RegistrationRequestDto> registrationValidator;
         private readonly IValidator<LoginRequestDto> loginValidator;
+        private readonly IValidator<ChangePersonalDataRequestDto> personalDataValidator;
         private readonly IMapper mapper;
 
         public AuthService(
@@ -26,6 +29,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             UserManager<AppUser> userManager,
             IValidator<RegistrationRequestDto> registrationValidator,
             IValidator<LoginRequestDto> loginValidator,
+            IValidator<ChangePersonalDataRequestDto> personalDataValidator,
             IMapper mapper)
         {
             this.tokenHandler = tokenHandler;
@@ -33,56 +37,110 @@ namespace eShop.AuthWebApi.Services.Implementation
             this.userManager = userManager;
             this.registrationValidator = registrationValidator;
             this.loginValidator = loginValidator;
+            this.personalDataValidator = personalDataValidator;
             this.mapper = mapper;
+        }
+
+        public async ValueTask<Result<ChangePersonalDataResponseDto>> ChangePersonalInformation(string Id, string Token, ChangePersonalDataRequestDto changePersonalDataRequest)
+        {
+            try
+            {
+                var user = await userManager.FindByIdAsync(Id);
+
+                if (user is not null)
+                {
+                    var validationResult = await personalDataValidator.ValidateAsync(changePersonalDataRequest);
+
+                    if (validationResult.IsValid)
+                    {
+                        user.AddPersonalData(changePersonalDataRequest);
+
+                        var result = await userManager.UpdateAsync(user);
+
+                        if (result.Succeeded)
+                        {
+                            return new(new ChangePersonalDataResponseDto()
+                            {
+                                User = new(),
+                                Token = tokenHandler.RefreshToken(Token)
+                            });
+                        }
+
+                        return new(new NotChangedPersonalDataException());
+                    }
+
+                    return new(new FailedValidationException("Validation Error(s)", validationResult.Errors.Select(x => x.ErrorMessage)));
+                }
+
+                return new(new NotFoundUserException(Id));
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
         }
 
         public async ValueTask<Result<LoginResponseDto>> LoginAsync(LoginRequestDto loginRequest)
         {
-            var validationResult = await loginValidator.ValidateAsync(loginRequest);
-
-            if (loginRequest is null)
-                return new Result<LoginResponseDto>(new NullRequestException(type: loginRequest.GetType()));
-
-            if (!validationResult.IsValid)
-                return new Result<LoginResponseDto>(new FailedValidationException("Validation Error(s)",
-                    validationResult.Errors.Select(x => x.ErrorMessage)));
-
-            var loginResult = await signInManager.PasswordSignInAsync(loginRequest.Email, loginRequest.Password, false, false);
-
-            if (loginResult.Succeeded)
+            try
             {
-                var user = await userManager.FindByEmailAsync(loginRequest.Email);
-                var token = tokenHandler.GenerateToken(user);
-                var userDto = new UserDto(user.Email, string.IsNullOrEmpty(user.Name)? user.Email! : user.Name!, user.Id);
+                var validationResult = await loginValidator.ValidateAsync(loginRequest);
 
-                return new Result<LoginResponseDto>(new LoginResponseDto(userDto, token));
+                if (loginRequest is null)
+                    return new(new NullRequestException(type: loginRequest!.GetType()));
+
+                if (!validationResult.IsValid)
+                    return new(new FailedValidationException("Validation Error(s)",
+                        validationResult.Errors.Select(x => x.ErrorMessage)));
+
+                var loginResult = await signInManager.PasswordSignInAsync(loginRequest.Email, loginRequest.Password, false, false);
+
+                if (loginResult.Succeeded)
+                {
+                    var user = await userManager.FindByEmailAsync(loginRequest.Email);
+                    var token = tokenHandler.GenerateToken(user);
+                    var userDto = new UserDto(user.Email!, user.Email!, user.Id);
+
+                    return new(new LoginResponseDto(userDto, token));
+                }
+
+                return new(new InvalidLoginAttemptException());
             }
-
-            return new Result<LoginResponseDto>(new InvalidLoginAttemptException());
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
         }
 
         public async ValueTask<Result<RegistrationResponseDto>> RegisterAsync(RegistrationRequestDto registrationRequest)
         {
-            var validationResult = await registrationValidator.ValidateAsync(registrationRequest);
-
-            if (registrationRequest is null)
-                return new Result<RegistrationResponseDto>(new NullRequestException(type: registrationRequest!.GetType()));
-
-            if (!validationResult.IsValid)
-                return new Result<RegistrationResponseDto>(new FailedValidationException("Validation Error(s)",
-                    validationResult.Errors.Select(x => x.ErrorMessage)));
-
-            var user = mapper.Map<AppUser>(registrationRequest);
-            var registrationResult = await userManager.CreateAsync(user, registrationRequest.Password);
-
-            if (registrationResult.Succeeded)
+            try
             {
-                return new Result<RegistrationResponseDto>(
-                    new RegistrationResponseDto($"Successfully registered."));
-            }
+                var validationResult = await registrationValidator.ValidateAsync(registrationRequest);
 
-            return new Result<RegistrationResponseDto>(
-                new InvalidRegisterAttemptException("Invalid registration attempt.", registrationResult.Errors.Select(x => x.Description)));
+                if (registrationRequest is null)
+                    return new(new NullRequestException(type: registrationRequest!.GetType()));
+
+                if (!validationResult.IsValid)
+                    return new(new FailedValidationException("Validation Error(s)",
+                        validationResult.Errors.Select(x => x.ErrorMessage)));
+
+                var user = mapper.Map<AppUser>(registrationRequest);
+                var registrationResult = await userManager.CreateAsync(user, registrationRequest.Password);
+
+                if (registrationResult.Succeeded)
+                {
+                    return new(
+                        new RegistrationResponseDto($"Successfully registered."));
+                }
+
+                return new(
+                    new InvalidRegisterAttemptException("Invalid registration attempt.", registrationResult.Errors.Select(x => x.Description)));
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
         }
     }
 }

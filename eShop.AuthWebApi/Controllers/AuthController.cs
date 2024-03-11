@@ -2,6 +2,7 @@
 using eShop.Domain.DTOs.Requests;
 using eShop.Domain.DTOs.Responses;
 using eShop.Domain.Exceptions;
+using eShop.Domain.Exceptions.Auth;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eShop.AuthWebApi.Controllers
@@ -46,11 +47,16 @@ namespace eShop.AuthWebApi.Controllers
                             .AddErrorMessage(referenceException.Message)
                             .Build());
 
-                    var identityException = fail as InvalidRegisterAttemptException;
-                    return BadRequest(new ResponseBuilder()
+                    if (fail is InvalidRegisterAttemptException identityException)
+                        return BadRequest(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(identityException!.ErrorType)
+                            .AddErrors(identityException.Errors.ToList())
+                            .Build());
+
+                    return StatusCode(500, new ResponseBuilder()
                         .Failed()
-                        .AddErrorMessage(identityException!.ErrorType)
-                        .AddErrors(identityException.Errors.ToList())
+                        .AddErrorMessage(fail.Message)
                         .Build());
                 });
         }
@@ -84,10 +90,49 @@ namespace eShop.AuthWebApi.Controllers
                             .AddErrors(validationException.Errors.ToList())
                             .Build());
 
-                    var loginException = fail as InvalidLoginAttemptException;
-                    return BadRequest(new ResponseBuilder()
+                    if (fail is InvalidLoginAttemptException loginException)
+                        return BadRequest(new ResponseBuilder()
                         .Failed()
                         .AddErrorMessage(loginException!.Message)
+                        .Build());
+
+                    return StatusCode(500, new ResponseBuilder()
+                        .Failed()
+                        .AddErrorMessage(fail.Message)
+                        .Build());
+
+                });
+        }
+
+        [HttpPost("change-personal-data/{Id}/{Token}")]
+        public async ValueTask<ActionResult<ResponseDto>> ChangePersonalData([FromBody] ChangePersonalDataRequestDto changePersonalDataRequest, string Id, string Token)
+        {
+            var result = await authService.ChangePersonalInformation(Id, Token, changePersonalDataRequest);
+
+            return result.Match<ActionResult<ResponseDto>>(
+                s => Ok(new ResponseBuilder()
+                    .Succeeded()
+                    .AddResultMessage("Personal data was successfully changed.")
+                    .AddResult(s)
+                    .Build()),
+                f =>
+                {
+                    if (f is FailedValidationException failedValidationException)
+                        return BadRequest(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(failedValidationException.Message)
+                            .AddErrors(failedValidationException.Errors.ToList())
+                            .Build());
+
+                    if (f is NotFoundUserException notFoundUserException)
+                        return NotFound(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(notFoundUserException.Message)
+                            .Build());
+
+                    return StatusCode(500, new ResponseBuilder()
+                        .Failed()
+                        .AddErrorMessage(f.Message)
                         .Build());
                 });
         }
