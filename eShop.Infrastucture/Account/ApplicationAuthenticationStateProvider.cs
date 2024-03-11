@@ -1,4 +1,5 @@
-﻿using eShop.Domain.Interfaces;
+﻿using eShop.Domain.Common;
+using eShop.Domain.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.IdentityModel.Tokens.Jwt;
@@ -23,12 +24,12 @@ namespace eShop.Infrastructure.Account
                 if (string.IsNullOrEmpty(JwtHandler.Token))
                     return await Task.FromResult(anonymous);
 
-                var rawToken = DecryptToken(JwtHandler.Token);
+                var token = DecryptToken(JwtHandler.Token);
 
-                if (rawToken is null || !rawToken.Claims.Any())
+                if (token is null || !token.Claims.Any())
                     return await Task.FromResult(anonymous);
 
-                var claims = SetClaims(rawToken);
+                var claims = SetClaims(token);
 
                 if (!claims.Any())
                     return await Task.FromResult(anonymous);
@@ -80,9 +81,14 @@ namespace eShop.Infrastructure.Account
             {
                 var claims = new List<Claim>()
                 {
-                    new(ClaimTypes.Name, token.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Name).Value),
+                    new(ClaimTypes.Name, token.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.UserName).Value),
                     new(ClaimTypes.Email, token.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email).Value),
-                    new("Id", token.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Sub).Value),
+                    new(CustomClaimTypes.FirstName, token.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.FirstName)!.Value),
+                    new(CustomClaimTypes.LastName, token.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.LastName)!.Value),
+                    new(CustomClaimTypes.MiddleName, token.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.MiddleName)!.Value),
+                    new(CustomClaimTypes.Gender, token.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Gender)!.Value),
+                    new(CustomClaimTypes.PhoneNumber, token.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.PhoneNumber)!.Value),
+                    new(CustomClaimTypes.Id, token.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value),
                 };
 
                 return claims;

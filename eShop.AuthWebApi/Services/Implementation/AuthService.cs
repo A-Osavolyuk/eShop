@@ -61,7 +61,7 @@ namespace eShop.AuthWebApi.Services.Implementation
                         {
                             return new(new ChangePersonalDataResponseDto()
                             {
-                                User = new(),
+                                User = new() { Id = Id, Email = user.Email!, Name = user.Email! },
                                 Token = tokenHandler.RefreshToken(Token)
                             });
                         }
