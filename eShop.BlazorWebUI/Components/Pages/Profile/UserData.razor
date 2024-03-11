@@ -1,6 +1,5 @@
 ﻿@page "/profile/user-data"
 
-@inject IDialogService DialogService
 @inject IAuthenticationService AuthenticationService
 @inject ITokenProvider TokenProvider
 
@@ -56,13 +55,13 @@
                                 <MudText Typo="Typo.h6"> Phone Number </MudText>
                             </MudPaper>
                         </MudItem>
-                        <MudItem xs="4">
+                        <MudItem xs="10">
                             <MudPaper Outlined Class="pa-3">
                                 <MudText Typo="Typo.h6"> @(string.IsNullOrEmpty(model.PhoneNumber) ? "None" : model.PhoneNumber) </MudText>
                             </MudPaper>
                         </MudItem>
 
-                        <MudItem xs="2">
+@*                         <MudItem xs="2">
                             <MudPaper Outlined Class="pa-3">
                                 <MudText Typo="Typo.h6"> Email </MudText>
                             </MudPaper>
@@ -71,7 +70,7 @@
                             <MudPaper Outlined Class="pa-3">
                                 <MudText Typo="Typo.h6"> @(string.IsNullOrEmpty(model.Email) ? "None" : model.Email) </MudText>
                             </MudPaper>
-                        </MudItem>
+                        </MudItem> *@
                     </MudGrid>
 
                     <MudGrid Class="mt-1">
@@ -136,11 +135,7 @@
 
     private void ShowChangeDataForm()
     {
-        DialogService.Show<ChangePersonalInfoDialog>("Change personal data", new DialogOptions()
-            {
-                DisableBackdropClick = true,
-                ClassBackground = "blured",
-            });
+
     }
 
 }
