@@ -4,6 +4,7 @@ using eShop.Domain.Entities;
 using eShop.Domain.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -71,14 +72,9 @@ namespace eShop.AuthWebApi.Services.Implementation
             {
                 var claims = new List<Claim>()
                 {
-                    new (CustomClaimTypes.UserName, user.UserName!),
-                    new (JwtRegisteredClaimNames.Email, user.Email!),
+                    new (CustomClaimTypes.UserName, user.UserName ?? "None"),
+                    new (JwtRegisteredClaimNames.Email, user.Email ?? "None"),
                     new (CustomClaimTypes.Id, user.Id),
-                    new (CustomClaimTypes.FirstName, user.FirstName!),
-                    new (CustomClaimTypes.LastName, user.LastName!),
-                    new (CustomClaimTypes.MiddleName, user.MiddleName!),
-                    new (CustomClaimTypes.Gender, user.Gender!),
-                    new (CustomClaimTypes.PhoneNumber, user.PhoneNumber!),
                 }; 
                 return claims;
             }
@@ -97,11 +93,6 @@ namespace eShop.AuthWebApi.Services.Implementation
                 var claims = new List<Claim>()
                 {
                     new (CustomClaimTypes.UserName, rawToken.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.UserName)!.Value),
-                    new (CustomClaimTypes.FirstName, rawToken.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.FirstName)!.Value),
-                    new (CustomClaimTypes.LastName, rawToken.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.LastName)!.Value),
-                    new (CustomClaimTypes.MiddleName, rawToken.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.MiddleName)!.Value),
-                    new (CustomClaimTypes.Gender, rawToken.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Gender)!.Value),
-                    new (CustomClaimTypes.PhoneNumber, rawToken.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.PhoneNumber)!.Value),
                     new (JwtRegisteredClaimNames.Email, rawToken.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email)!.Value),
                     new (CustomClaimTypes.Id, rawToken.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value),
                 };

@@ -1,5 +1,4 @@
 ﻿@page "/profile" 
-@using System.Security.Claims
 
 <PageTitle>Profile</PageTitle>
 
@@ -25,7 +24,7 @@
                                     </MudItem>
                                     <MudItem xs="10">
                                         <MudPaper Outlined Class="pa-3">
-                                            <MudText Typo="Typo.h6"> @(context.User.Claims.FirstOrDefault(x => x.Type == "Id").Value) </MudText>
+                                            <MudText Typo="Typo.h6"> @(context.User.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value) </MudText>
                                         </MudPaper>
                                     </MudItem>
                                 </MudGrid>
@@ -38,7 +37,7 @@
                                     </MudItem>
                                     <MudItem xs="10">
                                         <MudPaper Outlined Class="pa-3">
-                                            <MudText Typo="Typo.h6"> @(context.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value) </MudText>
+                                            <MudText Typo="Typo.h6"> @(context.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value) </MudText>
                                         </MudPaper>
                                     </MudItem>
                                 </MudGrid>
@@ -51,7 +50,7 @@
                                     </MudItem>
                                     <MudItem xs="10">
                                         <MudPaper Outlined Class="pa-3">
-                                            <MudText Typo="Typo.h6"> @(context.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name).Value) </MudText>
+                                            <MudText Typo="Typo.h6"> @(context.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)!.Value) </MudText>
                                         </MudPaper>
                                     </MudItem>
                                 </MudGrid>

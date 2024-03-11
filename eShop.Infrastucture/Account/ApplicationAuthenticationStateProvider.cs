@@ -81,14 +81,9 @@ namespace eShop.Infrastructure.Account
             {
                 var claims = new List<Claim>()
                 {
-                    new(ClaimTypes.Name, token.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.UserName).Value),
-                    new(ClaimTypes.Email, token.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email).Value),
-                    new(CustomClaimTypes.FirstName, token.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.FirstName)!.Value),
-                    new(CustomClaimTypes.LastName, token.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.LastName)!.Value),
-                    new(CustomClaimTypes.MiddleName, token.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.MiddleName)!.Value),
-                    new(CustomClaimTypes.Gender, token.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Gender)!.Value),
-                    new(CustomClaimTypes.PhoneNumber, token.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.PhoneNumber)!.Value),
                     new(CustomClaimTypes.Id, token.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value),
+                    new(ClaimTypes.Name, token.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.UserName)!.Value),
+                    new(ClaimTypes.Email, token.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email)!.Value),
                 };
 
                 return claims;

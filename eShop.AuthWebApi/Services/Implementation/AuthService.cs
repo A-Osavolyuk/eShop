@@ -41,7 +41,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             this.mapper = mapper;
         }
 
-        public async ValueTask<Result<ChangePersonalDataResponseDto>> ChangePersonalInformation(string Id, string Token, ChangePersonalDataRequestDto changePersonalDataRequest)
+        public async ValueTask<Result<ChangePersonalDataResponseDto>> ChangePersonalDataAsync(string Id, ChangePersonalDataRequestDto changePersonalDataRequest)
         {
             try
             {
@@ -61,8 +61,13 @@ namespace eShop.AuthWebApi.Services.Implementation
                         {
                             return new(new ChangePersonalDataResponseDto()
                             {
-                                User = new() { Id = Id, Email = user.Email!, Name = user.Email! },
-                                Token = tokenHandler.RefreshToken(Token)
+                                Email = user.Email,
+                                PhoneNumber = user.PhoneNumber,
+                                FirstName = user.FirstName,
+                                LastName = user.LastName,
+                                MiddleName = user.MiddleName,
+                                Gender = user.Gender,
+                                DateOfBirth = user.DateOfBirth,
                             });
                         }
 
@@ -73,6 +78,32 @@ namespace eShop.AuthWebApi.Services.Implementation
                 }
 
                 return new(new NotFoundUserException(Id));
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
+        }
+
+        public async ValueTask<Result<PersonalDataDto>> GetPersonalDataAsync(string Id)
+        {
+            try
+            {
+                var user = await userManager.FindByIdAsync(Id);
+
+                if (user is null)
+                    return new(new NotFoundUserException(Id));
+
+                return new(new PersonalDataDto()
+                {
+                    DateOfBirth = user.DateOfBirth,
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Gender= user.Gender,
+                    MiddleName= user.MiddleName,
+                    PhoneNumber = user.PhoneNumber ?? ""
+                });
             }
             catch (Exception ex)
             {

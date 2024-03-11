@@ -1,6 +1,8 @@
 ﻿@page "/profile/user-data"
 
 @inject IDialogService DialogService
+@inject IAuthenticationService AuthenticationService
+@inject ITokenProvider TokenProvider
 
 <PageTitle>User Data</PageTitle>
 
@@ -30,7 +32,7 @@
                         </MudItem>
                         <MudItem xs="10">
                             <MudPaper Outlined Class="pa-3">
-                                <MudText Typo="Typo.h6"> @(string.IsNullOrEmpty(model.FirstName) ? "None" : model.LastName) </MudText>
+                                <MudText Typo="Typo.h6"> @(string.IsNullOrEmpty(model.LastName) ? "None" : model.LastName) </MudText>
                             </MudPaper>
                         </MudItem>
                     </MudGrid>
@@ -43,7 +45,7 @@
                         </MudItem>
                         <MudItem xs="10">
                             <MudPaper Outlined Class="pa-3">
-                                <MudText Typo="Typo.h6"> @(string.IsNullOrEmpty(model.FirstName) ? "None" : model.MiddleName) </MudText>
+                                <MudText Typo="Typo.h6"> @(string.IsNullOrEmpty(model.MiddleName) ? "None" : model.MiddleName) </MudText>
                             </MudPaper>
                         </MudItem>
                     </MudGrid>
@@ -56,7 +58,7 @@
                         </MudItem>
                         <MudItem xs="4">
                             <MudPaper Outlined Class="pa-3">
-                                <MudText Typo="Typo.h6"> @(string.IsNullOrEmpty(model.FirstName) ? "None" : model.PhoneNumber) </MudText>
+                                <MudText Typo="Typo.h6"> @(string.IsNullOrEmpty(model.PhoneNumber) ? "None" : model.PhoneNumber) </MudText>
                             </MudPaper>
                         </MudItem>
 
@@ -67,7 +69,7 @@
                         </MudItem>
                         <MudItem xs="4">
                             <MudPaper Outlined Class="pa-3">
-                                <MudText Typo="Typo.h6"> @(string.IsNullOrEmpty(model.FirstName) ? "None" : model.Email) </MudText>
+                                <MudText Typo="Typo.h6"> @(string.IsNullOrEmpty(model.Email) ? "None" : model.Email) </MudText>
                             </MudPaper>
                         </MudItem>
                     </MudGrid>
@@ -80,7 +82,7 @@
                         </MudItem>
                         <MudItem xs="4">
                             <MudPaper Outlined Class="pa-3">
-                                <MudText Typo="Typo.h6"> @(string.IsNullOrEmpty(model.FirstName) ? "None" : model.DateOfBirth) </MudText>
+                                <MudText Typo="Typo.h6"> @(model.DateOfBirth) </MudText>
                             </MudPaper>
                         </MudItem>
                         <MudItem xs="2">
@@ -90,7 +92,7 @@
                         </MudItem>
                         <MudItem xs="4">
                             <MudPaper Outlined Class="pa-3">
-                                <MudText Typo="Typo.h6"> @(string.IsNullOrEmpty(model.FirstName) ? "None" : model.Gender) </MudText>
+                                <MudText Typo="Typo.h6"> @(string.IsNullOrEmpty(model.Gender) ? "None" : model.Gender) </MudText>
                             </MudPaper>
                         </MudItem>
                     </MudGrid>
@@ -115,12 +117,21 @@
 
 
 @code {
-    private PersonalInformationDto model { get; set; }
+    [CascadingParameter]
+    public Task<AuthenticationState> Context { get; set; }
+    private PersonalDataDto model { get; set; } = new();
     private bool ShowDialog { get; set; } = false; 
 
-    override protected void OnInitialized()
+    override protected async Task OnInitializedAsync()
     {
-        model = new();
+        var state = await Context;
+        var result = await AuthenticationService.
+            GetPersonalDataAsync(state.User.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id).Value);
+
+        if (result.IsSucceeded)
+        {
+            model = JsonConvert.DeserializeObject<PersonalDataDto>(result.Result!.ToString()!)!;
+        }
     }
 
     private void ShowChangeDataForm()

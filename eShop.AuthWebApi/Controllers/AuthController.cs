@@ -104,10 +104,10 @@ namespace eShop.AuthWebApi.Controllers
                 });
         }
 
-        [HttpPost("change-personal-data/{Id}/{Token}")]
-        public async ValueTask<ActionResult<ResponseDto>> ChangePersonalData([FromBody] ChangePersonalDataRequestDto changePersonalDataRequest, string Id, string Token)
+        [HttpPost("change-personal-data/{Id}")]
+        public async ValueTask<ActionResult<ResponseDto>> ChangePersonalData([FromBody] ChangePersonalDataRequestDto changePersonalDataRequest, string Id)
         {
-            var result = await authService.ChangePersonalInformation(Id, Token, changePersonalDataRequest);
+            var result = await authService.ChangePersonalDataAsync(Id, changePersonalDataRequest);
 
             return result.Match<ActionResult<ResponseDto>>(
                 s => Ok(new ResponseBuilder()
@@ -124,6 +124,31 @@ namespace eShop.AuthWebApi.Controllers
                             .AddErrors(failedValidationException.Errors.ToList())
                             .Build());
 
+                    if (f is NotFoundUserException notFoundUserException)
+                        return NotFound(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(notFoundUserException.Message)
+                            .Build());
+
+                    return StatusCode(500, new ResponseBuilder()
+                        .Failed()
+                        .AddErrorMessage(f.Message)
+                        .Build());
+                });
+        }
+
+        [HttpGet("get-personal-data/{Id}")]
+        public async ValueTask<ActionResult<ResponseDto>> GetPersonalData(string Id)
+        {
+            var result = await authService.GetPersonalDataAsync(Id);
+
+            return result.Match<ActionResult<ResponseDto>>(
+                s => Ok(new ResponseBuilder()
+                    .Succeeded()
+                    .AddResult(s)
+                    .Build()),
+                f =>
+                {
                     if (f is NotFoundUserException notFoundUserException)
                         return NotFound(new ResponseBuilder()
                             .Failed()
