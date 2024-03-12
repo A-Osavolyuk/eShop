@@ -97,7 +97,6 @@ namespace eShop.AuthWebApi.Services.Implementation
                 return new(new PersonalDataDto()
                 {
                     DateOfBirth = user.DateOfBirth,
-                    Email = user.Email,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Gender= user.Gender,
