@@ -1,11 +1,12 @@
 ﻿@page "/profile" 
+@layout ProfileLayout
 
 <PageTitle>Profile</PageTitle>
 
 <AuthorizeView>
     <Authorized>
         <MudGrid>
-            <MudItem xs="9">
+            <MudItem xs="12">
                 <MudPaper Outlined Class="pa-3">
                     <MudGrid>
                         <MudItem xs="2">
@@ -59,9 +60,9 @@
                     </MudGrid>
                 </MudPaper>
             </MudItem>
-            <MudItem xs="3">
+@*             <MudItem xs="3">
                 <ProfileNavigation IsProfilePage />
-            </MudItem>
+            </MudItem> *@
         </MudGrid>
     </Authorized>
 </AuthorizeView>

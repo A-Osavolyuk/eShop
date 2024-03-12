@@ -3,12 +3,14 @@
 @inject IAuthenticationService AuthenticationService
 @inject ITokenProvider TokenProvider
 
+@layout ProfileLayout
+
 <PageTitle>User Data</PageTitle>
 
 <AuthorizeView Context="authContext">
     <Authorized>
         <MudGrid>
-            <MudItem xs="9">
+            <MudItem xs="12">
                 <MudPaper Outlined Class="pa-3">
                     <MudGrid>
                         <MudItem xs="2">
@@ -106,9 +108,9 @@
                     </MudGrid>
                 </MudPaper>
             </MudItem>
-            <MudItem xs="3">
+@*             <MudItem xs="3">
                 <ProfileNavigation IsUserDataPage />
-            </MudItem>
+            </MudItem> *@
         </MudGrid>
     </Authorized>
 </AuthorizeView>
