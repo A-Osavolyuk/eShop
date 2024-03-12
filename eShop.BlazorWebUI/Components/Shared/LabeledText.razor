@@ -1,0 +1,20 @@
+﻿<MudGrid>
+    <MudItem xs="2">
+        <MudPaper Outlined=@Outlined Class=@Class>
+            <MudText Typo="Typo.h6"> @Label </MudText>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="10">
+        <MudPaper Outlined=@Outlined Class=@Class>
+            <MudText Typo="Typo.h6"> @(string.IsNullOrEmpty(TextContent) ? "None" : TextContent) </MudText>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    [Parameter] public string TextContent { get; set; } = string.Empty;
+    [Parameter] public string Label { get; set; } = string.Empty;
+    [Parameter] public bool Outlined { get; set; } = true;
+    [Parameter] public string Class { get; set; } = "pa-3";
+    [Parameter] public Typo Typo { get; set; } = Typo.h6;
+}
