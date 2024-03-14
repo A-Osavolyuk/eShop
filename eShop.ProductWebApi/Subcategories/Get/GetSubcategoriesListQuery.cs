@@ -17,19 +17,8 @@ namespace eShop.ProductWebApi.Subcategories.Get
             var result = await repository.GetAllSubcategoriesAsync();
 
             return result.Match<Result<IEnumerable<SubcategoryDto>>>(
-                s =>
-                {
-                    var list = new List<SubcategoryDto>();
-
-                    foreach (var subcategory in s)
-                    {
-                        list.Add(mapper.Map<SubcategoryDto>(subcategory));
-                    }
-
-                    return new(list);
-
-                }
-                , f => new(f));
+                s => new(s.AsQueryable().ProjectTo<SubcategoryDto>(mapper.ConfigurationProvider).ToList()),
+                f => new(f));
         }
     }
 }

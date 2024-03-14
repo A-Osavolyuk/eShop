@@ -86,7 +86,7 @@ namespace eShop.ProductWebApi.Repositories.Implementation
                         {
                             CategoryId = subcategory.Category.CategoryId,   
                             CategoryName = subcategory.Category.CategoryName,
-                            Subcategories = null!
+                            Subcategories = new List<SubcategoryEntity>()
                         }
                     })
                     .ToListAsync();
@@ -115,7 +115,7 @@ namespace eShop.ProductWebApi.Repositories.Implementation
                         {
                             CategoryId = subcategory.Category.CategoryId,
                             CategoryName = subcategory.Category.CategoryName,
-                            Subcategories = null!
+                            Subcategories = new List<SubcategoryEntity>()
                         }
                     }).FirstOrDefaultAsync(subcategory => subcategory.SubcategoryId == id);
 
@@ -143,7 +143,7 @@ namespace eShop.ProductWebApi.Repositories.Implementation
                         {
                             CategoryId = subcategory.Category.CategoryId,
                             CategoryName = subcategory.Category.CategoryName,
-                            Subcategories = null!
+                            Subcategories = new List<SubcategoryEntity>()
                         }
                     }).FirstOrDefaultAsync(subcategory => subcategory.SubcategoryName == name);
 
