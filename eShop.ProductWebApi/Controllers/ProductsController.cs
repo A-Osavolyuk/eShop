@@ -84,7 +84,7 @@ namespace eShop.ProductWebApi.Controllers
             var result = await sender.Send(new CreateProductCommand(Product));
 
             return result.Match<ActionResult<ResponseDto>>(
-                s => CreatedAtAction(nameof(GetProductByName), new { Id = s.ProductName }, new ResponseBuilder()
+                s => CreatedAtAction(nameof(GetProductById), new { Id = s.ProductId }, new ResponseBuilder()
                     .Succeeded()
                     .AddResultMessage("Product was successfully created.")
                     .AddResult(s)

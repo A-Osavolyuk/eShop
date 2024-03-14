@@ -79,7 +79,7 @@
             var result = await sender.Send(new CreateSupplierCommand(supplier));
 
             return result.Match<ActionResult<ResponseDto>>(
-                s => CreatedAtAction(nameof(GetSupplierByName), new { Id = s.SupplierName }, new ResponseBuilder()
+                s => CreatedAtAction(nameof(GetSupplierById), new { Id = s.SupplierId }, new ResponseBuilder()
                     .Succeeded()
                     .AddResultMessage("Supplier was successfully added.")
                     .AddResult(s)

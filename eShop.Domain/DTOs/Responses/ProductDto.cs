@@ -4,6 +4,7 @@ namespace eShop.Domain.DTOs.Responses
 {
     public class ProductDto
     {
+        public Guid ProductId { get; set; }
         public string ProductName { get; set; } = string.Empty;
         public decimal Price { get; set; }
         public ProductDescription ProductDescription { get; set; } = null!;
