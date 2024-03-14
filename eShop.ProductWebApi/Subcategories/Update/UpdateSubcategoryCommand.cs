@@ -1,24 +1,17 @@
 ﻿namespace eShop.ProductWebApi.Subcategories.Update
 {
-    public record UpdateSubcategoryCommand(SubcategoryDto Subcategory, Guid Id) : IRequest<Result<SubcategoryEntity>>;
+    public record UpdateSubcategoryCommand(CreateUpdateSubcategoryRequestDto Subcategory, Guid Id) : IRequest<Result<SubcategoryDto>>;
 
-    public class UpdateSubcategoryCommandHandler : IRequestHandler<UpdateSubcategoryCommand, Result<SubcategoryEntity>>
+    public class UpdateSubcategoryCommandHandler(
+        ISubcategoriesRepository repository,
+        IValidator<CreateUpdateSubcategoryRequestDto> validator,
+        IMapper mapper) : IRequestHandler<UpdateSubcategoryCommand, Result<SubcategoryDto>>
     {
-        private readonly ISubcategoriesRepository repository;
-        private readonly IValidator<SubcategoryDto> validator;
-        private readonly IMapper mapper;
+        private readonly ISubcategoriesRepository repository = repository;
+        private readonly IValidator<CreateUpdateSubcategoryRequestDto> validator = validator;
+        private readonly IMapper mapper = mapper;
 
-        public UpdateSubcategoryCommandHandler(
-            ISubcategoriesRepository repository,
-            IValidator<SubcategoryDto> validator,
-            IMapper mapper)
-        {
-            this.repository = repository;
-            this.validator = validator;
-            this.mapper = mapper;
-        }
-
-        public async Task<Result<SubcategoryEntity>> Handle(UpdateSubcategoryCommand request, CancellationToken cancellationToken)
+        public async Task<Result<SubcategoryDto>> Handle(UpdateSubcategoryCommand request, CancellationToken cancellationToken)
         {
             var validationResult = await validator.ValidateAsync(request.Subcategory);
 
@@ -30,7 +23,7 @@
 
             var result = await repository.UpdateSubcategoryAsync(Subcategory, request.Id);
 
-            return result.Match<Result<SubcategoryEntity>>(s => new(s), f => new(f));
+            return result.Match<Result<SubcategoryDto>>(s => new(mapper.Map<SubcategoryDto>(s)), f => new(f));
         }
     }
 }

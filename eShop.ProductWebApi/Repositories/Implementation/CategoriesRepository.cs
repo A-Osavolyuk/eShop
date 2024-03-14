@@ -51,12 +51,12 @@
                     .Select(category => new CategoryEntity()
                     {
                         CategoryId = category.CategoryId,
-                        Name = category.Name,
+                        CategoryName = category.CategoryName,
                         Subcategories = category.Subcategories
                             .Select(subcategory => new SubcategoryEntity() 
                             { 
                                 SubcategoryId = subcategory.SubcategoryId, 
-                                Name = subcategory.Name,
+                                SubcategoryName = subcategory.SubcategoryName,
                                 CategoryId = subcategory.CategoryId,
                                 Category = null!
                             }).ToList()
@@ -80,12 +80,12 @@
                     .Select(category => new CategoryEntity()
                     {
                         CategoryId = category.CategoryId,
-                        Name = category.Name,
+                        CategoryName = category.CategoryName,
                         Subcategories = category.Subcategories
                             .Select(subcategory => new SubcategoryEntity()
                             {
                                 SubcategoryId = subcategory.SubcategoryId,
-                                Name = subcategory.Name,
+                                SubcategoryName = subcategory.SubcategoryName,
                                 CategoryId = subcategory.CategoryId,
                                 Category = null!
                             }).ToList()
@@ -112,16 +112,16 @@
                     .Select(category => new CategoryEntity()
                     {
                         CategoryId = category.CategoryId,
-                        Name = category.Name,
+                        CategoryName = category.CategoryName,
                         Subcategories = category.Subcategories
                             .Select(subcategory => new SubcategoryEntity()
                             {
                                 SubcategoryId = subcategory.SubcategoryId,
-                                Name = subcategory.Name,
+                                SubcategoryName = subcategory.SubcategoryName,
                                 CategoryId = subcategory.CategoryId,
                                 Category = null!
                             }).ToList()
-                    }).FirstOrDefaultAsync(_ => _.Name == name);
+                    }).FirstOrDefaultAsync(_ => _.CategoryName == name);
 
                 if (category is not null)
                     return new(category);

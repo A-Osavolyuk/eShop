@@ -79,12 +79,12 @@ namespace eShop.ProductWebApi.Controllers
         }
 
         [HttpPost]
-        public async ValueTask<ActionResult<ResponseDto>> CreateProduct([FromBody] ProductDto Product)
+        public async ValueTask<ActionResult<ResponseDto>> CreateProduct([FromBody] CreateUpdateProductRequestDto Product)
         {
             var result = await sender.Send(new CreateProductCommand(Product));
 
             return result.Match<ActionResult<ResponseDto>>(
-                s => CreatedAtAction(nameof(GetProductById), new { Id = s.ProductId }, new ResponseBuilder()
+                s => CreatedAtAction(nameof(GetProductByName), new { Id = s.ProductName }, new ResponseBuilder()
                     .Succeeded()
                     .AddResultMessage("Product was successfully created.")
                     .AddResult(s)
@@ -131,7 +131,7 @@ namespace eShop.ProductWebApi.Controllers
         }
 
         [HttpPut("{Id:Guid}")]
-        public async ValueTask<ActionResult<ResponseDto>> UpdateProduct(Guid Id, [FromBody] ProductDto Product)
+        public async ValueTask<ActionResult<ResponseDto>> UpdateProduct(Guid Id, [FromBody] CreateUpdateProductRequestDto Product)
         {
             var result = await sender.Send(new UpdateProductCommand(Id, Product));
 

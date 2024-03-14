@@ -1,18 +1,18 @@
 ﻿namespace eShop.ProductWebApi.Suppliers.Create
 {
-    public record CreateSupplierCommand(SupplierDto Supplier) : IRequest<Result<SupplierEntity>>;
+    public record CreateSupplierCommand(CreateUpdateSupplierRequestDto Supplier) : IRequest<Result<SupplierDto>>;
 
     public class CreateSupplierCommandHandler(
         ISuppliersRepository repository, 
         IMapper mapper, 
-        IValidator<SupplierDto> validator) 
-        : IRequestHandler<CreateSupplierCommand, Result<SupplierEntity>>
+        IValidator<CreateUpdateSupplierRequestDto> validator) 
+        : IRequestHandler<CreateSupplierCommand, Result<SupplierDto>>
     {
         private readonly ISuppliersRepository repository = repository;
         private readonly IMapper mapper = mapper;
-        private readonly IValidator<SupplierDto> validator = validator;
+        private readonly IValidator<CreateUpdateSupplierRequestDto> validator = validator;
 
-        public async Task<Result<SupplierEntity>> Handle(CreateSupplierCommand request, CancellationToken cancellationToken)
+        public async Task<Result<SupplierDto>> Handle(CreateSupplierCommand request, CancellationToken cancellationToken)
         {
             var validationResult = await validator.ValidateAsync(request.Supplier, cancellationToken);
 
@@ -22,7 +22,7 @@
 
             var supplier = mapper.Map<SupplierEntity>(request.Supplier);
             var result = await repository.CreateSupplierAsync(supplier);
-            return result.Match<Result<SupplierEntity>>(s => new(s), f => new(f));
+            return result.Match<Result<SupplierDto>>(s => new(mapper.Map<SupplierDto>(s)), f => new(f));
         }
     }
 }

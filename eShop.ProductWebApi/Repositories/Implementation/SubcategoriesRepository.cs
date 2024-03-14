@@ -80,12 +80,12 @@ namespace eShop.ProductWebApi.Repositories.Implementation
                     .Select(subcategory => new SubcategoryEntity()
                     {
                         SubcategoryId = subcategory.SubcategoryId,
-                        Name = subcategory.Name,
+                        SubcategoryName = subcategory.SubcategoryName,
                         CategoryId = subcategory.CategoryId,
                         Category = new CategoryEntity()
                         {
                             CategoryId = subcategory.Category.CategoryId,   
-                            Name = subcategory.Category.Name,
+                            CategoryName = subcategory.Category.CategoryName,
                             Subcategories = null!
                         }
                     })
@@ -109,12 +109,12 @@ namespace eShop.ProductWebApi.Repositories.Implementation
                     .Select(subcategory => new SubcategoryEntity()
                     {
                         SubcategoryId = subcategory.SubcategoryId,
-                        Name = subcategory.Name,
+                        SubcategoryName = subcategory.SubcategoryName,
                         CategoryId = subcategory.CategoryId,
                         Category = new CategoryEntity()
                         {
                             CategoryId = subcategory.Category.CategoryId,
-                            Name = subcategory.Category.Name,
+                            CategoryName = subcategory.Category.CategoryName,
                             Subcategories = null!
                         }
                     }).FirstOrDefaultAsync(subcategory => subcategory.SubcategoryId == id);
@@ -137,15 +137,15 @@ namespace eShop.ProductWebApi.Repositories.Implementation
                     .Select(subcategory => new SubcategoryEntity()
                     {
                         SubcategoryId = subcategory.SubcategoryId,
-                        Name = subcategory.Name,
+                        SubcategoryName = subcategory.SubcategoryName,
                         CategoryId = subcategory.CategoryId,
                         Category = new CategoryEntity()
                         {
                             CategoryId = subcategory.Category.CategoryId,
-                            Name = subcategory.Category.Name,
+                            CategoryName = subcategory.Category.CategoryName,
                             Subcategories = null!
                         }
-                    }).FirstOrDefaultAsync(subcategory => subcategory.Name == name);
+                    }).FirstOrDefaultAsync(subcategory => subcategory.SubcategoryName == name);
 
                 return subcategory is not null ? new(subcategory) : new(new NotFoundSubcategoryException(name));
             }

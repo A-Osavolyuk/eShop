@@ -2,7 +2,7 @@
 {
     public class SubcategoryDto
     {
-        public string Name { get; set; } = string.Empty;
-        public Guid CategoryId { get; set; }
+        public string SubcategoryName { get; set; } = string.Empty;
+        public CategoryDto Category { get; set; } = null!;
     }
 }

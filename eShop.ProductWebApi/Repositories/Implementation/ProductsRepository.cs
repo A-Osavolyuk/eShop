@@ -69,7 +69,7 @@ namespace eShop.ProductWebApi.Repositories.Implementation
                     .Select(product => new ProductEntity()
                     {
                         ProductId = product.ProductId,
-                        Name = product.Name,
+                        ProductName = product.ProductName,
                         Price = product.Price,
                         ProductDescription = product.ProductDescription,
                         SubcategoryId = product.SubcategoryId,
@@ -78,7 +78,7 @@ namespace eShop.ProductWebApi.Repositories.Implementation
                         Subcategory = new SubcategoryEntity()
                         {
                             SubcategoryId = product.Subcategory.SubcategoryId,
-                            Name = product.Subcategory.Name,
+                            SubcategoryName = product.Subcategory.SubcategoryName,
                             CategoryId = product.Subcategory.CategoryId,
                             Category = null!
                         }
@@ -104,7 +104,7 @@ namespace eShop.ProductWebApi.Repositories.Implementation
                     .Select(product => new ProductEntity()
                     {
                         ProductId = product.ProductId,
-                        Name = product.Name,
+                        ProductName = product.ProductName,
                         Price = product.Price,
                         ProductDescription = product.ProductDescription,
                         SubcategoryId = product.SubcategoryId,
@@ -113,7 +113,7 @@ namespace eShop.ProductWebApi.Repositories.Implementation
                         Subcategory = new SubcategoryEntity()
                         {
                             SubcategoryId = product.Subcategory.SubcategoryId,
-                            Name = product.Subcategory.Name,
+                            SubcategoryName = product.Subcategory.SubcategoryName,
                             CategoryId = product.Subcategory.CategoryId,
                             Category = null!
                         }
@@ -139,7 +139,7 @@ namespace eShop.ProductWebApi.Repositories.Implementation
                     .Select(product => new ProductEntity()
                     {
                         ProductId = product.ProductId,
-                        Name = product.Name,
+                        ProductName = product.ProductName,
                         Price = product.Price,
                         ProductDescription = product.ProductDescription,
                         SubcategoryId = product.SubcategoryId,
@@ -148,12 +148,12 @@ namespace eShop.ProductWebApi.Repositories.Implementation
                         Subcategory = new SubcategoryEntity()
                         {
                             SubcategoryId = product.Subcategory.SubcategoryId,
-                            Name = product.Subcategory.Name,
+                            SubcategoryName = product.Subcategory.SubcategoryName,
                             CategoryId = product.Subcategory.CategoryId,
                             Category = null!
                         }
                     })
-                    .FirstOrDefaultAsync(_ => _.Name == Name);
+                    .FirstOrDefaultAsync(_ => _.ProductName == Name);
 
                 return product is not null ? new(product) : new(new NotFoundProductException(Name));
             }

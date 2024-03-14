@@ -1,16 +1,16 @@
 ﻿namespace eShop.ProductWebApi.Categories.Update
 {
-    public record UpdateCategoryCommand(CategoryDto Category, Guid Id) : IRequest<Result<CategoryEntity>>;
+    public record UpdateCategoryCommand(CreateUpdateCategoryRequestDto Category, Guid Id) : IRequest<Result<CategoryDto>>;
 
-    public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryCommand, Result<CategoryEntity>>
+    public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryCommand, Result<CategoryDto>>
     {
         private readonly ICategoriesRepository repository;
-        private readonly IValidator<CategoryDto> validator;
+        private readonly IValidator<CreateUpdateCategoryRequestDto> validator;
         private readonly IMapper mapper;
 
         public UpdateCategoryCommandHandler(
             ICategoriesRepository repository,
-            IValidator<CategoryDto> validator,
+            IValidator<CreateUpdateCategoryRequestDto> validator,
             IMapper mapper)
         {
             this.repository = repository;
@@ -18,7 +18,7 @@
             this.mapper = mapper;
         }
 
-        public async Task<Result<CategoryEntity>> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<Result<CategoryDto>> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {
             var validationResult = await validator.ValidateAsync(request.Category);
 
@@ -30,7 +30,7 @@
 
             var result = await repository.UpdateCategoryAsync(category, request.Id);
 
-            return result.Match<Result<CategoryEntity>>(s => new(s), f => new(f));
+            return result.Match<Result<CategoryDto>>(s => new(mapper.Map<CategoryDto>(s)), f => new(f));
         }
     }
 }

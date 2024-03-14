@@ -95,7 +95,7 @@ namespace eShop.ProductWebApi.Repositories.Implementation
             {
                 var supplier = await dbContext.Suppliers
                     .AsNoTracking()
-                    .FirstOrDefaultAsync(_ => _.Name == Name);
+                    .FirstOrDefaultAsync(_ => _.SupplierName == Name);
 
                 return supplier is not null ? new(supplier) : new(new NotFoundSupplierException(Name));
             }

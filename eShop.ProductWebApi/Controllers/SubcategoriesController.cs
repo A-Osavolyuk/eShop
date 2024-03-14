@@ -77,12 +77,12 @@ namespace eShop.ProductWebApi.Controllers
         }
 
         [HttpPost]
-        public async ValueTask<ActionResult<ResponseDto>> CreateSubcategory([FromBody] SubcategoryDto Subcategory)
+        public async ValueTask<ActionResult<ResponseDto>> CreateSubcategory([FromBody] CreateUpdateSubcategoryRequestDto Subcategory)
         {
             var result = await sender.Send(new CreateSubcategoryCommand(Subcategory));
 
             return result.Match<ActionResult<ResponseDto>>(
-                s => CreatedAtAction(nameof(GetSubcategoryById), new { Id = s.SubcategoryId } ,new ResponseBuilder()
+                s => CreatedAtAction(nameof(GetSubcategoryByName), new { Id = s.SubcategoryName } ,new ResponseBuilder()
                     .Succeeded()
                     .AddResultMessage("Subcategory was successfully created.")
                     .AddResult(s)
@@ -135,7 +135,7 @@ namespace eShop.ProductWebApi.Controllers
         }
 
         [HttpPut("{Id:guid}")]
-        public async ValueTask<ActionResult<ResponseDto>> UpdateSubcategory(Guid Id, [FromBody] SubcategoryDto Subcategory)
+        public async ValueTask<ActionResult<ResponseDto>> UpdateSubcategory(Guid Id, [FromBody] CreateUpdateSubcategoryRequestDto Subcategory)
         {
             var result = await sender.Send(new UpdateSubcategoryCommand(Subcategory, Id));
 

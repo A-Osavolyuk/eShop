@@ -1,8 +1,7 @@
-﻿namespace eShop.Domain.Entities
+﻿namespace eShop.Domain.DTOs.Requests
 {
-    public class SupplierEntity
+    public class CreateUpdateSupplierRequestDto
     {
-        public Guid SupplierId { get; set; }
         public string SupplierName { get; set; } = string.Empty;
         public string ContactEmail { get; set; } = string.Empty;
     }

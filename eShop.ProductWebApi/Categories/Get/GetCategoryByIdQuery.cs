@@ -1,21 +1,17 @@
 ﻿namespace eShop.ProductWebApi.Categories.Get
 {
-    public record GetCategoryByIdQuery(Guid Id) : IRequest<Result<CategoryEntity>>;
+    public record GetCategoryByIdQuery(Guid Id) : IRequest<Result<CategoryDto>>;
 
-    public class GetCategoryByIdQueryHandler : IRequestHandler<GetCategoryByIdQuery, Result<CategoryEntity>>
+    public class GetCategoryByIdQueryHandler(ICategoriesRepository repository, IMapper mapper) : IRequestHandler<GetCategoryByIdQuery, Result<CategoryDto>>
     {
-        private readonly ICategoriesRepository repository;
+        private readonly ICategoriesRepository repository = repository;
+        private readonly IMapper mapper = mapper;
 
-        public GetCategoryByIdQueryHandler(ICategoriesRepository repository)
-        {
-            this.repository = repository;
-        }
-
-        public async Task<Result<CategoryEntity>> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<CategoryDto>> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
         {
             var result = await repository.GetCategoryByIdAsync(request.Id);
 
-            return result.Match<Result<CategoryEntity>>(s => new(s), f => new(f));
+            return result.Match<Result<CategoryDto>>(s => new(mapper.Map<CategoryDto>(s)), f => new(f));
         }
     }
 }

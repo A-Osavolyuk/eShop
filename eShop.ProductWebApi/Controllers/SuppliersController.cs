@@ -74,12 +74,12 @@
         }
 
         [HttpPost]
-        public async ValueTask<ActionResult<ResponseDto>> CreateSupplier([FromBody] SupplierDto supplier)
+        public async ValueTask<ActionResult<ResponseDto>> CreateSupplier([FromBody] CreateUpdateSupplierRequestDto supplier)
         {
             var result = await sender.Send(new CreateSupplierCommand(supplier));
 
             return result.Match<ActionResult<ResponseDto>>(
-                s => CreatedAtAction(nameof(GetSupplierById), new { Id = s.SupplierId }, new ResponseBuilder()
+                s => CreatedAtAction(nameof(GetSupplierByName), new { Id = s.SupplierName }, new ResponseBuilder()
                     .Succeeded()
                     .AddResultMessage("Supplier was successfully added.")
                     .AddResult(s)
@@ -128,7 +128,7 @@
         }
 
         [HttpPut("{Id:guid}")]
-        public async ValueTask<ActionResult<ResponseDto>> UpdateSupplier(Guid Id, [FromBody] SupplierDto supplier)
+        public async ValueTask<ActionResult<ResponseDto>> UpdateSupplier(Guid Id, [FromBody] CreateUpdateSupplierRequestDto supplier)
         {
             var result = await sender.Send(new UpdateSupplierCommand(Id, supplier));
 

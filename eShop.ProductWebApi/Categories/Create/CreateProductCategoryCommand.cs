@@ -1,29 +1,29 @@
 ﻿namespace eShop.ProductWebApi.Categories.Create
 {
-    public record CreateProductCategoryCommand(CategoryDto CategoryDto) : IRequest<Result<CategoryEntity>>;
+    public record CreateProductCategoryCommand(CreateUpdateCategoryRequestDto Category) : IRequest<Result<CategoryDto>>;
 
     public class CreateProductCategoryCommandHandler(
-        IValidator<CategoryDto> validator,
+        IValidator<CreateUpdateCategoryRequestDto> validator,
         IMapper mapper,
-        ICategoriesRepository repository) : IRequestHandler<CreateProductCategoryCommand, Result<CategoryEntity>>
+        ICategoriesRepository repository) : IRequestHandler<CreateProductCategoryCommand, Result<CategoryDto>>
     {
-        private readonly IValidator<CategoryDto> validator = validator;
+        private readonly IValidator<CreateUpdateCategoryRequestDto> validator = validator;
         private readonly IMapper mapper = mapper;
         private readonly ICategoriesRepository repository = repository;
 
-        public async Task<Result<CategoryEntity>> Handle(CreateProductCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<Result<CategoryDto>> Handle(CreateProductCategoryCommand request, CancellationToken cancellationToken)
         {
-            var validationResult = await validator.ValidateAsync(request.CategoryDto);
+            var validationResult = await validator.ValidateAsync(request.Category);
 
             if (!validationResult.IsValid)
                 return new(new FailedValidationException("Validation Error(s).",
                     validationResult.Errors.Select(x => x.ErrorMessage)));
 
-            var category = mapper.Map<CategoryEntity>(request.CategoryDto);
+            var category = mapper.Map<CategoryEntity>(request.Category);
 
             var result = await repository.CreateCategoryAsync(category);
 
-            return result.Match<Result<CategoryEntity>>(s => new(s), f => new(f));
+            return result.Match<Result<CategoryDto>>(s => new(mapper.Map<CategoryDto>(s)), f => new(f));
 
         }
     }

@@ -1,13 +1,13 @@
-﻿using eShop.Domain.DTOs.Responses;
+﻿using eShop.Domain.DTOs.Requests;
 using FluentValidation;
 
 namespace eShop.Application.Validation
 {
-    public class ProductValidator : AbstractValidator<ProductDto>
+    public class ProductValidator : AbstractValidator<CreateUpdateProductRequestDto>
     {
         public ProductValidator()
         {
-            RuleFor(p => p.Name)
+            RuleFor(p => p.ProductName)
                 .NotEmpty().WithMessage("Name is must!")
                 .MaximumLength(32).WithMessage("Name cannot be longer then 32 characters.")
                 .MinimumLength(3).WithMessage("Name must contain at least 3 characters.");

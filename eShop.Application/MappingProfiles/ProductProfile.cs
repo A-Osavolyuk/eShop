@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using eShop.Domain.DTOs.Requests;
 using eShop.Domain.DTOs.Responses;
 using eShop.Domain.Entities;
 
@@ -9,6 +10,8 @@ namespace eShop.Application.MappingProfiles
         public ProductProfile()
         {
             CreateMap<ProductDto, ProductEntity>();
+            CreateMap<ProductEntity, ProductDto>();
+            CreateMap<CreateUpdateProductRequestDto, ProductDto>();
         }
     }
 }

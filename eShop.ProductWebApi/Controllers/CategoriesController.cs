@@ -80,12 +80,12 @@ namespace eShop.ProductWebApi.Controllers
         }
 
         [HttpPost]
-        public async ValueTask<ActionResult<ResponseDto>> CreateCategory([FromBody] CategoryDto Category)
+        public async ValueTask<ActionResult<ResponseDto>> CreateCategory([FromBody] CreateUpdateCategoryRequestDto Category)
         {
             var result = await sender.Send(new CreateProductCategoryCommand(Category));
 
             return result.Match<ActionResult<ResponseDto>>(
-                s => CreatedAtAction(nameof(GetCategoryById), new { Id = s.CategoryId }, new ResponseBuilder()
+                s => CreatedAtAction(nameof(GetCategoryByName), new { Id = s.CategoryName }, new ResponseBuilder()
                     .Succeeded()
                     .AddResultMessage("Category was successfully created.")
                     .AddResult(s)
@@ -132,7 +132,7 @@ namespace eShop.ProductWebApi.Controllers
         }
 
         [HttpPut("{Id:guid}")]
-        public async ValueTask<ActionResult<ResponseDto>> UpdateCategoryById(Guid Id, [FromBody] CategoryDto Category)
+        public async ValueTask<ActionResult<ResponseDto>> UpdateCategoryById(Guid Id, [FromBody] CreateUpdateCategoryRequestDto Category)
         {
             var result = await sender.Send(new UpdateCategoryCommand(Category, Id));
 

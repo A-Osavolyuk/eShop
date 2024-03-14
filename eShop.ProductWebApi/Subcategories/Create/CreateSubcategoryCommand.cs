@@ -1,18 +1,18 @@
 ﻿namespace eShop.ProductWebApi.Subcategories.Create
 {
-    public record CreateSubcategoryCommand(SubcategoryDto Subcategory) : IRequest<Result<SubcategoryEntity>>;
+    public record CreateSubcategoryCommand(CreateUpdateSubcategoryRequestDto Subcategory) : IRequest<Result<SubcategoryDto>>;
 
     public class CreateSubcategoryCommandHandler(
         ISubcategoriesRepository repository,
         IMapper mapper,
-        IValidator<SubcategoryDto> validator)
-        : IRequestHandler<CreateSubcategoryCommand, Result<SubcategoryEntity>>
+        IValidator<CreateUpdateSubcategoryRequestDto> validator)
+        : IRequestHandler<CreateSubcategoryCommand, Result<SubcategoryDto>>
     {
         private readonly ISubcategoriesRepository repository = repository;
         private readonly IMapper mapper = mapper;
-        private readonly IValidator<SubcategoryDto> validator = validator;
+        private readonly IValidator<CreateUpdateSubcategoryRequestDto> validator = validator;
 
-        public async Task<Result<SubcategoryEntity>> Handle(CreateSubcategoryCommand request, CancellationToken cancellationToken)
+        public async Task<Result<SubcategoryDto>> Handle(CreateSubcategoryCommand request, CancellationToken cancellationToken)
         {
             var validationResult = await validator.ValidateAsync(request.Subcategory, cancellationToken);
 
@@ -24,7 +24,7 @@
 
             var result = await repository.CreateSubcategoryAsync(subcategory);
 
-            return result.Match<Result<SubcategoryEntity>>(s => new(s), f => new(f));
+            return result.Match<Result<SubcategoryDto>>(s => new(mapper.Map<SubcategoryDto>(s)), f => new(f));
         }
     }
 }
