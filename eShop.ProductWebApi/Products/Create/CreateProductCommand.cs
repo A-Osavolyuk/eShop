@@ -1,5 +1,4 @@
-﻿
-namespace eShop.ProductWebApi.Products.Create
+﻿namespace eShop.ProductWebApi.Products.Create
 {
     public record CreateProductCommand(ProductDto Product) : IRequest<Result<ProductEntity>>;
 

@@ -1,5 +1,4 @@
-﻿
-namespace eShop.ProductWebApi.Products.Update
+﻿namespace eShop.ProductWebApi.Products.Update
 {
     public record UpdateProductCommand(Guid Id, ProductDto Product) : IRequest<Result<ProductEntity>>;
 

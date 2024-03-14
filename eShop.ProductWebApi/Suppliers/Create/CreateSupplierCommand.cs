@@ -1,5 +1,4 @@
-﻿
-namespace eShop.ProductWebApi.Suppliers.Create
+﻿namespace eShop.ProductWebApi.Suppliers.Create
 {
     public record CreateSupplierCommand(SupplierDto Supplier) : IRequest<Result<SupplierEntity>>;
 

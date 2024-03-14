@@ -1,6 +1,6 @@
 ﻿using eShop.Domain.Entities;
 
-namespace eShop.Domain.DTOs.Requests
+namespace eShop.Domain.DTOs.Responses
 {
     public class ProductDto
     {

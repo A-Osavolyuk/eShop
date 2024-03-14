@@ -1,5 +1,4 @@
-﻿
-namespace eShop.ProductWebApi.Suppliers.Update
+﻿namespace eShop.ProductWebApi.Suppliers.Update
 {
     public record UpdateSupplierCommand(Guid Id, SupplierDto Supplier) : IRequest<Result<SupplierEntity>>;
 
