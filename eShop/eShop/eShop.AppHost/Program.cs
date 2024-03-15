@@ -1,5 +1,7 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
+var azureStorage = builder.AddAzureStorage("AzureStorage");
+
 var sqlServer = builder.AddSqlServerContainer("SqlServer", "Password_2024", 8500)
     .AddDatabase("AuthDB")
     .AddDatabase("ProductDB");
