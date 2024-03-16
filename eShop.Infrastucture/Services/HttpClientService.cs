@@ -51,15 +51,7 @@ namespace eShop.Infrastructure.Services
 
                 httpResponse = await httpClient.SendAsync(message);
 
-                return httpResponse.StatusCode switch
-                {
-                    HttpStatusCode.NotFound => new ResponseBuilder().Failed().AddErrorMessage("Not Found").Build(),
-                    HttpStatusCode.Forbidden => new ResponseBuilder().Failed().AddErrorMessage("Forbidden").Build(),
-                    HttpStatusCode.Unauthorized => new ResponseBuilder().Failed().AddErrorMessage("Unauthorized").Build(),
-                    HttpStatusCode.InternalServerError => new ResponseBuilder().Failed().AddErrorMessage("Internal Server Error").Build(),
-                    _ => JsonConvert.DeserializeObject<ResponseDto>(
-                        await httpResponse.Content.ReadAsStringAsync())
-                };
+                return await HandleStatusCode(httpResponse);
             }
             catch (Exception ex)
             {
@@ -68,6 +60,23 @@ namespace eShop.Infrastructure.Services
                     .AddErrorMessage(ex.Message)
                     .Build();
             }
+        }
+
+        private async ValueTask<ResponseDto> HandleStatusCode(HttpResponseMessage httpResponse)
+        {
+            var response = JsonConvert.DeserializeObject<ResponseDto>(await httpResponse.Content.ReadAsStringAsync())!;
+
+            return httpResponse.StatusCode switch
+            {
+                HttpStatusCode.InternalServerError => new ResponseBuilder().Failed().AddErrorMessage($"Internal Server Error. {response!.ErrorMessage}").Build(),
+                HttpStatusCode.NotFound => new ResponseBuilder().Failed().AddErrorMessage($"Not Found. {response!.ErrorMessage}").Build(),
+                HttpStatusCode.Forbidden => new ResponseBuilder().Failed().AddErrorMessage("Forbidden").Build(),
+                HttpStatusCode.Unauthorized => new ResponseBuilder().Failed().AddErrorMessage($"Unauthorized").Build(),
+                HttpStatusCode.BadRequest => response.Errors.Any() ? 
+                    new ResponseBuilder().Failed().AddErrorMessage($"Bad Request. {response!.ErrorMessage}").AddErrors(response.Errors).Build() :
+                    new ResponseBuilder().Failed().AddErrorMessage($"Bad Request. {response!.ErrorMessage}").Build(),
+                _ => response
+            };
         }
     }
 }
