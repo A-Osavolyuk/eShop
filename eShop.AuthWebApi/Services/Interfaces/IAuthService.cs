@@ -10,7 +10,9 @@ namespace eShop.AuthWebApi.Services.Interfaces
         public ValueTask<Result<LoginResponseDto>> LoginAsync(LoginRequestDto loginRequest);
         public ValueTask<Result<RegistrationResponseDto>> RegisterAsync(RegistrationRequestDto registrationRequest);
 
-        public ValueTask<Result<ChangePersonalDataResponseDto>> ChangePersonalDataAsync(string Id, ChangePersonalDataRequestDto changePersonalDataRequest);
-        public ValueTask<Result<PersonalDataDto>> GetPersonalDataAsync(string Id);
+        public ValueTask<Result<ChangePersonalDataResponseDto>> ChangePersonalDataAsync(string UserId, ChangePersonalDataRequestDto changePersonalDataRequest);
+        public ValueTask<Result<PersonalDataDto>> GetPersonalDataAsync(string UserId);
+
+        public ValueTask<Result<ChangePasswordResponseDto>> ChangePassword(string UserId, ChangePasswordRequestDto changePasswordRequest);
     }
 }

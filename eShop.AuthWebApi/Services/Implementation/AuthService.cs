@@ -21,6 +21,7 @@ namespace eShop.AuthWebApi.Services.Implementation
         private readonly IValidator<RegistrationRequestDto> registrationValidator;
         private readonly IValidator<LoginRequestDto> loginValidator;
         private readonly IValidator<ChangePersonalDataRequestDto> personalDataValidator;
+        private readonly IValidator<ChangePasswordRequestDto> passwordValidator;
         private readonly IMapper mapper;
 
         public AuthService(
@@ -30,6 +31,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             IValidator<RegistrationRequestDto> registrationValidator,
             IValidator<LoginRequestDto> loginValidator,
             IValidator<ChangePersonalDataRequestDto> personalDataValidator,
+            IValidator<ChangePasswordRequestDto> passwordValidator,
             IMapper mapper)
         {
             this.tokenHandler = tokenHandler;
@@ -38,7 +40,41 @@ namespace eShop.AuthWebApi.Services.Implementation
             this.registrationValidator = registrationValidator;
             this.loginValidator = loginValidator;
             this.personalDataValidator = personalDataValidator;
+            this.passwordValidator = passwordValidator;
             this.mapper = mapper;
+        }
+
+        public async ValueTask<Result<ChangePasswordResponseDto>> ChangePassword(string UserId, ChangePasswordRequestDto changePasswordRequest)
+        {
+            try
+            {
+                var user = await userManager.FindByIdAsync(UserId);
+
+                if (user is not null)
+                {
+                    var validationResult = await passwordValidator.ValidateAsync(changePasswordRequest);
+
+                    if (validationResult.IsValid)
+                    {
+                        var result = await userManager.ChangePasswordAsync(user, changePasswordRequest.OldPassword, changePasswordRequest.NewPassword);
+
+                        if (result.Succeeded)
+                        {
+                            return new(new ChangePasswordResponseDto() { Message = "Password has been successfully changed." });
+                        }
+
+                        return new(new NotChangedPasswordException(result.Errors.First().Description));
+                    }
+
+                    return new(new FailedValidationException("Validation Error(s).", validationResult.Errors.Select(x => x.ErrorMessage)));
+                }
+
+                return new(new NotFoundUserException(UserId));
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
         }
 
         public async ValueTask<Result<ChangePersonalDataResponseDto>> ChangePersonalDataAsync(string Id, ChangePersonalDataRequestDto changePersonalDataRequest)
@@ -99,8 +135,8 @@ namespace eShop.AuthWebApi.Services.Implementation
                     DateOfBirth = user.DateOfBirth,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
-                    Gender= user.Gender,
-                    MiddleName= user.MiddleName,
+                    Gender = user.Gender,
+                    MiddleName = user.MiddleName,
                     PhoneNumber = user.PhoneNumber ?? ""
                 });
             }
