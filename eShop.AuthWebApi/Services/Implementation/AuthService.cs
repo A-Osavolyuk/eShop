@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using eShop.Application.Validation;
 using eShop.AuthWebApi.Services.Interfaces;
 using eShop.Domain.DTOs;
 using eShop.Domain.DTOs.Requests;

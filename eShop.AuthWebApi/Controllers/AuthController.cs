@@ -72,7 +72,7 @@ namespace eShop.AuthWebApi.Controllers
                     return Ok(new ResponseBuilder()
                         .Succeeded()
                         .AddResult(succ)
-                        .AddResultMessage("Successfully logged id.")
+                        .AddResultMessage("Successfully logged in.")
                         .Build());
                 },
                 fail =>
