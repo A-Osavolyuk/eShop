@@ -56,14 +56,21 @@ namespace eShop.AuthWebApi.Services.Implementation
 
                     if (validationResult.IsValid)
                     {
-                        var result = await userManager.ChangePasswordAsync(user, changePasswordRequest.OldPassword, changePasswordRequest.NewPassword);
+                        var isCorrectPassword = await userManager.CheckPasswordAsync(user, changePasswordRequest.OldPassword);
 
-                        if (result.Succeeded)
+                        if (isCorrectPassword)
                         {
-                            return new(new ChangePasswordResponseDto() { Message = "Password has been successfully changed." });
+                            var result = await userManager.ChangePasswordAsync(user, changePasswordRequest.OldPassword, changePasswordRequest.NewPassword);
+
+                            if (result.Succeeded)
+                            {
+                                return new(new ChangePasswordResponseDto() { Message = "Password has been successfully changed." });
+                            }
+
+                            return new(new NotChangedPasswordException(result.Errors.First().Description));
                         }
 
-                        return new(new NotChangedPasswordException(result.Errors.First().Description));
+                        return new(new WrongPasswordException());
                     }
 
                     return new(new FailedValidationException("Validation Error(s).", validationResult.Errors.Select(x => x.ErrorMessage)));

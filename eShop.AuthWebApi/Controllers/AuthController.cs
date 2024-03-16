@@ -161,5 +161,43 @@ namespace eShop.AuthWebApi.Controllers
                         .Build());
                 });
         }
+
+        [HttpPost("change-password/{Id}")]
+        public async ValueTask<ActionResult<ResponseDto>> ChangePassword([FromBody] ChangePasswordRequestDto changePasswordRequest, string Id)
+        {
+            var result = await authService.ChangePassword(Id, changePasswordRequest);
+
+            return result.Match<ActionResult<ResponseDto>>(
+                s => Ok(new ResponseBuilder()
+                    .Succeeded()
+                    .AddResultMessage(s.Message)
+                    .Build()),
+                f =>
+                {
+                    if (f is FailedValidationException failedValidationException)
+                        return BadRequest(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(failedValidationException.Message)
+                            .AddErrors(failedValidationException.Errors.ToList())
+                            .Build());
+
+                    if (f is WrongPasswordException wrongPasswordException)
+                        return BadRequest(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(wrongPasswordException.Message)
+                            .Build());
+
+                    if (f is NotFoundUserException notFoundUserException)
+                        return NotFound(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(notFoundUserException.Message)
+                            .Build());
+
+                    return StatusCode(500, new ResponseBuilder()
+                        .Failed()
+                        .AddErrorMessage(f.Message)
+                        .Build());
+                });
+        }
     }
 }
