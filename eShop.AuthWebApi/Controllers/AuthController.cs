@@ -124,7 +124,7 @@ namespace eShop.AuthWebApi.Controllers
                             .AddErrors(failedValidationException.Errors.ToList())
                             .Build());
 
-                    if (f is NotFoundUserException notFoundUserException)
+                    if (f is NotFoundUserByIdException notFoundUserException)
                         return NotFound(new ResponseBuilder()
                             .Failed()
                             .AddErrorMessage(notFoundUserException.Message)
@@ -149,7 +149,7 @@ namespace eShop.AuthWebApi.Controllers
                     .Build()),
                 f =>
                 {
-                    if (f is NotFoundUserException notFoundUserException)
+                    if (f is NotFoundUserByIdException notFoundUserException)
                         return NotFound(new ResponseBuilder()
                             .Failed()
                             .AddErrorMessage(notFoundUserException.Message)
@@ -187,10 +187,67 @@ namespace eShop.AuthWebApi.Controllers
                             .AddErrorMessage(wrongPasswordException.Message)
                             .Build());
 
-                    if (f is NotFoundUserException notFoundUserException)
+                    if (f is NotFoundUserByIdException notFoundUserException)
                         return NotFound(new ResponseBuilder()
                             .Failed()
                             .AddErrorMessage(notFoundUserException.Message)
+                            .Build());
+
+                    return StatusCode(500, new ResponseBuilder()
+                        .Failed()
+                        .AddErrorMessage(f.Message)
+                        .Build());
+                });
+        }
+
+        [HttpPost("reset-password-request/{Email}")]
+        public async ValueTask<ActionResult<ResponseDto>> ResetPasswordRequest(string Email)
+        {
+            var result = await authService.ResetPasswordRequest(Email);
+
+            return result.Match<ActionResult<ResponseDto>>(
+                s => Ok(new ResponseBuilder()
+                    .Succeeded()
+                    .AddResult(s)
+                    .Build()),
+                f =>
+                {
+                    if (f is NotFoundUserByEmailException notFoundUserException)
+                        return NotFound(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(notFoundUserException.Message)
+                            .Build());
+
+                    return StatusCode(500, new ResponseBuilder()
+                        .Failed()
+                        .AddErrorMessage(f.Message)
+                        .Build());
+                });
+        }
+
+        [HttpPost("confirm-reset-password/{Email}")]
+        public async ValueTask<ActionResult<ResponseDto>> ConfirmResetPassword(string Email, [FromBody] ConfirmPasswordResetRequestDto confirmPasswordResetRequest)
+        {
+            var result = await authService.ConfirmResetPassword(Email, confirmPasswordResetRequest);
+
+            return result.Match<ActionResult<ResponseDto>>(
+                s => Ok(new ResponseBuilder()
+                    .Succeeded()
+                    .AddResultMessage(s.Message)
+                    .Build()),
+                f =>
+                {
+                    if (f is NotFoundUserByIdException notFoundUserException)
+                        return NotFound(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(notFoundUserException.Message)
+                            .Build());
+
+                    if (f is FailedValidationException failedValidationException)
+                        return BadRequest(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(failedValidationException.Message)
+                            .AddErrors(failedValidationException.Errors.ToList())
                             .Build());
 
                     return StatusCode(500, new ResponseBuilder()

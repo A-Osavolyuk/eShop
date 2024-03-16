@@ -21,6 +21,7 @@ namespace eShop.AuthWebApi.Services.Implementation
         private readonly IValidator<LoginRequestDto> loginValidator;
         private readonly IValidator<ChangePersonalDataRequestDto> personalDataValidator;
         private readonly IValidator<ChangePasswordRequestDto> passwordValidator;
+        private readonly IValidator<ConfirmPasswordResetRequestDto> resetPasswordValidator;
         private readonly IMapper mapper;
 
         public AuthService(
@@ -31,6 +32,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             IValidator<LoginRequestDto> loginValidator,
             IValidator<ChangePersonalDataRequestDto> personalDataValidator,
             IValidator<ChangePasswordRequestDto> passwordValidator,
+            IValidator<ConfirmPasswordResetRequestDto> resetPasswordValidator,
             IMapper mapper)
         {
             this.tokenHandler = tokenHandler;
@@ -40,6 +42,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             this.loginValidator = loginValidator;
             this.personalDataValidator = personalDataValidator;
             this.passwordValidator = passwordValidator;
+            this.resetPasswordValidator = resetPasswordValidator;
             this.mapper = mapper;
         }
 
@@ -75,7 +78,7 @@ namespace eShop.AuthWebApi.Services.Implementation
                     return new(new FailedValidationException("Validation Error(s).", validationResult.Errors.Select(x => x.ErrorMessage)));
                 }
 
-                return new(new NotFoundUserException(UserId));
+                return new(new NotFoundUserByIdException(UserId));
             }
             catch (Exception ex)
             {
@@ -119,7 +122,40 @@ namespace eShop.AuthWebApi.Services.Implementation
                     return new(new FailedValidationException("Validation Error(s)", validationResult.Errors.Select(x => x.ErrorMessage)));
                 }
 
-                return new(new NotFoundUserException(Id));
+                return new(new NotFoundUserByIdException(Id));
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
+        }
+
+        public async ValueTask<Result<ConfirmPasswordResetResponseDto>> ConfirmResetPassword(string Email, ConfirmPasswordResetRequestDto confirmPasswordResetRequest)
+        {
+            try
+            {
+                var user = await userManager.FindByEmailAsync(Email);
+
+                if (user is not null)
+                {
+                    var validationResult = await resetPasswordValidator.ValidateAsync(confirmPasswordResetRequest);
+
+                    if (validationResult.IsValid)
+                    {
+                        var resetResult = await userManager.ResetPasswordAsync(user, confirmPasswordResetRequest.ResetToken, confirmPasswordResetRequest.NewPassword);
+
+                        if (resetResult.Succeeded)
+                        {
+                            return new(new ConfirmPasswordResetResponseDto() { Message = "Your password has been successfully reset." });
+                        }
+
+                        return new(new NotResetPasswordException());
+                    }
+
+                    return new(new FailedValidationException("Validation Error(s).", validationResult.Errors.Select(x => x.ErrorMessage)));
+                }
+
+                return new(new NotFoundUserByEmailException(Email));
             }
             catch (Exception ex)
             {
@@ -134,7 +170,7 @@ namespace eShop.AuthWebApi.Services.Implementation
                 var user = await userManager.FindByIdAsync(Id);
 
                 if (user is null)
-                    return new(new NotFoundUserException(Id));
+                    return new(new NotFoundUserByIdException(Id));
 
                 return new(new PersonalDataDto()
                 {
@@ -208,6 +244,31 @@ namespace eShop.AuthWebApi.Services.Implementation
 
                 return new(
                     new InvalidRegisterAttemptException("Invalid registration attempt.", registrationResult.Errors.Select(x => x.Description)));
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
+        }
+
+        public async ValueTask<Result<ResetPasswordResponseDto>> ResetPasswordRequest(string UserEmail)
+        {
+            try
+            {
+                var user = await userManager.FindByEmailAsync(UserEmail);
+
+                if (user is not null)
+                {
+                    var token = await userManager.GeneratePasswordResetTokenAsync(user);
+
+                    return new(new ResetPasswordResponseDto()
+                    {
+                        Message = $"We have sent a mail with instruction to your email address.",
+                        ResetToken = token
+                    });
+                }
+
+                return new(new NotFoundUserByEmailException(UserEmail));
             }
             catch (Exception ex)
             {
