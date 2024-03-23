@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace eShop.Application.Validation
 {
-    public class ResetPasswordValidator : AbstractValidator<ConfirmPasswordResetRequestDto>
+    public class ResetPasswordValidator : AbstractValidator<ConfirmPasswordResetRequest>
     {
         public ResetPasswordValidator()
         {

@@ -5,6 +5,8 @@ using eShop.AuthWebApi.Services.Interfaces;
 using eShop.Domain.Entities;
 using eShop.Domain.Options;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace eShop.AuthWebApi
 {

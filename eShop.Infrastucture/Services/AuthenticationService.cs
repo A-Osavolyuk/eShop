@@ -1,12 +1,10 @@
-﻿using eShop.Infrastructure.Account;
-using eShop.Domain.DTOs.Requests;
+﻿using eShop.Domain.DTOs.Requests;
 using eShop.Domain.DTOs.Responses;
-using eShop.Domain.Interfaces;
 using eShop.Domain.Enums;
-using Microsoft.Extensions.Configuration;
+using eShop.Domain.Interfaces;
+using eShop.Infrastructure.Account;
 using Microsoft.AspNetCore.Components.Authorization;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System;
+using Microsoft.Extensions.Configuration;
 
 namespace eShop.Infrastructure.Services
 {
@@ -37,6 +35,14 @@ namespace eShop.Infrastructure.Services
         public ValueTask<ResponseDto> ChangePersonalDataAsync(string Id, ChangePersonalDataRequestDto changePersonalDataRequestDto) => clientService.SendAsync(
                     new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/change-personal-data/{Id}",
                         Method: ApiMethod.POST, Data: changePersonalDataRequestDto));
+
+        public ValueTask<ResponseDto> ResetPasswordRequestAsync(string Email) => clientService.SendAsync(
+                    new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/reset-password-request/{Email}",
+                        Method: ApiMethod.POST));
+
+        public ValueTask<ResponseDto> ConfirmResetPasswordAsync(string Email, ConfirmPasswordResetRequest confirmPasswordResetRequest) => clientService.SendAsync(
+                    new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/confirm-reset-password/{Email}",
+                        Method: ApiMethod.POST, Data: confirmPasswordResetRequest));
 
         public ValueTask<ResponseDto> GetPersonalDataAsync(string Id) => clientService.SendAsync(
                     new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/get-personal-data/{Id}", Method: ApiMethod.GET));

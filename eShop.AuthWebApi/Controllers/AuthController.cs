@@ -208,7 +208,8 @@ namespace eShop.AuthWebApi.Controllers
             return result.Match<ActionResult<ResponseDto>>(
                 s => Ok(new ResponseBuilder()
                     .Succeeded()
-                    .AddResult(s)
+                    .AddResultMessage(s.Message)
+                    .AddResult(s.Link)
                     .Build()),
                 f =>
                 {
@@ -226,7 +227,7 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpPost("confirm-reset-password/{Email}")]
-        public async ValueTask<ActionResult<ResponseDto>> ConfirmResetPassword(string Email, [FromBody] ConfirmPasswordResetRequestDto confirmPasswordResetRequest)
+        public async ValueTask<ActionResult<ResponseDto>> ConfirmResetPassword(string Email, [FromBody] ConfirmPasswordResetRequest confirmPasswordResetRequest)
         {
             var result = await authService.ConfirmResetPassword(Email, confirmPasswordResetRequest);
 

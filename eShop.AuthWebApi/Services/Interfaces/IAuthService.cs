@@ -18,6 +18,6 @@ namespace eShop.AuthWebApi.Services.Interfaces
         public ValueTask<Result<ChangePasswordResponseDto>> ChangePassword(string UserId, ChangePasswordRequestDto changePasswordRequest);
 
         public ValueTask<Result<ResetPasswordResponseDto>> ResetPasswordRequest(string UserEmail);
-        public ValueTask<Result<ConfirmPasswordResetResponseDto>> ConfirmResetPassword(string Email, ConfirmPasswordResetRequestDto confirmPasswordResetRequest);
+        public ValueTask<Result<ConfirmPasswordResetResponseDto>> ConfirmResetPassword(string Email, ConfirmPasswordResetRequest confirmPasswordResetRequest);
     }
 }

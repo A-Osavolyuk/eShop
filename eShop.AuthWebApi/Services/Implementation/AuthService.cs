@@ -9,6 +9,8 @@ using eShop.Domain.Exceptions.Auth;
 using FluentValidation;
 using LanguageExt.Common;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Routing;
+using System.Text;
 
 namespace eShop.AuthWebApi.Services.Implementation
 {
@@ -21,7 +23,7 @@ namespace eShop.AuthWebApi.Services.Implementation
         private readonly IValidator<LoginRequestDto> loginValidator;
         private readonly IValidator<ChangePersonalDataRequestDto> personalDataValidator;
         private readonly IValidator<ChangePasswordRequestDto> passwordValidator;
-        private readonly IValidator<ConfirmPasswordResetRequestDto> resetPasswordValidator;
+        private readonly IValidator<ConfirmPasswordResetRequest> resetPasswordValidator;
         private readonly IMapper mapper;
 
         public AuthService(
@@ -32,7 +34,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             IValidator<LoginRequestDto> loginValidator,
             IValidator<ChangePersonalDataRequestDto> personalDataValidator,
             IValidator<ChangePasswordRequestDto> passwordValidator,
-            IValidator<ConfirmPasswordResetRequestDto> resetPasswordValidator,
+            IValidator<ConfirmPasswordResetRequest> resetPasswordValidator,
             IMapper mapper)
         {
             this.tokenHandler = tokenHandler;
@@ -130,7 +132,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
-        public async ValueTask<Result<ConfirmPasswordResetResponseDto>> ConfirmResetPassword(string Email, ConfirmPasswordResetRequestDto confirmPasswordResetRequest)
+        public async ValueTask<Result<ConfirmPasswordResetResponseDto>> ConfirmResetPassword(string Email, ConfirmPasswordResetRequest confirmPasswordResetRequest)
         {
             try
             {
@@ -142,7 +144,8 @@ namespace eShop.AuthWebApi.Services.Implementation
 
                     if (validationResult.IsValid)
                     {
-                        var resetResult = await userManager.ResetPasswordAsync(user, confirmPasswordResetRequest.ResetToken, confirmPasswordResetRequest.NewPassword);
+                        var token = new StringBuilder(confirmPasswordResetRequest.ResetToken).Replace(" ", "+").ToString();
+                        var resetResult = await userManager.ResetPasswordAsync(user, token, confirmPasswordResetRequest.NewPassword);
 
                         if (resetResult.Succeeded)
                         {
@@ -260,11 +263,15 @@ namespace eShop.AuthWebApi.Services.Implementation
                 if (user is not null)
                 {
                     var token = await userManager.GeneratePasswordResetTokenAsync(user);
+                    var link = UrlGenerator.ActionLink("confirm-password-reset", "account", 
+                        new { Email = UserEmail, Token = token }, "https", new HostString("localhost", 5102));
+
+                    //TODO: Sent request to EmailSenderService with token
 
                     return new(new ResetPasswordResponseDto()
                     {
                         Message = $"We have sent a mail with instruction to your email address.",
-                        ResetToken = token
+                        Link = link
                     });
                 }
 
@@ -273,6 +280,33 @@ namespace eShop.AuthWebApi.Services.Implementation
             catch (Exception ex)
             {
                 return new(ex);
+            }
+        }
+
+        public static class UrlGenerator
+        {
+            public static string ActionLink(string action, string controller, object values, string scheme, HostString host)
+            {
+
+                var queryParams = new StringBuilder("");
+
+                if (values is not null)
+                {
+                    queryParams.Append("?");
+
+                    var props = values.GetType().GetProperties();
+
+                    for (int i = 0; i < props.Length; i++)
+                    {
+                        if (i == props.Length - 1)
+                            queryParams.Append($"{props[i].Name}={props[i].GetValue(values)}");
+                        else
+                            queryParams.Append($"{props[i].Name}={props[i].GetValue(values)}&");
+
+                    }
+                }
+
+                return $"{scheme}://{host.Host}:{host.Port}/{controller}/{action}{queryParams}";
             }
         }
     }
