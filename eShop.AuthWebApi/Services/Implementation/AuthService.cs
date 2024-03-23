@@ -19,7 +19,6 @@ namespace eShop.AuthWebApi.Services.Implementation
     public class AuthService : IAuthService
     {
         private readonly ITokenHandler tokenHandler;
-        private readonly SignInManager<AppUser> signInManager;
         private readonly UserManager<AppUser> userManager;
         private readonly IValidator<RegistrationRequestDto> registrationValidator;
         private readonly IValidator<LoginRequestDto> loginValidator;
@@ -27,22 +26,18 @@ namespace eShop.AuthWebApi.Services.Implementation
         private readonly IValidator<ChangePasswordRequestDto> passwordValidator;
         private readonly IValidator<ConfirmPasswordResetRequest> resetPasswordValidator;
         private readonly IMapper mapper;
-        private readonly AuthDbContext authDBContext;
 
         public AuthService(
             ITokenHandler tokenHandler,
-            SignInManager<AppUser> signInManager,
             UserManager<AppUser> userManager,
             IValidator<RegistrationRequestDto> registrationValidator,
             IValidator<LoginRequestDto> loginValidator,
             IValidator<ChangePersonalDataRequestDto> personalDataValidator,
             IValidator<ChangePasswordRequestDto> passwordValidator,
             IValidator<ConfirmPasswordResetRequest> resetPasswordValidator,
-            IMapper mapper,
-            AuthDbContext authDBContext)
+            IMapper mapper)
         {
             this.tokenHandler = tokenHandler;
-            this.signInManager = signInManager;
             this.userManager = userManager;
             this.registrationValidator = registrationValidator;
             this.loginValidator = loginValidator;
@@ -50,7 +45,6 @@ namespace eShop.AuthWebApi.Services.Implementation
             this.passwordValidator = passwordValidator;
             this.resetPasswordValidator = resetPasswordValidator;
             this.mapper = mapper;
-            this.authDBContext = authDBContext;
         }
 
         public async ValueTask<Result<ChangePasswordResponseDto>> ChangePassword(string UserId, ChangePasswordRequestDto changePasswordRequest)
