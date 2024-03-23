@@ -77,6 +77,12 @@ namespace eShop.AuthWebApi.Controllers
                 },
                 fail =>
                 {
+                    if (fail is NotFoundUserByEmailException notFoundUserByEmail)
+                        return NotFound(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(notFoundUserByEmail.Message)
+                            .Build());
+
                     if (fail is NullRequestException nullRequest)
                         return BadRequest(new ResponseBuilder()
                             .Failed()

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using eShop.AuthWebApi.Data;
 using eShop.AuthWebApi.Services.Interfaces;
 using eShop.Domain.DTOs;
 using eShop.Domain.DTOs.Requests;
@@ -10,6 +11,7 @@ using FluentValidation;
 using LanguageExt.Common;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using System.Text;
 
 namespace eShop.AuthWebApi.Services.Implementation
@@ -25,6 +27,7 @@ namespace eShop.AuthWebApi.Services.Implementation
         private readonly IValidator<ChangePasswordRequestDto> passwordValidator;
         private readonly IValidator<ConfirmPasswordResetRequest> resetPasswordValidator;
         private readonly IMapper mapper;
+        private readonly AuthDbContext authDBContext;
 
         public AuthService(
             ITokenHandler tokenHandler,
@@ -35,7 +38,8 @@ namespace eShop.AuthWebApi.Services.Implementation
             IValidator<ChangePersonalDataRequestDto> personalDataValidator,
             IValidator<ChangePasswordRequestDto> passwordValidator,
             IValidator<ConfirmPasswordResetRequest> resetPasswordValidator,
-            IMapper mapper)
+            IMapper mapper,
+            AuthDbContext authDBContext)
         {
             this.tokenHandler = tokenHandler;
             this.signInManager = signInManager;
@@ -46,6 +50,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             this.passwordValidator = passwordValidator;
             this.resetPasswordValidator = resetPasswordValidator;
             this.mapper = mapper;
+            this.authDBContext = authDBContext;
         }
 
         public async ValueTask<Result<ChangePasswordResponseDto>> ChangePassword(string UserId, ChangePasswordRequestDto changePasswordRequest)
@@ -204,18 +209,24 @@ namespace eShop.AuthWebApi.Services.Implementation
                     return new(new FailedValidationException("Validation Error(s)",
                         validationResult.Errors.Select(x => x.ErrorMessage)));
 
-                var loginResult = await signInManager.PasswordSignInAsync(loginRequest.Email, loginRequest.Password, false, false);
+                var user = await userManager.FindByEmailAsync(loginRequest.Email);
 
-                if (loginResult.Succeeded)
+                if (user is not null)
                 {
-                    var user = await userManager.FindByEmailAsync(loginRequest.Email);
-                    var token = tokenHandler.GenerateToken(user);
-                    var userDto = new UserDto(user.Email!, user.Email!, user.Id);
+                    var isValidPassword = await userManager.CheckPasswordAsync(user, loginRequest.Password);
 
-                    return new(new LoginResponseDto(userDto, token));
+                    if (isValidPassword)
+                    {
+                        var token = tokenHandler.GenerateToken(user);
+                        var userDto = new UserDto(user.Email!, user.Email!, user.Id);
+
+                        return new(new LoginResponseDto(userDto, token));
+                    }
+
+                    return new(new InvalidLoginAttemptException());
                 }
 
-                return new(new InvalidLoginAttemptException());
+                return new(new NotFoundUserByEmailException(loginRequest.Email));
             }
             catch (Exception ex)
             {
@@ -263,7 +274,7 @@ namespace eShop.AuthWebApi.Services.Implementation
                 if (user is not null)
                 {
                     var token = await userManager.GeneratePasswordResetTokenAsync(user);
-                    var link = UrlGenerator.ActionLink("confirm-password-reset", "account", 
+                    var link = UrlGenerator.ActionLink("confirm-password-reset", "account",
                         new { Email = UserEmail, Token = token }, "https", new HostString("localhost", 5102));
 
                     //TODO: Sent request to EmailSenderService with token
