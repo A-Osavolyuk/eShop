@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Aspire.RabbitMQ.Client" Version="9.0.0-preview.2.24162.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\eShop\eShop\eShop.ServiceDefaults\eShop.ServiceDefaults.csproj" />
   </ItemGroup>
 
