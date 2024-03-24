@@ -278,7 +278,9 @@ namespace eShop.AuthWebApi.Services.Implementation
                     {
                         Link = link,
                         To = UserEmail,
-                        Subject = "Reset password request"
+                        Subject = "Reset password request",
+                        UserName = $"{(!string.IsNullOrEmpty(user.FirstName) && !string.IsNullOrEmpty(user.LastName) 
+                            ? $"{user.FirstName + " " + user.LastName}" : user.Email)}"
                     });
 
                     return new(new ResetPasswordResponseDto()
