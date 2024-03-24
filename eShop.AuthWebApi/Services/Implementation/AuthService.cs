@@ -285,8 +285,7 @@ namespace eShop.AuthWebApi.Services.Implementation
 
                     return new(new ResetPasswordResponseDto()
                     {
-                        Message = $"We have sent a mail with instruction to your email address.",
-                        Link = link
+                        Message = $"We have sent a mail with instruction to your email address."
                     });
                 }
 

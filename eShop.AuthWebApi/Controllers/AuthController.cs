@@ -215,7 +215,6 @@ namespace eShop.AuthWebApi.Controllers
                 s => Ok(new ResponseBuilder()
                     .Succeeded()
                     .AddResultMessage(s.Message)
-                    .AddResult(s.Link)
                     .Build()),
                 f =>
                 {
