@@ -1,3 +1,4 @@
+using eShop.Domain.Options;
 using eShop.EmailSenderWebApi.Services;
 using MassTransit;
 
@@ -5,23 +6,29 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
+builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("EmailOptions"));
+
 builder.Services.AddMassTransit(x =>
 {
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host(new Uri("rabbitmq://localhost"), h =>
+        var uri = builder.Configuration["RabbitMQConfigurations:HostUri"]!;
+        var username = builder.Configuration["RabbitMQConfigurations:UserName"]!;
+        var password = builder.Configuration["RabbitMQConfigurations:Password"]!;
+
+        cfg.Host(new Uri(uri), h =>
         {
-            h.Username("user");
-            h.Password("Test_12345");
+            h.Username(username);
+            h.Password(password);
         });
 
-        cfg.ReceiveEndpoint("send-email", e =>
+        cfg.ReceiveEndpoint("send-reset-password-email", e =>
         {
-            e.Consumer<EmailReceiver>();
+            e.ConfigureConsumer<ResetPasswordEmailReceiver>(context);
         });
     });
 
-    x.AddConsumer<EmailReceiver>();
+    x.AddConsumer<ResetPasswordEmailReceiver>();
 });
 
 var app = builder.Build();

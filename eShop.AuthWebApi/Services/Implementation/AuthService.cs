@@ -272,9 +272,14 @@ namespace eShop.AuthWebApi.Services.Implementation
                     var link = UrlGenerator.ActionLink("confirm-password-reset", "account",
                         new { Email = UserEmail, Token = token }, "https", new HostString("localhost", 5102));
 
-                    var uri = new Uri("rabbitmq://localhost/send-email");
+                    var uri = new Uri("rabbitmq://localhost/send-reset-password-email");
                     var endpoint = await bus.GetSendEndpoint(uri);
-                    await endpoint.Send(new SendEmailRequest() { Link = link });
+                    await endpoint.Send(new SendResetPasswordEmailRequest()
+                    {
+                        Link = link,
+                        To = UserEmail,
+                        Subject = "Reset password request"
+                    });
 
                     return new(new ResetPasswordResponseDto()
                     {

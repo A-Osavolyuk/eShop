@@ -10,10 +10,14 @@ builder.Services.AddMassTransit(x =>
 {
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host(new Uri("rabbitmq://localhost"), h =>
+        var uri = builder.Configuration["RabbitMQConfigurations:HostUri"]!;
+        var username = builder.Configuration["RabbitMQConfigurations:UserName"]!;
+        var password = builder.Configuration["RabbitMQConfigurations:Password"]!;
+
+        cfg.Host(new Uri(uri), h =>
         {
-            h.Username("user");
-            h.Password("Test_12345");
+            h.Username(username);
+            h.Password(password);
         });
     });
 });
