@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\eShop.AuthWebApi\eShop.AuthWebApi.csproj" />
     <ProjectReference Include="..\..\..\eShop.BlazorWebUI\eShop.BlazorWebUI.csproj" />
+    <ProjectReference Include="..\..\..\eShop.EmailSenderWebApi\eShop.EmailSenderWebApi.csproj" />
     <ProjectReference Include="..\..\..\eShop.ProductWebApi\eShop.ProductWebApi.csproj" />
   </ItemGroup>
 

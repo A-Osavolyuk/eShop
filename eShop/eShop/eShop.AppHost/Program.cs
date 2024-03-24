@@ -20,4 +20,6 @@ var productApi = builder.AddProject<Projects.eShop_ProductWebApi>("ProductWebApi
 builder.AddProject<Projects.eShop_BlazorWebUI>("BlazorWebUI")
     .WithReference(authApi);
 
+builder.AddProject<Projects.eShop_EmailSenderWebApi>("eshop-emailsenderwebapi");
+
 builder.Build().Run();
