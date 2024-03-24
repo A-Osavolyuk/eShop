@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using eShop.AuthWebApi.Data;
 using eShop.AuthWebApi.Services.Interfaces;
 using eShop.Domain.DTOs;
 using eShop.Domain.DTOs.Requests;
@@ -10,13 +9,11 @@ using eShop.Domain.Exceptions.Auth;
 using FluentValidation;
 using LanguageExt.Common;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.EntityFrameworkCore;
 using System.Text;
 
 namespace eShop.AuthWebApi.Services.Implementation
 {
-    public class AuthService : IAuthService
+    public partial class AuthService : IAuthService
     {
         private readonly ITokenHandler tokenHandler;
         private readonly UserManager<AppUser> userManager;
@@ -285,33 +282,6 @@ namespace eShop.AuthWebApi.Services.Implementation
             catch (Exception ex)
             {
                 return new(ex);
-            }
-        }
-
-        public static class UrlGenerator
-        {
-            public static string ActionLink(string action, string controller, object values, string scheme, HostString host)
-            {
-
-                var queryParams = new StringBuilder("");
-
-                if (values is not null)
-                {
-                    queryParams.Append("?");
-
-                    var props = values.GetType().GetProperties();
-
-                    for (int i = 0; i < props.Length; i++)
-                    {
-                        if (i == props.Length - 1)
-                            queryParams.Append($"{props[i].Name}={props[i].GetValue(values)}");
-                        else
-                            queryParams.Append($"{props[i].Name}={props[i].GetValue(values)}&");
-
-                    }
-                }
-
-                return $"{scheme}://{host.Host}:{host.Port}/{controller}/{action}{queryParams}";
             }
         }
     }
