@@ -8,6 +8,7 @@ using eShop.Domain.Exceptions;
 using eShop.Domain.Exceptions.Auth;
 using FluentValidation;
 using LanguageExt.Common;
+using MassTransit;
 using Microsoft.AspNetCore.Identity;
 using System.Text;
 
@@ -23,6 +24,7 @@ namespace eShop.AuthWebApi.Services.Implementation
         private readonly IValidator<ChangePasswordRequestDto> passwordValidator;
         private readonly IValidator<ConfirmPasswordResetRequest> resetPasswordValidator;
         private readonly IMapper mapper;
+        private readonly IBus bus;
 
         public AuthService(
             ITokenHandler tokenHandler,
@@ -32,7 +34,8 @@ namespace eShop.AuthWebApi.Services.Implementation
             IValidator<ChangePersonalDataRequestDto> personalDataValidator,
             IValidator<ChangePasswordRequestDto> passwordValidator,
             IValidator<ConfirmPasswordResetRequest> resetPasswordValidator,
-            IMapper mapper)
+            IMapper mapper,
+            IBus bus)
         {
             this.tokenHandler = tokenHandler;
             this.userManager = userManager;
@@ -42,6 +45,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             this.passwordValidator = passwordValidator;
             this.resetPasswordValidator = resetPasswordValidator;
             this.mapper = mapper;
+            this.bus = bus;
         }
 
         public async ValueTask<Result<ChangePasswordResponseDto>> ChangePassword(string UserId, ChangePasswordRequestDto changePasswordRequest)
@@ -268,7 +272,9 @@ namespace eShop.AuthWebApi.Services.Implementation
                     var link = UrlGenerator.ActionLink("confirm-password-reset", "account",
                         new { Email = UserEmail, Token = token }, "https", new HostString("localhost", 5102));
 
-                    //TODO: Sent request to EmailSenderService with token
+                    var uri = new Uri("rabbitmq://localhost/send-email");
+                    var endpoint = await bus.GetSendEndpoint(uri);
+                    await endpoint.Send(new SendEmailRequest() { Link = link });
 
                     return new(new ResetPasswordResponseDto()
                     {

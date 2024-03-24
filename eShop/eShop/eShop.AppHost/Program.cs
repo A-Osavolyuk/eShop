@@ -8,7 +8,7 @@ var sqlServer = builder.AddSqlServerContainer("SqlServer", "Password_2024", 8500
     .AddDatabase("ProductDB");
 
 var authApi = builder.AddProject<Projects.eShop_AuthWebApi>("AuthWebApi")
-    .WithReference(sqlServer)
+    .WithReference(sqlServer);
 
 var productApi = builder.AddProject<Projects.eShop_ProductWebApi>("ProductWebApi")
     .WithReference(sqlServer)
