@@ -11,7 +11,7 @@ namespace eShop.Domain.Entities
         public string Gender { get; set; } = string.Empty;
         public DateTime DateOfBirth { get; set; } = new DateTime(1980, 1, 1);
 
-        public void AddPersonalData(ChangePersonalDataRequestDto changePersonalDataRequestDto)
+        public void AddPersonalData(ChangePersonalDataRequest changePersonalDataRequestDto)
         {
             FirstName = changePersonalDataRequestDto.FirstName;
             LastName = changePersonalDataRequestDto.LastName;

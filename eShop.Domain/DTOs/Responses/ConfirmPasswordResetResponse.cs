@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.DTOs.Responses
 {
-    public class ConfirmPasswordResetResponseDto
+    public class ConfirmPasswordResetResponse
     {
         public string Message { get; set; } = string.Empty;
     }

@@ -22,13 +22,19 @@ builder.Services.AddMassTransit(x =>
             h.Password(password);
         });
 
-        cfg.ReceiveEndpoint("send-reset-password-email", e =>
+        cfg.ReceiveEndpoint("reset-password", e =>
         {
             e.ConfigureConsumer<ResetPasswordEmailReceiver>(context);
+        });
+
+        cfg.ReceiveEndpoint("confirm-email", e =>
+        {
+            e.ConfigureConsumer<ConfirmEmailReceiver>(context);
         });
     });
 
     x.AddConsumer<ResetPasswordEmailReceiver>();
+    x.AddConsumer<ConfirmEmailReceiver>();
 });
 
 var app = builder.Build();

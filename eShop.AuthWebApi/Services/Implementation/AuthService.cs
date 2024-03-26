@@ -1,31 +1,29 @@
-﻿using LanguageExt.Pretty;
-using OpenTelemetry.Trace;
-using System.Net;
+﻿using LanguageExt;
 
 namespace eShop.AuthWebApi.Services.Implementation
 {
     public partial class AuthService(
         ITokenHandler tokenHandler,
         UserManager<AppUser> userManager,
-        IValidator<RegistrationRequestDto> registrationValidator,
-        IValidator<LoginRequestDto> loginValidator,
-        IValidator<ChangePersonalDataRequestDto> personalDataValidator,
-        IValidator<ChangePasswordRequestDto> passwordValidator,
+        IValidator<RegistrationRequest> registrationValidator,
+        IValidator<LoginRequest> loginValidator,
+        IValidator<ChangePersonalDataRequest> personalDataValidator,
+        IValidator<ChangePasswordRequest> passwordValidator,
         IValidator<ConfirmPasswordResetRequest> resetPasswordValidator,
         IMapper mapper,
         IBus bus) : IAuthService
     {
         private readonly ITokenHandler tokenHandler = tokenHandler;
         private readonly UserManager<AppUser> userManager = userManager;
-        private readonly IValidator<RegistrationRequestDto> registrationValidator = registrationValidator;
-        private readonly IValidator<LoginRequestDto> loginValidator = loginValidator;
-        private readonly IValidator<ChangePersonalDataRequestDto> personalDataValidator = personalDataValidator;
-        private readonly IValidator<ChangePasswordRequestDto> passwordValidator = passwordValidator;
+        private readonly IValidator<RegistrationRequest> registrationValidator = registrationValidator;
+        private readonly IValidator<LoginRequest> loginValidator = loginValidator;
+        private readonly IValidator<ChangePersonalDataRequest> personalDataValidator = personalDataValidator;
+        private readonly IValidator<ChangePasswordRequest> passwordValidator = passwordValidator;
         private readonly IValidator<ConfirmPasswordResetRequest> resetPasswordValidator = resetPasswordValidator;
         private readonly IMapper mapper = mapper;
         private readonly IBus bus = bus;
 
-        public async ValueTask<Result<ChangePasswordResponseDto>> ChangePassword(string UserId, ChangePasswordRequestDto changePasswordRequest)
+        public async ValueTask<Result<ChangePasswordResponse>> ChangePassword(string UserId, ChangePasswordRequest changePasswordRequest)
         {
             try
             {
@@ -45,7 +43,7 @@ namespace eShop.AuthWebApi.Services.Implementation
 
                             if (result.Succeeded)
                             {
-                                return new(new ChangePasswordResponseDto() { Message = "Password has been successfully changed." });
+                                return new(new ChangePasswordResponse() { Message = "Password has been successfully changed." });
                             }
 
                             return new(new NotChangedPasswordException(result.Errors.First().Description));
@@ -65,7 +63,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
-        public async ValueTask<Result<ChangePersonalDataResponseDto>> ChangePersonalDataAsync(string Id, ChangePersonalDataRequestDto changePersonalDataRequest)
+        public async ValueTask<Result<ChangePersonalDataResponse>> ChangePersonalDataAsync(string Id, ChangePersonalDataRequest changePersonalDataRequest)
         {
             try
             {
@@ -83,7 +81,7 @@ namespace eShop.AuthWebApi.Services.Implementation
 
                         if (result.Succeeded)
                         {
-                            return new(new ChangePersonalDataResponseDto()
+                            return new(new ChangePersonalDataResponse()
                             {
                                 Email = user.Email,
                                 PhoneNumber = user.PhoneNumber,
@@ -109,7 +107,34 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
-        public async ValueTask<Result<ConfirmPasswordResetResponseDto>> ConfirmResetPassword(string Email, ConfirmPasswordResetRequest confirmPasswordResetRequest)
+        public async ValueTask<Result<Unit>> ConfirmEmail(string Email, ConfirmEmailRequest confirmEmailRequest)
+        {
+            try
+            {
+                var user = await userManager.FindByEmailAsync(Email);
+
+                if (user is not null)
+                {
+                    var token = new StringBuilder(confirmEmailRequest.Token).Replace(" ", "+").ToString();
+                    var confirmResult = await userManager.ConfirmEmailAsync(user, token);
+
+                    if (confirmResult.Succeeded)
+                    {
+                        return new(new Unit());
+                    }
+
+                    return new(new NotConfirmedEmailException());
+                }
+
+                return new(new NotFoundUserByEmailException(Email));
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
+        }
+
+        public async ValueTask<Result<ConfirmPasswordResetResponse>> ConfirmResetPassword(string Email, ConfirmPasswordResetRequest confirmPasswordResetRequest)
         {
             try
             {
@@ -126,7 +151,7 @@ namespace eShop.AuthWebApi.Services.Implementation
 
                         if (resetResult.Succeeded)
                         {
-                            return new(new ConfirmPasswordResetResponseDto() { Message = "Your password has been successfully reset." });
+                            return new(new ConfirmPasswordResetResponse() { Message = "Your password has been successfully reset." });
                         }
 
                         return new(new NotResetPasswordException());
@@ -143,7 +168,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
-        public async ValueTask<Result<PersonalDataDto>> GetPersonalDataAsync(string Id)
+        public async ValueTask<Result<PersonalData>> GetPersonalDataAsync(string Id)
         {
             try
             {
@@ -152,7 +177,7 @@ namespace eShop.AuthWebApi.Services.Implementation
                 if (user is null)
                     return new(new NotFoundUserByIdException(Id));
 
-                return new(new PersonalDataDto()
+                return new(new PersonalData()
                 {
                     DateOfBirth = user.DateOfBirth,
                     FirstName = user.FirstName,
@@ -168,7 +193,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
-        public async ValueTask<Result<LoginResponseDto>> LoginAsync(LoginRequestDto loginRequest)
+        public async ValueTask<Result<LoginResponse>> LoginAsync(LoginRequest loginRequest)
         {
             try
             {
@@ -192,7 +217,7 @@ namespace eShop.AuthWebApi.Services.Implementation
                         var token = tokenHandler.GenerateToken(user);
                         var userDto = new UserDto(user.Email!, user.Email!, user.Id);
 
-                        return new(new LoginResponseDto(userDto, token));
+                        return new(new LoginResponse(userDto, token));
                     }
 
                     return new(new InvalidLoginAttemptException());
@@ -206,7 +231,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
-        public async ValueTask<Result<RegistrationResponseDto>> RegisterAsync(RegistrationRequestDto registrationRequest)
+        public async ValueTask<Result<RegistrationResponse>> RegisterAsync(RegistrationRequest registrationRequest)
         {
             try
             {
@@ -231,16 +256,21 @@ namespace eShop.AuthWebApi.Services.Implementation
 
                     var endpoint = await bus.GetSendEndpoint(new Uri("rabbitmq://localhost/confirm-email"));
 
-                    await endpoint.Send(new ConfirmEmailRequest()
+                    await endpoint.Send(new ConfirmEmailMessage()
                     {
                         Link = link,
                         To = registrationRequest.Email,
-                        Subject = "Reset password request",
+                        Subject = "Confirm email address",
                         UserName = $"{(!string.IsNullOrEmpty(user.FirstName) && !string.IsNullOrEmpty(user.LastName)
                             ? $"{user.FirstName + " " + user.LastName}" : user.Email)}"
                     });
 
-                    return new(new RegistrationResponseDto() { Message = $"We have sent an email with instructions to your email address." });
+                    return new(new RegistrationResponse()
+                    {
+                        Message = $"Your account have been successfully registered. " +
+                        $"Now you have to confirm you email address to log in. " +
+                        $"We have sent an email with instructions to your email address."
+                    });
                 }
 
                 return new(new InvalidRegisterAttemptException("Invalid registration attempt.",
@@ -252,7 +282,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
-        public async ValueTask<Result<ResetPasswordResponseDto>> ResetPasswordRequest(string UserEmail)
+        public async ValueTask<Result<ResetPasswordResponse>> RequestResetPassword(string UserEmail)
         {
             try
             {
@@ -266,7 +296,7 @@ namespace eShop.AuthWebApi.Services.Implementation
 
                     var uri = new Uri("rabbitmq://localhost/reset-password");
                     var endpoint = await bus.GetSendEndpoint(uri);
-                    await endpoint.Send(new SendResetPasswordEmailRequest()
+                    await endpoint.Send(new ResetPasswordMessage()
                     {
                         Link = link,
                         To = UserEmail,
@@ -275,9 +305,10 @@ namespace eShop.AuthWebApi.Services.Implementation
                             ? $"{user.FirstName + " " + user.LastName}" : user.Email)}"
                     });
 
-                    return new(new ResetPasswordResponseDto()
+                    return new(new ResetPasswordResponse()
                     {
-                        Message = $"We have sent an email with instructions to your email address."
+                        Message = $"You have to confirm password reset. " +
+                        $"We have sent an email with instructions to your email address."
                     });
                 }
 

@@ -8,7 +8,7 @@
 @inject NavigationManager navigationManager
 @inject IAuthenticationService authenticationService
 @inject AuthenticationStateProvider authenticationStateProvider
-@inject IValidator<LoginRequestDto> validator
+@inject IValidator<LoginRequest> validator
 
 <PageTitle>Login</PageTitle>
 
@@ -50,7 +50,7 @@
 </MudGrid>
 
 @code {
-    [SupplyParameterFromForm] private LoginRequestDto loginRequest { get; set; } = new();
+    [SupplyParameterFromForm] private LoginRequest loginRequest { get; set; } = new();
 
     private async Task LoginClick()
     {
@@ -58,7 +58,7 @@
 
         if (result.IsSucceeded)
         {
-            var data = JsonConvert.DeserializeObject<LoginResponseDto>(result.Result!.ToString()!);
+            var data = JsonConvert.DeserializeObject<LoginResponse>(result.Result!.ToString()!);
             (authenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(data!.Token);
             navigationManager.NavigateTo("/");
             Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);

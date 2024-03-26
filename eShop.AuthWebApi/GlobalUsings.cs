@@ -2,10 +2,12 @@
 global using eShop.AuthWebApi;
 global using eShop.AuthWebApi.Data;
 global using eShop.AuthWebApi.Services.Interfaces;
+global using TokenHandler = eShop.AuthWebApi.Services.Implementation.TokenHandler;
 global using eShop.Domain.Common;
 global using eShop.Domain.DTOs;
 global using eShop.Domain.DTOs.Requests;
 global using eShop.Domain.DTOs.Responses;
+global using eShop.Domain.DTOs.Messages;
 global using eShop.Domain.Entities;
 global using eShop.Domain.Exceptions;
 global using eShop.Domain.Exceptions.Auth;
@@ -23,3 +25,4 @@ global using System.Data;
 global using System.IdentityModel.Tokens.Jwt;
 global using System.Security.Claims;
 global using System.Text;
+global using Microsoft.IdentityModel.Tokens;

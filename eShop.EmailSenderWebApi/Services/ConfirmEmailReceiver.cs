@@ -7,11 +7,11 @@ using MimeKit;
 
 namespace eShop.EmailSenderWebApi.Services
 {
-    public class ResetPasswordEmailReceiver(IOptions<EmailOptions> _options) : IConsumer<ResetPasswordMessage>
+    public class ConfirmEmailReceiver(IOptions<EmailOptions> _options) : IConsumer<ConfirmEmailMessage>
     {
         private readonly EmailOptions options = _options.Value;
 
-        public async Task Consume(ConsumeContext<ResetPasswordMessage> context)
+        public async Task Consume(ConsumeContext<ConfirmEmailMessage> context)
         {
             var emailMessage = new MimeMessage();
 
@@ -39,13 +39,13 @@ namespace eShop.EmailSenderWebApi.Services
             <!DOCTYPE html>
             <html>
             <head>
-                <title>Reset Your Password</title>
+                <title>Confirm Your Email Address</title>
             </head>
             <body>
                 <p>Hello " + userName + @",</p>
-                <p>We received a request to reset your password. Please click the link below to reset your password:</p>
-                <p><a href='" + resetLink + @"'>Reset Password</a></p>
-                <p>If you didn't request a password reset, you can ignore this email.</p>
+                <p>We received a request to confirm your email address. Please click the link below to confirm your email address:</p>
+                <p><a href='" + resetLink + @"'>Confirm Email Address</a></p>
+                <p>If you didn't request an email address confirmation, you can ignore this email.</p>
                 <p>Thank you,</p>
                 <p>Your Website Team</p>
             </body>

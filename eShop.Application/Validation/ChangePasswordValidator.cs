@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace eShop.Application.Validation
 {
-    public class ChangePasswordValidator : AbstractValidator<ChangePasswordRequestDto>
+    public class ChangePasswordValidator : AbstractValidator<ChangePasswordRequest>
     {
         public ChangePasswordValidator()
         {

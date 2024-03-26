@@ -3,13 +3,13 @@
 @inject ISnackbar Snackbar
 @inject NavigationManager navigationManager
 @inject IAuthenticationService authenticationService
-@inject IValidator<RegistrationRequestDto> validator
+@inject IValidator<RegistrationRequest> validator
 
 <PageTitle>Register</PageTitle>
 
 <MudGrid Justify="Justify.Center">
     <MudItem xs="4">
-        <MudPaper Outlined Style="margin-top: 20%;" Class="pa-3">
+        <MudPaper Outlined Style="margin-top: 30%;" Class="pa-3">
             <EditForm FormName="register-form" Model="registrationRequest" OnValidSubmit="RegisterUser">
                 <FluentValidationValidator Validator="validator" />
 
@@ -40,7 +40,7 @@
 </MudGrid>
 
 @code {
-    [SupplyParameterFromForm] private RegistrationRequestDto registrationRequest { get; set; } = new();
+    [SupplyParameterFromForm] private RegistrationRequest registrationRequest { get; set; } = new();
 
     private async Task RegisterUser()
     {

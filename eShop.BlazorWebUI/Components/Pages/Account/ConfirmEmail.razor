@@ -1,0 +1,29 @@
+﻿@page "/account/confirm-email/"
+@using eShop.Domain.DTOs.Responses
+
+@inject NavigationManager NavigationManager
+@inject IAuthenticationService AuthenticationService
+
+@code {
+    private ResponseDto Result { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = new StringBuilder(NavigationManager.Uri)
+            .Replace(NavigationManager.BaseUri, "")
+            .Replace("account/confirm-email?", "")
+            .ToString();
+
+        var query = QueryHelpers.ParseQuery(uri);
+
+        query.TryGetValue("Email", out var email);
+        query.TryGetValue("Token", out var token);
+
+        Result = await AuthenticationService.ConfirmEmailAsync(email!, new ConfirmEmailRequest() { Token = token! });
+
+        if (Result.IsSucceeded)
+            NavigationManager.NavigateTo("/account/confirmed-email");
+        else
+            NavigationManager.NavigateTo("/account/failed-email-confirmation");
+    }
+}

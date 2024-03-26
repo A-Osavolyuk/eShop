@@ -1,6 +1,6 @@
-﻿namespace eShop.Domain.DTOs.Requests
+﻿namespace eShop.Domain.DTOs.Messages
 {
-    public class SendResetPasswordEmailRequest
+    public class ResetPasswordMessage
     {
         public string To { get; set; } = string.Empty;
         public string Subject { get; set; } = string.Empty;

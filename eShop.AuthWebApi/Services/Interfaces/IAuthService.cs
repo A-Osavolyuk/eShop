@@ -2,17 +2,13 @@
 {
     public interface IAuthService
     {
-        public ValueTask<Result<LoginResponseDto>> LoginAsync(LoginRequestDto loginRequest);
-
-        public ValueTask<Result<RegistrationResponseDto>> RegisterAsync(RegistrationRequestDto registrationRequest);
-
-        public ValueTask<Result<ChangePersonalDataResponseDto>> ChangePersonalDataAsync(string UserId, ChangePersonalDataRequestDto changePersonalDataRequest);
-
-        public ValueTask<Result<PersonalDataDto>> GetPersonalDataAsync(string UserId);
-
-        public ValueTask<Result<ChangePasswordResponseDto>> ChangePassword(string UserId, ChangePasswordRequestDto changePasswordRequest);
-
-        public ValueTask<Result<ResetPasswordResponseDto>> ResetPasswordRequest(string UserEmail);
-        public ValueTask<Result<ConfirmPasswordResetResponseDto>> ConfirmResetPassword(string Email, ConfirmPasswordResetRequest confirmPasswordResetRequest);
+        public ValueTask<Result<LoginResponse>> LoginAsync(LoginRequest loginRequest);
+        public ValueTask<Result<RegistrationResponse>> RegisterAsync(RegistrationRequest registrationRequest);
+        public ValueTask<Result<ChangePersonalDataResponse>> ChangePersonalDataAsync(string UserId, ChangePersonalDataRequest changePersonalDataRequest);
+        public ValueTask<Result<PersonalData>> GetPersonalDataAsync(string UserId);
+        public ValueTask<Result<ChangePasswordResponse>> ChangePassword(string UserId, ChangePasswordRequest changePasswordRequest);
+        public ValueTask<Result<ResetPasswordResponse>> RequestResetPassword(string UserEmail);
+        public ValueTask<Result<ConfirmPasswordResetResponse>> ConfirmResetPassword(string Email, ConfirmPasswordResetRequest confirmPasswordResetRequest);
+        public ValueTask<Result<LanguageExt.Unit>> ConfirmEmail(string Email, ConfirmEmailRequest confirmEmailRequest);
     }
 }

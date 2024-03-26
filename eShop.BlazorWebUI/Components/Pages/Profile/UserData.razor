@@ -6,7 +6,7 @@
 @inject IDialogService DialogService
 @inject ITokenProvider TokenProvider
 @inject IMapper mapper
-@inject IValidator<ChangePersonalDataRequestDto> Validator
+@inject IValidator<ChangePersonalDataRequest> Validator
 @inject NavigationManager NavigationManager
 
 
@@ -73,15 +73,15 @@ else
 @code {
     [CascadingParameter]
     private Task<AuthenticationState> AuthenticationStateTask { get; set; }
-    private PersonalDataDto ShowModel { get; set; } = new();
+    private PersonalData ShowModel { get; set; } = new();
     private MudDatePicker? DatePicker { get; set; }
-    private ChangePersonalDataRequestDto FormModel { get; set; } = new();
+    private ChangePersonalDataRequest FormModel { get; set; } = new();
     private bool ShowForm { get; set; } = false;
 
     override protected async Task OnInitializedAsync()
     {
         await RefreshData();
-        FormModel = mapper.Map<ChangePersonalDataRequestDto>(ShowModel);
+        FormModel = mapper.Map<ChangePersonalDataRequest>(ShowModel);
         DatePicker = new();
     }
 
@@ -117,7 +117,7 @@ else
 
         if (result.IsSucceeded)
         {
-            ShowModel = JsonConvert.DeserializeObject<PersonalDataDto>(result.Result.ToString()!)!;
+            ShowModel = JsonConvert.DeserializeObject<PersonalData>(result.Result.ToString()!)!;
         }
         else
         {

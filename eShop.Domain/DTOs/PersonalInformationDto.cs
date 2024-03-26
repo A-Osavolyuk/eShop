@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.DTOs
 {
-    public class PersonalDataDto
+    public class PersonalData
     {
         public string FirstName { get; set; } = "";
         public string LastName { get; set; } = "";

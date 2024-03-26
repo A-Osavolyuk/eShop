@@ -8,7 +8,7 @@ namespace eShop.Application.MappingProfiles
     {
         public UserProfile()
         {
-            CreateMap<RegistrationRequestDto, AppUser>()
+            CreateMap<RegistrationRequest, AppUser>()
                 .ForMember(x => x.Email, opt => opt.MapFrom(src => src.Email))
                 //.ForMember(x => x.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(x => x.UserName, opt => opt.MapFrom(src => src.Email))

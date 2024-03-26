@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace eShop.Application.Validation
 {
-    public class PersonalDataValidator : AbstractValidator<ChangePersonalDataRequestDto>
+    public class PersonalDataValidator : AbstractValidator<ChangePersonalDataRequest>
     {
         public PersonalDataValidator()
         {

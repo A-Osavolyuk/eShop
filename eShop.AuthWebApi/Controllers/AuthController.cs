@@ -13,7 +13,7 @@
         }
 
         [HttpPost("register")]
-        public async ValueTask<ActionResult<ResponseDto>> Register([FromBody] RegistrationRequestDto registrationRequest)
+        public async ValueTask<ActionResult<ResponseDto>> Register([FromBody] RegistrationRequest registrationRequest)
         {
             var result = await authService.RegisterAsync(registrationRequest);
 
@@ -55,7 +55,7 @@
         }
 
         [HttpPost("login")]
-        public async ValueTask<ActionResult<ResponseDto>> Login([FromBody] LoginRequestDto loginRequest)
+        public async ValueTask<ActionResult<ResponseDto>> Login([FromBody] LoginRequest loginRequest)
         {
             var result = await authService.LoginAsync(loginRequest);
 
@@ -104,7 +104,7 @@
         }
 
         [HttpPost("change-personal-data/{Id}")]
-        public async ValueTask<ActionResult<ResponseDto>> ChangePersonalData([FromBody] ChangePersonalDataRequestDto changePersonalDataRequest, string Id)
+        public async ValueTask<ActionResult<ResponseDto>> ChangePersonalData([FromBody] ChangePersonalDataRequest changePersonalDataRequest, string Id)
         {
             var result = await authService.ChangePersonalDataAsync(Id, changePersonalDataRequest);
 
@@ -162,7 +162,7 @@
         }
 
         [HttpPost("change-password/{Id}")]
-        public async ValueTask<ActionResult<ResponseDto>> ChangePassword([FromBody] ChangePasswordRequestDto changePasswordRequest, string Id)
+        public async ValueTask<ActionResult<ResponseDto>> ChangePassword([FromBody] ChangePasswordRequest changePasswordRequest, string Id)
         {
             var result = await authService.ChangePassword(Id, changePasswordRequest);
 
@@ -199,10 +199,10 @@
                 });
         }
 
-        [HttpPost("reset-password-request/{Email}")]
+        [HttpPost("request-reset-password/{Email}")]
         public async ValueTask<ActionResult<ResponseDto>> ResetPasswordRequest(string Email)
         {
-            var result = await authService.ResetPasswordRequest(Email);
+            var result = await authService.RequestResetPassword(Email);
 
             return result.Match<ActionResult<ResponseDto>>(
                 s => Ok(new ResponseBuilder()
@@ -247,6 +247,31 @@
                             .Failed()
                             .AddErrorMessage(failedValidationException.Message)
                             .AddErrors(failedValidationException.Errors.ToList())
+                            .Build());
+
+                    return StatusCode(500, new ResponseBuilder()
+                        .Failed()
+                        .AddErrorMessage(f.Message)
+                        .Build());
+                });
+        }
+
+        [HttpPost("confirm-email/{Email}")]
+        public async ValueTask<ActionResult<ResponseDto>> ConfirmEmail(string Email, [FromBody] ConfirmEmailRequest confirmEmailRequest)
+        {
+            var result = await authService.ConfirmEmail(Email, confirmEmailRequest);
+
+            return result.Match<ActionResult<ResponseDto>>(
+                s => Ok(new ResponseBuilder()
+                    .Succeeded()
+                    .AddResultMessage("Your email address was successfully confirmed.")
+                    .Build()),
+                f =>
+                {
+                    if (f is NotFoundUserByEmailException notFoundUserByEmailException)
+                        return NotFound(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(notFoundUserByEmailException.Message)
                             .Build());
 
                     return StatusCode(500, new ResponseBuilder()

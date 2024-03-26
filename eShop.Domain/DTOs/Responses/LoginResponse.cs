@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.DTOs.Responses;
 
-public record LoginResponseDto(
+public record LoginResponse(
     UserDto User,
     string Token = ""
     );
