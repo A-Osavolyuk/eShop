@@ -1,38 +1,29 @@
-﻿namespace eShop.AuthWebApi.Services.Implementation
-{
-    public partial class AuthService : IAuthService
-    {
-        private readonly ITokenHandler tokenHandler;
-        private readonly UserManager<AppUser> userManager;
-        private readonly IValidator<RegistrationRequestDto> registrationValidator;
-        private readonly IValidator<LoginRequestDto> loginValidator;
-        private readonly IValidator<ChangePersonalDataRequestDto> personalDataValidator;
-        private readonly IValidator<ChangePasswordRequestDto> passwordValidator;
-        private readonly IValidator<ConfirmPasswordResetRequest> resetPasswordValidator;
-        private readonly IMapper mapper;
-        private readonly IBus bus;
+﻿using LanguageExt.Pretty;
+using OpenTelemetry.Trace;
+using System.Net;
 
-        public AuthService(
-            ITokenHandler tokenHandler,
-            UserManager<AppUser> userManager,
-            IValidator<RegistrationRequestDto> registrationValidator,
-            IValidator<LoginRequestDto> loginValidator,
-            IValidator<ChangePersonalDataRequestDto> personalDataValidator,
-            IValidator<ChangePasswordRequestDto> passwordValidator,
-            IValidator<ConfirmPasswordResetRequest> resetPasswordValidator,
-            IMapper mapper,
-            IBus bus)
-        {
-            this.tokenHandler = tokenHandler;
-            this.userManager = userManager;
-            this.registrationValidator = registrationValidator;
-            this.loginValidator = loginValidator;
-            this.personalDataValidator = personalDataValidator;
-            this.passwordValidator = passwordValidator;
-            this.resetPasswordValidator = resetPasswordValidator;
-            this.mapper = mapper;
-            this.bus = bus;
-        }
+namespace eShop.AuthWebApi.Services.Implementation
+{
+    public partial class AuthService(
+        ITokenHandler tokenHandler,
+        UserManager<AppUser> userManager,
+        IValidator<RegistrationRequestDto> registrationValidator,
+        IValidator<LoginRequestDto> loginValidator,
+        IValidator<ChangePersonalDataRequestDto> personalDataValidator,
+        IValidator<ChangePasswordRequestDto> passwordValidator,
+        IValidator<ConfirmPasswordResetRequest> resetPasswordValidator,
+        IMapper mapper,
+        IBus bus) : IAuthService
+    {
+        private readonly ITokenHandler tokenHandler = tokenHandler;
+        private readonly UserManager<AppUser> userManager = userManager;
+        private readonly IValidator<RegistrationRequestDto> registrationValidator = registrationValidator;
+        private readonly IValidator<LoginRequestDto> loginValidator = loginValidator;
+        private readonly IValidator<ChangePersonalDataRequestDto> personalDataValidator = personalDataValidator;
+        private readonly IValidator<ChangePasswordRequestDto> passwordValidator = passwordValidator;
+        private readonly IValidator<ConfirmPasswordResetRequest> resetPasswordValidator = resetPasswordValidator;
+        private readonly IMapper mapper = mapper;
+        private readonly IBus bus = bus;
 
         public async ValueTask<Result<ChangePasswordResponseDto>> ChangePassword(string UserId, ChangePasswordRequestDto changePasswordRequest)
         {
@@ -233,12 +224,27 @@
 
                 if (registrationResult.Succeeded)
                 {
-                    return new(
-                        new RegistrationResponseDto($"Successfully registered."));
+                    var emailConfirmationToken = await userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                    var link = UrlGenerator.ActionLink("confirm-email", "account",
+                        new { Email = registrationRequest.Email, Token = emailConfirmationToken }, "https", new HostString("localhost", 5102));
+
+                    var endpoint = await bus.GetSendEndpoint(new Uri("rabbitmq://localhost/confirm-email"));
+
+                    await endpoint.Send(new ConfirmEmailRequest()
+                    {
+                        Link = link,
+                        To = registrationRequest.Email,
+                        Subject = "Reset password request",
+                        UserName = $"{(!string.IsNullOrEmpty(user.FirstName) && !string.IsNullOrEmpty(user.LastName)
+                            ? $"{user.FirstName + " " + user.LastName}" : user.Email)}"
+                    });
+
+                    return new(new RegistrationResponseDto() { Message = $"We have sent an email with instructions to your email address." });
                 }
 
-                return new(
-                    new InvalidRegisterAttemptException("Invalid registration attempt.", registrationResult.Errors.Select(x => x.Description)));
+                return new(new InvalidRegisterAttemptException("Invalid registration attempt.",
+                    registrationResult.Errors.Select(x => x.Description)));
             }
             catch (Exception ex)
             {
@@ -258,20 +264,20 @@
                     var link = UrlGenerator.ActionLink("confirm-password-reset", "account",
                         new { Email = UserEmail, Token = token }, "https", new HostString("localhost", 5102));
 
-                    var uri = new Uri("rabbitmq://localhost/send-reset-password-email");
+                    var uri = new Uri("rabbitmq://localhost/reset-password");
                     var endpoint = await bus.GetSendEndpoint(uri);
                     await endpoint.Send(new SendResetPasswordEmailRequest()
                     {
                         Link = link,
                         To = UserEmail,
                         Subject = "Reset password request",
-                        UserName = $"{(!string.IsNullOrEmpty(user.FirstName) && !string.IsNullOrEmpty(user.LastName) 
+                        UserName = $"{(!string.IsNullOrEmpty(user.FirstName) && !string.IsNullOrEmpty(user.LastName)
                             ? $"{user.FirstName + " " + user.LastName}" : user.Email)}"
                     });
 
                     return new(new ResetPasswordResponseDto()
                     {
-                        Message = $"We have sent a mail with instruction to your email address."
+                        Message = $"We have sent an email with instructions to your email address."
                     });
                 }
 

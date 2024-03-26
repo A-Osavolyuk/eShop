@@ -1,6 +1,7 @@
 ﻿namespace eShop.Domain.DTOs.Responses
 {
-    public record RegistrationResponseDto(
-        string Message = ""
-        );
+    public class RegistrationResponseDto
+    {
+        public string Message { get; set; } = string.Empty;
+    }
 }
