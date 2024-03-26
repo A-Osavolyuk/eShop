@@ -1,18 +1,4 @@
-﻿using AutoMapper;
-using eShop.AuthWebApi.Services.Interfaces;
-using eShop.Domain.DTOs;
-using eShop.Domain.DTOs.Requests;
-using eShop.Domain.DTOs.Responses;
-using eShop.Domain.Entities;
-using eShop.Domain.Exceptions;
-using eShop.Domain.Exceptions.Auth;
-using FluentValidation;
-using LanguageExt.Common;
-using MassTransit;
-using Microsoft.AspNetCore.Identity;
-using System.Text;
-
-namespace eShop.AuthWebApi.Services.Implementation
+﻿namespace eShop.AuthWebApi.Services.Implementation
 {
     public partial class AuthService : IAuthService
     {

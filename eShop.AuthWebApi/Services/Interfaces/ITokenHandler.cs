@@ -1,7 +1,4 @@
-﻿using eShop.AuthWebApi.Data;
-using eShop.Domain.Entities;
-
-namespace eShop.AuthWebApi.Services.Interfaces
+﻿namespace eShop.AuthWebApi.Services.Interfaces
 {
     public interface ITokenHandler
     {

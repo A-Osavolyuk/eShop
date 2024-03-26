@@ -1,7 +1,3 @@
-using eShop.AuthWebApi;
-using eShop.AuthWebApi.Data;
-using MassTransit;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddApiServices();

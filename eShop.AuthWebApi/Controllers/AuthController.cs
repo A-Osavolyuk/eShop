@@ -1,11 +1,4 @@
-﻿using eShop.AuthWebApi.Services.Interfaces;
-using eShop.Domain.DTOs.Requests;
-using eShop.Domain.DTOs.Responses;
-using eShop.Domain.Exceptions;
-using eShop.Domain.Exceptions.Auth;
-using Microsoft.AspNetCore.Mvc;
-
-namespace eShop.AuthWebApi.Controllers
+﻿namespace eShop.AuthWebApi.Controllers
 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]

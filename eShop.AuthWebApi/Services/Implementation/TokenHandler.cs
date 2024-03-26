@@ -1,15 +1,4 @@
-﻿using eShop.AuthWebApi.Services.Interfaces;
-using eShop.Domain.Common;
-using eShop.Domain.Entities;
-using eShop.Domain.Options;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System.Data;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-
-namespace eShop.AuthWebApi.Services.Implementation
+﻿namespace eShop.AuthWebApi.Services.Implementation
 {
     public class TokenHandler : ITokenHandler
     {
