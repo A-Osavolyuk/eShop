@@ -11,7 +11,7 @@ namespace eShop.Application.MappingProfiles
         {
             CreateMap<SubcategoryDto, SubcategoryEntity>();
             CreateMap<SubcategoryEntity, SubcategoryDto>();
-            CreateMap<CreateUpdateSubcategoryRequestDto, SubcategoryDto>();
+            CreateMap<CreateUpdateSubcategoryRequest, SubcategoryDto>();
         }
     }
 }

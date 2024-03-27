@@ -1,4 +1,4 @@
-﻿namespace eShop.Domain.Exceptions.Auth
+﻿namespace eShop.AuthWebApi.Exceptions
 {
     public class NotChangedPasswordException(string message) : Exception(message);
 }

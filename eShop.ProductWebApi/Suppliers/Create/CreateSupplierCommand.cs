@@ -1,16 +1,16 @@
 ﻿namespace eShop.ProductWebApi.Suppliers.Create
 {
-    public record CreateSupplierCommand(CreateUpdateSupplierRequestDto Supplier) : IRequest<Result<SupplierDto>>;
+    public record CreateSupplierCommand(CreateUpdateSupplierRequest Supplier) : IRequest<Result<SupplierDto>>;
 
     public class CreateSupplierCommandHandler(
         ISuppliersRepository repository, 
         IMapper mapper, 
-        IValidator<CreateUpdateSupplierRequestDto> validator) 
+        IValidator<CreateUpdateSupplierRequest> validator) 
         : IRequestHandler<CreateSupplierCommand, Result<SupplierDto>>
     {
         private readonly ISuppliersRepository repository = repository;
         private readonly IMapper mapper = mapper;
-        private readonly IValidator<CreateUpdateSupplierRequestDto> validator = validator;
+        private readonly IValidator<CreateUpdateSupplierRequest> validator = validator;
 
         public async Task<Result<SupplierDto>> Handle(CreateSupplierCommand request, CancellationToken cancellationToken)
         {

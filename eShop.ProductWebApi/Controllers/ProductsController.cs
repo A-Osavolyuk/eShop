@@ -79,7 +79,7 @@ namespace eShop.ProductWebApi.Controllers
         }
 
         [HttpPost]
-        public async ValueTask<ActionResult<ResponseDto>> CreateProduct([FromBody] CreateUpdateProductRequestDto Product)
+        public async ValueTask<ActionResult<ResponseDto>> CreateProduct([FromBody] CreateUpdateProductRequest Product)
         {
             var result = await sender.Send(new CreateProductCommand(Product));
 
@@ -131,7 +131,7 @@ namespace eShop.ProductWebApi.Controllers
         }
 
         [HttpPut("{Id:Guid}")]
-        public async ValueTask<ActionResult<ResponseDto>> UpdateProduct(Guid Id, [FromBody] CreateUpdateProductRequestDto Product)
+        public async ValueTask<ActionResult<ResponseDto>> UpdateProduct(Guid Id, [FromBody] CreateUpdateProductRequest Product)
         {
             var result = await sender.Send(new UpdateProductCommand(Id, Product));
 

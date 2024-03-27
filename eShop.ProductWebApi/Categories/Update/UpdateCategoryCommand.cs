@@ -1,16 +1,16 @@
 ﻿namespace eShop.ProductWebApi.Categories.Update
 {
-    public record UpdateCategoryCommand(CreateUpdateCategoryRequestDto Category, Guid Id) : IRequest<Result<CategoryDto>>;
+    public record UpdateCategoryCommand(CreateUpdateCategoryRequest Category, Guid Id) : IRequest<Result<CategoryDto>>;
 
     public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryCommand, Result<CategoryDto>>
     {
         private readonly ICategoriesRepository repository;
-        private readonly IValidator<CreateUpdateCategoryRequestDto> validator;
+        private readonly IValidator<CreateUpdateCategoryRequest> validator;
         private readonly IMapper mapper;
 
         public UpdateCategoryCommandHandler(
             ICategoriesRepository repository,
-            IValidator<CreateUpdateCategoryRequestDto> validator,
+            IValidator<CreateUpdateCategoryRequest> validator,
             IMapper mapper)
         {
             this.repository = repository;

@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace eShop.Application.Validation
 {
-    public class CategoryValidator : AbstractValidator<CreateUpdateCategoryRequestDto>
+    public class CategoryValidator : AbstractValidator<CreateUpdateCategoryRequest>
     {
         public CategoryValidator()
         {

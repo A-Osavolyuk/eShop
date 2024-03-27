@@ -11,7 +11,7 @@ namespace eShop.Application.MappingProfiles
         {
             CreateMap<SupplierDto, SupplierEntity>();
             CreateMap<SupplierEntity, SupplierDto>();
-            CreateMap<CreateUpdateSupplierRequestDto, SupplierDto>();
+            CreateMap<CreateUpdateSupplierRequest, SupplierDto>();
         }
     }
 }

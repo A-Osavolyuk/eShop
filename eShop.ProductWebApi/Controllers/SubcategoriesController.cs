@@ -77,7 +77,7 @@ namespace eShop.ProductWebApi.Controllers
         }
 
         [HttpPost]
-        public async ValueTask<ActionResult<ResponseDto>> CreateSubcategory([FromBody] CreateUpdateSubcategoryRequestDto Subcategory)
+        public async ValueTask<ActionResult<ResponseDto>> CreateSubcategory([FromBody] CreateUpdateSubcategoryRequest Subcategory)
         {
             var result = await sender.Send(new CreateSubcategoryCommand(Subcategory));
 
@@ -135,7 +135,7 @@ namespace eShop.ProductWebApi.Controllers
         }
 
         [HttpPut("{Id:guid}")]
-        public async ValueTask<ActionResult<ResponseDto>> UpdateSubcategory(Guid Id, [FromBody] CreateUpdateSubcategoryRequestDto Subcategory)
+        public async ValueTask<ActionResult<ResponseDto>> UpdateSubcategory(Guid Id, [FromBody] CreateUpdateSubcategoryRequest Subcategory)
         {
             var result = await sender.Send(new UpdateSubcategoryCommand(Subcategory, Id));
 

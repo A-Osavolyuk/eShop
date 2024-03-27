@@ -10,7 +10,7 @@ global using eShop.Domain.DTOs.Responses;
 global using eShop.Domain.DTOs.Messages;
 global using eShop.Domain.Entities;
 global using eShop.Domain.Exceptions;
-global using eShop.Domain.Exceptions.Auth;
+global using eShop.AuthWebApi.Exceptions;
 global using eShop.Domain.Options;
 global using FluentValidation;
 global using LanguageExt.Common;

@@ -1,15 +1,15 @@
 ﻿namespace eShop.ProductWebApi.Products.Create
 {
-    public record CreateProductCommand(CreateUpdateProductRequestDto Product) : IRequest<Result<ProductDto>>;
+    public record CreateProductCommand(CreateUpdateProductRequest Product) : IRequest<Result<ProductDto>>;
 
     public class CreateProductCommandHandler(
         IProductsRepository repository, 
         IMapper mapper, 
-        IValidator<CreateUpdateProductRequestDto> validator) : IRequestHandler<CreateProductCommand, Result<ProductDto>>
+        IValidator<CreateUpdateProductRequest> validator) : IRequestHandler<CreateProductCommand, Result<ProductDto>>
     {
         private readonly IProductsRepository repository = repository;
         private readonly IMapper mapper = mapper;
-        private readonly IValidator<CreateUpdateProductRequestDto> validator = validator;
+        private readonly IValidator<CreateUpdateProductRequest> validator = validator;
 
         public async Task<Result<ProductDto>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {

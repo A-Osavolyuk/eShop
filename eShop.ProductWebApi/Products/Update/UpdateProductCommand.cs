@@ -1,16 +1,16 @@
 ﻿namespace eShop.ProductWebApi.Products.Update
 {
-    public record UpdateProductCommand(Guid Id, CreateUpdateProductRequestDto Product) : IRequest<Result<ProductDto>>;
+    public record UpdateProductCommand(Guid Id, CreateUpdateProductRequest Product) : IRequest<Result<ProductDto>>;
 
     public class UpdateProductCommandHandler(
         IProductsRepository repository,
         IMapper mapper,
-        IValidator<CreateUpdateProductRequestDto> validator) 
+        IValidator<CreateUpdateProductRequest> validator) 
         : IRequestHandler<UpdateProductCommand, Result<ProductDto>>
     {
         private readonly IProductsRepository repository = repository;
         private readonly IMapper mapper = mapper;
-        private readonly IValidator<CreateUpdateProductRequestDto> validator = validator;
+        private readonly IValidator<CreateUpdateProductRequest> validator = validator;
 
         public async Task<Result<ProductDto>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {

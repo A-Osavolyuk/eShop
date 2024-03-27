@@ -74,7 +74,7 @@
         }
 
         [HttpPost]
-        public async ValueTask<ActionResult<ResponseDto>> CreateSupplier([FromBody] CreateUpdateSupplierRequestDto supplier)
+        public async ValueTask<ActionResult<ResponseDto>> CreateSupplier([FromBody] CreateUpdateSupplierRequest supplier)
         {
             var result = await sender.Send(new CreateSupplierCommand(supplier));
 
@@ -128,7 +128,7 @@
         }
 
         [HttpPut("{Id:guid}")]
-        public async ValueTask<ActionResult<ResponseDto>> UpdateSupplier(Guid Id, [FromBody] CreateUpdateSupplierRequestDto supplier)
+        public async ValueTask<ActionResult<ResponseDto>> UpdateSupplier(Guid Id, [FromBody] CreateUpdateSupplierRequest supplier)
         {
             var result = await sender.Send(new UpdateSupplierCommand(Id, supplier));
 

@@ -11,7 +11,7 @@ namespace eShop.Application.MappingProfiles
         {
             CreateMap<ProductDto, ProductEntity>();
             CreateMap<ProductEntity, ProductDto>();
-            CreateMap<CreateUpdateProductRequestDto, ProductDto>();
+            CreateMap<CreateUpdateProductRequest, ProductDto>();
         }
     }
 }

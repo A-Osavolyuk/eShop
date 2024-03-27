@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.DTOs.Requests
 {
-    public class CreateUpdateCategoryRequestDto
+    public class CreateUpdateCategoryRequest
     {
         public string CategoryName { get; set; } = string.Empty;
     }

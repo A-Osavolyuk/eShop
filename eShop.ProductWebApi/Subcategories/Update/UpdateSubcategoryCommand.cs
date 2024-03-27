@@ -1,14 +1,14 @@
 ﻿namespace eShop.ProductWebApi.Subcategories.Update
 {
-    public record UpdateSubcategoryCommand(CreateUpdateSubcategoryRequestDto Subcategory, Guid Id) : IRequest<Result<SubcategoryDto>>;
+    public record UpdateSubcategoryCommand(CreateUpdateSubcategoryRequest Subcategory, Guid Id) : IRequest<Result<SubcategoryDto>>;
 
     public class UpdateSubcategoryCommandHandler(
         ISubcategoriesRepository repository,
-        IValidator<CreateUpdateSubcategoryRequestDto> validator,
+        IValidator<CreateUpdateSubcategoryRequest> validator,
         IMapper mapper) : IRequestHandler<UpdateSubcategoryCommand, Result<SubcategoryDto>>
     {
         private readonly ISubcategoriesRepository repository = repository;
-        private readonly IValidator<CreateUpdateSubcategoryRequestDto> validator = validator;
+        private readonly IValidator<CreateUpdateSubcategoryRequest> validator = validator;
         private readonly IMapper mapper = mapper;
 
         public async Task<Result<SubcategoryDto>> Handle(UpdateSubcategoryCommand request, CancellationToken cancellationToken)

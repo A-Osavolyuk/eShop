@@ -1,13 +1,13 @@
 ﻿namespace eShop.ProductWebApi.Categories.Create
 {
-    public record CreateProductCategoryCommand(CreateUpdateCategoryRequestDto Category) : IRequest<Result<CategoryDto>>;
+    public record CreateProductCategoryCommand(CreateUpdateCategoryRequest Category) : IRequest<Result<CategoryDto>>;
 
     public class CreateProductCategoryCommandHandler(
-        IValidator<CreateUpdateCategoryRequestDto> validator,
+        IValidator<CreateUpdateCategoryRequest> validator,
         IMapper mapper,
         ICategoriesRepository repository) : IRequestHandler<CreateProductCategoryCommand, Result<CategoryDto>>
     {
-        private readonly IValidator<CreateUpdateCategoryRequestDto> validator = validator;
+        private readonly IValidator<CreateUpdateCategoryRequest> validator = validator;
         private readonly IMapper mapper = mapper;
         private readonly ICategoriesRepository repository = repository;
 

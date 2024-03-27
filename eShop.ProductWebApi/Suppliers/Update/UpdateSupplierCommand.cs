@@ -1,16 +1,16 @@
 ﻿namespace eShop.ProductWebApi.Suppliers.Update
 {
-    public record UpdateSupplierCommand(Guid Id, CreateUpdateSupplierRequestDto Supplier) : IRequest<Result<SupplierDto>>;
+    public record UpdateSupplierCommand(Guid Id, CreateUpdateSupplierRequest Supplier) : IRequest<Result<SupplierDto>>;
 
     public class UpdateSupplierCommandHandler(
         ISuppliersRepository repository, 
         IMapper mapper, 
-        IValidator<CreateUpdateSupplierRequestDto> validator) 
+        IValidator<CreateUpdateSupplierRequest> validator) 
         : IRequestHandler<UpdateSupplierCommand, Result<SupplierDto>>
     {
         private readonly ISuppliersRepository repository = repository;
         private readonly IMapper mapper = mapper;
-        private readonly IValidator<CreateUpdateSupplierRequestDto> validator = validator;
+        private readonly IValidator<CreateUpdateSupplierRequest> validator = validator;
 
         public async Task<Result<SupplierDto>> Handle(UpdateSupplierCommand request, CancellationToken cancellationToken)
         {
