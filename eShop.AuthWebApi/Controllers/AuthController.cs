@@ -164,7 +164,7 @@
         [HttpPost("change-password/{Id}")]
         public async ValueTask<ActionResult<ResponseDto>> ChangePassword([FromBody] ChangePasswordRequest changePasswordRequest, string Id)
         {
-            var result = await authService.ChangePassword(Id, changePasswordRequest);
+            var result = await authService.ChangePasswordAsync(Id, changePasswordRequest);
 
             return result.Match<ActionResult<ResponseDto>>(
                 s => Ok(new ResponseBuilder()
@@ -202,7 +202,7 @@
         [HttpPost("request-reset-password/{Email}")]
         public async ValueTask<ActionResult<ResponseDto>> ResetPasswordRequest(string Email)
         {
-            var result = await authService.RequestResetPassword(Email);
+            var result = await authService.RequestResetPasswordAsync(Email);
 
             return result.Match<ActionResult<ResponseDto>>(
                 s => Ok(new ResponseBuilder()
@@ -227,7 +227,7 @@
         [HttpPost("confirm-reset-password/{Email}")]
         public async ValueTask<ActionResult<ResponseDto>> ConfirmResetPassword(string Email, [FromBody] ConfirmPasswordResetRequest confirmPasswordResetRequest)
         {
-            var result = await authService.ConfirmResetPassword(Email, confirmPasswordResetRequest);
+            var result = await authService.ConfirmResetPasswordAsync(Email, confirmPasswordResetRequest);
 
             return result.Match<ActionResult<ResponseDto>>(
                 s => Ok(new ResponseBuilder()
@@ -259,13 +259,66 @@
         [HttpPost("confirm-email/{Email}")]
         public async ValueTask<ActionResult<ResponseDto>> ConfirmEmail(string Email, [FromBody] ConfirmEmailRequest confirmEmailRequest)
         {
-            var result = await authService.ConfirmEmail(Email, confirmEmailRequest);
+            var result = await authService.ConfirmEmailAsync(Email, confirmEmailRequest);
 
             return result.Match<ActionResult<ResponseDto>>(
                 s => Ok(new ResponseBuilder()
                     .Succeeded()
                     .AddResultMessage("Your email address was successfully confirmed.")
                     .Build()),
+                f =>
+                {
+                    if (f is NotFoundUserByEmailException notFoundUserByEmailException)
+                        return NotFound(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(notFoundUserByEmailException.Message)
+                            .Build());
+
+                    return StatusCode(500, new ResponseBuilder()
+                        .Failed()
+                        .AddErrorMessage(f.Message)
+                        .Build());
+                });
+        }
+
+        [HttpPost("change-2fa-state/{Email}")]
+        public async ValueTask<ActionResult<ResponseDto>> ChangeTwoFactorAuthentication(string Email)
+        {
+            var result = await authService.ChangeTwoFactorAuthenticationStateAsync(Email);
+
+            return result.Match<ActionResult<ResponseDto>>(
+                s => Ok(new ResponseBuilder()
+                .Succeeded()
+                .AddResultMessage(s.Message)
+                .Build()),
+                f =>
+                {
+                    if (f is NotFoundUserByEmailException notFoundUserByEmailException)
+                        return NotFound(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(notFoundUserByEmailException.Message)
+                            .Build());
+
+                    return StatusCode(500, new ResponseBuilder()
+                        .Failed()
+                        .AddErrorMessage(f.Message)
+                        .Build());
+                });
+        }
+
+        [HttpGet("get-2fa-state/{Email}")]
+        public async ValueTask<ActionResult<ResponseDto>> GetTwoFactorAuthenticationState(string Email)
+        {
+            var result = await authService.GetTwoFactorAuthenticationStateAsync(Email);
+
+            return result.Match<ActionResult<ResponseDto>>(
+                s => Ok(new ResponseBuilder()
+                .Succeeded()
+                .AddResultMessage(s.TwoFactorAuthenticationState 
+                    ? "Two factor authentication state is enabled." 
+                    : "Two factor authentication state is disabled.")
+                .AddResult(s)
+                .Build()),
                 f =>
                 {
                     if (f is NotFoundUserByEmailException notFoundUserByEmailException)

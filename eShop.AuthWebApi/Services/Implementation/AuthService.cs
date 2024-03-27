@@ -23,7 +23,7 @@ namespace eShop.AuthWebApi.Services.Implementation
         private readonly IMapper mapper = mapper;
         private readonly IBus bus = bus;
 
-        public async ValueTask<Result<ChangePasswordResponse>> ChangePassword(string UserId, ChangePasswordRequest changePasswordRequest)
+        public async ValueTask<Result<ChangePasswordResponse>> ChangePasswordAsync(string UserId, ChangePasswordRequest changePasswordRequest)
         {
             try
             {
@@ -107,7 +107,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
-        public async ValueTask<Result<Unit>> ConfirmEmail(string Email, ConfirmEmailRequest confirmEmailRequest)
+        public async ValueTask<Result<Unit>> ConfirmEmailAsync(string Email, ConfirmEmailRequest confirmEmailRequest)
         {
             try
             {
@@ -134,7 +134,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
-        public async ValueTask<Result<ConfirmPasswordResetResponse>> ConfirmResetPassword(string Email, ConfirmPasswordResetRequest confirmPasswordResetRequest)
+        public async ValueTask<Result<ConfirmPasswordResetResponse>> ConfirmResetPasswordAsync(string Email, ConfirmPasswordResetRequest confirmPasswordResetRequest)
         {
             try
             {
@@ -282,7 +282,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
-        public async ValueTask<Result<ResetPasswordResponse>> RequestResetPassword(string UserEmail)
+        public async ValueTask<Result<ResetPasswordResponse>> RequestResetPasswordAsync(string UserEmail)
         {
             try
             {
@@ -313,6 +313,77 @@ namespace eShop.AuthWebApi.Services.Implementation
                 }
 
                 return new(new NotFoundUserByEmailException(UserEmail));
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
+        }
+
+        public async ValueTask<Result<ChangeTwoFactorAuthenticationResponse>> ChangeTwoFactorAuthenticationStateAsync(string Email)
+        {
+            try
+            {
+                var user = await userManager.FindByEmailAsync(Email);
+
+                if (user is not null)
+                {
+                    IdentityResult result = null!;
+
+                    if (user.TwoFactorEnabled)
+                    {
+                        result = await userManager.SetTwoFactorEnabledAsync(user, false);
+
+                        if (result.Succeeded)
+                        {
+                            return new(new ChangeTwoFactorAuthenticationResponse()
+                            {
+                                Message = "Two factor authentication was successfully disabled.",
+                                TwoFactorAuthenticationState = false
+                            });
+                        }
+
+                        return new(new NotChangedTwoFactorAuthenticationException());
+                    }
+                    else
+                    {
+                        result = await userManager.SetTwoFactorEnabledAsync(user, true);
+
+                        if (result.Succeeded)
+                        {
+                            return new(new ChangeTwoFactorAuthenticationResponse()
+                            {
+                                Message = "Two factor authentication was successfully enabled.",
+                                TwoFactorAuthenticationState = false
+                            });
+                        }
+
+                        return new(new NotChangedTwoFactorAuthenticationException());
+                    }
+                }
+
+                return new(new NotFoundUserByEmailException(Email));
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
+        }
+
+        public async ValueTask<Result<TwoFactorAuthenticationStateResponse>> GetTwoFactorAuthenticationStateAsync(string Email)
+        {
+            try
+            {
+                var user = await userManager.FindByEmailAsync(Email);
+
+                if (user is not null)
+                {
+                    return user.TwoFactorEnabled
+                        ? new(new TwoFactorAuthenticationStateResponse() { TwoFactorAuthenticationState = true })
+                        : new(new TwoFactorAuthenticationStateResponse() { TwoFactorAuthenticationState = false });
+                }
+
+                return new(new NotFoundUserByEmailException(Email));
             }
             catch (Exception ex)
             {
