@@ -11,7 +11,7 @@ namespace eShop.AuthWebApi.Services.Implementation
         IValidator<ChangePasswordRequest> passwordValidator,
         IValidator<ConfirmPasswordResetRequest> resetPasswordValidator,
         IMapper mapper,
-        IBus bus) : IAuthService
+        IEmailSender emailSender) : IAuthService
     {
         private readonly ITokenHandler tokenHandler = tokenHandler;
         private readonly UserManager<AppUser> userManager = userManager;
@@ -21,7 +21,7 @@ namespace eShop.AuthWebApi.Services.Implementation
         private readonly IValidator<ChangePasswordRequest> passwordValidator = passwordValidator;
         private readonly IValidator<ConfirmPasswordResetRequest> resetPasswordValidator = resetPasswordValidator;
         private readonly IMapper mapper = mapper;
-        private readonly IBus bus = bus;
+        private readonly IEmailSender emailSender = emailSender;
 
         public async ValueTask<Result<ChangePasswordResponse>> ChangePasswordAsync(string UserId, ChangePasswordRequest changePasswordRequest)
         {
@@ -120,6 +120,13 @@ namespace eShop.AuthWebApi.Services.Implementation
 
                     if (confirmResult.Succeeded)
                     {
+                        await emailSender.SendAccountRegisteredMessage(new AccountRegisteredMessage()
+                        {
+                            To = Email,
+                            Subject = "Successful Account Registration",
+                            UserName = user.UserName!
+                        });
+
                         return new(new Unit());
                     }
 
@@ -254,15 +261,12 @@ namespace eShop.AuthWebApi.Services.Implementation
                     var link = UrlGenerator.ActionLink("confirm-email", "account",
                         new { Email = registrationRequest.Email, Token = emailConfirmationToken }, "https", new HostString("localhost", 5102));
 
-                    var endpoint = await bus.GetSendEndpoint(new Uri("rabbitmq://localhost/confirm-email"));
-
-                    await endpoint.Send(new ConfirmEmailMessage()
+                    await emailSender.SendConfirmEmailMessage(new ConfirmEmailMessage()
                     {
-                        Link = link,
                         To = registrationRequest.Email,
-                        Subject = "Confirm email address",
-                        UserName = $"{(!string.IsNullOrEmpty(user.FirstName) && !string.IsNullOrEmpty(user.LastName)
-                            ? $"{user.FirstName + " " + user.LastName}" : user.Email)}"
+                        Subject = "Email Confirmation",
+                        Link = link,
+                        UserName = user.UserName!
                     });
 
                     return new(new RegistrationResponse()
@@ -294,15 +298,12 @@ namespace eShop.AuthWebApi.Services.Implementation
                     var link = UrlGenerator.ActionLink("confirm-password-reset", "account",
                         new { Email = UserEmail, Token = token }, "https", new HostString("localhost", 5102));
 
-                    var uri = new Uri("rabbitmq://localhost/reset-password");
-                    var endpoint = await bus.GetSendEndpoint(uri);
-                    await endpoint.Send(new ResetPasswordMessage()
+                    await emailSender.SendResetPasswordMessage(new ResetPasswordMessage()
                     {
-                        Link = link,
                         To = UserEmail,
-                        Subject = "Reset password request",
-                        UserName = $"{(!string.IsNullOrEmpty(user.FirstName) && !string.IsNullOrEmpty(user.LastName)
-                            ? $"{user.FirstName + " " + user.LastName}" : user.Email)}"
+                        Subject = "Reset Password Request",
+                        Link = link,
+                        UserName = user.UserName!
                     });
 
                     return new(new ResetPasswordResponse()
@@ -390,5 +391,6 @@ namespace eShop.AuthWebApi.Services.Implementation
                 return new(ex);
             }
         }
+
     }
 }
