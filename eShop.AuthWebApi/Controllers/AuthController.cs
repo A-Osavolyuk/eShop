@@ -65,7 +65,7 @@
                     return Ok(new ResponseBuilder()
                         .Succeeded()
                         .AddResult(succ)
-                        .AddResultMessage("Successfully logged in.")
+                        .AddResultMessage(succ.Message)
                         .Build());
                 },
                 fail =>
@@ -331,6 +331,42 @@
                         .Failed()
                         .AddErrorMessage(f.Message)
                         .Build());
+                });
+        }
+
+        [HttpPost("2fa-login/{Email}")]
+        public async ValueTask<ActionResult<ResponseDto>> LoginWithTwoFactorAuthenticationCode(string Email, TwoFactorAuthenticationLoginRequest twoFactorAuthenticationLoginRequest)
+        {
+            var result = await authService.LoginWithTwoFactorAuthenticationCodeAsync(Email, twoFactorAuthenticationLoginRequest);
+
+            return result.Match<ActionResult<ResponseDto>>(
+                succ =>
+                {
+                    return Ok(new ResponseBuilder()
+                        .Succeeded()
+                        .AddResult(succ)
+                        .AddResultMessage(succ.Message)
+                        .Build());
+                },
+                fail =>
+                {
+                    if (fail is NotFoundUserByEmailException notFoundUserByEmail)
+                        return NotFound(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(notFoundUserByEmail.Message)
+                            .Build());
+
+                    if (fail is InvalidTwoFactorAuthenticationCodeException invalidTwoFactorAuthenticationCodeException)
+                        return BadRequest(new ResponseBuilder()
+                        .Failed()
+                        .AddErrorMessage(invalidTwoFactorAuthenticationCodeException!.Message)
+                        .Build());
+
+                    return StatusCode(500, new ResponseBuilder()
+                        .Failed()
+                        .AddErrorMessage(fail.Message)
+                        .Build());
+
                 });
         }
     }

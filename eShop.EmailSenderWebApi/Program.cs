@@ -36,11 +36,16 @@ builder.Services.AddMassTransit(x =>
         {
             e.ConfigureConsumer<AccountRegisteredReceiver>(context);
         });
+        cfg.ReceiveEndpoint("2fa-code", e =>
+        {
+            e.ConfigureConsumer<TwoFactorAuthenticationCodeReceiver>(context);
+        });
     });
 
     x.AddConsumer<ResetPasswordEmailReceiver>();
     x.AddConsumer<ConfirmEmailReceiver>();
     x.AddConsumer<AccountRegisteredReceiver>();
+    x.AddConsumer<TwoFactorAuthenticationCodeReceiver>();
 });
 
 var app = builder.Build();

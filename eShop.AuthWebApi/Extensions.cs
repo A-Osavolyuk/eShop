@@ -43,6 +43,7 @@ namespace eShop.AuthWebApi
         {
             builder.Services.AddScoped<ITokenHandler, TokenHandler>();
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IEmailSender, EmailSender>();
 
             return builder;
         }

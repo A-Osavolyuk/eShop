@@ -1,10 +1,12 @@
 ﻿using LanguageExt;
+using LanguageExt.Pretty;
 
 namespace eShop.AuthWebApi.Services.Implementation
 {
     public partial class AuthService(
         ITokenHandler tokenHandler,
         UserManager<AppUser> userManager,
+        SignInManager<AppUser> signInManager,
         IValidator<RegistrationRequest> registrationValidator,
         IValidator<LoginRequest> loginValidator,
         IValidator<ChangePersonalDataRequest> personalDataValidator,
@@ -15,6 +17,7 @@ namespace eShop.AuthWebApi.Services.Implementation
     {
         private readonly ITokenHandler tokenHandler = tokenHandler;
         private readonly UserManager<AppUser> userManager = userManager;
+        private readonly SignInManager<AppUser> signInManager = signInManager;
         private readonly IValidator<RegistrationRequest> registrationValidator = registrationValidator;
         private readonly IValidator<LoginRequest> loginValidator = loginValidator;
         private readonly IValidator<ChangePersonalDataRequest> personalDataValidator = personalDataValidator;
@@ -217,17 +220,47 @@ namespace eShop.AuthWebApi.Services.Implementation
 
                 if (user is not null)
                 {
-                    var isValidPassword = await userManager.CheckPasswordAsync(user, loginRequest.Password);
-
-                    if (isValidPassword)
+                    if (user.EmailConfirmed)
                     {
-                        var token = tokenHandler.GenerateToken(user);
-                        var userDto = new UserDto(user.Email!, user.Email!, user.Id);
+                        var isValidPassword = await userManager.CheckPasswordAsync(user, loginRequest.Password);
 
-                        return new(new LoginResponse(userDto, token));
+                        if (isValidPassword)
+                        {
+                            var userDto = new UserDto(user.Email!, user.Email!, user.Id);
+
+                            if (user.TwoFactorEnabled)
+                            {
+                                var loginCode = await userManager.GenerateTwoFactorTokenAsync(user, "Email");
+
+                                await emailSender.SendTwoFactorAuthenticationCodeMessage(new TwoFactorAuthenticationCodeMessage()
+                                {
+                                    To = user.Email!,
+                                    Subject = "Login with 2FA code",
+                                    UserName = user.UserName!,
+                                    Code = loginCode
+                                });
+
+                                return new(new LoginResponse()
+                                {
+                                    User = userDto,
+                                    Message = "We have sent an email with 2FA code."
+                                });
+                            }
+
+                            var token = tokenHandler.GenerateToken(user);
+
+                            return new(new LoginResponse()
+                            {
+                                User = userDto,
+                                Token = token,
+                                Message = "Successfully logged in."
+                            });
+                        }
+
+                        return new(new InvalidLoginAttemptException());
                     }
 
-                    return new(new InvalidLoginAttemptException());
+                    return new(new InvalidLoginAttemptWithNotConfirmedEmailException());
                 }
 
                 return new(new NotFoundUserByEmailException(loginRequest.Email));
@@ -392,5 +425,38 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
+        public async ValueTask<Result<LoginResponse>> LoginWithTwoFactorAuthenticationCodeAsync(string Email, TwoFactorAuthenticationLoginRequest twoFactorAuthenticationLoginRequest)
+        {
+            try
+            {
+                var user = await userManager.FindByEmailAsync(Email);
+
+                if (user is not null)
+                {
+                    var result = await userManager.VerifyTwoFactorTokenAsync(user, "Email", twoFactorAuthenticationLoginRequest.Code);
+
+                    if (result)
+                    {
+                        var userDto = new UserDto(user.Email!, user.Email!, user.Id);
+                        var token = tokenHandler.GenerateToken(user);
+
+                        return new(new LoginResponse()
+                        {
+                            User = userDto,
+                            Token = token,
+                            Message = "Successfully logged in."
+                        });
+                    }
+
+                    return new(new InvalidTwoFactorAuthenticationCodeException());
+                }
+
+                return new(new NotFoundUserByEmailException(Email));
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
+        }
     }
 }

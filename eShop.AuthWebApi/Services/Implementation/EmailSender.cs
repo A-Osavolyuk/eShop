@@ -34,6 +34,13 @@ namespace eShop.AuthWebApi.Services.Implementation
             await endpoint.Send(resetPasswordMessage);
         }
 
+        public async ValueTask SendTwoFactorAuthenticationCodeMessage(TwoFactorAuthenticationCodeMessage twoFactorAuthenticationCodeMessage)
+        {
+            var queryName = "/2fa-code";
+            var endpoint = await bus.GetSendEndpoint(CreateQueryUri(queryName));
+            await endpoint.Send(twoFactorAuthenticationCodeMessage);
+        }
+
         private Uri CreateQueryUri(string queryName)
         {
             const string UriBase = "rabbitmq://localhost/";
