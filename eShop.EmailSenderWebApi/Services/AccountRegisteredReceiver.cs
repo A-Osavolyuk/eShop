@@ -7,11 +7,10 @@ using MimeKit;
 
 namespace eShop.EmailSenderWebApi.Services
 {
-    public class ConfirmEmailReceiver(IOptions<EmailOptions> _options) : IConsumer<ConfirmEmailMessage>
+    public class AccountRegisteredReceiver(IOptions<EmailOptions> _options) : IConsumer<AccountRegisteredMessage>
     {
         private readonly EmailOptions options = _options.Value;
-
-        public async Task Consume(ConsumeContext<ConfirmEmailMessage> context)
+        public async Task Consume(ConsumeContext<AccountRegisteredMessage> context)
         {
             var emailMessage = new MimeMessage();
 
@@ -20,7 +19,7 @@ namespace eShop.EmailSenderWebApi.Services
             emailMessage.Subject = context.Message.Subject;
 
             var builder = new BodyBuilder();
-            builder.HtmlBody = GetEmailBody(context.Message.To, context.Message.Link);
+            builder.HtmlBody = GetEmailBody(context.Message.To);
 
             emailMessage.Body = builder.ToMessageBody();
 
@@ -33,19 +32,17 @@ namespace eShop.EmailSenderWebApi.Services
             }
         }
 
-        private string GetEmailBody(string userName, string resetLink)
+        private string GetEmailBody(string userName)
         {
             string body = @"
             <!DOCTYPE html>
             <html>
             <head>
-                <title>Confirm Your Email Address</title>
+                <title>Welcome to eShop!</title>
             </head>
             <body>
                 <p>Hello " + userName + @",</p>
-                <p>We received a request to confirm your email address. Please click the link below to confirm your email address:</p>
-                <p><a href='" + resetLink + @"'>Confirm Email Address</a></p>
-                <p>If you didn't request an email address confirmation, you can ignore this email.</p>
+                <p>Your account was successfully registered.</p>
                 <p>Thank you,</p>
                 <p>Your Website Team</p>
             </body>

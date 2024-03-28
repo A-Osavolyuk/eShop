@@ -20,7 +20,7 @@ namespace eShop.EmailSenderWebApi.Services
             emailMessage.Subject = context.Message.Subject;
 
             var builder = new BodyBuilder();
-            builder.HtmlBody = GetResetPasswordEmailBody(context.Message.To, context.Message.Link);
+            builder.HtmlBody = GetEmailBody(context.Message.To, context.Message.Link);
 
             emailMessage.Body = builder.ToMessageBody();
 
@@ -33,7 +33,7 @@ namespace eShop.EmailSenderWebApi.Services
             }
         }
 
-        private string GetResetPasswordEmailBody(string userName, string resetLink)
+        private string GetEmailBody(string userName, string resetLink)
         {
             string body = @"
             <!DOCTYPE html>

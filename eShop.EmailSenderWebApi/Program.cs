@@ -31,10 +31,16 @@ builder.Services.AddMassTransit(x =>
         {
             e.ConfigureConsumer<ConfirmEmailReceiver>(context);
         });
+
+        cfg.ReceiveEndpoint("account-registered", e =>
+        {
+            e.ConfigureConsumer<AccountRegisteredReceiver>(context);
+        });
     });
 
     x.AddConsumer<ResetPasswordEmailReceiver>();
     x.AddConsumer<ConfirmEmailReceiver>();
+    x.AddConsumer<AccountRegisteredReceiver>();
 });
 
 var app = builder.Build();
