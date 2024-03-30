@@ -41,6 +41,13 @@ namespace eShop.AuthWebApi.Services.Implementation
             await endpoint.Send(twoFactorAuthenticationCodeMessage);
         }
 
+        public async ValueTask SendAccountRegisteredOnExternalLoginMessage(AccountRegisteredOnExternalLoginMessage accountRegisteredOnExternalLoginMessage)
+        {
+            var queryName = "/registered-on-external-login";
+            var endpoint = await bus.GetSendEndpoint(CreateQueryUri(queryName));
+            await endpoint.Send(accountRegisteredOnExternalLoginMessage);
+        }
+
         private Uri CreateQueryUri(string queryName)
         {
             const string UriBase = "rabbitmq://localhost/";

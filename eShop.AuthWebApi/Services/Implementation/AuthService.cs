@@ -517,10 +517,20 @@ namespace eShop.AuthWebApi.Services.Implementation
                         EmailConfirmed = true
                     };
 
-                    var result = await userManager.CreateAsync(user);
+                    var tempPassword = new StringBuilder("A").Append(Guid.NewGuid()).ToString();
+                    var result = await userManager.CreateAsync(user, tempPassword);
 
                     if (result.Succeeded)
                     {
+                        await emailSender.SendAccountRegisteredOnExternalLoginMessage(new AccountRegisteredOnExternalLoginMessage()
+                        {
+                            To = email,
+                            Subject = $"Account created with {externalLoginInfo!.ProviderDisplayName} sign in",
+                            TempPassword = tempPassword,
+                            UserName = email,
+                            ProviderName = externalLoginInfo!.ProviderDisplayName!
+                        });
+
                         token = tokenHandler.GenerateToken(user);
                         var link = UrlGenerator.ActionLink("/account/confirm-external-login", frontendUri, new { Token = token, ReturnUri = ReturnUri });
                         return new(link);

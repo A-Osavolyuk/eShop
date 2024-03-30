@@ -22,30 +22,18 @@ builder.Services.AddMassTransit(x =>
             h.Password(password);
         });
 
-        cfg.ReceiveEndpoint("reset-password", e =>
-        {
-            e.ConfigureConsumer<ResetPasswordEmailReceiver>(context);
-        });
-
-        cfg.ReceiveEndpoint("confirm-email", e =>
-        {
-            e.ConfigureConsumer<ConfirmEmailReceiver>(context);
-        });
-
-        cfg.ReceiveEndpoint("account-registered", e =>
-        {
-            e.ConfigureConsumer<AccountRegisteredReceiver>(context);
-        });
-        cfg.ReceiveEndpoint("2fa-code", e =>
-        {
-            e.ConfigureConsumer<TwoFactorAuthenticationCodeReceiver>(context);
-        });
+        cfg.ReceiveEndpoint("reset-password", e => e.ConfigureConsumer<ResetPasswordEmailReceiver>(context));
+        cfg.ReceiveEndpoint("confirm-email", e => e.ConfigureConsumer<ConfirmEmailReceiver>(context));
+        cfg.ReceiveEndpoint("account-registered", e => e.ConfigureConsumer<AccountRegisteredReceiver>(context));
+        cfg.ReceiveEndpoint("2fa-code", e => e.ConfigureConsumer<TwoFactorAuthenticationCodeReceiver>(context));
+        cfg.ReceiveEndpoint("registered-on-external-login", e => e.ConfigureConsumer<AccountRegisteredOnExternalLoginReceiver>(context));
     });
 
     x.AddConsumer<ResetPasswordEmailReceiver>();
     x.AddConsumer<ConfirmEmailReceiver>();
     x.AddConsumer<AccountRegisteredReceiver>();
     x.AddConsumer<TwoFactorAuthenticationCodeReceiver>();
+    x.AddConsumer<AccountRegisteredOnExternalLoginReceiver>();
 });
 
 var app = builder.Build();
