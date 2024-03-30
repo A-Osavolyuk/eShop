@@ -39,17 +39,17 @@
         @if (Providers.Any())
         {
             <MudPaper Outlined Class="mt-3 pa-3">
-                @foreach (var p in Providers)
-                {
-                    <MudGrid>
+                <MudGrid Spacing="1">
+                    @foreach (var p in Providers)
+                    {
                         <MudItem xs="3">
                             <MudButton ButtonType="ButtonType.Button" StartIcon="@Icons.Material.Filled.Login"
                                        Variant="Variant.Filled" OnClick="(() => ExternalLogin(p.Name))" Color="Color.Primary" FullWidth>
                                 @p.Name
                             </MudButton>
                         </MudItem>
-                    </MudGrid>
-                }
+                    }
+                </MudGrid>
             </MudPaper>
         }
         else

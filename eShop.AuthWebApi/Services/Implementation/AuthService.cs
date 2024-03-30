@@ -1,4 +1,5 @@
-﻿using LanguageExt;
+﻿using eShop.AuthWebApi.Utilities;
+using LanguageExt;
 using Microsoft.AspNetCore.Authentication.Google;
 using System;
 
@@ -430,7 +431,8 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
-        public async ValueTask<Result<LoginResponse>> LoginWithTwoFactorAuthenticationCodeAsync(string Email, TwoFactorAuthenticationLoginRequest twoFactorAuthenticationLoginRequest)
+        public async ValueTask<Result<LoginResponse>> LoginWithTwoFactorAuthenticationCodeAsync(string Email, 
+            TwoFactorAuthenticationLoginRequest twoFactorAuthenticationLoginRequest)
         {
             try
             {
@@ -470,9 +472,9 @@ namespace eShop.AuthWebApi.Services.Implementation
             {
                 var providers = await signInManager.GetExternalAuthenticationSchemesAsync();
 
-                var isValidProvider = providers.Select(p => p.Name == provider).FirstOrDefault();
+                var validProvider = providers.Any(x => x.DisplayName == provider);
 
-                if (isValidProvider)
+                if (validProvider)
                 {
                     var handlerUri = UrlGenerator.Action("handle-external-login-response", "Auth", new { ReturnUri = returnUri ?? "/" });
                     var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, handlerUri);
@@ -517,7 +519,7 @@ namespace eShop.AuthWebApi.Services.Implementation
                         EmailConfirmed = true
                     };
 
-                    var tempPassword = new StringBuilder("A").Append(Guid.NewGuid()).ToString();
+                    var tempPassword = userManager.GenerateRandomPassword(18);
                     var result = await userManager.CreateAsync(user, tempPassword);
 
                     if (result.Succeeded)

@@ -1,4 +1,4 @@
-﻿namespace eShop.AuthWebApi.Services.Implementation
+﻿namespace eShop.AuthWebApi.Utilities
 {
     public static class UrlGenerator
     {

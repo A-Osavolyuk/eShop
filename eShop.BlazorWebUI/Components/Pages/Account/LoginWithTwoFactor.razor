@@ -16,7 +16,7 @@
             <EditForm FormName="login-form" Model="Model" OnValidSubmit="OnValidSubmit">
                 <FluentValidationValidator Validator="Validator" />
 
-                <MudText Align="Align.Center" Typo="Typo.h4">Log In</MudText>
+                <MudText Align="Align.Center" Typo="Typo.h4">Two Factor Log In</MudText>
                 <MudText Class="mt-2" Align="Align.Center" Typo="Typo.h5">Enter the 6-digit code that was sent to you by email</MudText>
                 <MudTextField @bind-Value="Model.Code" For="(() => Model.Code)"
                               Label="Code" Immediate Variant="Variant.Outlined" />
