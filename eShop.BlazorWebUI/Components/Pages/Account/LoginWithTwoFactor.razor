@@ -1,0 +1,57 @@
+﻿@page "/account/login-2fa/{Email}"
+@using eShop.Domain.DTOs.Responses
+@using eShop.Infrastructure.Account
+
+@inject NavigationManager NavigationManager
+@inject IAuthenticationService AuthenticationService
+@inject ISnackbar Snackbar
+@inject IValidator<TwoFactorAuthenticationLoginRequest> Validator
+@inject AuthenticationStateProvider authenticationStateProvider
+
+<PageTitle>Login with 2FA</PageTitle>
+
+<MudGrid Justify="Justify.Center">
+    <MudItem xs="4">
+        <MudPaper Outlined Style="margin-top: 30%;" Class="pa-3">
+            <EditForm FormName="login-form" Model="Model" OnValidSubmit="OnValidSubmit">
+                <FluentValidationValidator Validator="Validator" />
+
+                <MudText Align="Align.Center" Typo="Typo.h4">Log In</MudText>
+                <MudText Class="mt-2" Align="Align.Center" Typo="Typo.h5">Enter the 6-digit code that was sent to you by email</MudText>
+                <MudTextField @bind-Value="Model.Code" For="(() => Model.Code)"
+                              Label="Code" Immediate Variant="Variant.Outlined" />
+
+                <MudGrid Justify="Justify.Center">
+                    <MudItem xs="8">
+                        <MudButton ButtonType="ButtonType.Submit" StartIcon="@Icons.Material.Filled.Login"
+                                   Variant="Variant.Filled" Color="Color.Primary" Class="mt-3" FullWidth>
+                            Submit
+                        </MudButton>
+                    </MudItem>
+
+                </MudGrid>
+            </EditForm>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    [Parameter] public string Email { get; set; } = string.Empty;
+    private TwoFactorAuthenticationLoginRequest Model { get; set; } = new();
+
+    private async Task OnValidSubmit()
+    {
+        var result = await AuthenticationService.LoginWithTwoFactorAuthenticationAsync(Email, Model);
+
+
+        if (result.IsSucceeded)
+        {
+            var data = JsonConvert.DeserializeObject<LoginResponse>(result.Result!.ToString()!);
+            (authenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(data!.Token);
+            NavigationManager.NavigateTo("/");
+            Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
+        }
+        else
+            Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
+    }
+}

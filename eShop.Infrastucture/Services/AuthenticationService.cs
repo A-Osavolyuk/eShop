@@ -51,7 +51,12 @@ namespace eShop.Infrastructure.Services
         public ValueTask<ResponseDto> GetPersonalDataAsync(string Id) => clientService.SendAsync(
                     new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/get-personal-data/{Id}", Method: ApiMethod.GET));
 
-        public ValueTask<ResponseDto> GetExternalProviders() => clientService.SendAsync(
+        public ValueTask<ResponseDto> GetExternalProvidersAsync() => clientService.SendAsync(
                     new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/get-external-providers", Method: ApiMethod.GET));
+
+        public ValueTask<ResponseDto> LoginWithTwoFactorAuthenticationAsync(
+            string Email, TwoFactorAuthenticationLoginRequest twoFactorAuthenticationLoginRequest) => clientService.SendAsync(
+                    new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/2fa-login/{Email}",
+                        Method: ApiMethod.POST, Data: twoFactorAuthenticationLoginRequest));
     }
 }

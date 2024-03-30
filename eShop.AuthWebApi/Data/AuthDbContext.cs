@@ -8,14 +8,14 @@
             builder.Entity<AppUser>().HasData(
                 new AppUser()
                 {
-                    Email = "test@test.com",
-                    NormalizedEmail = "test@test.com".ToUpper(),
-                    UserName = "test@test.com",
-                    NormalizedUserName = "test@test.com".ToUpper(),
+                    Email = "sasha.osavolll111@gmail.com",
+                    NormalizedEmail = "sasha.osavolll111@gmail.com".ToUpper(),
+                    UserName = "sasha.osavolll111@gmail.com",
+                    NormalizedUserName = "sasha.osavolll111@gmail.com".ToUpper(),
                     PasswordHash = "AQAAAAIAAYagAAAAEHeZ7iJce/rkJIBOAFdarWHCG1NUYQ1y67q5EyVGG9ttMlkXR2wxOMAQRsg+HtNtCg==",
                     Id = "abb9d2ed-c3d2-4df9-ba88-eab018b95bc3",
                     EmailConfirmed = true,
-                    TwoFactorEnabled = false,
+                    TwoFactorEnabled = true,
                 });
         }
     }

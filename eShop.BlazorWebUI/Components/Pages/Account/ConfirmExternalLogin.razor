@@ -4,6 +4,7 @@
 
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider authenticationStateProvider
+@inject ISnackbar Snackbar
 
 @code {
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -20,5 +21,7 @@
 
         (authenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(token!);
         NavigationManager.NavigateTo(returnUri!);
+
+        Snackbar.Add("Successfully logged in.", MudBlazor.Severity.Success);
     }
 }

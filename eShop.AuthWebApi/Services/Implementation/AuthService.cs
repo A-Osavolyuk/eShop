@@ -247,7 +247,8 @@ namespace eShop.AuthWebApi.Services.Implementation
                                 return new(new LoginResponse()
                                 {
                                     User = userDto,
-                                    Message = "We have sent an email with 2FA code."
+                                    Message = "We have sent an email with 2FA code at your email address.",
+                                    HasTwoFactorAuthentication = true
                                 });
                             }
 
@@ -257,7 +258,8 @@ namespace eShop.AuthWebApi.Services.Implementation
                             {
                                 User = userDto,
                                 Token = token,
-                                Message = "Successfully logged in."
+                                Message = "Successfully logged in.",
+                                HasTwoFactorAuthentication = false
                             });
                         }
 

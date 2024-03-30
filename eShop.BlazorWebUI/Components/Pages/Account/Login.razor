@@ -84,7 +84,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var result = await authenticationService.GetExternalProviders();
+        var result = await authenticationService.GetExternalProvidersAsync();
         Providers = JsonConvert.DeserializeObject<List<ExternalProviderDto>>(result.Result.ToString()!)!;
     }
 
@@ -95,15 +95,24 @@
         if (result.IsSucceeded)
         {
             var data = JsonConvert.DeserializeObject<LoginResponse>(result.Result!.ToString()!);
-            (authenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(data!.Token);
-            navigationManager.NavigateTo("/");
-            Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
+
+            if (data!.HasTwoFactorAuthentication)
+            {
+                Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
+                navigationManager.NavigateTo($"/account/login-2fa/{loginRequest.Email}");
+            }
+            else
+            {
+                (authenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(data!.Token);
+                navigationManager.NavigateTo("/");
+                Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
+            }
         }
         else
             Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
     }
 
-    private void ExternalLogin(string ProviderName)
+    private async Task ExternalLogin(string ProviderName)
     {
         var authUrl = $"{Configuration["Services:AuthWebApiUrl"]!}/api/v1/Auth/external-login/{ProviderName}";
         navigationManager.NavigateTo(authUrl);

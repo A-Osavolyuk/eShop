@@ -13,6 +13,7 @@ namespace eShop.Domain.Interfaces
         public ValueTask<ResponseDto> RequestResetPasswordAsync(string Email);
         public ValueTask<ResponseDto> ConfirmResetPasswordAsync(string Email, ConfirmPasswordResetRequest confirmPasswordResetRequest);
         public ValueTask<ResponseDto> ConfirmEmailAsync(string Email, ConfirmEmailRequest confirmEmailRequest);
-        public ValueTask<ResponseDto> GetExternalProviders();
+        public ValueTask<ResponseDto> GetExternalProvidersAsync();
+        public ValueTask<ResponseDto> LoginWithTwoFactorAuthenticationAsync(string Email, TwoFactorAuthenticationLoginRequest twoFactorAuthenticationLoginRequest);
     }
 }
