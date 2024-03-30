@@ -1,5 +1,6 @@
 ﻿using LanguageExt;
-using LanguageExt.Pretty;
+using Microsoft.AspNetCore.Authentication.Google;
+using System;
 
 namespace eShop.AuthWebApi.Services.Implementation
 {
@@ -13,7 +14,8 @@ namespace eShop.AuthWebApi.Services.Implementation
         IValidator<ChangePasswordRequest> passwordValidator,
         IValidator<ConfirmPasswordResetRequest> resetPasswordValidator,
         IMapper mapper,
-        IEmailSender emailSender) : IAuthService
+        IEmailSender emailSender,
+        IConfiguration configuration) : IAuthService
     {
         private readonly ITokenHandler tokenHandler = tokenHandler;
         private readonly UserManager<AppUser> userManager = userManager;
@@ -25,6 +27,8 @@ namespace eShop.AuthWebApi.Services.Implementation
         private readonly IValidator<ConfirmPasswordResetRequest> resetPasswordValidator = resetPasswordValidator;
         private readonly IMapper mapper = mapper;
         private readonly IEmailSender emailSender = emailSender;
+        private readonly IConfiguration configuration = configuration;
+        private readonly string frontendUri = configuration["GeneralSettings:FrontendBaseUri"]!;
 
         public async ValueTask<Result<ChangePasswordResponse>> ChangePasswordAsync(string UserId, ChangePasswordRequest changePasswordRequest)
         {
@@ -291,8 +295,8 @@ namespace eShop.AuthWebApi.Services.Implementation
                 {
                     var emailConfirmationToken = await userManager.GenerateEmailConfirmationTokenAsync(user);
 
-                    var link = UrlGenerator.ActionLink("confirm-email", "account",
-                        new { Email = registrationRequest.Email, Token = emailConfirmationToken }, "https", new HostString("localhost", 5102));
+                    var link = UrlGenerator.ActionLink("/account/confirm-email", frontendUri,
+                        new { Email = registrationRequest.Email, Token = emailConfirmationToken });
 
                     await emailSender.SendConfirmEmailMessage(new ConfirmEmailMessage()
                     {
@@ -328,8 +332,7 @@ namespace eShop.AuthWebApi.Services.Implementation
                 if (user is not null)
                 {
                     var token = await userManager.GeneratePasswordResetTokenAsync(user);
-                    var link = UrlGenerator.ActionLink("confirm-password-reset", "account",
-                        new { Email = UserEmail, Token = token }, "https", new HostString("localhost", 5102));
+                    var link = UrlGenerator.ActionLink("/account/confirm-password-reset", frontendUri, new { Email = UserEmail, Token = token });
 
                     await emailSender.SendResetPasswordMessage(new ResetPasswordMessage()
                     {
@@ -452,6 +455,91 @@ namespace eShop.AuthWebApi.Services.Implementation
                 }
 
                 return new(new NotFoundUserByEmailException(Email));
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
+        }
+
+        public async ValueTask<Result<ExternalLoginResponse>> RequestExternalLogin(string provider, string? returnUri = null)
+        {
+            try
+            {
+                var providers = await signInManager.GetExternalAuthenticationSchemesAsync();
+
+                var isValidProvider = providers.Select(p => p.Name == provider).FirstOrDefault();
+
+                if (isValidProvider)
+                {
+                    var handlerUri = UrlGenerator.Action("handle-external-login-response", "Auth", new { ReturnUri = returnUri ?? "/" });
+                    var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, handlerUri);
+
+                    return new(new ExternalLoginResponse()
+                    {
+                        Provider = provider,
+                        AuthenticationProperties = properties
+                    });
+                }
+
+                return new(new InvalidExternalProvider(provider));
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
+        }
+
+        public async ValueTask<Result<string>> HandleExternalLoginResponseAsync(ExternalLoginInfo externalLoginInfo, string ReturnUri)
+        {
+            try
+            {
+                var email = externalLoginInfo.Principal.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value;
+
+                if (email is not null)  
+                {
+                    var user = await userManager.FindByEmailAsync(email);
+                    var token = string.Empty;
+
+                    if (user is not null) 
+                    {
+                        token = tokenHandler.GenerateToken(user);
+                        var link = UrlGenerator.ActionLink("/account/confirm-external-login", frontendUri, new { Token = token, ReturnUri = ReturnUri });
+                        return new(link);
+                    }
+
+                    user = new AppUser()
+                    {
+                        Email = email,
+                        UserName = email,
+                        EmailConfirmed = true
+                    };
+
+                    var result = await userManager.CreateAsync(user);
+
+                    if (result.Succeeded)
+                    {
+                        token = tokenHandler.GenerateToken(user);
+                        var link = UrlGenerator.ActionLink("/account/confirm-external-login", frontendUri, new { Token = token, ReturnUri = ReturnUri });
+                        return new(link);
+                    }
+                }
+
+                return new(new NullCredentialsException());
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
+        }
+
+        public async ValueTask<Result<IEnumerable<ExternalProviderDto>>> GetExternalProviders()
+        {
+            try
+            {
+                var schemes = await signInManager.GetExternalAuthenticationSchemesAsync();
+                var providers = schemes.Select(p => new ExternalProviderDto() { Name = p.Name });
+                return new(providers);
             }
             catch (Exception ex)
             {

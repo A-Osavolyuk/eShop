@@ -25,6 +25,52 @@
 
             return $"{scheme}://{host.Host}:{host.Port}/{controller}/{action}{queryParams}";
         }
+
+        public static string ActionLink(string action, string hostUri, object values)
+        {
+            var query = new StringBuilder(hostUri).Append(action);
+
+            if (values is not null)
+            {
+                query.Append("?");
+
+                var props = values.GetType().GetProperties();
+
+                for (int i = 0; i < props.Length; i++)
+                {
+                    if (i == props.Length - 1)
+                        query.Append($"{props[i].Name}={props[i].GetValue(values)}");
+                    else
+                        query.Append($"{props[i].Name}={props[i].GetValue(values)}&");
+
+                }
+            }
+
+            return query.ToString();
+        }
+
+        public static string Action(string action, string controller, object values)
+        {
+            var query = new StringBuilder($"/api/v1/{controller}/{action}");
+
+            if (values is not null)
+            {
+                query.Append("?");
+
+                var props = values.GetType().GetProperties();
+
+                for (int i = 0; i < props.Length; i++)
+                {
+                    if (i == props.Length - 1)
+                        query.Append($"{props[i].Name}={props[i].GetValue(values)}");
+                    else
+                        query.Append($"{props[i].Name}={props[i].GetValue(values)}&");
+
+                }
+            }
+
+            return query.ToString();
+        }
     }
 }
 

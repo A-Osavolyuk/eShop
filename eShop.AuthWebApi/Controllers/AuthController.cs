@@ -6,10 +6,16 @@
     public class AuthController : ControllerBase
     {
         private readonly IAuthService authService;
+        private readonly SignInManager<AppUser> signInManager;
+        private readonly UserManager<AppUser> userManager;
+        private readonly ITokenHandler tokenHandler;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, ITokenHandler tokenHandler)
         {
             this.authService = authService;
+            this.signInManager = signInManager;
+            this.userManager = userManager;
+            this.tokenHandler = tokenHandler;
         }
 
         [HttpPost("register")]
@@ -314,8 +320,8 @@
             return result.Match<ActionResult<ResponseDto>>(
                 s => Ok(new ResponseBuilder()
                 .Succeeded()
-                .AddResultMessage(s.TwoFactorAuthenticationState 
-                    ? "Two factor authentication state is enabled." 
+                .AddResultMessage(s.TwoFactorAuthenticationState
+                    ? "Two factor authentication state is enabled."
                     : "Two factor authentication state is disabled.")
                 .AddResult(s)
                 .Build()),
@@ -368,6 +374,38 @@
                         .Build());
 
                 });
+        }
+
+        [HttpGet("external-login/{provider}")]
+        public async ValueTask<ActionResult<ResponseDto>> ExternalLogin(string provider, string? returnUri = null)
+        {
+            var result = await authService.RequestExternalLogin(provider, returnUri);
+
+            return result.Match<ActionResult<ResponseDto>>(
+                s => Challenge(s.AuthenticationProperties, s.Provider),
+                f => StatusCode(500, new ResponseBuilder().Failed().AddErrorMessage(f.Message).Build()));
+        }
+
+        [HttpGet("handle-external-login-response")]
+        public async ValueTask<ActionResult<ResponseDto>> HandleExternalLoginResponse(string? remoteError = null, string? returnUri = null)
+        {
+            var info = await signInManager.GetExternalLoginInfoAsync();
+
+            var result = await authService.HandleExternalLoginResponseAsync(info!, returnUri ?? "/");
+
+            return result.Match<ActionResult>(
+                s => Redirect(s),
+                f => StatusCode(500, new ResponseBuilder().Failed().AddErrorMessage(f.Message).Build()));
+        }
+
+        [HttpGet("get-external-providers")]
+        public async ValueTask<ActionResult<ResponseDto>> GetExternalProvidersList()
+        {
+            var result = await authService.GetExternalProviders();
+
+            return result.Match<ActionResult<ResponseDto>>(
+                s => Ok(new ResponseBuilder().Succeeded().AddResult(s).Build()),
+                f => StatusCode(500, new ResponseBuilder().Failed().AddErrorMessage(f.Message).Build()));
         }
     }
 }

@@ -50,5 +50,8 @@ namespace eShop.Infrastructure.Services
 
         public ValueTask<ResponseDto> GetPersonalDataAsync(string Id) => clientService.SendAsync(
                     new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/get-personal-data/{Id}", Method: ApiMethod.GET));
+
+        public ValueTask<ResponseDto> GetExternalProviders() => clientService.SendAsync(
+                    new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/get-external-providers", Method: ApiMethod.GET));
     }
 }

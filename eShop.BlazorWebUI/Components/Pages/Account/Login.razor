@@ -9,6 +9,7 @@
 @inject IAuthenticationService authenticationService
 @inject AuthenticationStateProvider authenticationStateProvider
 @inject IValidator<LoginRequest> validator
+@inject IConfiguration Configuration
 
 <PageTitle>Login</PageTitle>
 
@@ -16,13 +17,13 @@
     <MudItem xs="4">
         <MudPaper Outlined Style="margin-top: 30%;" Class="pa-3">
             <EditForm FormName="login-form" Model="loginRequest" OnValidSubmit="LoginClick">
-                <FluentValidationValidator Validator="validator"/>
+                <FluentValidationValidator Validator="validator" />
 
                 <MudText Align="Align.Center" Typo="Typo.h4">Log In</MudText>
-                <MudTextField @bind-Value="loginRequest.Email" For="(() => loginRequest.Email)" 
-                    InputType="InputType.Email" Label="Email" Immediate Variant="Variant.Outlined"/>
-                <MudTextField @bind-Value="loginRequest.Password" For="(() => loginRequest.Password)" 
-                    Label="Password" InputType="InputType.Password" Immediate Variant="Variant.Outlined"/>
+                <MudTextField @bind-Value="loginRequest.Email" For="(() => loginRequest.Email)"
+                              InputType="InputType.Email" Label="Email" Immediate Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="loginRequest.Password" For="(() => loginRequest.Password)"
+                              Label="Password" InputType="InputType.Password" Immediate Variant="Variant.Outlined" />
 
                 <MudGrid Justify="Justify.Center">
                     <MudItem xs="8">
@@ -31,9 +32,36 @@
                             Log In
                         </MudButton>
                     </MudItem>
+
                 </MudGrid>
             </EditForm>
         </MudPaper>
+        @if (Providers.Any())
+        {
+            <MudPaper Outlined Class="mt-3 pa-3">
+                @foreach (var p in Providers)
+                {
+                    <MudGrid>
+                        <MudItem xs="3">
+                            <MudButton ButtonType="ButtonType.Button" StartIcon="@Icons.Material.Filled.Login"
+                                       Variant="Variant.Filled" OnClick="(() => ExternalLogin(p.Name))" Color="Color.Primary" FullWidth>
+                                @p.Name
+                            </MudButton>
+                        </MudItem>
+                    </MudGrid>
+                }
+            </MudPaper>
+        }
+        else
+        {
+            <MudPaper Outlined Class="mt-3 pa-2">
+                <MudGrid Justify="Justify.Center">
+                    <MudItem>
+                        <MudProgressCircular Color="Color.Primary" Indeterminate />
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        }
         <MudPaper Outlined Class="mt-3 pa-3">
             <MudText Align="Align.Center">
                 Do not have an account?
@@ -52,6 +80,14 @@
 @code {
     [SupplyParameterFromForm] private LoginRequest loginRequest { get; set; } = new();
 
+    private List<ExternalProviderDto> Providers { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await authenticationService.GetExternalProviders();
+        Providers = JsonConvert.DeserializeObject<List<ExternalProviderDto>>(result.Result.ToString()!)!;
+    }
+
     private async Task LoginClick()
     {
         var result = await authenticationService.LoginAsync(loginRequest);
@@ -63,7 +99,13 @@
             navigationManager.NavigateTo("/");
             Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
         }
-        else 
+        else
             Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
+    }
+
+    private void ExternalLogin(string ProviderName)
+    {
+        var authUrl = $"{Configuration["Services:AuthWebApiUrl"]!}/api/v1/Auth/external-login/{ProviderName}";
+        navigationManager.NavigateTo(authUrl);
     }
 }

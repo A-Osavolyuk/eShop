@@ -1,0 +1,24 @@
+﻿@page "/account/confirm-external-login/"
+@using eShop.Domain.DTOs.Responses
+@using eShop.Infrastructure.Account
+
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider authenticationStateProvider
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var uri = new StringBuilder(NavigationManager.Uri)
+            .Replace(NavigationManager.BaseUri, "")
+            .Replace("account/confirm-external-login?", "")
+            .ToString();
+
+        var query = QueryHelpers.ParseQuery(uri);
+
+        query.TryGetValue("Token", out var token);
+        query.TryGetValue("ReturnUri", out var returnUri);
+
+        (authenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(token!);
+        NavigationManager.NavigateTo(returnUri!);
+    }
+}

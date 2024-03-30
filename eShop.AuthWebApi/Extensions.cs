@@ -1,5 +1,6 @@
 ﻿using eShop.Application;
 using eShop.AuthWebApi.Services.Implementation;
+using Microsoft.AspNetCore.Authentication.Google;
 
 namespace eShop.AuthWebApi
 {
@@ -11,6 +12,17 @@ namespace eShop.AuthWebApi
             builder.ConfigureVersioning();
             builder.AddMapping();
             builder.AddValidation();
+
+            builder.Services.AddCors(o =>
+            {
+                o.AddDefaultPolicy(p =>
+                {
+                    p.AllowAnyHeader();
+                    p.AllowAnyMethod();
+                    p.AllowCredentials();
+                    p.WithOrigins("https://localhost:8101");
+                });
+            });
 
             builder.AddAuth();
             builder.AddDependencyInjection();
@@ -35,6 +47,12 @@ namespace eShop.AuthWebApi
             })
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<AuthDbContext>();
+
+            builder.Services.AddAuthentication().AddGoogle(options =>
+            {
+                options.ClientId = builder.Configuration["Authentication:Google:ClientId"] ?? "";
+                options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"] ?? "";
+            });
 
             return builder;
         }
