@@ -407,5 +407,31 @@
                 s => Ok(new ResponseBuilder().Succeeded().AddResult(s).Build()),
                 f => StatusCode(500, new ResponseBuilder().Failed().AddErrorMessage(f.Message).Build()));
         }
+
+        [HttpPost("request-change-email")]
+        public async ValueTask<ActionResult<ResponseDto>> RequestChangeEmail(ChangeEmailRequest changeEmailRequest)
+        {
+            var result = await authService.RequestChangeEmailAsync(changeEmailRequest);
+
+            return result.Match<ActionResult<ResponseDto>>(
+                s => Ok(new ResponseBuilder()
+                    .Succeeded()
+                    .AddResult(s)
+                    .AddResultMessage(s.Message)
+                    .Build()),
+                f =>
+                {
+                    if (f is NotFoundUserByEmailException notFoundUserByEmailException)
+                        return NotFound(new ResponseBuilder()
+                            .Failed()
+                            .AddErrorMessage(notFoundUserByEmailException.Message)
+                            .Build());
+
+                    return StatusCode(500, new ResponseBuilder()
+                        .Failed()
+                        .AddErrorMessage(f.Message)
+                        .Build());
+                });
+        }
     }
 }

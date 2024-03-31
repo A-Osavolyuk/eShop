@@ -1,7 +1,7 @@
 ﻿namespace eShop.Domain.DTOs.Messages
 {
-    public class ConfirmEmailMessage : MessageBase
-    {
+    public class ChangeEmailMessage : MessageBase
+    { 
         public string Link { get; set; } = string.Empty;
     }
 }

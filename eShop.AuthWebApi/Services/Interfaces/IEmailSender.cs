@@ -7,5 +7,6 @@
         public ValueTask SendAccountRegisteredMessage(AccountRegisteredMessage accountRegisteredMessage);
         public ValueTask SendTwoFactorAuthenticationCodeMessage(TwoFactorAuthenticationCodeMessage twoFactorAuthenticationCodeMessage);
         public ValueTask SendAccountRegisteredOnExternalLoginMessage(AccountRegisteredOnExternalLoginMessage accountRegisteredOnExternalLoginMessage);
+        public ValueTask SendChangeEmailMessage(ChangeEmailMessage changeEmailMessage);
     }
 }

@@ -1,7 +1,5 @@
 ﻿using eShop.AuthWebApi.Utilities;
 using LanguageExt;
-using Microsoft.AspNetCore.Authentication.Google;
-using System;
 
 namespace eShop.AuthWebApi.Services.Implementation
 {
@@ -431,7 +429,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
-        public async ValueTask<Result<LoginResponse>> LoginWithTwoFactorAuthenticationCodeAsync(string Email, 
+        public async ValueTask<Result<LoginResponse>> LoginWithTwoFactorAuthenticationCodeAsync(string Email,
             TwoFactorAuthenticationLoginRequest twoFactorAuthenticationLoginRequest)
         {
             try
@@ -500,12 +498,12 @@ namespace eShop.AuthWebApi.Services.Implementation
             {
                 var email = externalLoginInfo.Principal.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value;
 
-                if (email is not null)  
+                if (email is not null)
                 {
                     var user = await userManager.FindByEmailAsync(email);
                     var token = string.Empty;
 
-                    if (user is not null) 
+                    if (user is not null)
                     {
                         token = tokenHandler.GenerateToken(user);
                         var link = UrlGenerator.ActionLink("/account/confirm-external-login", frontendUri, new { Token = token, ReturnUri = ReturnUri });
@@ -554,6 +552,31 @@ namespace eShop.AuthWebApi.Services.Implementation
                 var schemes = await signInManager.GetExternalAuthenticationSchemesAsync();
                 var providers = schemes.Select(p => new ExternalProviderDto() { Name = p.Name });
                 return new(providers);
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
+        }
+
+        public async ValueTask<Result<ChangeEmailResponse>> RequestChangeEmailAsync(ChangeEmailRequest changeEmailRequest)
+        {
+            try
+            {
+                var user = await userManager.FindByEmailAsync(changeEmailRequest.CurrentEmail);
+
+                if (user is not null)
+                {
+                    var token = await userManager.GenerateChangeEmailTokenAsync(user, changeEmailRequest.NewEmail);
+
+                    return new(new ChangeEmailResponse()
+                    {
+                        Token = token,
+                        Message = "We have sent an email with instructions to your email."
+                    });
+                }
+
+                return new(new NotFoundUserByEmailException(changeEmailRequest.CurrentEmail));
             }
             catch (Exception ex)
             {

@@ -59,5 +59,12 @@ namespace eShop.AuthWebApi.Services.Implementation
 
             return Uri;
         }
+
+        public async ValueTask SendChangeEmailMessage(ChangeEmailMessage changeEmailMessage)
+        {
+            var queryName = "/change-email";
+            var endpoint = await bus.GetSendEndpoint(CreateQueryUri(queryName));
+            await endpoint.Send(changeEmailMessage);
+        }
     }
 }
