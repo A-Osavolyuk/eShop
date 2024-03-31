@@ -33,6 +33,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.ProductWebApi", "eSho
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.EmailSenderWebApi", "eShop.EmailSenderWebApi\eShop.EmailSenderWebApi.csproj", "{6EDB4ABB-AAF5-4BE5-A535-D9FF5FB3B83E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "k8s", "k8s", "{E7563BE2-3AB0-4A1C-BAFD-25C2F50F15C5}"
+	ProjectSection(SolutionItems) = preProject
+		mssql-deploy.yaml = mssql-deploy.yaml
+		rabbitmq-deploy.yaml = rabbitmq-deploy.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
