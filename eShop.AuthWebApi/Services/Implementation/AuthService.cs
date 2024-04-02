@@ -212,9 +212,6 @@ namespace eShop.AuthWebApi.Services.Implementation
             {
                 var validationResult = await loginValidator.ValidateAsync(loginRequest);
 
-                if (loginRequest is null)
-                    return new(new NullRequestException(type: loginRequest!.GetType()));
-
                 if (!validationResult.IsValid)
                     return new(new FailedValidationException("Validation Error(s)",
                         validationResult.Errors.Select(x => x.ErrorMessage)));
@@ -281,9 +278,6 @@ namespace eShop.AuthWebApi.Services.Implementation
             try
             {
                 var validationResult = await registrationValidator.ValidateAsync(registrationRequest);
-
-                if (registrationRequest is null)
-                    return new(new NullRequestException(type: registrationRequest!.GetType()));
 
                 if (!validationResult.IsValid)
                     return new(new FailedValidationException("Validation Error(s)",
