@@ -1,4 +1,7 @@
-﻿namespace eShop.AuthWebApi.Controllers
+﻿using eShop.Application.Utilities;
+using LanguageExt.Pretty;
+
+namespace eShop.AuthWebApi.Controllers
 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
@@ -31,33 +34,7 @@
                         .AddResultMessage(succ.Message)
                         .Build());
                 },
-                fail =>
-                {
-                    if (fail is FailedValidationException validationException)
-                        return BadRequest(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(validationException.Message)
-                            .AddErrors(validationException.Errors.ToList())
-                            .Build());
-
-                    if (fail is NullReferenceException referenceException)
-                        return BadRequest(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(referenceException.Message)
-                            .Build());
-
-                    if (fail is InvalidRegisterAttemptException identityException)
-                        return BadRequest(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(identityException!.ErrorType)
-                            .AddErrors(identityException.Errors.ToList())
-                            .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddErrorMessage(fail.Message)
-                        .Build());
-                });
+                fail => ExceptionHandler.HandleException(fail));
         }
 
         [HttpPost("login")]
@@ -74,39 +51,7 @@
                         .AddResultMessage(succ.Message)
                         .Build());
                 },
-                fail =>
-                {
-                    if (fail is NotFoundUserByEmailException notFoundUserByEmail)
-                        return NotFound(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(notFoundUserByEmail.Message)
-                            .Build());
-
-                    if (fail is NullRequestException nullRequest)
-                        return BadRequest(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(nullRequest.Message)
-                            .Build());
-
-                    if (fail is FailedValidationException validationException)
-                        return BadRequest(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(validationException.Message)
-                            .AddErrors(validationException.Errors.ToList())
-                            .Build());
-
-                    if (fail is InvalidLoginAttemptException loginException)
-                        return BadRequest(new ResponseBuilder()
-                        .Failed()
-                        .AddErrorMessage(loginException!.Message)
-                        .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddErrorMessage(fail.Message)
-                        .Build());
-
-                });
+                fail => ExceptionHandler.HandleException(fail));
         }
 
         [HttpPost("change-personal-data/{Id}")]
@@ -119,27 +64,8 @@
                     .Succeeded()
                     .AddResultMessage("Personal data was successfully changed.")
                     .AddResult(s)
-                    .Build()),
-                f =>
-                {
-                    if (f is FailedValidationException failedValidationException)
-                        return BadRequest(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(failedValidationException.Message)
-                            .AddErrors(failedValidationException.Errors.ToList())
-                            .Build());
-
-                    if (f is NotFoundUserByIdException notFoundUserException)
-                        return NotFound(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(notFoundUserException.Message)
-                            .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddErrorMessage(f.Message)
-                        .Build());
-                });
+                .Build()),
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpGet("get-personal-data/{Id}")]
@@ -152,19 +78,7 @@
                     .Succeeded()
                     .AddResult(s)
                     .Build()),
-                f =>
-                {
-                    if (f is NotFoundUserByIdException notFoundUserException)
-                        return NotFound(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(notFoundUserException.Message)
-                            .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddErrorMessage(f.Message)
-                        .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpPost("change-password/{Id}")]
@@ -177,32 +91,7 @@
                     .Succeeded()
                     .AddResultMessage(s.Message)
                     .Build()),
-                f =>
-                {
-                    if (f is FailedValidationException failedValidationException)
-                        return BadRequest(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(failedValidationException.Message)
-                            .AddErrors(failedValidationException.Errors.ToList())
-                            .Build());
-
-                    if (f is WrongPasswordException wrongPasswordException)
-                        return BadRequest(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(wrongPasswordException.Message)
-                            .Build());
-
-                    if (f is NotFoundUserByIdException notFoundUserException)
-                        return NotFound(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(notFoundUserException.Message)
-                            .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddErrorMessage(f.Message)
-                        .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpPost("request-reset-password/{Email}")]
@@ -215,19 +104,7 @@
                     .Succeeded()
                     .AddResultMessage(s.Message)
                     .Build()),
-                f =>
-                {
-                    if (f is NotFoundUserByEmailException notFoundUserException)
-                        return NotFound(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(notFoundUserException.Message)
-                            .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddErrorMessage(f.Message)
-                        .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpPost("confirm-reset-password/{Email}")]
@@ -240,26 +117,7 @@
                     .Succeeded()
                     .AddResultMessage(s.Message)
                     .Build()),
-                f =>
-                {
-                    if (f is NotFoundUserByIdException notFoundUserException)
-                        return NotFound(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(notFoundUserException.Message)
-                            .Build());
-
-                    if (f is FailedValidationException failedValidationException)
-                        return BadRequest(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(failedValidationException.Message)
-                            .AddErrors(failedValidationException.Errors.ToList())
-                            .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddErrorMessage(f.Message)
-                        .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpPost("confirm-email/{Email}")]
@@ -272,19 +130,7 @@
                     .Succeeded()
                     .AddResultMessage("Your email address was successfully confirmed.")
                     .Build()),
-                f =>
-                {
-                    if (f is NotFoundUserByEmailException notFoundUserByEmailException)
-                        return NotFound(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(notFoundUserByEmailException.Message)
-                            .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddErrorMessage(f.Message)
-                        .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpPost("change-2fa-state/{Email}")]
@@ -297,19 +143,7 @@
                 .Succeeded()
                 .AddResultMessage(s.Message)
                 .Build()),
-                f =>
-                {
-                    if (f is NotFoundUserByEmailException notFoundUserByEmailException)
-                        return NotFound(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(notFoundUserByEmailException.Message)
-                            .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddErrorMessage(f.Message)
-                        .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpGet("get-2fa-state/{Email}")]
@@ -325,19 +159,7 @@
                     : "Two factor authentication state is disabled.")
                 .AddResult(s)
                 .Build()),
-                f =>
-                {
-                    if (f is NotFoundUserByEmailException notFoundUserByEmailException)
-                        return NotFound(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(notFoundUserByEmailException.Message)
-                            .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddErrorMessage(f.Message)
-                        .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpPost("2fa-login/{Email}")]
@@ -354,26 +176,7 @@
                         .AddResultMessage(succ.Message)
                         .Build());
                 },
-                fail =>
-                {
-                    if (fail is NotFoundUserByEmailException notFoundUserByEmail)
-                        return NotFound(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(notFoundUserByEmail.Message)
-                            .Build());
-
-                    if (fail is InvalidTwoFactorAuthenticationCodeException invalidTwoFactorAuthenticationCodeException)
-                        return BadRequest(new ResponseBuilder()
-                        .Failed()
-                        .AddErrorMessage(invalidTwoFactorAuthenticationCodeException!.Message)
-                        .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddErrorMessage(fail.Message)
-                        .Build());
-
-                });
+                fail => ExceptionHandler.HandleException(f));
         }
 
         [HttpGet("external-login/{provider}")]
@@ -383,7 +186,7 @@
 
             return result.Match<ActionResult<ResponseDto>>(
                 s => Challenge(s.AuthenticationProperties, s.Provider),
-                f => StatusCode(500, new ResponseBuilder().Failed().AddErrorMessage(f.Message).Build()));
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpGet("handle-external-login-response")]
@@ -393,9 +196,9 @@
 
             var result = await authService.HandleExternalLoginResponseAsync(info!, returnUri ?? "/");
 
-            return result.Match<ActionResult>(
+            return result.Match<ActionResult<ResponseDto>>(
                 s => Redirect(s),
-                f => StatusCode(500, new ResponseBuilder().Failed().AddErrorMessage(f.Message).Build()));
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpGet("get-external-providers")]
@@ -405,7 +208,7 @@
 
             return result.Match<ActionResult<ResponseDto>>(
                 s => Ok(new ResponseBuilder().Succeeded().AddResult(s).Build()),
-                f => StatusCode(500, new ResponseBuilder().Failed().AddErrorMessage(f.Message).Build()));
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpPost("request-change-email")]
@@ -419,19 +222,7 @@
                     .AddResult(s)
                     .AddResultMessage(s.Message)
                     .Build()),
-                f =>
-                {
-                    if (f is NotFoundUserByEmailException notFoundUserByEmailException)
-                        return NotFound(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(notFoundUserByEmailException.Message)
-                            .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddErrorMessage(f.Message)
-                        .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
     }
 }

@@ -1,6 +1,8 @@
-﻿namespace eShop.Domain.Exceptions
+﻿using eShop.Domain.Interfaces;
+
+namespace eShop.Domain.Exceptions
 {
-    public class FailedValidationException : Exception
+    public class FailedValidationException : Exception, IFailedValidationException
     {
         public FailedValidationException(string ErrorMessage, IEnumerable<string> Errors) : base(ErrorMessage)
         {

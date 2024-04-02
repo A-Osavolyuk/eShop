@@ -23,6 +23,7 @@ builder.Services.AddMassTransit(x =>
         });
 
         cfg.ReceiveEndpoint("reset-password", e => e.ConfigureConsumer<ResetPasswordEmailReceiver>(context));
+        cfg.ReceiveEndpoint("change-email", e => e.ConfigureConsumer<ChangeEmailReceiver>(context));
         cfg.ReceiveEndpoint("confirm-email", e => e.ConfigureConsumer<ConfirmEmailReceiver>(context));
         cfg.ReceiveEndpoint("account-registered", e => e.ConfigureConsumer<AccountRegisteredReceiver>(context));
         cfg.ReceiveEndpoint("2fa-code", e => e.ConfigureConsumer<TwoFactorAuthenticationCodeReceiver>(context));
@@ -30,6 +31,7 @@ builder.Services.AddMassTransit(x =>
     });
 
     x.AddConsumer<ResetPasswordEmailReceiver>();
+    x.AddConsumer<ChangeEmailReceiver>();
     x.AddConsumer<ConfirmEmailReceiver>();
     x.AddConsumer<AccountRegisteredReceiver>();
     x.AddConsumer<TwoFactorAuthenticationCodeReceiver>();

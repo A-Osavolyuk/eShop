@@ -289,34 +289,40 @@ namespace eShop.AuthWebApi.Services.Implementation
                     return new(new FailedValidationException("Validation Error(s)",
                         validationResult.Errors.Select(x => x.ErrorMessage)));
 
-                var user = mapper.Map<AppUser>(registrationRequest);
-                var registrationResult = await userManager.CreateAsync(user, registrationRequest.Password);
+                var exists = await userManager.FindByEmailAsync(registrationRequest.Email);
 
-                if (registrationResult.Succeeded)
+                if (exists is null)
                 {
-                    var emailConfirmationToken = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var user = mapper.Map<AppUser>(registrationRequest);
+                    var registrationResult = await userManager.CreateAsync(user, registrationRequest.Password);
 
-                    var link = UrlGenerator.ActionLink("/account/confirm-email", frontendUri,
-                        new { Email = registrationRequest.Email, Token = emailConfirmationToken });
-
-                    await emailSender.SendConfirmEmailMessage(new ConfirmEmailMessage()
+                    if (registrationResult.Succeeded)
                     {
-                        To = registrationRequest.Email,
-                        Subject = "Email Confirmation",
-                        Link = link,
-                        UserName = user.UserName!
-                    });
+                        var emailConfirmationToken = await userManager.GenerateEmailConfirmationTokenAsync(user);
 
-                    return new(new RegistrationResponse()
-                    {
-                        Message = $"Your account have been successfully registered. " +
-                        $"Now you have to confirm you email address to log in. " +
-                        $"We have sent an email with instructions to your email address."
-                    });
+                        var link = UrlGenerator.ActionLink("/account/confirm-email", frontendUri,
+                            new { Email = registrationRequest.Email, Token = emailConfirmationToken });
+
+                        await emailSender.SendConfirmEmailMessage(new ConfirmEmailMessage()
+                        {
+                            To = registrationRequest.Email,
+                            Subject = "Email Confirmation",
+                            Link = link,
+                            UserName = user.UserName!
+                        });
+
+                        return new(new RegistrationResponse()
+                        {
+                            Message = $"Your account have been successfully registered. " +
+                            $"Now you have to confirm you email address to log in. " +
+                            $"We have sent an email with instructions to your email address."
+                        });
+                    }
+
+                    return new(new InvalidRegisterAttemptException());
                 }
 
-                return new(new InvalidRegisterAttemptException("Invalid registration attempt.",
-                    registrationResult.Errors.Select(x => x.Description)));
+                return new(new UserAlreadyExistsException(registrationRequest.Email));
             }
             catch (Exception ex)
             {
@@ -568,10 +574,24 @@ namespace eShop.AuthWebApi.Services.Implementation
                 if (user is not null)
                 {
                     var token = await userManager.GenerateChangeEmailTokenAsync(user, changeEmailRequest.NewEmail);
+                    var link = UrlGenerator.ActionLink("/account/change-email", frontendUri, new
+                        {
+                            changeEmailRequest.CurrentEmail,
+                            changeEmailRequest.NewEmail,
+                            Token = token
+                        });
+
+                    await emailSender.SendChangeEmailMessage(new ChangeEmailMessage()
+                    {
+                        Link = link,
+                        To = changeEmailRequest.CurrentEmail,
+                        Subject = "Change email address request",
+                        UserName = changeEmailRequest.CurrentEmail,
+                        NewEmail = changeEmailRequest.NewEmail,
+                    });
 
                     return new(new ChangeEmailResponse()
                     {
-                        Token = token,
                         Message = "We have sent an email with instructions to your email."
                     });
                 }
