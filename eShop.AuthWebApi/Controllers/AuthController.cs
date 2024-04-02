@@ -11,12 +11,10 @@ namespace eShop.AuthWebApi.Controllers
         private readonly IAuthService authService;
         private readonly SignInManager<AppUser> signInManager;
 
-        public AuthController(IAuthService authService, SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, ITokenHandler tokenHandler)
+        public AuthController(IAuthService authService, SignInManager<AppUser> signInManager)
         {
             this.authService = authService;
             this.signInManager = signInManager;
-            this.userManager = userManager;
-            this.tokenHandler = tokenHandler;
         }
 
         [HttpPost("register")]

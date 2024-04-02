@@ -3,11 +3,12 @@
 
 @inject NavigationManager NavigationManager
 @inject IAuthenticationService AuthenticationService
+@inject ISnackbar SnackBar
 
 @code {
     private ResponseDto Result { get; set; } = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         var uri = new StringBuilder(NavigationManager.Uri)
             .Replace(NavigationManager.BaseUri, "")
@@ -22,8 +23,15 @@
         Result = await AuthenticationService.ConfirmEmailAsync(email!, new ConfirmEmailRequest() { Token = token! });
 
         if (Result.IsSucceeded)
-            NavigationManager.NavigateTo("/account/confirmed-email");
+        {
+            NavigationManager.NavigateTo("/account/login");
+            SnackBar.Add(Result.ResultMessage, MudBlazor.Severity.Success);
+
+        }
         else
+        {
             NavigationManager.NavigateTo("/account/failed-email-confirmation");
+            SnackBar.Add(Result.ResultMessage, MudBlazor.Severity.Error);
+        }
     }
 }
