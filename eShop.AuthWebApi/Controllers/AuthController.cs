@@ -10,8 +10,6 @@ namespace eShop.AuthWebApi.Controllers
     {
         private readonly IAuthService authService;
         private readonly SignInManager<AppUser> signInManager;
-        private readonly UserManager<AppUser> userManager;
-        private readonly ITokenHandler tokenHandler;
 
         public AuthController(IAuthService authService, SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, ITokenHandler tokenHandler)
         {
@@ -176,7 +174,7 @@ namespace eShop.AuthWebApi.Controllers
                         .AddResultMessage(succ.Message)
                         .Build());
                 },
-                fail => ExceptionHandler.HandleException(f));
+                fail => ExceptionHandler.HandleException(fail));
         }
 
         [HttpGet("external-login/{provider}")]

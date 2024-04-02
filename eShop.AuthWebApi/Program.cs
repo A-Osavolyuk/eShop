@@ -30,6 +30,7 @@ if (app.Environment.IsDevelopment())
     using (var scope = app.Services.CreateScope())
     {
         var context = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
+        context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
     }
 }
