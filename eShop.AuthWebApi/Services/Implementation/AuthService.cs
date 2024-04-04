@@ -94,7 +94,6 @@ namespace eShop.AuthWebApi.Services.Implementation
                                 PhoneNumber = user.PhoneNumber,
                                 FirstName = user.FirstName,
                                 LastName = user.LastName,
-                                MiddleName = user.MiddleName,
                                 Gender = user.Gender,
                                 DateOfBirth = user.DateOfBirth,
                             });
@@ -197,7 +196,6 @@ namespace eShop.AuthWebApi.Services.Implementation
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Gender = user.Gender,
-                    MiddleName = user.MiddleName,
                     PhoneNumber = user.PhoneNumber ?? ""
                 });
             }

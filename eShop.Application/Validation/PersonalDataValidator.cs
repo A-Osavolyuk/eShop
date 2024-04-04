@@ -17,11 +17,6 @@ namespace eShop.Application.Validation
                 .MinimumLength(3).WithMessage("Last Name length must be longer then 3 letters.")
                 .MaximumLength(32).WithMessage("Last Name length must be less then 3 letters.");
 
-            RuleFor(x => x.MiddleName)
-                .NotEmpty().WithMessage("Middle Name is must!")
-                .MinimumLength(3).WithMessage("Middle Name must be longer then 3 letters.")
-                .MaximumLength(32).WithMessage("Middle Name must be less then 3 letters.");
-
             RuleFor(x => x.PhoneNumber)
                 .Matches("^[0-9\\-\\+]{9,15}$").WithMessage("Wrong phone number format.");
 

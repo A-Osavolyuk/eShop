@@ -1,12 +1,12 @@
 ﻿<MudGrid>
-    <MudItem xs="2">
+    <MudItem xs="3">
         <MudPaper Outlined=@Outlined Class=@Class>
-            <MudText Typo="Typo.h6"> @Label </MudText>
+            <MudText Typo="Typo"> @Label </MudText>
         </MudPaper>
     </MudItem>
-    <MudItem xs="10">
+    <MudItem xs="9">
         <MudPaper Outlined=@Outlined Class=@Class>
-            <MudText Typo="Typo.h6"> @(string.IsNullOrEmpty(TextContent) ? "None" : TextContent) </MudText>
+            <MudText Typo="Typo"> @(string.IsNullOrEmpty(TextContent) ? "None" : TextContent) </MudText>
         </MudPaper>
     </MudItem>
 </MudGrid>

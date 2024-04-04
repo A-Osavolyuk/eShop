@@ -43,7 +43,6 @@
     {
         var result = await AuthenticationService.LoginWithTwoFactorAuthenticationAsync(Email, Model);
 
-
         if (result.IsSucceeded)
         {
             var data = JsonConvert.DeserializeObject<LoginResponse>(result.Result!.ToString()!);

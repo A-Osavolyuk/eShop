@@ -5,9 +5,9 @@ namespace eShop.Domain.Interfaces
 {
     public interface IAuthenticationService
     {
+        public ValueTask LogOutAsync();
         public ValueTask<ResponseDto> LoginAsync(LoginRequest loginRequestDto);
         public ValueTask<ResponseDto> RegisterAsync(RegistrationRequest registrationRequest);
-        public ValueTask LogOutAsync();
         public ValueTask<ResponseDto> ChangePersonalDataAsync(string Id, ChangePersonalDataRequest changePersonalDataRequestDto);
         public ValueTask<ResponseDto> GetPersonalDataAsync(string Id);
         public ValueTask<ResponseDto> RequestResetPasswordAsync(string Email);
@@ -17,5 +17,6 @@ namespace eShop.Domain.Interfaces
         public ValueTask<ResponseDto> LoginWithTwoFactorAuthenticationAsync(string Email, TwoFactorAuthenticationLoginRequest twoFactorAuthenticationLoginRequest);
         public ValueTask<ResponseDto> RequestChangeEmailAsync(ChangeEmailRequest changeEmailRequest);
         public ValueTask<ResponseDto> ConfirmChangeEmailAsync(ConfirmChangeEmailRequest changeEmailRequest);
+        public ValueTask<ResponseDto> ChangePasswordAsync(string Email, ChangePasswordRequest changePasswordRequest);
     }
 }

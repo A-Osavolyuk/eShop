@@ -1,0 +1,20 @@
+﻿
+<MudCard Outlined>
+    <MudCardHeader>
+        <MudText Typo="Typo.h5">Main Information</MudText>
+    </MudCardHeader>
+    <MudCardContent>
+        <LabeledText Label="User Name" Typo="Typo.subtitle1" TextContent=@Model.UserName />
+        <LabeledText Label="Full name" Typo="Typo.subtitle1" TextContent=@Model.FullName />
+        <LabeledText Label="Date of birth" Typo="Typo.subtitle1" TextContent=@Model.DateOfBirth.ToShortDateString() />
+        <LabeledText Label="Gender" Typo="Typo.subtitle1" TextContent=@Model.Gender />
+    </MudCardContent>
+    <MudCardActions>
+        <MudButton Class="ml-2" Color="Color.Primary" Variant="Variant.Filled">Change user name </MudButton>
+        <MudButton Class="ml-2" Color="Color.Primary" Variant="Variant.Filled">Change personal information</MudButton>
+    </MudCardActions>
+</MudCard>
+
+@code {
+    [Parameter] public MainDataModel Model { get; set; } = new();
+}

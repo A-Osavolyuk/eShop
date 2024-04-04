@@ -66,5 +66,10 @@ namespace eShop.Infrastructure.Services
         public ValueTask<ResponseDto> ConfirmChangeEmailAsync(ConfirmChangeEmailRequest changeEmailRequest) => clientService.SendAsync(
                     new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/confirm-change-email",
                         Method: ApiMethod.POST, Data: changeEmailRequest));
+
+        public ValueTask<ResponseDto> ChangePasswordAsync(string Email, ChangePasswordRequest changePasswordRequest) => clientService.SendAsync(
+                    new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/change-password/{Email}",
+                        Method: ApiMethod.POST, Data: changePasswordRequest));
+
     }
 }

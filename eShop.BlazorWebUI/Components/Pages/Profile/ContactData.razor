@@ -1,0 +1,17 @@
+﻿<MudCard Outlined>
+    <MudCardHeader>
+        <MudText Typo="Typo.h5">Contact Information</MudText>
+    </MudCardHeader>
+    <MudCardContent>
+        <LabeledText Label="Email" Typo="Typo.subtitle1" TextContent="@Model.Email" />
+        <LabeledText Label="Phone number" Typo="Typo.subtitle1" TextContent=@Model.PhoneNumber />
+    </MudCardContent>
+    <MudCardActions>
+        <MudButton Class="ml-2" Color="Color.Primary" Variant="Variant.Filled">Change Email Address</MudButton>
+        <MudButton Class="ml-2" Color="Color.Primary" Variant="Variant.Filled">Change Phone Number</MudButton>
+    </MudCardActions>
+</MudCard>
+
+@code {
+    [Parameter] public ContactDataModel Model { get; set; } = new();
+}

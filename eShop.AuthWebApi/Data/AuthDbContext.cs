@@ -16,6 +16,12 @@
                     Id = "abb9d2ed-c3d2-4df9-ba88-eab018b95bc3",
                     EmailConfirmed = true,
                     TwoFactorEnabled = true,
+
+                    FirstName = "Alex",
+                    LastName = "Osavoliuk",
+                    DateOfBirth = new DateTime(2000, 01, 01),
+                    Gender = "Male",
+                    PhoneNumber = "+(38)-068-610-02-42"
                 });
         }
     }

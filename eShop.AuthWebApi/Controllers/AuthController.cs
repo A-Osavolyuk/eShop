@@ -1,5 +1,4 @@
 ﻿using eShop.Application.Utilities;
-using LanguageExt.Pretty;
 
 namespace eShop.AuthWebApi.Controllers
 {
@@ -215,7 +214,6 @@ namespace eShop.AuthWebApi.Controllers
             return result.Match<ActionResult<ResponseDto>>(
                 s => Ok(new ResponseBuilder()
                     .Succeeded()
-                    .AddResult(s)
                     .AddResultMessage(s.Message)
                     .Build()),
                 f => ExceptionHandler.HandleException(f));
