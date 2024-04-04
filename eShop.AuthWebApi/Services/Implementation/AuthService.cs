@@ -1,4 +1,5 @@
 ﻿using eShop.AuthWebApi.Utilities;
+using eShop.Domain.DTOs.Requests;
 using LanguageExt;
 
 namespace eShop.AuthWebApi.Services.Implementation
@@ -545,7 +546,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
-        public async ValueTask<Result<IEnumerable<ExternalProviderDto>>> GetExternalProviders()
+        public async ValueTask<Result<IEnumerable<ExternalProviderDto>>> GetExternalProvidersAsync()
         {
             try
             {
@@ -569,11 +570,11 @@ namespace eShop.AuthWebApi.Services.Implementation
                 {
                     var token = await userManager.GenerateChangeEmailTokenAsync(user, changeEmailRequest.NewEmail);
                     var link = UrlGenerator.ActionLink("/account/change-email", frontendUri, new
-                        {
-                            changeEmailRequest.CurrentEmail,
-                            changeEmailRequest.NewEmail,
-                            Token = token
-                        });
+                    {
+                        changeEmailRequest.CurrentEmail,
+                        changeEmailRequest.NewEmail,
+                        Token = token
+                    });
 
                     await emailSender.SendChangeEmailMessage(new ChangeEmailMessage()
                     {
@@ -591,6 +592,36 @@ namespace eShop.AuthWebApi.Services.Implementation
                 }
 
                 return new(new NotFoundUserByEmailException(changeEmailRequest.CurrentEmail));
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
+        }
+
+        public async ValueTask<Result<ConfirmChangeEmailResponse>> ConfirmChangeEmailAsync(ConfirmChangeEmailRequest confirmChangeEmailRequest)
+        {
+            try
+            {
+                var user = await userManager.FindByEmailAsync(confirmChangeEmailRequest.CurrentEmail);
+
+                if (user is not null)
+                {
+                    var token = new StringBuilder(confirmChangeEmailRequest.Token).Replace(" ", "+").ToString();
+                    var result = await userManager.ChangeEmailAsync(user, confirmChangeEmailRequest.NewEmail, token);
+
+                    if (result.Succeeded)
+                    {
+                        return new(new ConfirmChangeEmailResponse()
+                        {
+                            Message = "Your email address was successfully changed."
+                        });
+                    }
+
+                    return new(new NotChangedEmailException());
+                }
+
+                return new(new NotFoundUserByEmailException(confirmChangeEmailRequest.CurrentEmail));
             }
             catch (Exception ex)
             {

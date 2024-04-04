@@ -1,0 +1,44 @@
+﻿@page "/account/change-email/"
+
+@inject IAuthenticationService AuthenticationService
+@inject NavigationManager NavigationManager
+@inject ISnackbar Snackbar
+
+@code {
+    private ConfirmChangeEmailRequest ConfirmChangeEmailRequest { get; set; } = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var uri = new StringBuilder(NavigationManager.Uri)
+            .Replace(NavigationManager.BaseUri, "")
+            .Replace("account/change-email?", "")
+            .ToString();
+
+        var query = QueryHelpers.ParseQuery(uri);
+
+        query.TryGetValue("CurrentEmail", out var currentEmail);
+        query.TryGetValue("NewEmail", out var newEmail);
+        query.TryGetValue("Token", out var token);
+
+        ConfirmChangeEmailRequest = new()
+            {
+                CurrentEmail = currentEmail!,
+                NewEmail = newEmail!,
+                Token = token!
+            };
+
+        var result = await AuthenticationService.ConfirmChangeEmailAsync(ConfirmChangeEmailRequest);
+
+        if (result.IsSucceeded)
+        {
+            await AuthenticationService.LogOutAsync();
+            Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
+            NavigationManager.NavigateTo("/account/login");
+        }
+        else
+        {
+            Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
+            NavigationManager.NavigateTo("/account/login");
+        }
+    }
+}

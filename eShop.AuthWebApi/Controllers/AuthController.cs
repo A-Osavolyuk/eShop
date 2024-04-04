@@ -200,7 +200,7 @@ namespace eShop.AuthWebApi.Controllers
         [HttpGet("get-external-providers")]
         public async ValueTask<ActionResult<ResponseDto>> GetExternalProvidersList()
         {
-            var result = await authService.GetExternalProviders();
+            var result = await authService.GetExternalProvidersAsync();
 
             return result.Match<ActionResult<ResponseDto>>(
                 s => Ok(new ResponseBuilder().Succeeded().AddResult(s).Build()),
@@ -218,6 +218,16 @@ namespace eShop.AuthWebApi.Controllers
                     .AddResult(s)
                     .AddResultMessage(s.Message)
                     .Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
+        [HttpPost("confirm-change-email")]
+        public async ValueTask<ActionResult<ResponseDto>> ConfirmChangeEmail(ConfirmChangeEmailRequest confirmChangeEmailRequest)
+        {
+            var result = await authService.ConfirmChangeEmailAsync(confirmChangeEmailRequest);
+
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().AddResultMessage(s.Message).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
     }

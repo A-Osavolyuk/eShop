@@ -58,5 +58,13 @@ namespace eShop.Infrastructure.Services
             string Email, TwoFactorAuthenticationLoginRequest twoFactorAuthenticationLoginRequest) => clientService.SendAsync(
                     new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/2fa-login/{Email}",
                         Method: ApiMethod.POST, Data: twoFactorAuthenticationLoginRequest));
+
+        public ValueTask<ResponseDto> RequestChangeEmailAsync(ChangeEmailRequest changeEmailRequest) => clientService.SendAsync(
+                    new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/request-change-email",
+                        Method: ApiMethod.POST, Data: changeEmailRequest));
+
+        public ValueTask<ResponseDto> ConfirmChangeEmailAsync(ConfirmChangeEmailRequest changeEmailRequest) => clientService.SendAsync(
+                    new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/confirm-change-email",
+                        Method: ApiMethod.POST, Data: changeEmailRequest));
     }
 }

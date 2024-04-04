@@ -17,7 +17,8 @@ namespace eShop.AuthWebApi.Services.Interfaces
         public ValueTask<Result<LoginResponse>> LoginWithTwoFactorAuthenticationCodeAsync(string Email, TwoFactorAuthenticationLoginRequest twoFactorAuthenticationLoginRequest);
         public ValueTask<Result<string>> HandleExternalLoginResponseAsync(ExternalLoginInfo externalLoginInfo, string ReturnUri);
         public ValueTask<Result<ExternalLoginResponse>> RequestExternalLogin(string provider, string? returnUri);
-        public ValueTask<Result<IEnumerable<ExternalProviderDto>>> GetExternalProviders();
+        public ValueTask<Result<IEnumerable<ExternalProviderDto>>> GetExternalProvidersAsync();
         public ValueTask<Result<ChangeEmailResponse>> RequestChangeEmailAsync(ChangeEmailRequest changeEmailRequest);
+        public ValueTask<Result<ConfirmChangeEmailResponse>> ConfirmChangeEmailAsync(ConfirmChangeEmailRequest confirmChangeEmailRequest);
     }
 }
