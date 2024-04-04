@@ -1,4 +1,7 @@
-﻿<MudCard Outlined>
+﻿@using eShop.Domain.DTOs.Responses
+@inject IDialogService DialogService 
+
+<MudCard Outlined>
     <MudCardHeader>
         <MudText Typo="Typo.h5">Contact Information</MudText>
     </MudCardHeader>
@@ -7,11 +10,25 @@
         <LabeledText Label="Phone number" Typo="Typo.subtitle1" TextContent=@Model.PhoneNumber />
     </MudCardContent>
     <MudCardActions>
-        <MudButton Class="ml-2" Color="Color.Primary" Variant="Variant.Filled">Change Email Address</MudButton>
+        <MudButton Class="ml-2" OnClick="ChangeEmailAddress" Color="Color.Primary" Variant="Variant.Filled">Change Email Address</MudButton>
         <MudButton Class="ml-2" Color="Color.Primary" Variant="Variant.Filled">Change Phone Number</MudButton>
     </MudCardActions>
 </MudCard>
 
+<style>
+    .blured {
+        backdrop-filter: blur(10px);
+    }
+</style>
+
 @code {
     [Parameter] public ContactDataModel Model { get; set; } = new();
+
+
+    private async Task ChangeEmailAddress()
+    {
+        var parameters = new DialogParameters<ChangeEmailDialog>() { { x => x.Model, new ChangeEmailRequest { CurrentEmail = Model.Email } } };
+        var options = new DialogOptions { CloseOnEscapeKey = true, ClassBackground = "blured", FullWidth=true };
+        var dialog = await DialogService.ShowAsync<ChangeEmailDialog>("Change email address", parameters, options);
+    }
 }
