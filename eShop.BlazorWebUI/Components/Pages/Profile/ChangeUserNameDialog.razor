@@ -1,12 +1,12 @@
 ﻿@inject IAuthenticationService AuthenticationService
 @inject ISnackbar Snackbar
-@inject IValidator<ChangeEmailRequest> Validator
+@inject IValidator<ChangeUserNameRequest> Validator
 
 <MudDialog>
     <DialogContent>
-        <EditForm FormName="change-email-form" Model="Model" OnValidSubmit="Submit">
+        <EditForm FormName="change-username-form" Model="Model" OnValidSubmit="Submit">
             <FluentValidationValidator Validator="Validator" />
-            <MudTextField Class="mb-3" @bind-Value=Model.NewEmail For="(() => Model.NewEmail)" Variant="Variant.Outlined" Label="New email" />
+            <MudTextField Class="mb-3" @bind-Value=Model.UserName For="(() => Model.UserName)" Variant="Variant.Outlined" Label="User Name" />
 
             <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
             <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Submit</MudButton>
@@ -15,16 +15,17 @@
 </MudDialog>
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-    [Parameter] public ChangeEmailRequest Model { get; set; } = new();
+    [Parameter] public ChangeUserNameRequest Model { get; set; } = new();
 
     private async Task Submit()
     {
-        var result = await AuthenticationService.RequestChangeEmailAsync(Model);
+        var result = await AuthenticationService.ChangeUserNameAsync(Model);
 
         if (result.IsSucceeded)
         {
-            MudDialog.Close(DialogResult.Ok(true));
+            var data = JsonConvert.DeserializeObject<ChangeUserNameResponse>(result.Result!.ToString()!);
             Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
+            MudDialog.Close(DialogResult.Ok(data!.Token));
         }
         else
         {

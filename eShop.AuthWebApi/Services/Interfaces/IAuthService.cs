@@ -20,6 +20,6 @@ namespace eShop.AuthWebApi.Services.Interfaces
         public ValueTask<Result<IEnumerable<ExternalProviderDto>>> GetExternalProvidersAsync();
         public ValueTask<Result<ChangeEmailResponse>> RequestChangeEmailAsync(ChangeEmailRequest changeEmailRequest);
         public ValueTask<Result<ConfirmChangeEmailResponse>> ConfirmChangeEmailAsync(ConfirmChangeEmailRequest confirmChangeEmailRequest);
-        public ValueTask<Result<ChangeUserNameResponse>> ChangeUserNameAsync(string Email, ChangeUserNameRequest changeUserNameRequest);
+        public ValueTask<Result<ChangeUserNameResponse>> ChangeUserNameAsync(ChangeUserNameRequest changeUserNameRequest);
     }
 }

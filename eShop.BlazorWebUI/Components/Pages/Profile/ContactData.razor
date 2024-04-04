@@ -1,5 +1,6 @@
 ﻿@using eShop.Domain.DTOs.Responses
 @inject IDialogService DialogService 
+@inject IAuthenticationService AuthenticationService
 
 <MudCard Outlined>
     <MudCardHeader>
@@ -22,13 +23,58 @@
 </style>
 
 @code {
-    [Parameter] public ContactDataModel Model { get; set; } = new();
-
+    [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; }
+    private ContactDataModel Model { get; set; } = new();
+    private PersonalData PersonalData { get; set; } = new();
 
     private async Task ChangeEmailAddress()
     {
         var parameters = new DialogParameters<ChangeEmailDialog>() { { x => x.Model, new ChangeEmailRequest { CurrentEmail = Model.Email } } };
         var options = new DialogOptions { CloseOnEscapeKey = true, ClassBackground = "blured", FullWidth=true };
         var dialog = await DialogService.ShowAsync<ChangeEmailDialog>("Change email address", parameters, options);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshData();
+    }
+
+    private async Task RefreshData()
+    {
+        PersonalData = await GetPersonalData();
+        Model = await SetContactData();
+    }
+
+    private async Task<ContactDataModel> SetContactData()
+    {
+        var state = await AuthenticationStateTask!;
+        var email = state.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value!;
+        var data = new ContactDataModel()
+            {
+                Email = email,
+                PhoneNumber = PersonalData.PhoneNumber
+            };
+
+        return data;
+    }
+
+    private async Task<PersonalData> GetPersonalData()
+    {
+        var state = await AuthenticationStateTask!;
+        var id = state.User.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value!;
+        var result = await AuthenticationService.GetPersonalDataAsync(id);
+        if (result.IsSucceeded)
+        {
+            var data = JsonConvert.DeserializeObject<PersonalData>(result.Result!.ToString()!)!;
+            return data;
+        }
+        return new()
+            {
+                FirstName = "None",
+                LastName = "None",
+                Gender = "None",
+                PhoneNumber = "None",
+                DateOfBirth = new(2000, 1, 1)
+            };
     }
 }

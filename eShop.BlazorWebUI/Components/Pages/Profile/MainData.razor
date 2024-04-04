@@ -1,4 +1,7 @@
-﻿
+﻿@inject IDialogService DialogService
+@inject IAuthenticationService AuthenticationService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
 <MudCard Outlined>
     <MudCardHeader>
         <MudText Typo="Typo.h5">Main Information</MudText>
@@ -10,11 +13,79 @@
         <LabeledText Label="Gender" Typo="Typo.subtitle1" TextContent=@Model.Gender />
     </MudCardContent>
     <MudCardActions>
-        <MudButton Class="ml-2" Color="Color.Primary" Variant="Variant.Filled">Change user name </MudButton>
+        <MudButton OnClick="ChangeUserName" Class="ml-2" Color="Color.Primary" Variant="Variant.Filled">Change user name </MudButton>
         <MudButton Class="ml-2" Color="Color.Primary" Variant="Variant.Filled">Change personal information</MudButton>
     </MudCardActions>
 </MudCard>
 
 @code {
-    [Parameter] public MainDataModel Model { get; set; } = new();
+    [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; }
+    private MainDataModel Model { get; set; } = new();
+    private ChangeUserNameRequest ChangeUserNameRequest { get; set; } = new();
+    private PersonalData PersonalData { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshData();
+
+        var task = await AuthenticationStateTask;
+        ChangeUserNameRequest.Email = task.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value!;
+    }
+
+    private async Task RefreshData()
+    {
+        PersonalData = await GetPersonalData();
+        Model = await SetMainData();
+    }
+
+    private async Task ChangeUserName()
+    {
+        var parameters = new DialogParameters<ChangeUserNameDialog>() { { x => x.Model, ChangeUserNameRequest } };
+        var options = new DialogOptions { CloseOnEscapeKey = true, ClassBackground = "blured", FullWidth = true };
+        var dialog = await DialogService.ShowAsync<ChangeUserNameDialog>("Change User Name", parameters, options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            var token = result.Data.ToString();
+            (AuthenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(token!);
+            await RefreshData();
+            StateHasChanged();
+        }
+    }
+
+    private async Task<MainDataModel> SetMainData()
+    {
+        var userName = (await AuthenticationStateTask!).User.Identity!.Name;
+
+        var data = new MainDataModel()
+            {
+                UserName = userName!,
+                DateOfBirth = PersonalData.DateOfBirth,
+                FullName = $"{PersonalData.FirstName} {PersonalData.LastName}",
+                Gender = PersonalData.Gender
+            };
+
+        return data;
+    }
+
+    private async Task<PersonalData> GetPersonalData()
+    {
+        var state = await AuthenticationStateTask!;
+        var id = state.User.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value!;
+        var result = await AuthenticationService.GetPersonalDataAsync(id);
+        if (result.IsSucceeded)
+        {
+            var data = JsonConvert.DeserializeObject<PersonalData>(result.Result!.ToString()!)!;
+            return data;
+        }
+        return new()
+            {
+                FirstName = "None",
+                LastName = "None",
+                Gender = "None",
+                PhoneNumber = "None",
+                DateOfBirth = new(2000, 1, 1)
+            };
+    }
 }

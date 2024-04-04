@@ -13,11 +13,20 @@
                         <MudPaper Class="pa-3">
                             <MudGrid Justify="Justify.Center">
                                 <MudItem xs="12" xl="12">
-                                    <MainData Model="MainDataModel" />
+                                    <MainData />
                                 </MudItem>
-
+                            </MudGrid>
+                        </MudPaper>
+                    </MudItem>
+                </MudGrid>
+            </MudTabPanel>
+            <MudTabPanel Text="Contact Information">
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudPaper Class="pa-3">
+                            <MudGrid Justify="Justify.Center">
                                 <MudItem xs="12" xl="12">
-                                    <ContactData Model="ContactDataModel" />
+                                    <ContactData />
                                 </MudItem>
                             </MudGrid>
                         </MudPaper>
@@ -36,7 +45,6 @@
 
 @code {
     [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; }
-    private MainDataModel MainDataModel { get; set; } = new();
     private ContactDataModel ContactDataModel { get; set; } = new();
     private PersonalData PersonalData { get; set; } = new();
 
@@ -48,23 +56,7 @@
     private async Task RefreshData()
     {
         PersonalData = await GetPersonalData();
-        MainDataModel = await SetMainData();
         ContactDataModel = await SetContactData();
-    }
-
-    private async Task<MainDataModel> SetMainData()
-    {
-        var userName = (await AuthenticationStateTask!).User.Identity!.Name;
-
-        var data = new MainDataModel()
-        {
-            UserName = userName!,
-            DateOfBirth = PersonalData.DateOfBirth,
-            FullName = $"{PersonalData.FirstName} {PersonalData.LastName}",
-            Gender = PersonalData.Gender
-        };
-
-        return data;
     }
 
     private async Task<ContactDataModel> SetContactData()

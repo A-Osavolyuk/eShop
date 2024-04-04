@@ -639,11 +639,11 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
-        public async ValueTask<Result<ChangeUserNameResponse>> ChangeUserNameAsync(string Email, ChangeUserNameRequest changeUserNameRequest)
+        public async ValueTask<Result<ChangeUserNameResponse>> ChangeUserNameAsync(ChangeUserNameRequest changeUserNameRequest)
         {
             try
             {
-                var user = await userManager.FindByEmailAsync(Email);
+                var user = await userManager.FindByEmailAsync(changeUserNameRequest.Email);
 
                 if (user is not null)
                 {
@@ -655,7 +655,7 @@ namespace eShop.AuthWebApi.Services.Implementation
 
                         if (result.Succeeded)
                         {
-                            user = await userManager.FindByEmailAsync(Email);
+                            user = await userManager.FindByEmailAsync(changeUserNameRequest.Email);
                             var token = tokenHandler.GenerateToken(user!);
 
                             return new(new ChangeUserNameResponse()
@@ -671,7 +671,7 @@ namespace eShop.AuthWebApi.Services.Implementation
                     return new(new FailedValidationException("Validation Error(s).", validationResult.Errors.Select(x => x.ErrorMessage)));
                 }
 
-                return new(new NotFoundUserByEmailException(Email));
+                return new(new NotFoundUserByEmailException(changeUserNameRequest.Email));
             }
             catch (Exception ex)
             {

@@ -71,5 +71,8 @@ namespace eShop.Infrastructure.Services
                     new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/change-password/{Email}",
                         Method: ApiMethod.POST, Data: changePasswordRequest));
 
+        public ValueTask<ResponseDto> ChangeUserNameAsync(ChangeUserNameRequest changeUserNameRequest) => clientService.SendAsync(
+                    new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/change-user-name",
+                        Method: ApiMethod.POST, Data: changeUserNameRequest));
     }
 }
