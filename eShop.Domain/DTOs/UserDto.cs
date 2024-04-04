@@ -2,6 +2,6 @@
 
 public record UserDto(
     string Email = "",
-    string Name = "",
+    string UserName = "",
     string Id = ""
     );

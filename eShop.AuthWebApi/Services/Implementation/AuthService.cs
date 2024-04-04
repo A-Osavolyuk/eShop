@@ -13,6 +13,8 @@ namespace eShop.AuthWebApi.Services.Implementation
         IValidator<ChangePersonalDataRequest> personalDataValidator,
         IValidator<ChangePasswordRequest> passwordValidator,
         IValidator<ConfirmPasswordResetRequest> resetPasswordValidator,
+        IValidator<ChangeUserNameRequest> userNameValidator,
+        IValidator<ChangeEmailRequest> emailValidator,
         IMapper mapper,
         IEmailSender emailSender,
         IConfiguration configuration) : IAuthService
@@ -25,6 +27,8 @@ namespace eShop.AuthWebApi.Services.Implementation
         private readonly IValidator<ChangePersonalDataRequest> personalDataValidator = personalDataValidator;
         private readonly IValidator<ChangePasswordRequest> passwordValidator = passwordValidator;
         private readonly IValidator<ConfirmPasswordResetRequest> resetPasswordValidator = resetPasswordValidator;
+        private readonly IValidator<ChangeUserNameRequest> userNameValidator = userNameValidator;
+        private readonly IValidator<ChangeEmailRequest> emailValidator = emailValidator;
         private readonly IMapper mapper = mapper;
         private readonly IEmailSender emailSender = emailSender;
         private readonly IConfiguration configuration = configuration;
@@ -225,7 +229,7 @@ namespace eShop.AuthWebApi.Services.Implementation
 
                         if (isValidPassword)
                         {
-                            var userDto = new UserDto(user.Email!, user.Email!, user.Id);
+                            var userDto = new UserDto(user.Email!, user.UserName!, user.Id);
 
                             if (user.TwoFactorEnabled)
                             {
@@ -441,7 +445,7 @@ namespace eShop.AuthWebApi.Services.Implementation
 
                     if (result)
                     {
-                        var userDto = new UserDto(user.Email!, user.Email!, user.Id);
+                        var userDto = new UserDto(user.Email!, user.UserName!, user.Id);
                         var token = tokenHandler.GenerateToken(user);
 
                         return new(new LoginResponse()
@@ -566,27 +570,35 @@ namespace eShop.AuthWebApi.Services.Implementation
 
                 if (user is not null)
                 {
-                    var token = await userManager.GenerateChangeEmailTokenAsync(user, changeEmailRequest.NewEmail);
-                    var link = UrlGenerator.ActionLink("/account/change-email", frontendUri, new
-                    {
-                        changeEmailRequest.CurrentEmail,
-                        changeEmailRequest.NewEmail,
-                        Token = token
-                    });
+                    var validationResult = await emailValidator.ValidateAsync(changeEmailRequest);
 
-                    await emailSender.SendChangeEmailMessage(new ChangeEmailMessage()
+                    if (validationResult.IsValid)
                     {
-                        Link = link,
-                        To = changeEmailRequest.CurrentEmail,
-                        Subject = "Change email address request",
-                        UserName = changeEmailRequest.CurrentEmail,
-                        NewEmail = changeEmailRequest.NewEmail,
-                    });
+                        var token = await userManager.GenerateChangeEmailTokenAsync(user, changeEmailRequest.NewEmail);
+                        var link = UrlGenerator.ActionLink("/account/change-email", frontendUri, new
+                        {
+                            changeEmailRequest.CurrentEmail,
+                            changeEmailRequest.NewEmail,
+                            Token = token
+                        });
 
-                    return new(new ChangeEmailResponse()
-                    {
-                        Message = "We have sent an email with instructions to your email."
-                    });
+                        await emailSender.SendChangeEmailMessage(new ChangeEmailMessage()
+                        {
+                            Link = link,
+                            To = changeEmailRequest.CurrentEmail,
+                            Subject = "Change email address request",
+                            UserName = changeEmailRequest.CurrentEmail,
+                            NewEmail = changeEmailRequest.NewEmail,
+                        });
+
+                        return new(new ChangeEmailResponse()
+                        {
+                            Message = "We have sent an email with instructions to your email."
+                        });
+                    }
+
+                    return new(new FailedValidationException("Validation Error(s).", validationResult.Errors.Select(x => x.ErrorMessage)));
+
                 }
 
                 return new(new NotFoundUserByEmailException(changeEmailRequest.CurrentEmail));
@@ -620,6 +632,46 @@ namespace eShop.AuthWebApi.Services.Implementation
                 }
 
                 return new(new NotFoundUserByEmailException(confirmChangeEmailRequest.CurrentEmail));
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
+        }
+
+        public async ValueTask<Result<ChangeUserNameResponse>> ChangeUserNameAsync(string Email, ChangeUserNameRequest changeUserNameRequest)
+        {
+            try
+            {
+                var user = await userManager.FindByEmailAsync(Email);
+
+                if (user is not null)
+                {
+                    var validationResult = await userNameValidator.ValidateAsync(changeUserNameRequest);
+
+                    if (validationResult.IsValid)
+                    {
+                        var result = await userManager.SetUserNameAsync(user, changeUserNameRequest.UserName);
+
+                        if (result.Succeeded)
+                        {
+                            user = await userManager.FindByEmailAsync(Email);
+                            var token = tokenHandler.GenerateToken(user!);
+
+                            return new(new ChangeUserNameResponse()
+                            {
+                                Message = "Your user name was successfully changed.",
+                                Token = token
+                            });
+                        }
+
+                        return new(new NotChangedUserNameException());
+                    }
+
+                    return new(new FailedValidationException("Validation Error(s).", validationResult.Errors.Select(x => x.ErrorMessage)));
+                }
+
+                return new(new NotFoundUserByEmailException(Email));
             }
             catch (Exception ex)
             {

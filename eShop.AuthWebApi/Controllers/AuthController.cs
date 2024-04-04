@@ -228,5 +228,15 @@ namespace eShop.AuthWebApi.Controllers
                 s => Ok(new ResponseBuilder().Succeeded().AddResultMessage(s.Message).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
+
+        [HttpPost("change-user-name/{Email}")]
+        public async ValueTask<ActionResult<ResponseDto>> ChangeUserName(string Email, ChangeUserNameRequest changeUserNameRequest)
+        {
+            var result = await authService.ChangeUserNameAsync(Email, changeUserNameRequest);
+
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().AddResultMessage(s.Message).AddResult(s).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
     }
 }
