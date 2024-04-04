@@ -15,7 +15,6 @@ namespace eShop.Domain.Entities
         {
             FirstName = changePersonalDataRequestDto.FirstName;
             LastName = changePersonalDataRequestDto.LastName;
-            MiddleName = changePersonalDataRequestDto.MiddleName;
             Gender = changePersonalDataRequestDto.Gender;
             DateOfBirth = changePersonalDataRequestDto.DateOfBirth;
             PhoneNumber = changePersonalDataRequestDto.PhoneNumber;

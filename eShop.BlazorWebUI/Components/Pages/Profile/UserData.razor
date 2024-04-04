@@ -23,7 +23,6 @@
                     <MudPaper Outlined Class="pa-3">
                         <LabeledText Label="First Name" TextContent="@ShowModel.FirstName" />
                         <LabeledText Label="Last Name" TextContent="@ShowModel.LastName" />
-                        <LabeledText Label="Middle Name" TextContent="@ShowModel.MiddleName" />
                         <LabeledText Label="Gender" TextContent="@ShowModel.Gender" />
                         <LabeledText Label="Date of Birth" TextContent="@(ShowModel.DateOfBirth.ToLongDateString())" />
                         <LabeledText Label="Phone Number" TextContent="@ShowModel.PhoneNumber" />
@@ -52,7 +51,6 @@ else
 
                     <MudTextField @bind-Value="FormModel.FirstName" For="(() => FormModel.FirstName)" Label="First Name" Variant="Variant.Outlined" />
                     <MudTextField @bind-Value="FormModel.LastName" For="(() => FormModel.LastName)" Label="Last Name" Variant="Variant.Outlined" />
-                    <MudTextField @bind-Value="FormModel.MiddleName" For="(() => FormModel.MiddleName)" Label="Middle Name" Variant="Variant.Outlined" />
                     <MudDatePicker Date="FormModel.DateOfBirth" @ref="DatePicker" Label="Date of birth" Variant="Variant.Outlined" />
                     <MudSelect @bind-Value="FormModel.Gender" For="(() => FormModel.Gender)" Label="Gender" Variant="Variant.Outlined">
                         <MudSelectItem T="string"> Choose your gender </MudSelectItem>
