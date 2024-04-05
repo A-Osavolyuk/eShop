@@ -1,6 +1,5 @@
 ﻿using eShop.Application;
 using eShop.AuthWebApi.Services.Implementation;
-using Microsoft.AspNetCore.Authentication.Google;
 
 namespace eShop.AuthWebApi
 {
@@ -19,8 +18,7 @@ namespace eShop.AuthWebApi
                 {
                     p.AllowAnyHeader();
                     p.AllowAnyMethod();
-                    p.AllowCredentials();
-                    p.WithOrigins("https://localhost:8101");
+                    p.AllowAnyOrigin();
                 });
             });
 

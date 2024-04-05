@@ -46,7 +46,7 @@
         if (result.IsSucceeded)
         {
             var data = JsonConvert.DeserializeObject<LoginResponse>(result.Result!.ToString()!);
-            (authenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(data!.Token);
+            await (authenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(data!.Token);
             NavigationManager.NavigateTo("/");
             Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
         }

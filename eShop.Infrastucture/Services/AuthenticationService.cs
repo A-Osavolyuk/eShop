@@ -74,5 +74,13 @@ namespace eShop.Infrastructure.Services
         public ValueTask<ResponseDto> ChangeUserNameAsync(ChangeUserNameRequest changeUserNameRequest) => clientService.SendAsync(
                     new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/change-user-name",
                         Method: ApiMethod.POST, Data: changeUserNameRequest));
+
+        public ValueTask<ResponseDto> ChangeTwoFactorStateAsync(string Email) => clientService.SendAsync(
+                    new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/change-2fa-state/{Email}",
+                        Method: ApiMethod.POST));
+
+        public ValueTask<ResponseDto> GetTwoFactorStateAsync(string Email) => clientService.SendAsync(
+                    new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/get-2fa-state/{Email}",
+                        Method: ApiMethod.GET));
     }
 }

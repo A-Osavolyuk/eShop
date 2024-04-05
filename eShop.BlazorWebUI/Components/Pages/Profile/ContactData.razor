@@ -1,18 +1,41 @@
 ﻿@using eShop.Domain.DTOs.Responses
-@inject IDialogService DialogService 
+@inject IDialogService DialogService
 @inject IAuthenticationService AuthenticationService
 
-<MudCard Outlined>
+<MudCard Outlined Style="height:100%">
     <MudCardHeader>
         <MudText Typo="Typo.h5">Contact Information</MudText>
     </MudCardHeader>
     <MudCardContent>
-        <LabeledText Label="Email" Typo="Typo.subtitle1" TextContent="@Model.Email" />
-        <LabeledText Label="Phone number" Typo="Typo.subtitle1" TextContent=@Model.PhoneNumber />
+        <MudDivider />
+        <MudGrid Spacing="0">
+            <MudItem xs="12" sm="3">
+                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> Email </MudText>
+            </MudItem>
+            <MudItem xs="12" sm="9">
+                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> @Model.Email </MudText>
+            </MudItem>
+        </MudGrid>
+        <MudDivider />
+        <MudGrid Spacing="0">
+            <MudItem xs="12" sm="3">
+                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> Phone Number </MudText>
+            </MudItem>
+            <MudItem xs="12" sm="9">
+                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> @Model.PhoneNumber </MudText>
+            </MudItem>
+        </MudGrid>
+        <MudDivider />
     </MudCardContent>
     <MudCardActions>
-        <MudButton Class="ml-2" OnClick="ChangeEmailAddress" Color="Color.Primary" Variant="Variant.Filled">Change Email Address</MudButton>
-        <MudButton Class="ml-2" Color="Color.Primary" Variant="Variant.Filled">Change Phone Number</MudButton>
+        <MudGrid Spacing="1">
+            <MudItem xs="12" lg="3">
+                <MudButton FullWidth OnClick="ChangeEmailAddress" Color="Color.Primary" Variant="Variant.Filled">Change Email Address</MudButton>
+            </MudItem>
+            <MudItem xs="12" lg="3">
+                <MudButton FullWidth Color="Color.Primary" Variant="Variant.Filled">Change Phone Number</MudButton>
+            </MudItem>
+        </MudGrid>
     </MudCardActions>
 </MudCard>
 
@@ -30,7 +53,7 @@
     private async Task ChangeEmailAddress()
     {
         var parameters = new DialogParameters<ChangeEmailDialog>() { { x => x.Model, new ChangeEmailRequest { CurrentEmail = Model.Email } } };
-        var options = new DialogOptions { CloseOnEscapeKey = true, ClassBackground = "blured", FullWidth=true };
+        var options = new DialogOptions { CloseOnEscapeKey = true, ClassBackground = "blured", FullWidth = true };
         var dialog = await DialogService.ShowAsync<ChangeEmailDialog>("Change email address", parameters, options);
     }
 

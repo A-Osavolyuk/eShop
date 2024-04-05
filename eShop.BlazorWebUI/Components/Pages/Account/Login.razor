@@ -103,7 +103,7 @@
             }
             else
             {
-                (authenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(data!.Token);
+                await (authenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(data!.Token);
                 navigationManager.NavigateTo("/");
                 Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
             }

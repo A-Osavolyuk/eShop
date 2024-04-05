@@ -44,7 +44,7 @@ namespace eShop.Infrastructure.Account
             }
         }
 
-        public async void UpdateAuthenticationState(string token)
+        public async Task UpdateAuthenticationState(string token)
         {
             var claimsPrincipal = new ClaimsPrincipal();
             if (!string.IsNullOrEmpty(token))

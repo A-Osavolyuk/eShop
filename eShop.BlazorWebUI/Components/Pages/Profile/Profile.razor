@@ -6,89 +6,41 @@
 
 <AuthorizeView>
     <Authorized>
-        <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true">
-            <MudTabPanel Text="Personal Information">
-                <MudGrid>
-                    <MudItem xs="12">
-                        <MudPaper Class="pa-3">
-                            <MudGrid Justify="Justify.Center">
-                                <MudItem xs="12" xl="12">
+        <MudGrid Justify="Justify.Center">
+            <MudItem md="12" sm="12" xs="12" lg="8">
+                <MudTabs Elevation="0" Rounded="true" ApplyEffectsToContainer="true">
+                    <MudTabPanel Text="Main">
+                        <MudGrid Class="my-2" Spacing="2">
+                            <MudItem xs="12" sm="12" md="12">
+                                <MudPaper Elevation="0" Class="pa-3">
                                     <MainData />
-                                </MudItem>
-                            </MudGrid>
-                        </MudPaper>
-                    </MudItem>
-                </MudGrid>
-            </MudTabPanel>
-            <MudTabPanel Text="Contact Information">
-                <MudGrid>
-                    <MudItem xs="12">
-                        <MudPaper Class="pa-3">
-                            <MudGrid Justify="Justify.Center">
-                                <MudItem xs="12" xl="12">
+                                </MudPaper>
+                            </MudItem>
+                            <MudItem xs="12" sm="12" md="12">
+                                <MudPaper Elevation="0" Class="pa-3">
                                     <ContactData />
-                                </MudItem>
-                            </MudGrid>
-                        </MudPaper>
-                    </MudItem>
-                </MudGrid>
-            </MudTabPanel>
-            <MudTabPanel Text="Security">
-                <MudText>Content Three</MudText>
-            </MudTabPanel>
-            <MudTabPanel Text="Settings" Disabled="true">
-                <MudText>Content Disabled</MudText>
-            </MudTabPanel>
-        </MudTabs>
+                                </MudPaper>
+                            </MudItem>
+                        </MudGrid>
+                    </MudTabPanel>
+                    <MudTabPanel Text="Security">
+                        <MudGrid>
+                            <MudItem xs="12">
+                                <MudPaper Elevation="0" Class="pa-3">
+                                    <Security />
+                                </MudPaper>
+                            </MudItem>
+                        </MudGrid>
+                    </MudTabPanel>
+                    <MudTabPanel Text="Settings">
+                        <MudText>Content Disabled</MudText>
+                    </MudTabPanel>
+                </MudTabs>
+            </MudItem>
+        </MudGrid>
     </Authorized>
 </AuthorizeView>
 
 @code {
-    [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; }
-    private ContactDataModel ContactDataModel { get; set; } = new();
-    private PersonalData PersonalData { get; set; } = new();
-
-    protected override async Task OnInitializedAsync()
-    {
-        await RefreshData();
-    }
-
-    private async Task RefreshData()
-    {
-        PersonalData = await GetPersonalData();
-        ContactDataModel = await SetContactData();
-    }
-
-    private async Task<ContactDataModel> SetContactData()
-    {
-        var state = await AuthenticationStateTask!;
-        var email = state.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value!;
-        var data = new ContactDataModel()
-        {
-            Email = email,
-            PhoneNumber = PersonalData.PhoneNumber
-        };
-
-        return data;
-    }
-
-    private async Task<PersonalData> GetPersonalData()
-    {
-        var state = await AuthenticationStateTask!;
-        var id = state.User.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value!;
-        var result = await AuthenticationService.GetPersonalDataAsync(id);
-        if (result.IsSucceeded)
-        {
-            var data = JsonConvert.DeserializeObject<PersonalData>(result.Result!.ToString()!)!;
-            return data;
-        }
-        return new()
-        {
-            FirstName = "None",
-            LastName = "None",
-            Gender = "None",
-            PhoneNumber = "None",
-            DateOfBirth = new(2000, 1, 1)
-        };
-    }
+    
 }

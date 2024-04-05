@@ -1,20 +1,60 @@
 ﻿@inject IDialogService DialogService
 @inject IAuthenticationService AuthenticationService
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
 
 <MudCard Outlined>
     <MudCardHeader>
         <MudText Typo="Typo.h5">Main Information</MudText>
     </MudCardHeader>
     <MudCardContent>
-        <LabeledText Label="User Name" Typo="Typo.subtitle1" TextContent=@Model.UserName />
-        <LabeledText Label="Full name" Typo="Typo.subtitle1" TextContent=@Model.FullName />
-        <LabeledText Label="Date of birth" Typo="Typo.subtitle1" TextContent=@Model.DateOfBirth.ToShortDateString() />
-        <LabeledText Label="Gender" Typo="Typo.subtitle1" TextContent=@Model.Gender />
+        <MudDivider />
+        <MudGrid Spacing="0">
+            <MudItem xs="12" sm="3">
+                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> User name </MudText>
+            </MudItem>
+            <MudItem xs="12" sm="9">
+                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> @Model.UserName </MudText>
+            </MudItem>
+        </MudGrid>
+        <MudDivider />
+        <MudGrid Spacing="0">
+            <MudItem xs="12" sm="3">
+                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> Full name </MudText>
+            </MudItem>
+            <MudItem xs="12" sm="9">
+                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> @Model.FullName </MudText>
+            </MudItem>
+        </MudGrid>
+        <MudDivider />
+        <MudGrid Spacing="0">
+            <MudItem xs="12" sm="3">
+                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> Date of birth </MudText>
+            </MudItem>
+            <MudItem xs="12" sm="9">
+                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> @Model.DateOfBirth.ToShortDateString() </MudText>
+            </MudItem>
+        </MudGrid>
+        <MudDivider />
+        <MudGrid Spacing="0">
+            <MudItem xs="12" sm="3">
+                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> Gender </MudText>
+            </MudItem>
+            <MudItem xs="12" sm="9">
+                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> @Model.Gender </MudText>
+            </MudItem>
+        </MudGrid>
+        <MudDivider />
     </MudCardContent>
     <MudCardActions>
-        <MudButton OnClick="ChangeUserName" Class="ml-2" Color="Color.Primary" Variant="Variant.Filled">Change user name </MudButton>
-        <MudButton Class="ml-2" Color="Color.Primary" Variant="Variant.Filled">Change personal information</MudButton>
+        <MudGrid Spacing="1">
+            <MudItem xs="12" lg="3"> 
+                <MudButton FullWidth OnClick="ChangeUserName" Color="Color.Primary" Variant="Variant.Filled">Change user name </MudButton>
+            </MudItem>
+            <MudItem xs="12" lg="3">
+                <MudButton FullWidth Color="Color.Primary" Variant="Variant.Filled">Change personal data</MudButton>
+            </MudItem>
+        </MudGrid>
     </MudCardActions>
 </MudCard>
 
@@ -48,9 +88,12 @@
         if (!result.Canceled)
         {
             var token = result.Data.ToString();
-            (AuthenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(token!);
-            await RefreshData();
-            StateHasChanged();
+            await (AuthenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(token!);
+            var task = await AuthenticationStateTask;
+            Model.UserName = task.User.Identity!.Name!;
+            NavigationManager.Refresh(true);
+
+            ChangeUserNameRequest.UserName = string.Empty;
         }
     }
 

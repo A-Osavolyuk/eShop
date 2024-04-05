@@ -1,0 +1,61 @@
+﻿@inject IAuthenticationService AuthenticationService
+@inject ISnackbar Snackbar
+
+<MudCard Outlined>
+    <MudCardHeader>
+        <MudText Typo="Typo.h5"> Account Security </MudText>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudDivider />
+        <MudGrid Spacing="0">
+            <MudItem xs="12" sm="3">
+                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> Two Factor Authentication </MudText>
+            </MudItem>
+            <MudItem xs="12" sm="9">
+                <MudCheckBox @onclick=ChangeState @bind-Value="TwoFactorState" />
+            </MudItem>
+        </MudGrid>
+        <MudDivider />
+    </MudCardContent>
+</MudCard>
+
+@code {
+    [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; }
+    private bool TwoFactorState { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var task = await AuthenticationStateTask;
+
+        var email = task.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value!;
+        var result = await AuthenticationService.GetTwoFactorStateAsync(email);
+
+        if (result.IsSucceeded)
+        {
+            var data = JsonConvert.DeserializeObject<TwoFactorAuthenticationStateResponse>(result.Result!.ToString()!);
+            TwoFactorState = data!.TwoFactorAuthenticationState;
+        }
+        else
+        {
+            TwoFactorState = false;
+            Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
+        }
+    }
+
+    private async Task ChangeState()
+    {
+        var task = await AuthenticationStateTask;
+
+        var email = task.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value!;
+        var result = await AuthenticationService.ChangeTwoFactorStateAsync(email);
+
+        if (result.IsSucceeded)
+        {
+            Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
+        }
+    }
+}
