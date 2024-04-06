@@ -16,6 +16,7 @@ namespace eShop.AuthWebApi.Services.Implementation
         IValidator<ConfirmPasswordResetRequest> resetPasswordValidator,
         IValidator<ChangeUserNameRequest> userNameValidator,
         IValidator<ChangeEmailRequest> emailValidator,
+        IValidator<ChangePhoneNumberRequest> phoneValidator,
         IMapper mapper,
         IEmailSender emailSender,
         IConfiguration configuration) : IAuthService
@@ -30,6 +31,7 @@ namespace eShop.AuthWebApi.Services.Implementation
         private readonly IValidator<ConfirmPasswordResetRequest> resetPasswordValidator = resetPasswordValidator;
         private readonly IValidator<ChangeUserNameRequest> userNameValidator = userNameValidator;
         private readonly IValidator<ChangeEmailRequest> emailValidator = emailValidator;
+        private readonly IValidator<ChangePhoneNumberRequest> phoneValidator = phoneValidator;
         private readonly IMapper mapper = mapper;
         private readonly IEmailSender emailSender = emailSender;
         private readonly IConfiguration configuration = configuration;
@@ -697,6 +699,51 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
-        
+        public async ValueTask<Result<ChangePhoneNumberResponse>> ChangePhoneNumberAsync(ChangePhoneNumberRequest changePhoneNumberRequest)
+        {
+            try
+            {
+                var user = await userManager.FindByEmailAsync(changePhoneNumberRequest.Email);
+
+                if (user is not null)
+                {
+                    var validationResult = await phoneValidator.ValidateAsync(changePhoneNumberRequest);
+
+                    if (validationResult.IsValid)
+                    {
+                        var token = await userManager.GenerateChangePhoneNumberTokenAsync(user, changePhoneNumberRequest.PhoneNumber);
+                        var encodedToken = Uri.EscapeDataString(token);
+                        var link = UrlGenerator.ActionLink("/account/change-phone-number", frontendUri, new
+                        {
+                            Token = encodedToken,
+                            Email = changePhoneNumberRequest.Email,
+                            PhoneNumber = changePhoneNumberRequest.PhoneNumber
+                        });
+
+                        await emailSender.SendChangePhoneNumberMessage(new ChangePhoneNumberMessage()
+                        {
+                            Link = link,
+                            To = changePhoneNumberRequest.Email,
+                            Subject = "Change phone number request",
+                            UserName = changePhoneNumberRequest.Email,
+                            PhoneNumber = changePhoneNumberRequest.PhoneNumber
+                        });
+
+                        return new(new ChangePhoneNumberResponse()
+                        {
+                            Message = "We have sent you an email with instructions."
+                        });
+                    }
+
+                    return new(new FailedValidationException("Validation error(s).", validationResult.Errors.Select(x => x.ErrorMessage)));
+                }
+
+                return new(new NotFoundUserByEmailException(changePhoneNumberRequest.Email));
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
+        }
     }
 }

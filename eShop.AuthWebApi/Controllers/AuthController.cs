@@ -248,5 +248,15 @@ namespace eShop.AuthWebApi.Controllers
                 s => Ok(new ResponseBuilder().Succeeded().AddResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
+
+        [HttpPost("change-phone-number")]
+        public async ValueTask<ActionResult<ResponseDto>> ChangePhoneNumber([FromBody] ChangePhoneNumberRequest changePhoneNumberRequest)
+        {
+            var result = await authService.ChangePhoneNumberAsync(changePhoneNumberRequest);
+
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().AddResultMessage(s.Message).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
     }
 }

@@ -1,9 +1,4 @@
-﻿
-using eShop.Domain.DTOs.Messages;
-using LanguageExt.Pipes;
-using OpenTelemetry.Trace;
-
-namespace eShop.AuthWebApi.Services.Implementation
+﻿namespace eShop.AuthWebApi.Services.Implementation
 {
     public class EmailSender : IEmailSender
     {
@@ -46,6 +41,13 @@ namespace eShop.AuthWebApi.Services.Implementation
             var queryName = "/registered-on-external-login";
             var endpoint = await bus.GetSendEndpoint(CreateQueryUri(queryName));
             await endpoint.Send(accountRegisteredOnExternalLoginMessage);
+        }
+
+        public async ValueTask SendChangePhoneNumberMessage(ChangePhoneNumberMessage changePhoneNumberMessage)
+        {
+            var queryName = "/change-phone-number";
+            var endpoint = await bus.GetSendEndpoint(CreateQueryUri(queryName));
+            await endpoint.Send(changePhoneNumberMessage);
         }
 
         private Uri CreateQueryUri(string queryName)

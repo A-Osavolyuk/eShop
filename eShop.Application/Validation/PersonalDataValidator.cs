@@ -1,5 +1,6 @@
 ﻿using eShop.Domain.DTOs.Requests;
 using FluentValidation;
+using System.Text.RegularExpressions;
 
 namespace eShop.Application.Validation
 {
@@ -18,7 +19,8 @@ namespace eShop.Application.Validation
                 .MaximumLength(32).WithMessage("Last Name length must be less then 3 letters.");
 
             RuleFor(x => x.PhoneNumber)
-                .Matches("^[0-9\\-\\+]{9,15}$").WithMessage("Wrong phone number format.");
+                .Matches(@"^\+\(\d{2}\)-\d{3}-\d{3}-\d{4}$|^\d{12}$").WithMessage("Wrong phone number format.")
+                .NotEmpty().WithMessage("Phone number is must!");
 
             RuleFor(x => x.Gender)
                 .NotEmpty().WithMessage("Gender is must!")

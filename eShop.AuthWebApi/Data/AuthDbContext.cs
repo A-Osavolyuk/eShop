@@ -21,7 +21,7 @@
                     LastName = "Osavoliuk",
                     DateOfBirth = new DateTime(2000, 01, 01),
                     Gender = "Male",
-                    PhoneNumber = "+(38)-068-610-02-42"
+                    PhoneNumber = "380686100242"
                 });
         }
     }
