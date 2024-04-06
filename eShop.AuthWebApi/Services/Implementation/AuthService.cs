@@ -33,11 +33,11 @@ namespace eShop.AuthWebApi.Services.Implementation
         private readonly IConfiguration configuration = configuration;
         private readonly string frontendUri = configuration["GeneralSettings:FrontendBaseUri"]!;
 
-        public async ValueTask<Result<ChangePasswordResponse>> ChangePasswordAsync(string UserId, ChangePasswordRequest changePasswordRequest)
+        public async ValueTask<Result<ChangePasswordResponse>> ChangePasswordAsync(string Email, ChangePasswordRequest changePasswordRequest)
         {
             try
             {
-                var user = await userManager.FindByIdAsync(UserId);
+                var user = await userManager.FindByEmailAsync(Email);
 
                 if (user is not null)
                 {
@@ -65,7 +65,7 @@ namespace eShop.AuthWebApi.Services.Implementation
                     return new(new FailedValidationException("Validation Error(s).", validationResult.Errors.Select(x => x.ErrorMessage)));
                 }
 
-                return new(new NotFoundUserByIdException(UserId));
+                return new(new NotFoundUserByEmailException(Email));
             }
             catch (Exception ex)
             {

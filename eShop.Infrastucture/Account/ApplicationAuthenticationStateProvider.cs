@@ -79,14 +79,16 @@ namespace eShop.Infrastructure.Account
         {
             if (token is not null)
             {
-                var claims = new List<Claim>()
+                var claims = token.Claims.ToList();
+
+                var output = new List<Claim>()
                 {
-                    new(CustomClaimTypes.Id, token.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value),
-                    new(ClaimTypes.Name, token.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.UserName)!.Value),
-                    new(ClaimTypes.Email, token.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email)!.Value),
+                    new(CustomClaimTypes.Id, claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value),
+                    new(ClaimTypes.Name, claims.FirstOrDefault(x => x.Type == CustomClaimTypes.UserName)!.Value),
+                    new(ClaimTypes.Email, claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email)!.Value),
                 };
 
-                return claims;
+                return output;
             }
 
             return [];

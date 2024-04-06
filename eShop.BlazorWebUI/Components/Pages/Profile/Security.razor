@@ -1,4 +1,5 @@
 ﻿@inject IAuthenticationService AuthenticationService
+@inject IDialogService DialogService
 @inject ISnackbar Snackbar
 
 <MudCard Outlined>
@@ -12,23 +13,36 @@
                 <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> Two Factor Authentication </MudText>
             </MudItem>
             <MudItem xs="12" sm="9">
-                <MudCheckBox @onclick=ChangeState @bind-Value="TwoFactorState" />
+                <MudText Class="mx-3 my-1" Color="@(TwoFactorState ? Color.Success : Color.Error)" 
+                    Typo="Typo.subtitle1">@(TwoFactorState ? "Enabled" : "Disabled")</MudText>
             </MudItem>
         </MudGrid>
         <MudDivider />
     </MudCardContent>
+    <MudCardActions>
+        <MudGrid Spacing="1">
+            <MudItem xs="12" lg="3">
+                <MudButton FullWidth Color="Color.Primary" OnClick="ChangeState" Variant="Variant.Filled">@(!TwoFactorState ? "Enable" : "Disable") 2FA</MudButton>
+            </MudItem>
+            <MudItem xs="12" lg="3">
+                <MudButton FullWidth Color="Color.Primary" OnClick="ChangePassword" Variant="Variant.Filled">Change Password</MudButton>
+            </MudItem>
+        </MudGrid>
+    </MudCardActions>
 </MudCard>
 
 @code {
     [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; }
+    private ChangePasswordRequest Request { get; set; } = new();
     private bool TwoFactorState { get; set; } = false;
+    private string Email { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
         var task = await AuthenticationStateTask;
 
-        var email = task.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value!;
-        var result = await AuthenticationService.GetTwoFactorStateAsync(email);
+        Email = task.User.Claims.ToList().FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value!;
+        var result = await AuthenticationService.GetTwoFactorStateAsync(Email);
 
         if (result.IsSucceeded)
         {
@@ -44,18 +58,24 @@
 
     private async Task ChangeState()
     {
-        var task = await AuthenticationStateTask;
-
-        var email = task.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value!;
-        var result = await AuthenticationService.ChangeTwoFactorStateAsync(email);
+        var result = await AuthenticationService.ChangeTwoFactorStateAsync(Email);
 
         if (result.IsSucceeded)
         {
             Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
+            TwoFactorState = !TwoFactorState;
         }
         else
         {
             Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
         }
+    }
+
+    private async Task ChangePassword()
+    {
+        var parameters = new DialogParameters<ChangePasswordDialog>() { { x => x.Email, Email } };
+        var options = new DialogOptions { CloseOnEscapeKey = true, ClassBackground = "blured", FullWidth = true };
+        var dialog = await DialogService.ShowAsync<ChangePasswordDialog>("Change Password", parameters, options);
+        var result = await dialog.Result;
     }
 }

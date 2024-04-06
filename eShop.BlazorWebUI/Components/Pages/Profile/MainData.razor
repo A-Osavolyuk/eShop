@@ -69,7 +69,7 @@
         await RefreshData();
 
         var task = await AuthenticationStateTask;
-        ChangeUserNameRequest.Email = task.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value!;
+        ChangeUserNameRequest.Email = task.User.Claims.ToList().FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value!;
     }
 
     private async Task RefreshData()

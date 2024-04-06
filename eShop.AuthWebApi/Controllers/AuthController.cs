@@ -76,10 +76,10 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpPost("change-password/{Id}")]
-        public async ValueTask<ActionResult<ResponseDto>> ChangePassword([FromBody] ChangePasswordRequest changePasswordRequest, string Id)
+        [HttpPost("change-password/{Email}")]
+        public async ValueTask<ActionResult<ResponseDto>> ChangePassword([FromBody] ChangePasswordRequest changePasswordRequest, string Email)
         {
-            var result = await authService.ChangePasswordAsync(Id, changePasswordRequest);
+            var result = await authService.ChangePasswordAsync(Email, changePasswordRequest);
 
             return result.Match<ActionResult<ResponseDto>>(
                 s => Ok(new ResponseBuilder()
