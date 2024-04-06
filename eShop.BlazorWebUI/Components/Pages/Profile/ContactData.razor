@@ -33,7 +33,7 @@
                 <MudButton FullWidth OnClick="ChangeEmailAddress" Color="Color.Primary" Variant="Variant.Filled">Change Email Address</MudButton>
             </MudItem>
             <MudItem xs="12" lg="3">
-                <MudButton FullWidth Color="Color.Primary" Variant="Variant.Filled">Change Phone Number</MudButton>
+                <MudButton FullWidth OnClick="ChangePhoneNumber" Color="Color.Primary" Variant="Variant.Filled">Change Phone Number</MudButton>
             </MudItem>
         </MudGrid>
     </MudCardActions>
@@ -49,16 +49,26 @@
     [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; }
     private ContactDataModel Model { get; set; } = new();
     private PersonalData PersonalData { get; set; } = new();
+    public string Email { get; set; } = string.Empty;
 
     private async Task ChangeEmailAddress()
     {
-        var parameters = new DialogParameters<ChangeEmailDialog>() { { x => x.Model, new ChangeEmailRequest { CurrentEmail = Model.Email } } };
+        var parameters = new DialogParameters<ChangeEmailDialog>() { { x => x.Email, Email } };
         var options = new DialogOptions { CloseOnEscapeKey = true, ClassBackground = "blured", FullWidth = true };
         var dialog = await DialogService.ShowAsync<ChangeEmailDialog>("Change email address", parameters, options);
     }
 
+    private async Task ChangePhoneNumber()
+    {
+        var parameters = new DialogParameters<ChangePhoneNumberDialog>() { { x => x.Email, Email } };
+        var options = new DialogOptions { CloseOnEscapeKey = true, ClassBackground = "blured", FullWidth = true };
+        var dialog = await DialogService.ShowAsync<ChangePhoneNumberDialog>("Change phone number", parameters, options);
+    }
+
     protected override async Task OnInitializedAsync()
     {
+        var state = await AuthenticationStateTask!;
+        Email = state.User.Claims.ToList().FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value;
         await RefreshData();
     }
 

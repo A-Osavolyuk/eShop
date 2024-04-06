@@ -249,10 +249,20 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpPost("change-phone-number")]
-        public async ValueTask<ActionResult<ResponseDto>> ChangePhoneNumber([FromBody] ChangePhoneNumberRequest changePhoneNumberRequest)
+        [HttpPost("request-change-phone-number")]
+        public async ValueTask<ActionResult<ResponseDto>> RequestChangePhoneNumber([FromBody] ChangePhoneNumberRequest changePhoneNumberRequest)
         {
-            var result = await authService.ChangePhoneNumberAsync(changePhoneNumberRequest);
+            var result = await authService.RequestChangePhoneNumberAsync(changePhoneNumberRequest);
+
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().AddResultMessage(s.Message).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
+        [HttpPost("confirm-change-phone-number")]
+        public async ValueTask<ActionResult<ResponseDto>> ConfirmChangePhoneNumber([FromBody] ConfirmChangePhoneNumberRequest confirmChangePhoneNumberRequest)
+        {
+            var result = await authService.ConfirmChangePhoneNumberAsync(confirmChangePhoneNumberRequest);
 
             return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().AddResultMessage(s.Message).Build()),
@@ -260,3 +270,4 @@ namespace eShop.AuthWebApi.Controllers
         }
     }
 }
+

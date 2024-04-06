@@ -699,7 +699,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
-        public async ValueTask<Result<ChangePhoneNumberResponse>> ChangePhoneNumberAsync(ChangePhoneNumberRequest changePhoneNumberRequest)
+        public async ValueTask<Result<ChangePhoneNumberResponse>> RequestChangePhoneNumberAsync(ChangePhoneNumberRequest changePhoneNumberRequest)
         {
             try
             {
@@ -712,10 +712,9 @@ namespace eShop.AuthWebApi.Services.Implementation
                     if (validationResult.IsValid)
                     {
                         var token = await userManager.GenerateChangePhoneNumberTokenAsync(user, changePhoneNumberRequest.PhoneNumber);
-                        var encodedToken = Uri.EscapeDataString(token);
                         var link = UrlGenerator.ActionLink("/account/change-phone-number", frontendUri, new
                         {
-                            Token = encodedToken,
+                            Token = token,
                             Email = changePhoneNumberRequest.Email,
                             PhoneNumber = changePhoneNumberRequest.PhoneNumber
                         });
@@ -739,6 +738,33 @@ namespace eShop.AuthWebApi.Services.Implementation
                 }
 
                 return new(new NotFoundUserByEmailException(changePhoneNumberRequest.Email));
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
+        }
+
+        public async ValueTask<Result<ConfirmChangePhoneNumberResponse>> ConfirmChangePhoneNumberAsync(ConfirmChangePhoneNumberRequest confirmChangePhoneNumberRequest)
+        {
+            try
+            {
+                var user = await userManager.FindByEmailAsync(confirmChangePhoneNumberRequest.Email);
+
+                if (user is not null)
+                {
+                    var token = Uri.UnescapeDataString(confirmChangePhoneNumberRequest.Token);
+                    var result = await userManager.ChangePhoneNumberAsync(user, confirmChangePhoneNumberRequest.PhoneNumber, token);
+
+                    if (result.Succeeded)
+                    {
+                        return new(new ConfirmChangePhoneNumberResponse() { Message = "Your phone number was successfully changed." });
+                    }
+
+                    return new(new NotChangedPhoneNumberException());
+                }
+
+                return new(new NotFoundUserByEmailException(confirmChangePhoneNumberRequest.Email));
             }
             catch (Exception ex)
             {

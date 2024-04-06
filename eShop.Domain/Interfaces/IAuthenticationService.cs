@@ -21,5 +21,7 @@ namespace eShop.Domain.Interfaces
         public ValueTask<ResponseDto> ChangeTwoFactorStateAsync(string Email);
         public ValueTask<ResponseDto> GetTwoFactorStateAsync(string Email);
         public ValueTask<ResponseDto> RefreshToken(RefreshTokenRequest refreshTokenRequest);
+        public ValueTask<ResponseDto> RequestChangePhoneNumberAsync(ChangePhoneNumberRequest changePhoneNumberRequest);
+        public ValueTask<ResponseDto> ConfirmChangePhoneNumberAsync(ConfirmChangePhoneNumberRequest confirmChangePhoneNumberRequest);
     }
 }

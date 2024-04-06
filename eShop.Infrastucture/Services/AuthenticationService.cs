@@ -73,5 +73,12 @@ namespace eShop.Infrastructure.Services
         public ValueTask<ResponseDto> RefreshToken(RefreshTokenRequest refreshTokenRequest) => clientService.SendAsync(
                     new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/refresh-token",
                         Method: ApiMethod.POST, Data: refreshTokenRequest));
+
+        public ValueTask<ResponseDto> RequestChangePhoneNumberAsync(ChangePhoneNumberRequest changePhoneNumberRequest) => clientService.SendAsync(
+                    new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/request-change-phone-number",
+                        Method: ApiMethod.POST, Data: changePhoneNumberRequest));
+        public ValueTask<ResponseDto> ConfirmChangePhoneNumberAsync(ConfirmChangePhoneNumberRequest changePhoneNumberRequest) => clientService.SendAsync(
+                    new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/confirm-change-phone-number",
+                        Method: ApiMethod.POST, Data: changePhoneNumberRequest));
     }
 }

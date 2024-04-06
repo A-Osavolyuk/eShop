@@ -1,0 +1,45 @@
+﻿@page "/account/change-phone-number/"
+
+@inject IAuthenticationService AuthenticationService
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider authenticationState
+@inject ITokenProvider tokenProvider
+@inject ISnackbar Snackbar
+
+@code {
+    private ConfirmChangePhoneNumberRequest ConfirmChangePhoneNumberRequest { get; set; } = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var uri = new StringBuilder(NavigationManager.Uri)
+            .Replace(NavigationManager.BaseUri, "")
+            .Replace("account/change-phone-number?", "")
+            .ToString();
+
+        var query = QueryHelpers.ParseQuery(uri);
+
+        query.TryGetValue("Email", out var email);
+        query.TryGetValue("PhoneNumber", out var phoneNumber);
+        query.TryGetValue("Token", out var token);
+
+        ConfirmChangePhoneNumberRequest = new()
+            {
+                Email = email!,
+                PhoneNumber = phoneNumber!,
+                Token = token!
+            };
+
+        var result = await AuthenticationService.ConfirmChangePhoneNumberAsync(ConfirmChangePhoneNumberRequest);
+
+        if (result.IsSucceeded)
+        {
+            Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
+            NavigationManager.NavigateTo("/account/profile");
+        }
+        else
+        {
+            Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
+            NavigationManager.NavigateTo("/account/profile");
+        }
+    }
+}
