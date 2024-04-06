@@ -2,6 +2,8 @@
 
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider authenticationState
+@inject ITokenProvider tokenProvider
 @inject ISnackbar Snackbar
 
 @code {
@@ -31,7 +33,7 @@
 
         if (result.IsSucceeded)
         {
-            await AuthenticationService.LogOutAsync();
+            await (authenticationState as ApplicationAuthenticationStateProvider)!.LogOutAsync();
             Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
             NavigationManager.NavigateTo("/account/login");
         }

@@ -158,7 +158,7 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpPost("2fa-login/{Email}")]
-        public async ValueTask<ActionResult<ResponseDto>> LoginWithTwoFactorAuthenticationCode(string Email, TwoFactorAuthenticationLoginRequest twoFactorAuthenticationLoginRequest)
+        public async ValueTask<ActionResult<ResponseDto>> LoginWithTwoFactorAuthenticationCode(string Email, [FromBody] TwoFactorAuthenticationLoginRequest twoFactorAuthenticationLoginRequest)
         {
             var result = await authService.LoginWithTwoFactorAuthenticationCodeAsync(Email, twoFactorAuthenticationLoginRequest);
 
@@ -207,7 +207,7 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpPost("request-change-email")]
-        public async ValueTask<ActionResult<ResponseDto>> RequestChangeEmail(ChangeEmailRequest changeEmailRequest)
+        public async ValueTask<ActionResult<ResponseDto>> RequestChangeEmail([FromBody]ChangeEmailRequest changeEmailRequest)
         {
             var result = await authService.RequestChangeEmailAsync(changeEmailRequest);
 
@@ -220,7 +220,7 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpPost("confirm-change-email")]
-        public async ValueTask<ActionResult<ResponseDto>> ConfirmChangeEmail(ConfirmChangeEmailRequest confirmChangeEmailRequest)
+        public async ValueTask<ActionResult<ResponseDto>> ConfirmChangeEmail([FromBody] ConfirmChangeEmailRequest confirmChangeEmailRequest)
         {
             var result = await authService.ConfirmChangeEmailAsync(confirmChangeEmailRequest);
 
@@ -230,7 +230,7 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpPost("change-user-name")]
-        public async ValueTask<ActionResult<ResponseDto>> ChangeUserName(ChangeUserNameRequest changeUserNameRequest)
+        public async ValueTask<ActionResult<ResponseDto>> ChangeUserName([FromBody] ChangeUserNameRequest changeUserNameRequest)
         {
             var result = await authService.ChangeUserNameAsync(changeUserNameRequest);
 
@@ -240,7 +240,7 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpPost("refresh-token")]
-        public ActionResult<ResponseDto> RefreshToken(RefreshTokenRequest refreshTokenRequest) 
+        public ActionResult<ResponseDto> RefreshToken([FromBody] RefreshTokenRequest refreshTokenRequest) 
         { 
             var result = authService.RefreshTokenAsync(refreshTokenRequest);
 

@@ -1,5 +1,7 @@
 ﻿@inject IAuthenticationService authenticationService
 @inject NavigationManager navigationManger
+@inject AuthenticationStateProvider authenticationState
+@inject ITokenProvider tokenProvider
 @inject ISnackbar Snackbar
 
 <AuthorizeView>
@@ -44,7 +46,7 @@
 @code {
     private async Task LogoutClick()
     {
-        await authenticationService.LogOutAsync();
+        await (authenticationState as ApplicationAuthenticationStateProvider)!.LogOutAsync();
         Snackbar.Add("Successfully logged out.", MudBlazor.Severity.Success);
         navigationManger.NavigateTo("/account/login");
     }

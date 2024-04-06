@@ -1,5 +1,7 @@
 ﻿using eShop.AuthWebApi.Utilities;
+using eShop.Domain.DTOs.Requests;
 using LanguageExt;
+using System.Net;
 
 namespace eShop.AuthWebApi.Services.Implementation
 {
@@ -124,7 +126,7 @@ namespace eShop.AuthWebApi.Services.Implementation
 
                 if (user is not null)
                 {
-                    var token = new StringBuilder(confirmEmailRequest.Token).Replace(" ", "+").ToString();
+                    var token = Uri.UnescapeDataString(confirmEmailRequest.Token);
                     var confirmResult = await userManager.ConfirmEmailAsync(user, token);
 
                     if (confirmResult.Succeeded)
@@ -162,7 +164,7 @@ namespace eShop.AuthWebApi.Services.Implementation
 
                     if (validationResult.IsValid)
                     {
-                        var token = new StringBuilder(confirmPasswordResetRequest.ResetToken).Replace(" ", "+").ToString();
+                        var token = Uri.UnescapeDataString(confirmPasswordResetRequest.ResetToken);
                         var resetResult = await userManager.ResetPasswordAsync(user, token, confirmPasswordResetRequest.NewPassword);
 
                         if (resetResult.Succeeded)
@@ -295,9 +297,10 @@ namespace eShop.AuthWebApi.Services.Implementation
                     if (registrationResult.Succeeded)
                     {
                         var emailConfirmationToken = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                        var encodedToken = Uri.EscapeDataString(emailConfirmationToken);
 
                         var link = UrlGenerator.ActionLink("/account/confirm-email", frontendUri,
-                            new { Email = registrationRequest.Email, Token = emailConfirmationToken });
+                            new { Email = registrationRequest.Email, Token = encodedToken });
 
                         await emailSender.SendConfirmEmailMessage(new ConfirmEmailMessage()
                         {
@@ -335,7 +338,8 @@ namespace eShop.AuthWebApi.Services.Implementation
                 if (user is not null)
                 {
                     var token = await userManager.GeneratePasswordResetTokenAsync(user);
-                    var link = UrlGenerator.ActionLink("/account/confirm-password-reset", frontendUri, new { Email = UserEmail, Token = token });
+                    var encodedToken = Uri.EscapeDataString(token);
+                    var link = UrlGenerator.ActionLink("/account/confirm-password-reset", frontendUri, new { Email = UserEmail, Token = encodedToken });
 
                     await emailSender.SendResetPasswordMessage(new ResetPasswordMessage()
                     {
@@ -574,11 +578,12 @@ namespace eShop.AuthWebApi.Services.Implementation
                     if (validationResult.IsValid)
                     {
                         var token = await userManager.GenerateChangeEmailTokenAsync(user, changeEmailRequest.NewEmail);
+                        var encodedToken = Uri.EscapeDataString(token);
                         var link = UrlGenerator.ActionLink("/account/change-email", frontendUri, new
                         {
                             changeEmailRequest.CurrentEmail,
                             changeEmailRequest.NewEmail,
-                            Token = token
+                            Token = encodedToken
                         });
 
                         await emailSender.SendChangeEmailMessage(new ChangeEmailMessage()
@@ -616,7 +621,7 @@ namespace eShop.AuthWebApi.Services.Implementation
 
                 if (user is not null)
                 {
-                    var token = new StringBuilder(confirmChangeEmailRequest.Token).Replace(" ", "+").ToString();
+                    var token = Uri.UnescapeDataString(confirmChangeEmailRequest.Token);
                     var result = await userManager.ChangeEmailAsync(user, confirmChangeEmailRequest.NewEmail, token);
 
                     if (result.Succeeded)
@@ -691,5 +696,7 @@ namespace eShop.AuthWebApi.Services.Implementation
                 return new(ex);
             }
         }
+
+        
     }
 }

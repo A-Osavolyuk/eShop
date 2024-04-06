@@ -1,4 +1,4 @@
-﻿using eShop.Domain.DTOs.Responses;
+﻿using eShop.Domain.DTOs;
 using eShop.Domain.Exceptions;
 using eShop.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;

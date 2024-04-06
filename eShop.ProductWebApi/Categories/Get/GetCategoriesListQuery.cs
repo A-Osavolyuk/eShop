@@ -1,4 +1,5 @@
 ﻿using AutoMapper.QueryableExtensions;
+using eShop.Domain.DTOs;
 
 namespace eShop.ProductWebApi.Categories.Get
 {

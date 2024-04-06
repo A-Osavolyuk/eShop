@@ -1,4 +1,6 @@
-﻿namespace eShop.ProductWebApi.Suppliers.Get
+﻿using eShop.Domain.DTOs;
+
+namespace eShop.ProductWebApi.Suppliers.Get
 {
     public record GetSupplierByNameQuery(string Name) : IRequest<Result<SupplierDto>>;
 

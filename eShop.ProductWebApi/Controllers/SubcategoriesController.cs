@@ -1,4 +1,5 @@
-﻿using eShop.Domain.Exceptions.Categories;
+﻿using eShop.Domain.DTOs;
+using eShop.Domain.Exceptions.Categories;
 using eShop.Domain.Exceptions.Subcategories;
 
 namespace eShop.ProductWebApi.Controllers

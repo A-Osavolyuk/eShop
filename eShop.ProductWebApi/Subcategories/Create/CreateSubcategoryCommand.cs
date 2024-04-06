@@ -1,4 +1,6 @@
-﻿namespace eShop.ProductWebApi.Subcategories.Create
+﻿using eShop.Domain.DTOs;
+
+namespace eShop.ProductWebApi.Subcategories.Create
 {
     public record CreateSubcategoryCommand(CreateUpdateSubcategoryRequest Subcategory) : IRequest<Result<SubcategoryDto>>;
 

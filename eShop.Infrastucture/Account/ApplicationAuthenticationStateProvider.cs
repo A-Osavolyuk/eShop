@@ -10,11 +10,17 @@ using System.Security.Claims;
 
 namespace eShop.Infrastructure.Account
 {
-    public class ApplicationAuthenticationStateProvider(ITokenProvider tokenProvider, IAuthenticationService authenticationService) : AuthenticationStateProvider
+    public class ApplicationAuthenticationStateProvider : AuthenticationStateProvider
     {
         private readonly AuthenticationState anonymous = new(new ClaimsPrincipal());
-        private readonly ITokenProvider tokenProvider = tokenProvider;
-        private readonly IAuthenticationService authenticationService = authenticationService;
+        private readonly ITokenProvider tokenProvider;
+        private readonly IAuthenticationService authenticationService;
+
+        public ApplicationAuthenticationStateProvider(ITokenProvider tokenProvider, IAuthenticationService authenticationService)
+        {
+            this.tokenProvider = tokenProvider;
+            this.authenticationService = authenticationService;
+        }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
@@ -42,7 +48,7 @@ namespace eShop.Infrastructure.Account
                             return await Task.FromResult(anonymous);
                         }
 
-                        return await RefreshToken(JwtHandler.Token);
+                        //return await RefreshToken(JwtHandler.Token);
                     }
 
                     return await Task.FromResult(anonymous);
@@ -143,6 +149,12 @@ namespace eShop.Infrastructure.Account
             }
 
             return await Task.FromResult(anonymous);
+        }
+
+        public async Task LogOutAsync()
+        {
+            await tokenProvider.RemoveTokenAsync();
+            await UpdateAuthenticationState("");
         }
     }
 }

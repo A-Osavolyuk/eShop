@@ -1,4 +1,5 @@
-﻿using eShop.ProductWebApi.Products.Create;
+﻿using eShop.Domain.DTOs;
+using eShop.ProductWebApi.Products.Create;
 using eShop.ProductWebApi.Products.Delete;
 using eShop.ProductWebApi.Products.Get;
 using eShop.ProductWebApi.Products.Update;

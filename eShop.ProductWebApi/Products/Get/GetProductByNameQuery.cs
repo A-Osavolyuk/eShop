@@ -1,4 +1,6 @@
 ﻿
+using eShop.Domain.DTOs;
+
 namespace eShop.ProductWebApi.Products.Get
 {
     public record GetProductByNameQuery(string Name) : IRequest<Result<ProductDto>>;

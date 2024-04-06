@@ -1,4 +1,4 @@
-﻿using eShop.Domain.DTOs.Responses;
+﻿using eShop.Domain.DTOs;
 
 namespace eShop.Domain.Interfaces
 {

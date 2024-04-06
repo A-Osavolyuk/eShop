@@ -1,4 +1,6 @@
-﻿namespace eShop.ProductWebApi.Categories.Get
+﻿using eShop.Domain.DTOs;
+
+namespace eShop.ProductWebApi.Categories.Get
 {
     public record GetCategoryByIdQuery(Guid Id) : IRequest<Result<CategoryDto>>;
 

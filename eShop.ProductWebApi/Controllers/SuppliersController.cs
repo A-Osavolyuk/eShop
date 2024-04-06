@@ -1,4 +1,6 @@
-﻿namespace eShop.ProductWebApi.Controllers
+﻿using eShop.Domain.DTOs;
+
+namespace eShop.ProductWebApi.Controllers
 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]

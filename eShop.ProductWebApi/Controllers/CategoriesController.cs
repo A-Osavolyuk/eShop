@@ -1,4 +1,5 @@
-﻿using eShop.Domain.Exceptions.Categories;
+﻿using eShop.Domain.DTOs;
+using eShop.Domain.Exceptions.Categories;
 using eShop.ProductWebApi.Categories.Create;
 using eShop.ProductWebApi.Categories.Delete;
 using eShop.ProductWebApi.Categories.Get;

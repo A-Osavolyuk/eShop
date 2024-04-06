@@ -1,4 +1,6 @@
 ﻿
+using eShop.Domain.DTOs;
+
 namespace eShop.ProductWebApi.Products.Get
 {
     public record GetProductByIdQuery(Guid Id) : IRequest<Result<ProductDto>>;

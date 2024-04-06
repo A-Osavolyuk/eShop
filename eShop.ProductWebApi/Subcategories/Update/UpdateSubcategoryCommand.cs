@@ -1,4 +1,6 @@
-﻿namespace eShop.ProductWebApi.Subcategories.Update
+﻿using eShop.Domain.DTOs;
+
+namespace eShop.ProductWebApi.Subcategories.Update
 {
     public record UpdateSubcategoryCommand(CreateUpdateSubcategoryRequest Subcategory, Guid Id) : IRequest<Result<SubcategoryDto>>;
 

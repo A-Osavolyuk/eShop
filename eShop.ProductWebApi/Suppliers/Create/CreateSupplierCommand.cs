@@ -1,4 +1,6 @@
-﻿namespace eShop.ProductWebApi.Suppliers.Create
+﻿using eShop.Domain.DTOs;
+
+namespace eShop.ProductWebApi.Suppliers.Create
 {
     public record CreateSupplierCommand(CreateUpdateSupplierRequest Supplier) : IRequest<Result<SupplierDto>>;
 

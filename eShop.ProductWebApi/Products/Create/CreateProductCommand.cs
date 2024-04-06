@@ -1,4 +1,6 @@
-﻿namespace eShop.ProductWebApi.Products.Create
+﻿using eShop.Domain.DTOs;
+
+namespace eShop.ProductWebApi.Products.Create
 {
     public record CreateProductCommand(CreateUpdateProductRequest Product) : IRequest<Result<ProductDto>>;
 

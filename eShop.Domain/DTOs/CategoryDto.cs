@@ -1,6 +1,6 @@
 ﻿using eShop.Domain.Entities;
 
-namespace eShop.Domain.DTOs.Responses
+namespace eShop.Domain.DTOs
 {
     public class CategoryDto
     {

@@ -1,11 +1,10 @@
-﻿using eShop.Domain.DTOs.Requests;
-using eShop.Domain.DTOs.Responses;
+﻿using eShop.Domain.DTOs;
+using eShop.Domain.DTOs.Requests;
 
 namespace eShop.Domain.Interfaces
 {
     public interface IAuthenticationService
     {
-        public ValueTask LogOutAsync();
         public ValueTask<ResponseDto> LoginAsync(LoginRequest loginRequestDto);
         public ValueTask<ResponseDto> RegisterAsync(RegistrationRequest registrationRequest);
         public ValueTask<ResponseDto> ChangePersonalDataAsync(string Id, ChangePersonalDataRequest changePersonalDataRequestDto);

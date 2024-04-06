@@ -1,4 +1,6 @@
 ﻿
+using eShop.Domain.DTOs;
+
 namespace eShop.ProductWebApi.Suppliers.Get
 {
     public record GetSupplierByIdQuery(Guid Id) : IRequest<Result<SupplierDto>>;

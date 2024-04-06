@@ -1,4 +1,6 @@
-﻿namespace eShop.ProductWebApi.Categories.Update
+﻿using eShop.Domain.DTOs;
+
+namespace eShop.ProductWebApi.Categories.Update
 {
     public record UpdateCategoryCommand(CreateUpdateCategoryRequest Category, Guid Id) : IRequest<Result<CategoryDto>>;
 

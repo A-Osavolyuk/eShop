@@ -1,4 +1,6 @@
 ﻿
+using eShop.Domain.DTOs;
+
 namespace eShop.ProductWebApi.Subcategories.Get
 {
     public record GetSubcategoryByNameQuery(string Name) : IRequest<Result<SubcategoryDto>>;

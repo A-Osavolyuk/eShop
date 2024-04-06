@@ -1,4 +1,6 @@
-﻿namespace eShop.ProductWebApi.Suppliers.Update
+﻿using eShop.Domain.DTOs;
+
+namespace eShop.ProductWebApi.Suppliers.Update
 {
     public record UpdateSupplierCommand(Guid Id, CreateUpdateSupplierRequest Supplier) : IRequest<Result<SupplierDto>>;
 

@@ -1,4 +1,6 @@
-﻿namespace eShop.ProductWebApi.Categories.Create
+﻿using eShop.Domain.DTOs;
+
+namespace eShop.ProductWebApi.Categories.Create
 {
     public record CreateProductCategoryCommand(CreateUpdateCategoryRequest Category) : IRequest<Result<CategoryDto>>;
 

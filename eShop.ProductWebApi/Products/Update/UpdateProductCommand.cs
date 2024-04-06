@@ -1,4 +1,6 @@
-﻿namespace eShop.ProductWebApi.Products.Update
+﻿using eShop.Domain.DTOs;
+
+namespace eShop.ProductWebApi.Products.Update
 {
     public record UpdateProductCommand(Guid Id, CreateUpdateProductRequest Product) : IRequest<Result<ProductDto>>;
 
