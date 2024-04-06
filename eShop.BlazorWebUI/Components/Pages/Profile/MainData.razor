@@ -14,7 +14,7 @@
                 <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> User name </MudText>
             </MudItem>
             <MudItem xs="12" sm="9">
-                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> @Model.UserName </MudText>
+                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> @(string.IsNullOrEmpty(Model.UserName) ? "Loading..." : Model.UserName) </MudText>
             </MudItem>
         </MudGrid>
         <MudDivider />
@@ -23,7 +23,7 @@
                 <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> Full name </MudText>
             </MudItem>
             <MudItem xs="12" sm="9">
-                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> @Model.FullName </MudText>
+                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> @(string.IsNullOrEmpty(Model.FullName) ? "Loading..." : Model.FullName) </MudText>
             </MudItem>
         </MudGrid>
         <MudDivider />
@@ -32,7 +32,9 @@
                 <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> Date of birth </MudText>
             </MudItem>
             <MudItem xs="12" sm="9">
-                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> @Model.DateOfBirth.ToShortDateString() </MudText>
+                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1">
+                    @(string.IsNullOrEmpty(Model.DateOfBirth.ToLongDateString()) ? "Loading..." : Model.DateOfBirth.ToShortDateString())
+                </MudText>
             </MudItem>
         </MudGrid>
         <MudDivider />
@@ -41,14 +43,14 @@
                 <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> Gender </MudText>
             </MudItem>
             <MudItem xs="12" sm="9">
-                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> @Model.Gender </MudText>
+                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> @(string.IsNullOrEmpty(Model.Gender) ? "Loading..." : Model.Gender) </MudText>
             </MudItem>
         </MudGrid>
         <MudDivider />
     </MudCardContent>
     <MudCardActions>
         <MudGrid Spacing="1">
-            <MudItem xs="12" lg="3"> 
+            <MudItem xs="12" lg="3">
                 <MudButton FullWidth OnClick="ChangeUserName" Color="Color.Primary" Variant="Variant.Filled">Change user name </MudButton>
             </MudItem>
             <MudItem xs="12" lg="3">

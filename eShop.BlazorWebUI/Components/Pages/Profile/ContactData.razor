@@ -13,7 +13,7 @@
                 <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> Email </MudText>
             </MudItem>
             <MudItem xs="12" sm="9">
-                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> @Model.Email </MudText>
+                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> @(string.IsNullOrEmpty(Model.Email) ? "Loading..." : Model.Email) </MudText>
             </MudItem>
         </MudGrid>
         <MudDivider />
@@ -22,7 +22,7 @@
                 <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> Phone Number </MudText>
             </MudItem>
             <MudItem xs="12" sm="9">
-                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> @Model.PhoneNumber </MudText>
+                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> @(string.IsNullOrEmpty(Model.PhoneNumber) ? "Loading..." : Model.PhoneNumber) </MudText>
             </MudItem>
         </MudGrid>
         <MudDivider />
