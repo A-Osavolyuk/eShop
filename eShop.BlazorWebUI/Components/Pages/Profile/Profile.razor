@@ -29,15 +29,6 @@
                             </MudItem>
                         </MudGrid>
                     </MudTabPanel>
-                    <MudTabPanel Text="Security">
-                        <MudGrid>
-                            <MudItem xs="12">
-                                <MudPaper Elevation="0" Class="pa-3">
-                                    <Security />
-                                </MudPaper>
-                            </MudItem>
-                        </MudGrid>
-                    </MudTabPanel>
                     <MudTabPanel Text="Settings">
                         <MudText>Content Disabled</MudText>
                     </MudTabPanel>
@@ -45,9 +36,6 @@
             </MudItem>
         </MudGrid>
     </Authorized>
-    <NotAuthorized>
-        @(() => NavigationManager.NavigateTo("/account/login"))
-    </NotAuthorized>
 </AuthorizeView>
 
 @code {

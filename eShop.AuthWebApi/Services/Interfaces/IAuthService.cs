@@ -21,5 +21,6 @@ namespace eShop.AuthWebApi.Services.Interfaces
         public ValueTask<Result<ChangeEmailResponse>> RequestChangeEmailAsync(ChangeEmailRequest changeEmailRequest);
         public ValueTask<Result<ConfirmChangeEmailResponse>> ConfirmChangeEmailAsync(ConfirmChangeEmailRequest confirmChangeEmailRequest);
         public ValueTask<Result<ChangeUserNameResponse>> ChangeUserNameAsync(ChangeUserNameRequest changeUserNameRequest);
+        public Result<RefreshTokenResponse> RefreshTokenAsync(RefreshTokenRequest refreshTokenRequest);
     }
 }

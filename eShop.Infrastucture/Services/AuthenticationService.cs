@@ -28,7 +28,7 @@ namespace eShop.Infrastructure.Services
         public async ValueTask LogOutAsync()
         {
             await tokenProvider.RemoveTokenAsync();
-            (authenticationState as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState("");
+            await (authenticationState as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState("");
 
         }
 
@@ -82,5 +82,9 @@ namespace eShop.Infrastructure.Services
         public ValueTask<ResponseDto> GetTwoFactorStateAsync(string Email) => clientService.SendAsync(
                     new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/get-2fa-state/{Email}",
                         Method: ApiMethod.GET));
+
+        public ValueTask<ResponseDto> RefreshToken(RefreshTokenRequest refreshTokenRequest) => clientService.SendAsync(
+                    new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/refresh-token",
+                        Method: ApiMethod.POST, Data: refreshTokenRequest));
     }
 }

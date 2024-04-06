@@ -677,5 +677,19 @@ namespace eShop.AuthWebApi.Services.Implementation
                 return new(ex);
             }
         }
+
+        public Result<RefreshTokenResponse> RefreshTokenAsync(RefreshTokenRequest refreshTokenRequest)
+        {
+            try
+            {
+                var newToken = tokenHandler.RefreshToken(refreshTokenRequest.Token);
+
+                return new(new RefreshTokenResponse() { Token = newToken });
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
+        }
     }
 }

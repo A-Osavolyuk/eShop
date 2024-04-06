@@ -238,5 +238,15 @@ namespace eShop.AuthWebApi.Controllers
                 s => Ok(new ResponseBuilder().Succeeded().AddResultMessage(s.Message).AddResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
+
+        [HttpPost("refresh-token")]
+        public ActionResult<ResponseDto> RefreshToken(RefreshTokenRequest refreshTokenRequest) 
+        { 
+            var result = authService.RefreshTokenAsync(refreshTokenRequest);
+
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().AddResult(s).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
     }
 }
