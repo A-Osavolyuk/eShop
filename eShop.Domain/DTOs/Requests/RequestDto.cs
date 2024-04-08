@@ -5,5 +5,5 @@ namespace eShop.Domain.DTOs.Requests
     public record RequestDto(
         string Url = "", 
         object? Data = null!, 
-        ApiMethod Method = ApiMethod.GET);
+        HttpMethods Method = HttpMethods.GET);
 }
