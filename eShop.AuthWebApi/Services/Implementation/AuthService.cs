@@ -201,6 +201,7 @@ namespace eShop.AuthWebApi.Services.Implementation
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Gender = user.Gender,
+                    PhoneNumber = user.PhoneNumber,
                 });
             }
             catch (Exception ex)

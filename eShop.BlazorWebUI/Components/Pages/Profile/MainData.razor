@@ -54,7 +54,7 @@
                 <MudButton FullWidth OnClick="ChangeUserName" Color="Color.Primary" Variant="Variant.Filled">Change user name </MudButton>
             </MudItem>
             <MudItem xs="12" lg="3">
-                <MudButton FullWidth Color="Color.Primary" Variant="Variant.Filled">Change personal data</MudButton>
+                <MudButton FullWidth OnClick="ChangePersonalData" Color="Color.Primary" Variant="Variant.Filled">Change personal data</MudButton>
             </MudItem>
         </MudGrid>
     </MudCardActions>
@@ -63,15 +63,15 @@
 @code {
     [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; }
     private MainDataModel Model { get; set; } = new();
-    private ChangeUserNameRequest ChangeUserNameRequest { get; set; } = new();
     private PersonalDataDto PersonalData { get; set; } = new();
+    private string Email { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
         await RefreshData();
 
         var task = await AuthenticationStateTask;
-        ChangeUserNameRequest.Email = task.User.Claims.ToList().FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value!;
+        Email = task.User.Claims.ToList().FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value!;
     }
 
     private async Task RefreshData()
@@ -82,7 +82,8 @@
 
     private async Task ChangeUserName()
     {
-        var parameters = new DialogParameters<ChangeUserNameDialog>() { { x => x.Model, ChangeUserNameRequest } };
+        var model = new ChangeUserNameRequest() { Email = Email };
+        var parameters = new DialogParameters<ChangeUserNameDialog>() { { x => x.Model, model } };
         var options = new DialogOptions { CloseOnEscapeKey = true, ClassBackground = "blured", FullWidth = true };
         var dialog = await DialogService.ShowAsync<ChangeUserNameDialog>("Change User Name", parameters, options);
         var result = await dialog.Result;
@@ -94,8 +95,28 @@
             var task = await AuthenticationStateTask;
             Model.UserName = task.User.Identity!.Name!;
             NavigationManager.Refresh(true);
+        }
+    }
 
-            ChangeUserNameRequest.UserName = string.Empty;
+    private async Task ChangePersonalData()
+    {
+        var model = new ChangePersonalDataRequest()
+        {
+            FirstName = PersonalData.FirstName,
+            LastName = PersonalData.LastName,
+            DateOfBirth = PersonalData.DateOfBirth,
+            Gender = PersonalData.Gender
+        };
+        var parameters = new DialogParameters<ChangePersonalDataDialog>();
+        parameters.Add(x => x.Model, model);
+        parameters.Add(x => x.Email, Email);
+        var options = new DialogOptions { CloseOnEscapeKey = true, ClassBackground = "blured", FullWidth = true };
+        var dialog = await DialogService.ShowAsync<ChangePersonalDataDialog>("Change Personal Data", parameters, options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            NavigationManager.Refresh(true);
         }
     }
 
@@ -125,11 +146,11 @@
             return data;
         }
         return new()
-            {
-                FirstName = "None",
-                LastName = "None",
-                Gender = "None",
-                DateOfBirth = new(2000, 1, 1)
-            };
+        {
+            FirstName = "None",
+            LastName = "None",
+            Gender = "None",
+            DateOfBirth = new(2000, 1, 1)
+        };
     }
 }

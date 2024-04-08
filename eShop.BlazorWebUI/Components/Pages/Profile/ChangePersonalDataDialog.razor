@@ -1,0 +1,47 @@
+﻿@inject IAuthenticationService AuthenticationService
+@inject ISnackbar Snackbar
+@inject IValidator<ChangePersonalDataRequest> Validator
+
+<MudDialog>
+    <DialogContent>
+        <EditForm FormName="change-personal-data-form" Model="Model" OnValidSubmit="Submit">
+            <FluentValidationValidator Validator="Validator" />
+            <MudTextField Class="mb-3" @bind-Value=Model.FirstName For="(() => Model.FirstName)" Variant="Variant.Outlined" Label="First Name" />
+            <MudTextField Class="mb-3" @bind-Value=Model.LastName For="(() => Model.LastName)" Variant="Variant.Outlined" Label="Last Name" />
+            <MudTextField Class="mb-3" @bind-Value=Model.Gender For="(() => Model.Gender)" Variant="Variant.Outlined" Label="Gender" />
+            <MudDatePicker Class="mb-3" Date="Model.DateOfBirth" @ref="DatePicker" Variant="Variant.Outlined" Label="Date of Birth" />
+
+            <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Submit</MudButton>
+        </EditForm>
+    </DialogContent>
+</MudDialog>
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public ChangePersonalDataRequest Model { get; set; } = new();
+    [Parameter] public string Email { get; set; } = string.Empty;
+    private MudDatePicker DatePicker { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        DatePicker = new() { Date = Model.DateOfBirth };
+    }
+
+    private async Task Submit()
+    {
+        Model.DateOfBirth = DatePicker.Date!.Value;
+        var result = await AuthenticationService.ChangePersonalDataAsync(Email, Model);
+
+        if (result.IsSucceeded)
+        {
+            Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+        else
+        {
+            Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
+            MudDialog.Close(DialogResult.Cancel());
+        }
+    }
+    void Cancel() => MudDialog.Cancel();
+}
