@@ -16,37 +16,37 @@ namespace eShop.Infrastructure.Services
         public async ValueTask<ResponseDto> CreateSupplierAsync(SupplierDto Supplier)
         {
             return await clientService.SendAsync(new RequestDto(
-                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Suppliers", Data: Supplier, Method: ApiMethod.POST));
+                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Suppliers", Data: Supplier, Method: HttpMethods.POST));
         }
 
         public async ValueTask<ResponseDto> DeleteSupplierByIdAsync(Guid Id)
         {
             return await clientService.SendAsync(new RequestDto(
-                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Suppliers/{Id}", Method: ApiMethod.DELETE));
+                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Suppliers/{Id}", Method: HttpMethods.DELETE));
         }
 
         public async ValueTask<ResponseDto> GetAllSuppliersAsync()
         {
             return await clientService.SendAsync(new RequestDto(
-                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Suppliers", Method: ApiMethod.GET));
+                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Suppliers", Method: HttpMethods.GET));
         }
 
         public async ValueTask<ResponseDto> GetSupplierByIdAsync(Guid Id)
         {
             return await clientService.SendAsync(new RequestDto(
-                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Suppliers/{Id}", Method: ApiMethod.GET));
+                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Suppliers/{Id}", Method: HttpMethods.GET));
         }
 
         public async ValueTask<ResponseDto> GetSupplierByNameAsync(string Name)
         {
             return await clientService.SendAsync(new RequestDto(
-                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Suppliers/{Name}", Method: ApiMethod.GET));
+                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Suppliers/{Name}", Method: HttpMethods.GET));
         }
 
         public async ValueTask<ResponseDto> UpdateSupplierAsync(SupplierDto Supplier, Guid Id)
         {
             return await clientService.SendAsync(new RequestDto(
-                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Suppliers/{Id}", Data: Supplier, Method: ApiMethod.PUT));
+                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Suppliers/{Id}", Data: Supplier, Method: HttpMethods.PUT));
         }
     }
 }

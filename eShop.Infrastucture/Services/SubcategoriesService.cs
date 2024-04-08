@@ -16,37 +16,37 @@ namespace eShop.Infrastructure.Services
         public async ValueTask<ResponseDto> CreateSubcategoryAsync(SubcategoryDto Subcategory)
         {
             return await clientService.SendAsync(new RequestDto(
-                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Subcategories", Data: Subcategory, Method: ApiMethod.POST));
+                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Subcategories", Data: Subcategory, Method: HttpMethods.POST));
         }
 
         public async ValueTask<ResponseDto> DeleteSubcategoryByIdAsync(Guid Id)
         {
             return await clientService.SendAsync(new RequestDto(
-                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Subcategories/{Id}", Method: ApiMethod.DELETE));
+                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Subcategories/{Id}", Method: HttpMethods.DELETE));
         }
 
         public async ValueTask<ResponseDto> GetAllSubcategoriesAsync()
         {
             return await clientService.SendAsync(new RequestDto(
-                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Subcategories", Method: ApiMethod.GET));
+                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Subcategories", Method: HttpMethods.GET));
         }
 
         public async ValueTask<ResponseDto> GetSubcategoryByIdAsync(Guid Id)
         {
             return await clientService.SendAsync(new RequestDto(
-                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Subcategories/{Id}", Method: ApiMethod.GET));
+                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Subcategories/{Id}", Method: HttpMethods.GET));
         }
 
         public async ValueTask<ResponseDto> GetSubcategoryByNameAsync(string Name)
         {
             return await clientService.SendAsync(new RequestDto(
-                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Subcategories/{Name}", Method: ApiMethod.GET));
+                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Subcategories/{Name}", Method: HttpMethods.GET));
         }
 
         public async ValueTask<ResponseDto> UpdateSubcategoryAsync(SubcategoryDto Subcategory, Guid Id)
         {
             return await clientService.SendAsync(new RequestDto(
-                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Subcategories/{Id}", Data: Subcategory, Method: ApiMethod.PUT));
+                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Subcategories/{Id}", Data: Subcategory, Method: HttpMethods.PUT));
         }
     }
 }
