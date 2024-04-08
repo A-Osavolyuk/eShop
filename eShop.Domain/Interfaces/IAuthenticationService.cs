@@ -7,8 +7,8 @@ namespace eShop.Domain.Interfaces
     {
         public ValueTask<ResponseDto> LoginAsync(LoginRequest loginRequestDto);
         public ValueTask<ResponseDto> RegisterAsync(RegistrationRequest registrationRequest);
-        public ValueTask<ResponseDto> ChangePersonalDataAsync(string Id, ChangePersonalDataRequest changePersonalDataRequestDto);
-        public ValueTask<ResponseDto> GetPersonalDataAsync(string Id);
+        public ValueTask<ResponseDto> ChangePersonalDataAsync(string Email, ChangePersonalDataRequest changePersonalDataRequestDto);
+        public ValueTask<ResponseDto> GetPersonalDataAsync(string Email);
         public ValueTask<ResponseDto> RequestResetPasswordAsync(string Email);
         public ValueTask<ResponseDto> ConfirmResetPasswordAsync(string Email, ConfirmPasswordResetRequest confirmPasswordResetRequest);
         public ValueTask<ResponseDto> ConfirmEmailAsync(string Email, ConfirmEmailRequest confirmEmailRequest);

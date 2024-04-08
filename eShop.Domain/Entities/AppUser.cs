@@ -16,7 +16,6 @@ namespace eShop.Domain.Entities
             LastName = changePersonalDataRequestDto.LastName;
             Gender = changePersonalDataRequestDto.Gender;
             DateOfBirth = changePersonalDataRequestDto.DateOfBirth;
-            PhoneNumber = changePersonalDataRequestDto.PhoneNumber;
         }
     }
 }

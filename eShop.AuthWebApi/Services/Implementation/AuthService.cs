@@ -77,11 +77,11 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
-        public async ValueTask<Result<ChangePersonalDataResponse>> ChangePersonalDataAsync(string Id, ChangePersonalDataRequest changePersonalDataRequest)
+        public async ValueTask<Result<ChangePersonalDataResponse>> ChangePersonalDataAsync(string Email, ChangePersonalDataRequest changePersonalDataRequest)
         {
             try
             {
-                var user = await userManager.FindByIdAsync(Id);
+                var user = await userManager.FindByEmailAsync(Email);
 
                 if (user is not null)
                 {
@@ -97,8 +97,6 @@ namespace eShop.AuthWebApi.Services.Implementation
                         {
                             return new(new ChangePersonalDataResponse()
                             {
-                                Email = user.Email,
-                                PhoneNumber = user.PhoneNumber,
                                 FirstName = user.FirstName,
                                 LastName = user.LastName,
                                 Gender = user.Gender,
@@ -112,7 +110,7 @@ namespace eShop.AuthWebApi.Services.Implementation
                     return new(new FailedValidationException("Validation Error(s)", validationResult.Errors.Select(x => x.ErrorMessage)));
                 }
 
-                return new(new NotFoundUserByIdException(Id));
+                return new(new NotFoundUserByIdException(Email));
             }
             catch (Exception ex)
             {
@@ -188,22 +186,21 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
-        public async ValueTask<Result<PersonalData>> GetPersonalDataAsync(string Id)
+        public async ValueTask<Result<PersonalDataDto>> GetPersonalDataAsync(string Email)
         {
             try
             {
-                var user = await userManager.FindByIdAsync(Id);
+                var user = await userManager.FindByEmailAsync(Email);
 
                 if (user is null)
-                    return new(new NotFoundUserByIdException(Id));
+                    return new(new NotFoundUserByEmailException(Email));
 
-                return new(new PersonalData()
+                return new(new PersonalDataDto()
                 {
                     DateOfBirth = user.DateOfBirth,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Gender = user.Gender,
-                    PhoneNumber = user.PhoneNumber ?? ""
                 });
             }
             catch (Exception ex)

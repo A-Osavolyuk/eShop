@@ -49,10 +49,10 @@ namespace eShop.AuthWebApi.Controllers
                 fail => ExceptionHandler.HandleException(fail));
         }
 
-        [HttpPost("change-personal-data/{Id}")]
-        public async ValueTask<ActionResult<ResponseDto>> ChangePersonalData([FromBody] ChangePersonalDataRequest changePersonalDataRequest, string Id)
+        [HttpPost("change-personal-data/{Email}")]
+        public async ValueTask<ActionResult<ResponseDto>> ChangePersonalData([FromBody] ChangePersonalDataRequest changePersonalDataRequest, string Email)
         {
-            var result = await authService.ChangePersonalDataAsync(Id, changePersonalDataRequest);
+            var result = await authService.ChangePersonalDataAsync(Email, changePersonalDataRequest);
 
             return result.Match<ActionResult<ResponseDto>>(
                 s => Ok(new ResponseBuilder()
@@ -63,10 +63,10 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpGet("get-personal-data/{Id}")]
-        public async ValueTask<ActionResult<ResponseDto>> GetPersonalData(string Id)
+        [HttpGet("get-personal-data/{Email}")]
+        public async ValueTask<ActionResult<ResponseDto>> GetPersonalData(string Email)
         {
-            var result = await authService.GetPersonalDataAsync(Id);
+            var result = await authService.GetPersonalDataAsync(Email);
 
             return result.Match<ActionResult<ResponseDto>>(
                 s => Ok(new ResponseBuilder()

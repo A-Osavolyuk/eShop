@@ -19,8 +19,8 @@ namespace eShop.Infrastructure.Services
         public ValueTask<ResponseDto> RegisterAsync(RegistrationRequest registrationRequest) => clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/register", Method: ApiMethod.POST, Data: registrationRequest));
 
-        public ValueTask<ResponseDto> ChangePersonalDataAsync(string Id, ChangePersonalDataRequest changePersonalDataRequestDto) => clientService.SendAsync(
-                    new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/change-personal-data/{Id}",
+        public ValueTask<ResponseDto> ChangePersonalDataAsync(string Email, ChangePersonalDataRequest changePersonalDataRequestDto) => clientService.SendAsync(
+                    new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/change-personal-data/{Email}",
                         Method: ApiMethod.POST, Data: changePersonalDataRequestDto));
 
         public ValueTask<ResponseDto> RequestResetPasswordAsync(string Email) => clientService.SendAsync(
@@ -35,8 +35,8 @@ namespace eShop.Infrastructure.Services
                     new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/confirm-email/{Email}",
                         Method: ApiMethod.POST, Data: confirmEmailRequest));
 
-        public ValueTask<ResponseDto> GetPersonalDataAsync(string Id) => clientService.SendAsync(
-                    new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/get-personal-data/{Id}", Method: ApiMethod.GET));
+        public ValueTask<ResponseDto> GetPersonalDataAsync(string Email) => clientService.SendAsync(
+                    new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/get-personal-data/{Email}", Method: ApiMethod.GET));
 
         public ValueTask<ResponseDto> GetExternalProvidersAsync() => clientService.SendAsync(
                     new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/get-external-providers", Method: ApiMethod.GET));

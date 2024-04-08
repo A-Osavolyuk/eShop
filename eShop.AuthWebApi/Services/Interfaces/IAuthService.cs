@@ -6,8 +6,8 @@ namespace eShop.AuthWebApi.Services.Interfaces
     {
         public ValueTask<Result<LoginResponse>> LoginAsync(LoginRequest loginRequest);
         public ValueTask<Result<RegistrationResponse>> RegisterAsync(RegistrationRequest registrationRequest);
-        public ValueTask<Result<ChangePersonalDataResponse>> ChangePersonalDataAsync(string UserId, ChangePersonalDataRequest changePersonalDataRequest);
-        public ValueTask<Result<PersonalData>> GetPersonalDataAsync(string UserId);
+        public ValueTask<Result<ChangePersonalDataResponse>> ChangePersonalDataAsync(string Email, ChangePersonalDataRequest changePersonalDataRequest);
+        public ValueTask<Result<PersonalDataDto>> GetPersonalDataAsync(string UserId);
         public ValueTask<Result<ChangePasswordResponse>> ChangePasswordAsync(string Email, ChangePasswordRequest changePasswordRequest);
         public ValueTask<Result<ResetPasswordResponse>> RequestResetPasswordAsync(string UserEmail);
         public ValueTask<Result<ConfirmPasswordResetResponse>> ConfirmResetPasswordAsync(string Email, ConfirmPasswordResetRequest confirmPasswordResetRequest);

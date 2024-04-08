@@ -64,7 +64,7 @@
     [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; }
     private MainDataModel Model { get; set; } = new();
     private ChangeUserNameRequest ChangeUserNameRequest { get; set; } = new();
-    private PersonalData PersonalData { get; set; } = new();
+    private PersonalDataDto PersonalData { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -114,14 +114,14 @@
         return data;
     }
 
-    private async Task<PersonalData> GetPersonalData()
+    private async Task<PersonalDataDto> GetPersonalData()
     {
         var state = await AuthenticationStateTask!;
-        var id = state.User.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value!;
-        var result = await AuthenticationService.GetPersonalDataAsync(id);
+        var email = state.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value!;
+        var result = await AuthenticationService.GetPersonalDataAsync(email);
         if (result.IsSucceeded)
         {
-            var data = JsonConvert.DeserializeObject<PersonalData>(result.Result!.ToString()!)!;
+            var data = JsonConvert.DeserializeObject<PersonalDataDto>(result.Result!.ToString()!)!;
             return data;
         }
         return new()
@@ -129,7 +129,6 @@
                 FirstName = "None",
                 LastName = "None",
                 Gender = "None",
-                PhoneNumber = "None",
                 DateOfBirth = new(2000, 1, 1)
             };
     }
