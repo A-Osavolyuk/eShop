@@ -16,37 +16,37 @@ namespace eShop.Infrastructure.Services
         public async ValueTask<ResponseDto> CreateCategoryAsync(CategoryDto Category)
         {
             return await clientService.SendAsync(new RequestDto(
-                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Categories", Data: Category, Method: HttpMethods.POST));
+                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Categories", Data: Category, Method: ApiMethod.POST));
         }
 
         public async ValueTask<ResponseDto> DeleteCategoryByIdAsync(Guid Id)
         {
             return await clientService.SendAsync(new RequestDto(
-                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Categories/{Id}", Method: HttpMethods.DELETE));
+                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Categories/{Id}", Method: ApiMethod.DELETE));
         }
 
         public async ValueTask<ResponseDto> GetAllCategoriesAsync()
         {
             return await clientService.SendAsync(new RequestDto(
-                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Categories", Method: HttpMethods.GET));
+                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Categories", Method: ApiMethod.GET));
         }
 
         public async ValueTask<ResponseDto> GetCategoryByIdAsync(Guid Id)
         {
             return await clientService.SendAsync(new RequestDto(
-                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Categories/{Id}", Method: HttpMethods.GET));
+                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Categories/{Id}", Method: ApiMethod.GET));
         }
 
         public async ValueTask<ResponseDto> GetCategoryByNameAsync(string Name)
         {
             return await clientService.SendAsync(new RequestDto(
-                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Categories/{Name}", Method: HttpMethods.GET));
+                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Categories/{Name}", Method: ApiMethod.GET));
         }
 
         public async ValueTask<ResponseDto> UpdateCategoryAsync(CategoryDto Category, Guid Id)
         {
             return await clientService.SendAsync(new RequestDto(
-                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Categories/{Id}", Data: Category, Method: HttpMethods.PUT));
+                Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Categories/{Id}", Data: Category, Method: ApiMethod.PUT));
         }
     }
 }

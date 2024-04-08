@@ -43,9 +43,9 @@ namespace eShop.Infrastructure.Services
 
                 message.Method = request.Method switch
                 {
-                    HttpMethods.POST => HttpMethod.Post,
-                    HttpMethods.DELETE => HttpMethod.Delete,
-                    HttpMethods.PUT => HttpMethod.Put,
+                    ApiMethod.POST => HttpMethod.Post,
+                    ApiMethod.DELETE => HttpMethod.Delete,
+                    ApiMethod.PUT => HttpMethod.Put,
                     _ => HttpMethod.Get,
                 };
 

@@ -1,0 +1,10 @@
+﻿using eShop.Domain.Interfaces;
+
+namespace eShop.Domain.Exceptions.Categories
+{
+    public class NotFoundCategoryException : Exception, INotFoundException
+    {
+        public NotFoundCategoryException(Guid id) : base($"Cannot find category with id: {id}.") { }
+        public NotFoundCategoryException(string name) : base($"Cannot find category with name: {name}.") { }
+    }
+}

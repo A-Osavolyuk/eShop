@@ -23,6 +23,10 @@
 
         public static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
         {
+            builder.Services.AddScoped<ICategoriesRepository, CategoriesRepository>();
+            builder.Services.AddScoped<ISubcategoriesRepository, SubcategoriesRepository>();
+            builder.Services.AddScoped<ISuppliersRepository, SuppliersRepository>();
+            builder.Services.AddScoped<IProductsRepository, ProductsRepository>();
 
             return builder;
         }
