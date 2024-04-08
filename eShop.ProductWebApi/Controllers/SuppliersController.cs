@@ -1,4 +1,5 @@
-﻿using eShop.Domain.DTOs;
+﻿using eShop.Application.Utilities;
+using eShop.Domain.DTOs;
 
 namespace eShop.ProductWebApi.Controllers
 {
@@ -19,10 +20,7 @@ namespace eShop.ProductWebApi.Controllers
                     .Succeeded()
                     .AddResult(s)
                     .Build()),
-                f => StatusCode(500, new ResponseBuilder()
-                    .Failed()
-                    .AddErrorMessage(f.Message)
-                    .Build()));
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpGet("getSupplierById/{Id:guid}")]
@@ -35,19 +33,7 @@ namespace eShop.ProductWebApi.Controllers
                     .Succeeded()
                     .AddResult(s)
                     .Build()),
-                f =>
-                {
-                    if (f is NotFoundSupplierException ex)
-                        return NotFound(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(ex.Message)
-                            .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddResultMessage(f.Message)
-                        .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpGet("getSupplierByName/{Name}")]
@@ -60,19 +46,7 @@ namespace eShop.ProductWebApi.Controllers
                     .Succeeded()
                     .AddResult(s)
                     .Build()),
-                f =>
-                {
-                    if (f is NotFoundSupplierException ex)
-                        return NotFound(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(ex.Message)
-                            .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddResultMessage(f.Message)
-                        .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpPost]
@@ -86,22 +60,7 @@ namespace eShop.ProductWebApi.Controllers
                     .AddResultMessage("Supplier was successfully added.")
                     .AddResult(s)
                     .Build()),
-                f =>
-                {
-                    if (f is FailedValidationException exception)
-                    {
-                        return BadRequest(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(exception.Message)
-                            .AddErrors(exception.Errors.ToList())
-                            .Build());
-                    }
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddResultMessage(f.Message)
-                        .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpDelete("{Id:guid}")]
@@ -114,19 +73,7 @@ namespace eShop.ProductWebApi.Controllers
                     .Succeeded()
                     .AddResultMessage("Supplier was successfully deleted.")
                     .Build()),
-                f =>
-                {
-                    if (f is NotFoundSupplierException ex)
-                        return NotFound(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(ex.Message)
-                            .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddResultMessage(f.Message)
-                        .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpPut("{Id:guid}")]
@@ -140,26 +87,7 @@ namespace eShop.ProductWebApi.Controllers
                     .AddResult(s)
                     .AddResultMessage("Supplier was successfully updated.")
                     .Build()),
-                f =>
-                {
-                    if (f is NotFoundSupplierException ex)
-                        return NotFound(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(ex.Message)
-                            .Build());
-
-                    if (f is FailedValidationException validationException)
-                        return NotFound(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(validationException.Message)
-                            .AddErrors(validationException.Errors.ToList())
-                            .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddResultMessage(f.Message)
-                        .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
     }
 }

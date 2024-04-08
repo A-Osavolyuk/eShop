@@ -1,4 +1,5 @@
-﻿using eShop.Domain.DTOs;
+﻿using eShop.Application.Utilities;
+using eShop.Domain.DTOs;
 using eShop.Domain.Exceptions.Categories;
 using eShop.ProductWebApi.Categories.Create;
 using eShop.ProductWebApi.Categories.Delete;
@@ -24,10 +25,7 @@ namespace eShop.ProductWebApi.Controllers
                     .Succeeded()
                     .AddResult(s)
                     .Build()),
-                f => StatusCode(500, new ResponseBuilder()
-                    .Failed()
-                    .AddErrorMessage(f.Message)
-                    .Build()));
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpGet("getById/{Id:guid}")]
@@ -40,19 +38,7 @@ namespace eShop.ProductWebApi.Controllers
                     .Succeeded()
                     .AddResult(s)
                     .Build()),
-                f =>
-                {
-                    if (f is NotFoundCategoryException ex)
-                        return NotFound(new ResponseBuilder()
-                                .Failed()
-                                .AddErrorMessage(ex.Message)
-                                .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(f.Message)
-                            .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpGet("getByName/{Name}")]
@@ -65,19 +51,7 @@ namespace eShop.ProductWebApi.Controllers
                     .Succeeded()
                     .AddResult(s)
                     .Build()),
-                f =>
-                {
-                    if (f is NotFoundCategoryException ex)
-                        return NotFound(new ResponseBuilder()
-                                .Failed()
-                                .AddErrorMessage(ex.Message)
-                                .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(f.Message)
-                            .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpPost]
@@ -91,20 +65,7 @@ namespace eShop.ProductWebApi.Controllers
                     .AddResultMessage("Category was successfully created.")
                     .AddResult(s)
                     .Build()),
-                f =>
-                {
-                    if (f is FailedValidationException exception)
-                        return BadRequest(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(exception.Message)
-                            .AddErrors(exception.Errors.ToList())
-                            .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddErrorMessage(f.Message)
-                        .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpDelete("{Id:guid}")]
@@ -117,19 +78,7 @@ namespace eShop.ProductWebApi.Controllers
                     .Succeeded()
                     .AddResultMessage($"Category was successfully deleted.")
                     .Build()),
-                f =>
-                {
-                    if (f is NotFoundCategoryException exception)
-                        return NotFound(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(exception.Message)
-                            .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddErrorMessage(f.Message)
-                        .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpPut("{Id:guid}")]
@@ -143,26 +92,7 @@ namespace eShop.ProductWebApi.Controllers
                     .AddResult(s)
                     .AddResultMessage("Category was successfully updated.")
                     .Build()),
-                f =>
-                {
-                    if (f is NotFoundCategoryException exception)
-                        return new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(exception.Message)
-                            .Build();
-
-                    if (f is FailedValidationException validation)
-                        return new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(validation.Message)
-                            .AddErrors(validation.Errors.ToList())
-                            .Build();
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddErrorMessage(f.Message)
-                        .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
     }
 }

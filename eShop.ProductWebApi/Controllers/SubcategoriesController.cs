@@ -1,4 +1,5 @@
-﻿using eShop.Domain.DTOs;
+﻿using eShop.Application.Utilities;
+using eShop.Domain.DTOs;
 using eShop.Domain.Exceptions.Categories;
 using eShop.Domain.Exceptions.Subcategories;
 
@@ -21,10 +22,7 @@ namespace eShop.ProductWebApi.Controllers
                             .Succeeded()
                             .AddResult(s)
                             .Build()),
-                f => StatusCode(500, new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(f.Message)
-                            .Build()));
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpGet("getById/{Id:guid}")]
@@ -37,19 +35,7 @@ namespace eShop.ProductWebApi.Controllers
                         .Succeeded()
                         .AddResult(s)
                         .Build()),
-                f =>
-                {
-                    if (f is NotFoundSubcategoryException ex)
-                        return NotFound(new ResponseBuilder()
-                                .Failed()
-                                .AddErrorMessage(ex.Message)
-                                .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(f.Message)
-                            .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpGet("getByName/{Name}")]
@@ -62,19 +48,7 @@ namespace eShop.ProductWebApi.Controllers
                         .Succeeded()
                         .AddResult(s)
                         .Build()),
-                f =>
-                {
-                    if (f is NotFoundSubcategoryException ex)
-                        return NotFound(new ResponseBuilder()
-                                .Failed()
-                                .AddErrorMessage(ex.Message)
-                                .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(f.Message)
-                            .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpPost]
@@ -88,26 +62,7 @@ namespace eShop.ProductWebApi.Controllers
                     .AddResultMessage("Subcategory was successfully created.")
                     .AddResult(s)
                     .Build()),
-                f =>
-                {
-                    if (f is NotFoundSubcategoryException || f is NotFoundCategoryException)
-                        return NotFound(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(f.Message)
-                            .Build());
-
-                    if (f is FailedValidationException ex)
-                        return BadRequest(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(ex.Message)
-                            .AddErrors(ex.Errors.ToList())
-                            .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddErrorMessage(f.Message)
-                        .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpDelete("{Id:guid}")]
@@ -120,19 +75,7 @@ namespace eShop.ProductWebApi.Controllers
                     .Succeeded()
                     .AddResultMessage("Subcategory was successfully deleted.")
                     .Build()),
-                f =>
-                {
-                    if (f is NotFoundSubcategoryException ex)
-                        return NotFound(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(ex.Message)
-                            .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddErrorMessage(f.Message)
-                        .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpPut("{Id:guid}")]
@@ -146,26 +89,7 @@ namespace eShop.ProductWebApi.Controllers
                     .AddResultMessage("Subcategory was successfully updated.")
                     .AddResult(s)
                     .Build()),
-                f =>
-                {
-                    if (f is NotFoundSubcategoryException || f is NotFoundCategoryException)
-                        return NotFound(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(f.Message)
-                            .Build());
-
-                    if (f is FailedValidationException ex)
-                        return BadRequest(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(ex.Message)
-                            .AddErrors(ex.Errors.ToList())
-                            .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddErrorMessage(f.Message)
-                        .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
     }
 }

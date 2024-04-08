@@ -1,4 +1,5 @@
-﻿using eShop.Domain.DTOs;
+﻿using eShop.Application.Utilities;
+using eShop.Domain.DTOs;
 using eShop.ProductWebApi.Products.Create;
 using eShop.ProductWebApi.Products.Delete;
 using eShop.ProductWebApi.Products.Get;
@@ -23,10 +24,7 @@ namespace eShop.ProductWebApi.Controllers
                     .Succeeded()
                     .AddResult(s)
                     .Build()),
-                f => StatusCode(500, new ResponseBuilder()
-                    .Failed()
-                    .AddErrorMessage(f.Message)
-                    .Build()));
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpGet("getById/{Id:Guid}")]
@@ -39,19 +37,7 @@ namespace eShop.ProductWebApi.Controllers
                     .Succeeded()
                     .AddResult(s)
                     .Build()),
-                f =>
-                {
-                    if (f is NotFoundProductException exception)
-                        return NotFound(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(exception.Message)
-                            .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddErrorMessage(f.Message)
-                        .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpGet("getByName/{Name}")]
@@ -64,19 +50,7 @@ namespace eShop.ProductWebApi.Controllers
                     .Succeeded()
                     .AddResult(s)
                     .Build()),
-                f =>
-                {
-                    if (f is NotFoundProductException exception)
-                        return NotFound(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(exception.Message)
-                            .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddErrorMessage(f.Message)
-                        .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpPost]
@@ -90,20 +64,7 @@ namespace eShop.ProductWebApi.Controllers
                     .AddResultMessage("Product was successfully created.")
                     .AddResult(s)
                     .Build()),
-                f =>
-                {
-                    if (f is FailedValidationException exception)
-                        return BadRequest(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(exception.Message)
-                            .AddErrors(exception.Errors.ToList())
-                            .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddErrorMessage(f.Message)
-                        .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpDelete("{Id:Guid}")]
@@ -116,19 +77,7 @@ namespace eShop.ProductWebApi.Controllers
                     .Succeeded()
                     .AddResultMessage("Product was successfully deleted.")
                     .Build()),
-                f =>
-                {
-                    if (f is NotFoundProductException exception)
-                        return NotFound(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(exception.Message)
-                            .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddErrorMessage(f.Message)
-                        .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
 
         [HttpPut("{Id:Guid}")]
@@ -142,26 +91,7 @@ namespace eShop.ProductWebApi.Controllers
                     .AddResult(s)
                     .AddResultMessage("Product was successfully updated.")
                     .Build()),
-                f =>
-                {
-                    if (f is NotFoundProductException exception)
-                        return NotFound(new ResponseBuilder()
-                            .Failed()
-                            .AddErrorMessage(exception.Message)
-                            .Build());
-
-                    if (f is FailedValidationException validationException)
-                        return NotFound(new ResponseBuilder()
-                            .Failed()
-                            .AddErrors(validationException.Errors.ToList())
-                            .AddErrorMessage(validationException.Message)
-                            .Build());
-
-                    return StatusCode(500, new ResponseBuilder()
-                        .Failed()
-                        .AddErrorMessage(f.Message)
-                        .Build());
-                });
+                f => ExceptionHandler.HandleException(f));
         }
     }
 }
