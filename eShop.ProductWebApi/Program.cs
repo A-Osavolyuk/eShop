@@ -1,3 +1,5 @@
+using eShop.Domain.Entities;
+using eShop.Domain.Enums;
 using eShop.ProductWebApi;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +18,7 @@ if (app.Environment.IsDevelopment())
     using (var scope = app.Services.CreateScope())
     {
         var context = scope.ServiceProvider.GetRequiredService<ProductDbContext>();
+        context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
     }
 }

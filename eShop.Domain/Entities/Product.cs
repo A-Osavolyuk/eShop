@@ -10,6 +10,8 @@ namespace eShop.Domain.Entities
         public ProductTypes ProductType { get; set; }
         public Money Price { get; set; } = null!;
         public Guid SupplierId { get; set; }
+        public Guid BrandId { get; set; }
         public Supplier Supplier { get; set; } = null!;
+        public Brand Brand { get; set; } = null!;
     }
 }
