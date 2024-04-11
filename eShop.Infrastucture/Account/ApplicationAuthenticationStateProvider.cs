@@ -10,17 +10,15 @@ using System.Security.Claims;
 
 namespace eShop.Infrastructure.Account
 {
-    public class ApplicationAuthenticationStateProvider : AuthenticationStateProvider
+    public class ApplicationAuthenticationStateProvider(
+        ITokenProvider tokenProvider, 
+        IAuthenticationService authenticationService,
+        ILocalDataAccessor localDataAccessor) : AuthenticationStateProvider
     {
         private readonly AuthenticationState anonymous = new(new ClaimsPrincipal());
-        private readonly ITokenProvider tokenProvider;
-        private readonly IAuthenticationService authenticationService;
-
-        public ApplicationAuthenticationStateProvider(ITokenProvider tokenProvider, IAuthenticationService authenticationService)
-        {
-            this.tokenProvider = tokenProvider;
-            this.authenticationService = authenticationService;
-        }
+        private readonly ITokenProvider tokenProvider = tokenProvider;
+        private readonly IAuthenticationService authenticationService = authenticationService;
+        private readonly ILocalDataAccessor localDataAccessor = localDataAccessor;
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
@@ -36,7 +34,7 @@ namespace eShop.Infrastructure.Account
 
                         if (valid)
                         {
-                            var claims = SetClaims(token);
+                            var claims = await SetClaims(token);
 
                             if (claims.Any())
                             {
@@ -48,7 +46,7 @@ namespace eShop.Infrastructure.Account
                             return await Task.FromResult(anonymous);
                         }
 
-                        //return await RefreshToken(JwtHandler.Token);
+                        return await RefreshTokenAsync(JwtHandler.Token);
                     }
 
                     return await Task.FromResult(anonymous);
@@ -71,7 +69,7 @@ namespace eShop.Infrastructure.Account
                 await tokenProvider.SetTokenAsync(token);
 
                 var rawToken = DecryptToken(token)!;
-                var claims = SetClaims(rawToken)!;
+                var claims = await SetClaims(rawToken)!;
                 claimsPrincipal = new(new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme));
             }
             else
@@ -93,7 +91,7 @@ namespace eShop.Infrastructure.Account
             return new JwtSecurityToken();
         }
 
-        private List<Claim> SetClaims(JwtSecurityToken token)
+        private async Task<List<Claim>> SetClaims(JwtSecurityToken token)
         {
             if (token is not null)
             {
@@ -106,10 +104,19 @@ namespace eShop.Infrastructure.Account
                     new(ClaimTypes.Email, claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email)!.Value),
                 };
 
+                await WriteToLocalStorageAsync(output);
+
                 return output;
             }
 
             return [];
+        }
+
+        private async Task WriteToLocalStorageAsync(List<Claim> Claims)
+        {
+            await localDataAccessor.SetEmailAsync(Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value);
+            await localDataAccessor.SetUserNameAsync(Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)!.Value);
+            await localDataAccessor.SetUserIdAsync(Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value);
         }
 
         private bool IsValid(JwtSecurityToken token)
@@ -121,7 +128,7 @@ namespace eShop.Infrastructure.Account
             return DateTimeOffset.Now < expData;
         }
 
-        private async Task<AuthenticationState> RefreshToken(string expiredToken)
+        private async Task<AuthenticationState> RefreshTokenAsync(string expiredToken)
         {
             var result = await authenticationService.RefreshToken(new RefreshTokenRequest() { Token = expiredToken });
 
@@ -154,6 +161,7 @@ namespace eShop.Infrastructure.Account
         public async Task LogOutAsync()
         {
             await tokenProvider.RemoveTokenAsync();
+            await localDataAccessor.RemoveDataAsync();
             await UpdateAuthenticationState("");
         }
     }

@@ -186,7 +186,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
-        public async ValueTask<Result<PersonalDataDto>> GetPersonalDataAsync(string Email)
+        public async ValueTask<Result<PersonalDataDTO>> GetPersonalDataAsync(string Email)
         {
             try
             {
@@ -195,7 +195,7 @@ namespace eShop.AuthWebApi.Services.Implementation
                 if (user is null)
                     return new(new NotFoundUserByEmailException(Email));
 
-                return new(new PersonalDataDto()
+                return new(new PersonalDataDTO()
                 {
                     DateOfBirth = user.DateOfBirth,
                     FirstName = user.FirstName,
@@ -230,7 +230,7 @@ namespace eShop.AuthWebApi.Services.Implementation
 
                         if (isValidPassword)
                         {
-                            var userDto = new UserDto(user.Email!, user.UserName!, user.Id);
+                            var userDto = new UserDTO(user.Email!, user.UserName!, user.Id);
 
                             if (user.TwoFactorEnabled)
                             {
@@ -448,7 +448,7 @@ namespace eShop.AuthWebApi.Services.Implementation
 
                     if (result)
                     {
-                        var userDto = new UserDto(user.Email!, user.UserName!, user.Id);
+                        var userDto = new UserDTO(user.Email!, user.UserName!, user.Id);
                         var token = tokenHandler.GenerateToken(user);
 
                         return new(new LoginResponse()

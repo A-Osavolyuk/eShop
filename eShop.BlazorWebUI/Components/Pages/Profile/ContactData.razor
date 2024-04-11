@@ -47,8 +47,8 @@
 
 @code {
     [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; }
-    private ContactDataModel Model { get; set; } = new();
-    private PersonalDataDto PersonalData { get; set; } = new();
+    private Domain.Models.ContactDataDTO Model { get; set; } = new();
+    private PersonalDataDTO PersonalData { get; set; } = new();
     public string Email { get; set; } = string.Empty;
 
     private async Task ChangeEmailAddress()
@@ -78,11 +78,11 @@
         Model = await SetContactData();
     }
 
-    private async Task<ContactDataModel> SetContactData()
+    private async Task<Domain.Models.ContactDataDTO> SetContactData()
     {
         var state = await AuthenticationStateTask!;
         var email = state.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value!;
-        var data = new ContactDataModel()
+        var data = new Domain.Models.ContactDataDTO()
             {
                 Email = email,
                 PhoneNumber = PersonalData.PhoneNumber
@@ -91,12 +91,12 @@
         return data;
     }
 
-    private async Task<PersonalDataDto> GetPersonalData()
+    private async Task<PersonalDataDTO> GetPersonalData()
     {
         var result = await AuthenticationService.GetPersonalDataAsync(Email);
         if (result.IsSucceeded)
         {
-            var data = JsonConvert.DeserializeObject<PersonalDataDto>(result.Result!.ToString()!)!;
+            var data = JsonConvert.DeserializeObject<PersonalDataDTO>(result.Result!.ToString()!)!;
             return data;
         }
         return new()

@@ -8,7 +8,7 @@ namespace eShop.Application.MappingProfiles
     {
         public PersonalDataProfile()
         {
-            CreateMap<PersonalDataDto, ChangePersonalDataRequest>();
+            CreateMap<PersonalDataDTO, ChangePersonalDataRequest>();
         }
     }
 }

@@ -31,6 +31,7 @@ namespace eShop.Infrastructure
             builder.Services.AddScoped<IHttpClientService, HttpClientService>();
             builder.Services.AddScoped<ITokenProvider, TokenProvider>();
             builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+            builder.Services.AddScoped<ILocalDataAccessor, LocalDataAccessor>();
 
             return builder;
         }

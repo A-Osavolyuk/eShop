@@ -17,11 +17,11 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpPost("register")]
-        public async ValueTask<ActionResult<ResponseDto>> Register([FromBody] RegistrationRequest registrationRequest)
+        public async ValueTask<ActionResult<ResponseDTO>> Register([FromBody] RegistrationRequest registrationRequest)
         {
             var result = await authService.RegisterAsync(registrationRequest);
 
-            return result.Match<ActionResult<ResponseDto>>(
+            return result.Match<ActionResult<ResponseDTO>>(
                 succ =>
                 {
                     return Ok(new ResponseBuilder()
@@ -33,11 +33,11 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpPost("login")]
-        public async ValueTask<ActionResult<ResponseDto>> Login([FromBody] LoginRequest loginRequest)
+        public async ValueTask<ActionResult<ResponseDTO>> Login([FromBody] LoginRequest loginRequest)
         {
             var result = await authService.LoginAsync(loginRequest);
 
-            return result.Match<ActionResult<ResponseDto>>(
+            return result.Match<ActionResult<ResponseDTO>>(
                 succ =>
                 {
                     return Ok(new ResponseBuilder()
@@ -50,11 +50,11 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpPost("change-personal-data/{Email}")]
-        public async ValueTask<ActionResult<ResponseDto>> ChangePersonalData([FromBody] ChangePersonalDataRequest changePersonalDataRequest, string Email)
+        public async ValueTask<ActionResult<ResponseDTO>> ChangePersonalData([FromBody] ChangePersonalDataRequest changePersonalDataRequest, string Email)
         {
             var result = await authService.ChangePersonalDataAsync(Email, changePersonalDataRequest);
 
-            return result.Match<ActionResult<ResponseDto>>(
+            return result.Match<ActionResult<ResponseDTO>>(
                 s => Ok(new ResponseBuilder()
                     .Succeeded()
                     .AddResultMessage("Personal data was successfully changed.")
@@ -64,11 +64,11 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpGet("get-personal-data/{Email}")]
-        public async ValueTask<ActionResult<ResponseDto>> GetPersonalData(string Email)
+        public async ValueTask<ActionResult<ResponseDTO>> GetPersonalData(string Email)
         {
             var result = await authService.GetPersonalDataAsync(Email);
 
-            return result.Match<ActionResult<ResponseDto>>(
+            return result.Match<ActionResult<ResponseDTO>>(
                 s => Ok(new ResponseBuilder()
                     .Succeeded()
                     .AddResult(s)
@@ -77,11 +77,11 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpPost("change-password/{Email}")]
-        public async ValueTask<ActionResult<ResponseDto>> ChangePassword([FromBody] ChangePasswordRequest changePasswordRequest, string Email)
+        public async ValueTask<ActionResult<ResponseDTO>> ChangePassword([FromBody] ChangePasswordRequest changePasswordRequest, string Email)
         {
             var result = await authService.ChangePasswordAsync(Email, changePasswordRequest);
 
-            return result.Match<ActionResult<ResponseDto>>(
+            return result.Match<ActionResult<ResponseDTO>>(
                 s => Ok(new ResponseBuilder()
                     .Succeeded()
                     .AddResultMessage(s.Message)
@@ -90,11 +90,11 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpPost("request-reset-password/{Email}")]
-        public async ValueTask<ActionResult<ResponseDto>> ResetPasswordRequest(string Email)
+        public async ValueTask<ActionResult<ResponseDTO>> ResetPasswordRequest(string Email)
         {
             var result = await authService.RequestResetPasswordAsync(Email);
 
-            return result.Match<ActionResult<ResponseDto>>(
+            return result.Match<ActionResult<ResponseDTO>>(
                 s => Ok(new ResponseBuilder()
                     .Succeeded()
                     .AddResultMessage(s.Message)
@@ -103,11 +103,11 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpPost("confirm-reset-password/{Email}")]
-        public async ValueTask<ActionResult<ResponseDto>> ConfirmResetPassword(string Email, [FromBody] ConfirmPasswordResetRequest confirmPasswordResetRequest)
+        public async ValueTask<ActionResult<ResponseDTO>> ConfirmResetPassword(string Email, [FromBody] ConfirmPasswordResetRequest confirmPasswordResetRequest)
         {
             var result = await authService.ConfirmResetPasswordAsync(Email, confirmPasswordResetRequest);
 
-            return result.Match<ActionResult<ResponseDto>>(
+            return result.Match<ActionResult<ResponseDTO>>(
                 s => Ok(new ResponseBuilder()
                     .Succeeded()
                     .AddResultMessage(s.Message)
@@ -116,11 +116,11 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpPost("confirm-email/{Email}")]
-        public async ValueTask<ActionResult<ResponseDto>> ConfirmEmail(string Email, [FromBody] ConfirmEmailRequest confirmEmailRequest)
+        public async ValueTask<ActionResult<ResponseDTO>> ConfirmEmail(string Email, [FromBody] ConfirmEmailRequest confirmEmailRequest)
         {
             var result = await authService.ConfirmEmailAsync(Email, confirmEmailRequest);
 
-            return result.Match<ActionResult<ResponseDto>>(
+            return result.Match<ActionResult<ResponseDTO>>(
                 s => Ok(new ResponseBuilder()
                     .Succeeded()
                     .AddResultMessage("Your email address was successfully confirmed.")
@@ -129,11 +129,11 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpPost("change-2fa-state/{Email}")]
-        public async ValueTask<ActionResult<ResponseDto>> ChangeTwoFactorAuthentication(string Email)
+        public async ValueTask<ActionResult<ResponseDTO>> ChangeTwoFactorAuthentication(string Email)
         {
             var result = await authService.ChangeTwoFactorAuthenticationStateAsync(Email);
 
-            return result.Match<ActionResult<ResponseDto>>(
+            return result.Match<ActionResult<ResponseDTO>>(
                 s => Ok(new ResponseBuilder()
                 .Succeeded()
                 .AddResultMessage(s.Message)
@@ -142,11 +142,11 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpGet("get-2fa-state/{Email}")]
-        public async ValueTask<ActionResult<ResponseDto>> GetTwoFactorAuthenticationState(string Email)
+        public async ValueTask<ActionResult<ResponseDTO>> GetTwoFactorAuthenticationState(string Email)
         {
             var result = await authService.GetTwoFactorAuthenticationStateAsync(Email);
 
-            return result.Match<ActionResult<ResponseDto>>(
+            return result.Match<ActionResult<ResponseDTO>>(
                 s => Ok(new ResponseBuilder()
                 .Succeeded()
                 .AddResultMessage(s.TwoFactorAuthenticationState
@@ -158,11 +158,11 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpPost("2fa-login/{Email}")]
-        public async ValueTask<ActionResult<ResponseDto>> LoginWithTwoFactorAuthenticationCode(string Email, [FromBody] TwoFactorAuthenticationLoginRequest twoFactorAuthenticationLoginRequest)
+        public async ValueTask<ActionResult<ResponseDTO>> LoginWithTwoFactorAuthenticationCode(string Email, [FromBody] TwoFactorAuthenticationLoginRequest twoFactorAuthenticationLoginRequest)
         {
             var result = await authService.LoginWithTwoFactorAuthenticationCodeAsync(Email, twoFactorAuthenticationLoginRequest);
 
-            return result.Match<ActionResult<ResponseDto>>(
+            return result.Match<ActionResult<ResponseDTO>>(
                 succ =>
                 {
                     return Ok(new ResponseBuilder()
@@ -175,43 +175,43 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpGet("external-login/{provider}")]
-        public async ValueTask<ActionResult<ResponseDto>> ExternalLogin(string provider, string? returnUri = null)
+        public async ValueTask<ActionResult<ResponseDTO>> ExternalLogin(string provider, string? returnUri = null)
         {
             var result = await authService.RequestExternalLogin(provider, returnUri);
 
-            return result.Match<ActionResult<ResponseDto>>(
+            return result.Match<ActionResult<ResponseDTO>>(
                 s => Challenge(s.AuthenticationProperties, s.Provider),
                 f => ExceptionHandler.HandleException(f));
         }
 
         [HttpGet("handle-external-login-response")]
-        public async ValueTask<ActionResult<ResponseDto>> HandleExternalLoginResponse(string? remoteError = null, string? returnUri = null)
+        public async ValueTask<ActionResult<ResponseDTO>> HandleExternalLoginResponse(string? remoteError = null, string? returnUri = null)
         {
             var info = await signInManager.GetExternalLoginInfoAsync();
 
             var result = await authService.HandleExternalLoginResponseAsync(info!, returnUri ?? "/");
 
-            return result.Match<ActionResult<ResponseDto>>(
+            return result.Match<ActionResult<ResponseDTO>>(
                 s => Redirect(s),
                 f => ExceptionHandler.HandleException(f));
         }
 
         [HttpGet("get-external-providers")]
-        public async ValueTask<ActionResult<ResponseDto>> GetExternalProvidersList()
+        public async ValueTask<ActionResult<ResponseDTO>> GetExternalProvidersList()
         {
             var result = await authService.GetExternalProvidersAsync();
 
-            return result.Match<ActionResult<ResponseDto>>(
+            return result.Match<ActionResult<ResponseDTO>>(
                 s => Ok(new ResponseBuilder().Succeeded().AddResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 
         [HttpPost("request-change-email")]
-        public async ValueTask<ActionResult<ResponseDto>> RequestChangeEmail([FromBody]ChangeEmailRequest changeEmailRequest)
+        public async ValueTask<ActionResult<ResponseDTO>> RequestChangeEmail([FromBody]ChangeEmailRequest changeEmailRequest)
         {
             var result = await authService.RequestChangeEmailAsync(changeEmailRequest);
 
-            return result.Match<ActionResult<ResponseDto>>(
+            return result.Match<ActionResult<ResponseDTO>>(
                 s => Ok(new ResponseBuilder()
                     .Succeeded()
                     .AddResultMessage(s.Message)
@@ -220,7 +220,7 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpPost("confirm-change-email")]
-        public async ValueTask<ActionResult<ResponseDto>> ConfirmChangeEmail([FromBody] ConfirmChangeEmailRequest confirmChangeEmailRequest)
+        public async ValueTask<ActionResult<ResponseDTO>> ConfirmChangeEmail([FromBody] ConfirmChangeEmailRequest confirmChangeEmailRequest)
         {
             var result = await authService.ConfirmChangeEmailAsync(confirmChangeEmailRequest);
 
@@ -230,7 +230,7 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpPost("change-user-name")]
-        public async ValueTask<ActionResult<ResponseDto>> ChangeUserName([FromBody] ChangeUserNameRequest changeUserNameRequest)
+        public async ValueTask<ActionResult<ResponseDTO>> ChangeUserName([FromBody] ChangeUserNameRequest changeUserNameRequest)
         {
             var result = await authService.ChangeUserNameAsync(changeUserNameRequest);
 
@@ -240,7 +240,7 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpPost("refresh-token")]
-        public ActionResult<ResponseDto> RefreshToken([FromBody] RefreshTokenRequest refreshTokenRequest) 
+        public ActionResult<ResponseDTO> RefreshToken([FromBody] RefreshTokenRequest refreshTokenRequest) 
         { 
             var result = authService.RefreshTokenAsync(refreshTokenRequest);
 
@@ -250,7 +250,7 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpPost("request-change-phone-number")]
-        public async ValueTask<ActionResult<ResponseDto>> RequestChangePhoneNumber([FromBody] ChangePhoneNumberRequest changePhoneNumberRequest)
+        public async ValueTask<ActionResult<ResponseDTO>> RequestChangePhoneNumber([FromBody] ChangePhoneNumberRequest changePhoneNumberRequest)
         {
             var result = await authService.RequestChangePhoneNumberAsync(changePhoneNumberRequest);
 
@@ -260,7 +260,7 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpPost("confirm-change-phone-number")]
-        public async ValueTask<ActionResult<ResponseDto>> ConfirmChangePhoneNumber([FromBody] ConfirmChangePhoneNumberRequest confirmChangePhoneNumberRequest)
+        public async ValueTask<ActionResult<ResponseDTO>> ConfirmChangePhoneNumber([FromBody] ConfirmChangePhoneNumberRequest confirmChangePhoneNumberRequest)
         {
             var result = await authService.ConfirmChangePhoneNumberAsync(confirmChangePhoneNumberRequest);
 

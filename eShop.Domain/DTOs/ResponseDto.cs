@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.DTOs;
 
-public class ResponseDto
+public class ResponseDTO
 {
     public string ResultMessage { get; set; } = "";
     public string ErrorMessage { get; set; } = "";
@@ -59,9 +59,9 @@ public class ResponseBuilder
         return this;
     }
 
-    public ResponseDto Build()
+    public ResponseDTO Build()
     {
-        return new ResponseDto()
+        return new ResponseDTO()
         {
             IsSucceeded = _IsSucceeded,
             ErrorMessage = _ErrorMessage,

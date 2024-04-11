@@ -19,7 +19,7 @@ namespace eShop.Infrastructure.Services
             this.tokenProvider = tokenProvider;
         }
 
-        public async ValueTask<ResponseDto?> SendAsync(RequestDto request, bool withBearer = true)
+        public async ValueTask<ResponseDTO?> SendAsync(RequestDto request, bool withBearer = true)
         {
             try
             {
@@ -62,9 +62,9 @@ namespace eShop.Infrastructure.Services
             }
         }
 
-        private async ValueTask<ResponseDto> HandleStatusCode(HttpResponseMessage httpResponse)
+        private async ValueTask<ResponseDTO> HandleStatusCode(HttpResponseMessage httpResponse)
         {
-            var response = JsonConvert.DeserializeObject<ResponseDto>(await httpResponse.Content.ReadAsStringAsync())!;
+            var response = JsonConvert.DeserializeObject<ResponseDTO>(await httpResponse.Content.ReadAsStringAsync())!;
 
             return httpResponse.StatusCode switch
             {
