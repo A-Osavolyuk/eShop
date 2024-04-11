@@ -19,8 +19,8 @@ namespace eShop.ProductWebApi.Data
             modelBuilder.Entity<Brand>().HasKey(x => x.Id);
             modelBuilder.Entity<Product>().HasKey(x => x.Id);
 
-            modelBuilder.Entity<Product>().HasOne(x => x.Supplier).WithMany(x => x.Products).HasForeignKey(x => x.SupplierId);
-            modelBuilder.Entity<Product>().HasOne(x => x.Brand).WithMany(x => x.Products).HasForeignKey(x => x.BrandId);
+            modelBuilder.Entity<Product>().HasOne(x => x.Supplier).WithMany().HasForeignKey(x => x.SupplierId);
+            modelBuilder.Entity<Product>().HasOne(x => x.Brand).WithMany().HasForeignKey(x => x.BrandId);
 
             modelBuilder.Entity<Product>().OwnsOne(x => x.Price, p =>
             {

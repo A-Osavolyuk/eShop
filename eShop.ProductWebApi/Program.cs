@@ -1,5 +1,3 @@
-using eShop.Domain.Entities;
-using eShop.Domain.Enums;
 using eShop.ProductWebApi;
 
 var builder = WebApplication.CreateBuilder(args);

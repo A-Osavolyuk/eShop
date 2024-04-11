@@ -1,10 +1,15 @@
-﻿namespace eShop.ProductWebApi.Repositories
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using eShop.Domain.Enums;
+
+namespace eShop.ProductWebApi.Repositories
 {
-    public class ProductsRepository(ProductDbContext context) : IProductRepository
+    public class ProductsRepository(ProductDbContext context, IMapper mapper) : IProductRepository
     {
         private readonly ProductDbContext context = context;
+        private readonly IMapper mapper = mapper;
 
-        public async ValueTask<Result<IEnumerable<ProductDTO>>> GetProductsList()
+        public async ValueTask<Result<IEnumerable<ProductDTO>>> GetProductsListAsync()
         {
             try
             {
@@ -13,12 +18,27 @@
                     .Select(x => new ProductDTO()
                     {
                         Id = x.Id,
-                        Brand = x.Brand,
                         Name = x.Name,
                         Description = x.Description,
-                        Price = x.Price,
                         ProductType = x.ProductType,
-                        Supplier = x.Supplier,
+                        Price = new Money
+                        {
+                            Amount = x.Price.Amount,
+                            Currency = x.Price.Currency,
+                        },
+                        Brand = new Brand
+                        {
+                            Id = x.Brand.Id,
+                            Name = x.Brand.Name,
+                            Country = x.Brand.Country
+                        },
+                        Supplier = new Supplier
+                        {
+                            Id = x.Supplier.Id,
+                            Name = x.Supplier.Name,
+                            ContactEmail = x.Supplier.ContactEmail,
+                            ContactPhone = x.Supplier.ContactPhone
+                        },
                     })
                     .ToListAsync();
             }
@@ -27,10 +47,32 @@
                 return new(ex);
             }
         }
+
+        public async ValueTask<Result<IEnumerable<ProductDTO>>> GetProductByType(ProductType Type)
+        {
+            try
+            {
+                return Type switch
+                {
+                    ProductType.Clothing => new(await context.Products.AsNoTracking().OfType<Clothing>()
+                                                .ProjectTo<ClothingDTO>(mapper.ConfigurationProvider).ToListAsync()),
+
+                    ProductType.Shoes => new(await context.Products.AsNoTracking().OfType<Shoes>()
+                                                .ProjectTo<ShoesDTO>(mapper.ConfigurationProvider).ToListAsync()),
+
+                    _ => new(Enumerable.Empty<ProductDTO>())
+                };
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
+        } 
     }
 
     public interface IProductRepository
     {
-        public ValueTask<Result<IEnumerable<ProductDTO>>> GetProductsList();
+        public ValueTask<Result<IEnumerable<ProductDTO>>> GetProductsListAsync();
+        public ValueTask<Result<IEnumerable<ProductDTO>>> GetProductByType(ProductType type);
     }
 }

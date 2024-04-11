@@ -1,10 +1,10 @@
 ﻿using eShop.Domain.Enums;
 
-namespace eShop.Domain.Entities
+namespace eShop.Domain.DTOs
 {
-    public class Shoes : Product
+    public class ClothingDTO : ProductDTO
     {
-        public Shoes() => this.ProductType = ProductType.Shoes;
+        public ClothingDTO() => this.ProductType = ProductType.Clothing;
         public byte Size { get; set; }
         public Colors Color { get; set; }
         public Audience Audience { get; set; }

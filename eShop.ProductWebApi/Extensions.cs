@@ -1,4 +1,6 @@
-﻿namespace eShop.ProductWebApi
+﻿using eShop.ProductWebApi.Repositories;
+
+namespace eShop.ProductWebApi
 {
     public static class Extensions
     {
@@ -23,7 +25,7 @@
 
         public static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
         {
-
+            builder.Services.AddScoped<IProductRepository, ProductsRepository>();
             return builder;
         }
     }
