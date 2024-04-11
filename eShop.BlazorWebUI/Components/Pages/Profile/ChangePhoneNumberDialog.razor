@@ -1,6 +1,7 @@
 ﻿@inject IAuthenticationService AuthenticationService
 @inject ISnackbar Snackbar
 @inject IValidator<ChangePhoneNumberRequest> Validator
+@inject ILocalDataAccessor LocalDataAccessor
 
 <MudDialog>
     <DialogContent>
@@ -16,12 +17,11 @@
 </MudDialog>
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-    [Parameter] public string Email { get; set; } = string.Empty;
     private ChangePhoneNumberRequest Model { get; set; } = new();
 
     private async Task Submit()
     {
-        Model.Email = Email;
+        Model.Email = await LocalDataAccessor.GetEmailAsync();
 
         var result = await AuthenticationService.RequestChangePhoneNumberAsync(Model);
 

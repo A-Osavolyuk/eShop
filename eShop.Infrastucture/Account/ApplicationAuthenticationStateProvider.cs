@@ -143,7 +143,7 @@ namespace eShop.Infrastructure.Account
 
                     if (token is not null || token!.Claims.Any())
                     {
-                        var claims = SetClaims(token);
+                        var claims = await SetClaims(token);
 
                         if (claims.Any())
                         {

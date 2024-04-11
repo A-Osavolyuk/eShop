@@ -7,7 +7,7 @@ namespace eShop.AuthWebApi.Services.Interfaces
         public ValueTask<Result<LoginResponse>> LoginAsync(LoginRequest loginRequest);
         public ValueTask<Result<RegistrationResponse>> RegisterAsync(RegistrationRequest registrationRequest);
         public ValueTask<Result<ChangePersonalDataResponse>> ChangePersonalDataAsync(string Email, ChangePersonalDataRequest changePersonalDataRequest);
-        public ValueTask<Result<PersonalDataDTO>> GetPersonalDataAsync(string UserId);
+        public ValueTask<Result<PersonalDataResponse>> GetPersonalDataAsync(string UserId);
         public ValueTask<Result<ChangePasswordResponse>> ChangePasswordAsync(string Email, ChangePasswordRequest changePasswordRequest);
         public ValueTask<Result<ResetPasswordResponse>> RequestResetPasswordAsync(string UserEmail);
         public ValueTask<Result<ConfirmPasswordResetResponse>> ConfirmResetPasswordAsync(string Email, ConfirmPasswordResetRequest confirmPasswordResetRequest);
@@ -24,5 +24,6 @@ namespace eShop.AuthWebApi.Services.Interfaces
         public Result<RefreshTokenResponse> RefreshTokenAsync(RefreshTokenRequest refreshTokenRequest);
         public ValueTask<Result<ChangePhoneNumberResponse>> RequestChangePhoneNumberAsync(ChangePhoneNumberRequest changePhoneNumberRequest);
         public ValueTask<Result<ConfirmChangePhoneNumberResponse>> ConfirmChangePhoneNumberAsync(ConfirmChangePhoneNumberRequest confirmChangePhoneNumberRequest);
+        public ValueTask<Result<PhoneNumberResponse>> GetPhoneNumber(string Email);
     }
 }

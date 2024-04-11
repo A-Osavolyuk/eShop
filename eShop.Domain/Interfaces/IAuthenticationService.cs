@@ -23,5 +23,6 @@ namespace eShop.Domain.Interfaces
         public ValueTask<ResponseDTO> RefreshToken(RefreshTokenRequest refreshTokenRequest);
         public ValueTask<ResponseDTO> RequestChangePhoneNumberAsync(ChangePhoneNumberRequest changePhoneNumberRequest);
         public ValueTask<ResponseDTO> ConfirmChangePhoneNumberAsync(ConfirmChangePhoneNumberRequest confirmChangePhoneNumberRequest);
+        public ValueTask<ResponseDTO> GetPhoneNumber(string Email);
     }
 }

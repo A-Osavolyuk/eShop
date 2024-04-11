@@ -186,7 +186,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
-        public async ValueTask<Result<PersonalDataDTO>> GetPersonalDataAsync(string Email)
+        public async ValueTask<Result<PersonalDataResponse>> GetPersonalDataAsync(string Email)
         {
             try
             {
@@ -195,14 +195,35 @@ namespace eShop.AuthWebApi.Services.Implementation
                 if (user is null)
                     return new(new NotFoundUserByEmailException(Email));
 
-                return new(new PersonalDataDTO()
+                return new(new PersonalDataResponse()
                 {
                     DateOfBirth = user.DateOfBirth,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Gender = user.Gender,
-                    PhoneNumber = user.PhoneNumber,
                 });
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
+        }
+
+        public async ValueTask<Result<PhoneNumberResponse>> GetPhoneNumber(string Email)
+        {
+            try
+            {
+                var user = await userManager.FindByEmailAsync(Email);
+
+                if(user is not null)
+                {
+                    return new(new PhoneNumberResponse()
+                    {
+                        PhoneNumber = user.PhoneNumber!
+                    });
+                }
+
+                return new(new NotFoundUserByEmailException(Email));
             }
             catch (Exception ex)
             {

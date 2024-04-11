@@ -1,6 +1,7 @@
 ﻿@inject IAuthenticationService AuthenticationService
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
+@inject ILocalDataAccessor LocalDataAccessor
 
 <MudCard Outlined>
     <MudCardHeader>
@@ -32,17 +33,14 @@
 </MudCard>
 
 @code {
-    [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; }
     private ChangePasswordRequest Request { get; set; } = new();
     private bool TwoFactorState { get; set; } = false;
-    private string Email { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        var task = await AuthenticationStateTask;
 
-        Email = task.User.Claims.ToList().FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value!;
-        var result = await AuthenticationService.GetTwoFactorStateAsync(Email);
+        var email = await LocalDataAccessor.GetEmailAsync();
+        var result = await AuthenticationService.GetTwoFactorStateAsync(email);
 
         if (result.IsSucceeded)
         {
@@ -58,7 +56,8 @@
 
     private async Task ChangeState()
     {
-        var result = await AuthenticationService.ChangeTwoFactorStateAsync(Email);
+        var email = await LocalDataAccessor.GetEmailAsync();
+        var result = await AuthenticationService.ChangeTwoFactorStateAsync(email);
 
         if (result.IsSucceeded)
         {
@@ -66,16 +65,12 @@
             TwoFactorState = !TwoFactorState;
         }
         else
-        {
             Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
-        }
     }
 
     private async Task ChangePassword()
     {
-        var parameters = new DialogParameters<ChangePasswordDialog>() { { x => x.Email, Email } };
         var options = new DialogOptions { CloseOnEscapeKey = true, ClassBackground = "blured", FullWidth = true };
-        var dialog = await DialogService.ShowAsync<ChangePasswordDialog>("Change Password", parameters, options);
-        var result = await dialog.Result;
+        var dialog = await DialogService.ShowAsync<ChangePasswordDialog>("Change Password", options);
     }
 }

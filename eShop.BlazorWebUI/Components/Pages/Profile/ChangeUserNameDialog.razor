@@ -1,6 +1,7 @@
 ﻿@inject IAuthenticationService AuthenticationService
 @inject ISnackbar Snackbar
 @inject IValidator<ChangeUserNameRequest> Validator
+@inject ILocalDataAccessor LocalDataAccessor
 
 <MudDialog>
     <DialogContent>
@@ -23,6 +24,7 @@
 
         if (result.IsSucceeded)
         {
+            await LocalDataAccessor.SetUserNameAsync(Model.UserName);
             var data = JsonConvert.DeserializeObject<ChangeUserNameResponse>(result.Result!.ToString()!);
             Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
             MudDialog.Close(DialogResult.Ok(data!.Token));

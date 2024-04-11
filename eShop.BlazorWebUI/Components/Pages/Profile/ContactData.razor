@@ -1,6 +1,8 @@
 ﻿@using eShop.Domain.DTOs.Responses
 @inject IDialogService DialogService
 @inject IAuthenticationService AuthenticationService
+@inject ILocalDataAccessor LocalDataAccessor
+@inject ISnackbar Snackbar
 
 <MudCard Outlined Style="height:100%">
     <MudCardHeader>
@@ -13,7 +15,7 @@
                 <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> Email </MudText>
             </MudItem>
             <MudItem xs="12" sm="9">
-                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> @(string.IsNullOrEmpty(Model.Email) ? "Loading..." : Model.Email) </MudText>
+                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> @(string.IsNullOrEmpty(ContactDataModel.Email) ? "Loading..." : ContactDataModel.Email) </MudText>
             </MudItem>
         </MudGrid>
         <MudDivider />
@@ -22,7 +24,7 @@
                 <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> Phone Number </MudText>
             </MudItem>
             <MudItem xs="12" sm="9">
-                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> @(string.IsNullOrEmpty(Model.PhoneNumber) ? "Loading..." : Model.PhoneNumber) </MudText>
+                <MudText Class="mx-3 my-1" Typo="Typo.subtitle1"> @(string.IsNullOrEmpty(ContactDataModel.PhoneNumber) ? "Loading..." : ContactDataModel.PhoneNumber) </MudText>
             </MudItem>
         </MudGrid>
         <MudDivider />
@@ -46,66 +48,57 @@
 </style>
 
 @code {
-    [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; }
-    private Domain.Models.ContactDataDTO Model { get; set; } = new();
-    private PersonalDataDTO PersonalData { get; set; } = new();
-    public string Email { get; set; } = string.Empty;
+    private ContactDataModel ContactDataModel { get; set; } = new();
 
     private async Task ChangeEmailAddress()
     {
-        var parameters = new DialogParameters<ChangeEmailDialog>() { { x => x.Email, Email } };
+        ;
         var options = new DialogOptions { CloseOnEscapeKey = true, ClassBackground = "blured", FullWidth = true };
-        var dialog = await DialogService.ShowAsync<ChangeEmailDialog>("Change email address", parameters, options);
+        var dialog = await DialogService.ShowAsync<ChangeEmailDialog>("Change email address", options);
     }
 
     private async Task ChangePhoneNumber()
     {
-        var parameters = new DialogParameters<ChangePhoneNumberDialog>() { { x => x.Email, Email } };
         var options = new DialogOptions { CloseOnEscapeKey = true, ClassBackground = "blured", FullWidth = true };
-        var dialog = await DialogService.ShowAsync<ChangePhoneNumberDialog>("Change phone number", parameters, options);
+        var dialog = await DialogService.ShowAsync<ChangePhoneNumberDialog>("Change phone number", options);
     }
 
     protected override async Task OnInitializedAsync()
     {
-        var state = await AuthenticationStateTask!;
-        Email = state.User.Claims.ToList().FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value;
         await RefreshData();
     }
 
     private async Task RefreshData()
     {
-        PersonalData = await GetPersonalData();
-        Model = await SetContactData();
+        await SetContactData();
     }
 
-    private async Task<Domain.Models.ContactDataDTO> SetContactData()
+    private async Task SetContactData()
     {
-        var state = await AuthenticationStateTask!;
-        var email = state.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value!;
-        var data = new Domain.Models.ContactDataDTO()
-            {
-                Email = email,
-                PhoneNumber = PersonalData.PhoneNumber
-            };
+        ContactDataModel.Email = await LocalDataAccessor.GetEmailAsync();
+        var phoneNumber = await LocalDataAccessor.GetPhoneNumberAsync();
 
-        return data;
-    }
-
-    private async Task<PersonalDataDTO> GetPersonalData()
-    {
-        var result = await AuthenticationService.GetPersonalDataAsync(Email);
-        if (result.IsSucceeded)
+        if (string.IsNullOrEmpty(phoneNumber))
         {
-            var data = JsonConvert.DeserializeObject<PersonalDataDTO>(result.Result!.ToString()!)!;
-            return data;
-        }
-        return new()
+            var email = await LocalDataAccessor.GetEmailAsync();
+            var result = await AuthenticationService.GetPhoneNumber(email);
+
+            if (result.IsSucceeded)
             {
-                FirstName = "None",
-                LastName = "None",
-                Gender = "None",
-                PhoneNumber = "None",
-                DateOfBirth = new(2000, 1, 1)
-            };
+                var response = JsonConvert.DeserializeObject<PhoneNumberResponse>(result!.Result!.ToString()!)!;
+                await LocalDataAccessor.SetPhoneNumberAsync(response.PhoneNumber);
+                ContactDataModel.PhoneNumber = response.PhoneNumber ?? "None";
+            }
+            else
+            {
+                Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
+                ContactDataModel.PhoneNumber = "None";
+            }
+
+        }
+        else
+        {
+            ContactDataModel.PhoneNumber = phoneNumber;
+        }
     }
 }

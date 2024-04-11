@@ -33,7 +33,7 @@ namespace eShop.Infrastructure.Services
             await localStorageService.RemoveItemAsync("user-id");
         }
 
-        public async ValueTask<PersonalDataDTO> GetPersonalDatAsync()
+        public async ValueTask<PersonalDataDTO> GetPersonalDataAsync()
         {
             var phoneNumber = await localStorageService.GetItemAsync<PersonalDataDTO>("personal-data");
             return phoneNumber!;

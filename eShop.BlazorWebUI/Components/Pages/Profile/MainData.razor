@@ -2,6 +2,8 @@
 @inject IAuthenticationService AuthenticationService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
+@inject ILocalDataAccessor LocalStorageAccessor
+@inject IMapper Mapper
 
 <MudCard Outlined>
     <MudCardHeader>
@@ -61,17 +63,12 @@
 </MudCard>
 
 @code {
-    [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; }
     private MainDataModel Model { get; set; } = new();
     private PersonalDataDTO PersonalData { get; set; } = new();
-    private string Email { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
         await RefreshData();
-
-        var task = await AuthenticationStateTask;
-        Email = task.User.Claims.ToList().FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value!;
     }
 
     private async Task RefreshData()
@@ -82,18 +79,15 @@
 
     private async Task ChangeUserName()
     {
-        var model = new ChangeUserNameRequest() { Email = Email };
-        var parameters = new DialogParameters<ChangeUserNameDialog>() { { x => x.Model, model } };
         var options = new DialogOptions { CloseOnEscapeKey = true, ClassBackground = "blured", FullWidth = true };
-        var dialog = await DialogService.ShowAsync<ChangeUserNameDialog>("Change User Name", parameters, options);
+        var dialog = await DialogService.ShowAsync<ChangeUserNameDialog>("Change User Name", options);
         var result = await dialog.Result;
 
         if (!result.Canceled)
         {
             var token = result.Data.ToString();
             await (AuthenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(token!);
-            var task = await AuthenticationStateTask;
-            Model.UserName = task.User.Identity!.Name!;
+            Model.UserName = await LocalStorageAccessor.GetUserNameAsync();
             NavigationManager.Refresh(true);
         }
     }
@@ -109,7 +103,6 @@
         };
         var parameters = new DialogParameters<ChangePersonalDataDialog>();
         parameters.Add(x => x.Model, model);
-        parameters.Add(x => x.Email, Email);
         var options = new DialogOptions { CloseOnEscapeKey = true, ClassBackground = "blured", FullWidth = true };
         var dialog = await DialogService.ShowAsync<ChangePersonalDataDialog>("Change Personal Data", parameters, options);
         var result = await dialog.Result;
@@ -122,35 +115,42 @@
 
     private async Task<MainDataModel> SetMainData()
     {
-        var userName = (await AuthenticationStateTask!).User.Identity!.Name;
-
         var data = new MainDataModel()
-            {
-                UserName = userName!,
-                DateOfBirth = PersonalData.DateOfBirth,
-                FullName = $"{PersonalData.FirstName} {PersonalData.LastName}",
-                Gender = PersonalData.Gender
-            };
+        {
+            UserName = await LocalStorageAccessor.GetUserNameAsync(),
+            DateOfBirth = PersonalData.DateOfBirth,
+            FullName = $"{PersonalData.FirstName} {PersonalData.LastName}",
+            Gender = PersonalData.Gender
+        };
 
         return data;
     }
 
     private async Task<PersonalDataDTO> GetPersonalData()
     {
-        var state = await AuthenticationStateTask!;
-        var email = state.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value!;
-        var result = await AuthenticationService.GetPersonalDataAsync(email);
-        if (result.IsSucceeded)
+        var personalData = await LocalStorageAccessor.GetPersonalDataAsync();
+
+        if (personalData is null)
         {
-            var data = JsonConvert.DeserializeObject<PersonalDataDTO>(result.Result!.ToString()!)!;
-            return data;
+            var email = await LocalStorageAccessor.GetEmailAsync();
+            var result = await AuthenticationService.GetPersonalDataAsync(email);
+            if (result.IsSucceeded)
+            {
+                var response = JsonConvert.DeserializeObject<PersonalDataResponse>(result.Result!.ToString()!)!;
+                var data = Mapper.Map<PersonalDataDTO>(response);
+                await LocalStorageAccessor.SetPersonalDataAsync(data);
+
+                return data;
+            }
+            return new()
+            {
+                FirstName = "None",
+                LastName = "None",
+                Gender = "None",
+                DateOfBirth = new(2000, 1, 1)
+            };
         }
-        return new()
-        {
-            FirstName = "None",
-            LastName = "None",
-            Gender = "None",
-            DateOfBirth = new(2000, 1, 1)
-        };
+
+        return personalData;
     }
 }

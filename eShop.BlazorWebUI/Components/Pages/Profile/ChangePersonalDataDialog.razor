@@ -1,6 +1,7 @@
 ﻿@inject IAuthenticationService AuthenticationService
 @inject ISnackbar Snackbar
 @inject IValidator<ChangePersonalDataRequest> Validator
+@inject ILocalDataAccessor LocalDataAccessor
 
 <MudDialog>
     <DialogContent>
@@ -19,7 +20,6 @@
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public ChangePersonalDataRequest Model { get; set; } = new();
-    [Parameter] public string Email { get; set; } = string.Empty;
     private MudDatePicker DatePicker { get; set; } = new();
 
     protected override void OnInitialized()
@@ -30,7 +30,8 @@
     private async Task Submit()
     {
         Model.DateOfBirth = DatePicker.Date!.Value;
-        var result = await AuthenticationService.ChangePersonalDataAsync(Email, Model);
+        var email = await LocalDataAccessor.GetEmailAsync();
+        var result = await AuthenticationService.ChangePersonalDataAsync(email, Model);
 
         if (result.IsSucceeded)
         {

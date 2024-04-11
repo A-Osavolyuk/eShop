@@ -6,7 +6,7 @@ namespace eShop.Domain.Interfaces
     {
         public ValueTask RemoveDataAsync();
         public ValueTask SetPersonalDataAsync(PersonalDataDTO PersonalData);
-        public ValueTask<PersonalDataDTO> GetPersonalDatAsync();
+        public ValueTask<PersonalDataDTO> GetPersonalDataAsync();
         public ValueTask SetPhoneNumberAsync(string PhoneNumber);
         public ValueTask<string> GetPhoneNumberAsync();
         public ValueTask SetEmailAsync(string Email);

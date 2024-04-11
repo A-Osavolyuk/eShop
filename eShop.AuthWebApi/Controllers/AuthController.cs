@@ -268,6 +268,16 @@ namespace eShop.AuthWebApi.Controllers
                 s => Ok(new ResponseBuilder().Succeeded().AddResultMessage(s.Message).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
+
+        [HttpGet("get-phone-number/{Email}")]
+        public async ValueTask<ActionResult<ResponseDTO>> GetPhoneNumber(string Email)
+        {
+            var result = await authService.GetPhoneNumber(Email);
+
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().AddResult(s).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
     }
 }
 

@@ -80,5 +80,9 @@ namespace eShop.Infrastructure.Services
         public ValueTask<ResponseDTO> ConfirmChangePhoneNumberAsync(ConfirmChangePhoneNumberRequest changePhoneNumberRequest) => clientService.SendAsync(
                     new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/confirm-change-phone-number",
                         Method: HttpMethods.POST, Data: changePhoneNumberRequest));
+
+        public ValueTask<ResponseDTO> GetPhoneNumber(string Email) => clientService.SendAsync(
+                    new RequestDto(Url: $"{configuration["Services:AuthWebApiUrl"]}/api/v1/Auth/get-phone-number/{Email}",
+                        Method: HttpMethods.GET));
     }
 }
