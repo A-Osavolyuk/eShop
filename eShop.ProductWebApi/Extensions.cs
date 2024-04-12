@@ -27,6 +27,7 @@ namespace eShop.ProductWebApi
         {
             builder.Services.AddScoped<IProductRepository, ProductsRepository>();
             builder.Services.AddScoped<ISupplierRepository, SuppliersRepository>();
+            builder.Services.AddScoped<IBrandsRepository, BrandsRepository>();
             return builder;
         }
     }
