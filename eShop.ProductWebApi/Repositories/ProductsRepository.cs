@@ -83,6 +83,20 @@ namespace eShop.ProductWebApi.Repositories
                 return new(ex);
             }
         }
+
+        public async ValueTask<Result<ProductDTO>> GetProductByNameAsync(string Name)
+        {
+            try
+            {
+                var product = await context.Products.AsNoTracking().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Name == Name);
+
+                return product is null ? new(new NotFoundProductException(Name)) : new(product);
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
+        }
     }
 
     public interface IProductRepository
@@ -90,5 +104,6 @@ namespace eShop.ProductWebApi.Repositories
         public ValueTask<Result<IEnumerable<ProductDTO>>> GetProductsListAsync();
         public ValueTask<Result<IEnumerable<ProductDTO>>> GetProductsListByTypeAsync(ProductType type);
         public ValueTask<Result<ProductDTO>> GetProductByIdAsync(Guid Id);
+        public ValueTask<Result<ProductDTO>> GetProductByNameAsync(string Name);
     }
 }

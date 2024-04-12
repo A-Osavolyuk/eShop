@@ -39,5 +39,14 @@ namespace eShop.ProductWebApi.Controllers
                 s => Ok(new ResponseBuilder().Succeeded().AddResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
+
+        [HttpGet("get-product-by-name/{Name}")]
+        public async ValueTask<ActionResult<ResponseDTO>> GetProductByName(string Name)
+        {
+            var result = await sender.Send(new GetProductByNameQuery(Name));
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().AddResult(s).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
     }
 }
