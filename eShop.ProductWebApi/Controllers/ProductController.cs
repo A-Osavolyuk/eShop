@@ -31,7 +31,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpGet("get-product-with-id/{Id:guid}")]
+        [HttpGet("get-product-by-id/{Id:guid}")]
         public async ValueTask<ActionResult<ResponseDTO>> GetProductById(Guid Id)
         {
             var result = await sender.Send(new GetProductByIdQuery(Id));

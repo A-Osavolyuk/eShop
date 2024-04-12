@@ -76,10 +76,7 @@ namespace eShop.ProductWebApi.Repositories
             {
                 var product = await context.Products.AsNoTracking().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == Id);
 
-                if (product is not null)
-                    return new(product);
-
-                return new(new NotFoundProductById(Id));
+                return product is null ? new(new NotFoundProductException(Id)) : new(product);
             }
             catch (Exception ex)
             {

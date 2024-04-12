@@ -20,5 +20,23 @@ namespace eShop.ProductWebApi.Controllers
                 s => Ok(new ResponseBuilder().Succeeded().AddResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
+
+        [HttpGet("get-supplier-by-id/{Id:guid}")]
+        public async ValueTask<ActionResult<ResponseDTO>> GetSupplierById(Guid Id)
+        {
+            var result = await sender.Send(new GetSupplierByIdQuery(Id));
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().AddResult(s).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
+        [HttpGet("get-supplier-by-name/{Name}")]
+        public async ValueTask<ActionResult<ResponseDTO>> GetSupplierById(string Name)
+        {
+            var result = await sender.Send(new GetSupplierByNameQuery(Name));
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().AddResult(s).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
     }
 }
