@@ -1,7 +1,4 @@
-﻿using eShop.Domain.Entities;
-using eShop.Domain.Enums;
-
-namespace eShop.ProductWebApi.Data
+﻿namespace eShop.ProductWebApi.Data
 {
     public class ProductDbContext(DbContextOptions<ProductDbContext> options) : DbContext(options)
     {
@@ -27,6 +24,72 @@ namespace eShop.ProductWebApi.Data
                 p.Property(p => p.Currency).HasColumnName("Currency");
                 p.Property(p => p.Amount).HasColumnName("Amount");
             });
+
+            modelBuilder.Entity<Supplier>().HasData(
+                new Supplier()
+                {
+                    Id = Guid.Parse("7374a58c-59e8-4c86-9c19-38574d664a43"),
+                    Name = "Nike",
+                    ContactEmail = "nike@gmail.com",
+                    ContactPhone = "123456789001"
+                },
+                new Supplier()
+                {
+                    Id = Guid.Parse("fa663b63-cc14-4f0a-bad1-29e4b326eb99"),
+                    Name = "Adidas",
+                    ContactEmail = "adidas@gmail.com",
+                    ContactPhone = "123456789002"
+                },
+                new Supplier()
+                {
+                    Id = Guid.Parse("90a3052c-8967-4d97-ae80-779af12c44c1"),
+                    Name = "Puma",
+                    ContactEmail = "puma@gmail.com",
+                    ContactPhone = "123456789003"
+                },
+                new Supplier()
+                {
+                    Id = Guid.Parse("450c2a3e-eb97-4d5e-b1d7-891649c57b92"),
+                    Name = "Reebok",
+                    ContactEmail = "reebok@gmail.com",
+                    ContactPhone = "123456789004"
+                },
+                new Supplier()
+                {
+                    Id = Guid.Parse("4f13e7bb-4b4c-4e12-a0fc-58cb09c4cf17"),
+                    Name = "Under Armour",
+                    ContactEmail = "underarmour@gmail.com",
+                    ContactPhone = "123456789005"
+                },
+                new Supplier()
+                {
+                    Id = Guid.Parse("f8c8b35b-26a5-4029-a1a1-53a9d40b3697"),
+                    Name = "New Balance",
+                    ContactEmail = "newbalance@gmail.com",
+                    ContactPhone = "123456789006"
+                },
+                new Supplier()
+                {
+                    Id = Guid.Parse("f48a6e4b-f73f-42a9-a23e-4be702f671b4"),
+                    Name = "Converse",
+                    ContactEmail = "converse@gmail.com",
+                    ContactPhone = "123456789007"
+                },
+                new Supplier()
+                {
+                    Id = Guid.Parse("80cc7840-f39c-49d0-80b5-4d8d9b9c0c36"),
+                    Name = "Vans",
+                    ContactEmail = "vans@gmail.com",
+                    ContactPhone = "123456789008"
+                },
+                new Supplier()
+                {
+                    Id = Guid.Parse("686a4e3f-2c29-47c7-8f2c-cb1688c962f5"),
+                    Name = "ASICS",
+                    ContactEmail = "asics@gmail.com",
+                    ContactPhone = "123456789009"
+                });
+
         }
     }
 }
