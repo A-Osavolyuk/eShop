@@ -12,7 +12,7 @@ namespace eShop.ProductWebApi.Queries.Products
 
         public async Task<Result<IEnumerable<ProductDTO>>> Handle(GetProductsListByTypeQuery request, CancellationToken cancellationToken)
         {
-            var result = await repository.GetProductByType(request.type);
+            var result = await repository.GetProductsListByTypeAsync(request.type);
             return result;
         }
     }

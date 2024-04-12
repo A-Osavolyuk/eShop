@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using eShop.Domain.Enums;
+using eShop.ProductWebApi.Exceptions;
 
 namespace eShop.ProductWebApi.Repositories
 {
@@ -42,13 +43,13 @@ namespace eShop.ProductWebApi.Repositories
                     })
                     .ToListAsync();
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 return new(ex);
             }
         }
 
-        public async ValueTask<Result<IEnumerable<ProductDTO>>> GetProductByType(ProductType Type)
+        public async ValueTask<Result<IEnumerable<ProductDTO>>> GetProductsListByTypeAsync(ProductType Type)
         {
             try
             {
@@ -67,12 +68,30 @@ namespace eShop.ProductWebApi.Repositories
             {
                 return new(ex);
             }
-        } 
+        }
+
+        public async ValueTask<Result<ProductDTO>> GetProductByIdAsync(Guid Id)
+        {
+            try
+            {
+                var product = await context.Products.AsNoTracking().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == Id);
+
+                if (product is not null)
+                    return new(product);
+
+                return new(new NotFoundProductById(Id));
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
+        }
     }
 
     public interface IProductRepository
     {
         public ValueTask<Result<IEnumerable<ProductDTO>>> GetProductsListAsync();
-        public ValueTask<Result<IEnumerable<ProductDTO>>> GetProductByType(ProductType type);
+        public ValueTask<Result<IEnumerable<ProductDTO>>> GetProductsListByTypeAsync(ProductType type);
+        public ValueTask<Result<ProductDTO>> GetProductByIdAsync(Guid Id);
     }
 }

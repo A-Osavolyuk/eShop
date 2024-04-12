@@ -13,7 +13,7 @@ namespace eShop.ProductWebApi.Controllers
     {
         private readonly ISender sender = sender;
 
-        [HttpGet("get-all-products-list")]
+        [HttpGet("get-products-list")]
         public async ValueTask<ActionResult<ResponseDTO>> GetProductList()
         {
             var result = await sender.Send(new GetProductsListQuery());
@@ -22,10 +22,19 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpGet("get-all-products-list-by-type/{type}")]
+        [HttpGet("get-products-list-by-type/{type}")]
         public async ValueTask<ActionResult<ResponseDTO>> GetProductListByType(ProductType type)
         {
             var result = await sender.Send(new GetProductsListByTypeQuery(type));
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().AddResult(s).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
+        [HttpGet("get-product-with-id/{Id:guid}")]
+        public async ValueTask<ActionResult<ResponseDTO>> GetProductById(Guid Id)
+        {
+            var result = await sender.Send(new GetProductByIdQuery(Id));
             return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().AddResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
