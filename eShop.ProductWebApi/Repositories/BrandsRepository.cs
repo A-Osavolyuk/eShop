@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using eShop.Domain.DTOs.Requests;
 using eShop.ProductWebApi.Exceptions;
+using Unit = LanguageExt.Unit;
 
 namespace eShop.ProductWebApi.Repositories
 {
@@ -19,6 +19,29 @@ namespace eShop.ProductWebApi.Repositories
                 var output = mapper.Map<BrandDTO>(data);
 
                 return result > 0 ? new(output) : new(new NotCreateBrandException());
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
+        }
+
+        public async ValueTask<Result<Unit>> DeleteBrandAsync(Guid Id)
+        {
+            try
+            {
+                var brand = await context.Brands.AsNoTracking().FirstOrDefaultAsync(_ => _.Id == Id);
+
+                if (brand is not null) 
+                { 
+                    context.Brands.Remove(brand);
+                    var result = await context.SaveChangesAsync();
+
+                    return result > 0 ? new(new Unit()) : new(new NotDeletedBrandException());
+                }
+
+                return new(new NotFoundBrandException(Id));
+
             }
             catch (Exception ex)
             {
@@ -71,5 +94,6 @@ namespace eShop.ProductWebApi.Repositories
         public ValueTask<Result<BrandDTO>> GetBrandByIdAsync(Guid Id);
         public ValueTask<Result<BrandDTO>> GetBrandByNameAsync(string Name);
         public ValueTask<Result<BrandDTO>> CreateBrandAsync(Brand brand);
+        public ValueTask<Result<Unit>> DeleteBrandAsync(Guid Id);
     }
 }

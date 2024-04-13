@@ -14,7 +14,7 @@ namespace eShop.ProductWebApi.Controllers
     {
         private readonly ISender sender = sender;
 
-        [HttpGet("get-brands-list")]
+        [HttpGet]
         public async ValueTask<ActionResult<ResponseDTO>> GetBrandsList()
         {
             var result = await sender.Send(new GetBrandsListQuery());
@@ -23,7 +23,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpGet("get-brand-by-id/{Id:guid}")]
+        [HttpGet("{Id:guid}")]
         public async ValueTask<ActionResult<ResponseDTO>> GetBrandById(Guid Id)
         {
             var result = await sender.Send(new GetBrandByIdQuery(Id));
@@ -32,7 +32,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpGet("get-brand-by-name/{Name}")]
+        [HttpGet("{Name}")]
         public async ValueTask<ActionResult<ResponseDTO>> GetBrandById(string Name)
         {
             var result = await sender.Send(new GetBrandByNameQuery(Name));
@@ -41,13 +41,22 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpPost("create-brand")]
+        [HttpPost]
         public async ValueTask<ActionResult<ResponseDTO>> CreateBrand([FromBody]CreateBrandRequest body)
         {
             var result = await sender.Send(new CreateBrandCommand(body));
 
             return result.Match(
-                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage("Successfully created.").WithResult(s).Build()),
+                s => CreatedAtAction(nameof(GetBrandById), new { s.Id } ,new ResponseBuilder().Succeeded().WithResultMessage("Successfully created.").WithResult(s).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
+        [HttpDelete("{Id:guid}")]
+        public async ValueTask<ActionResult<ResponseDTO>> DeleteBrandById(Guid Id)
+        {
+            var result = await sender.Send(new DeleteBrandCommand(Id));
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).WithResultMessage("Successfully deleted.").Build()),
                 f => ExceptionHandler.HandleException(f));
         }
     }

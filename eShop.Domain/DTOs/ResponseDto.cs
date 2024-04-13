@@ -29,7 +29,7 @@ public class ResponseBuilder
         return this;
     }
 
-    public ResponseBuilder AddErrorMessage(string ErrorMessage)
+    public ResponseBuilder WithErrorMessage(string ErrorMessage)
     {
         _ErrorMessage = ErrorMessage;
         return this;
@@ -47,7 +47,7 @@ public class ResponseBuilder
         return this;
     }
 
-    public ResponseBuilder AddErrors(List<string> Errors)
+    public ResponseBuilder WithErrors(List<string> Errors)
     {
         _Errors.AddRange(Errors);
         return this;

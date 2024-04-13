@@ -57,7 +57,7 @@ namespace eShop.Infrastructure.Services
             {
                 return new ResponseBuilder()
                     .Failed()
-                    .AddErrorMessage(ex.Message)
+                    .WithErrorMessage(ex.Message)
                     .Build();
             }
         }
@@ -68,13 +68,13 @@ namespace eShop.Infrastructure.Services
 
             return httpResponse.StatusCode switch
             {
-                HttpStatusCode.InternalServerError => new ResponseBuilder().Failed().AddErrorMessage($"Internal Server Error. {response!.ErrorMessage}").Build(),
-                HttpStatusCode.NotFound => new ResponseBuilder().Failed().AddErrorMessage($"Not Found. {response!.ErrorMessage}").Build(),
-                HttpStatusCode.Forbidden => new ResponseBuilder().Failed().AddErrorMessage("Forbidden").Build(),
-                HttpStatusCode.Unauthorized => new ResponseBuilder().Failed().AddErrorMessage($"Unauthorized").Build(),
+                HttpStatusCode.InternalServerError => new ResponseBuilder().Failed().WithErrorMessage($"Internal Server Error. {response!.ErrorMessage}").Build(),
+                HttpStatusCode.NotFound => new ResponseBuilder().Failed().WithErrorMessage($"Not Found. {response!.ErrorMessage}").Build(),
+                HttpStatusCode.Forbidden => new ResponseBuilder().Failed().WithErrorMessage("Forbidden").Build(),
+                HttpStatusCode.Unauthorized => new ResponseBuilder().Failed().WithErrorMessage($"Unauthorized").Build(),
                 HttpStatusCode.BadRequest => response.Errors.Any() ? 
-                    new ResponseBuilder().Failed().AddErrorMessage($"Bad Request. {response!.ErrorMessage}").AddErrors(response.Errors).Build() :
-                    new ResponseBuilder().Failed().AddErrorMessage($"Bad Request. {response!.ErrorMessage}").Build(),
+                    new ResponseBuilder().Failed().WithErrorMessage($"Bad Request. {response!.ErrorMessage}").WithErrors(response.Errors).Build() :
+                    new ResponseBuilder().Failed().WithErrorMessage($"Bad Request. {response!.ErrorMessage}").Build(),
                 _ => response
             };
         }

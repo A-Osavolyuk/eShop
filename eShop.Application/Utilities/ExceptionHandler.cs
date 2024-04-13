@@ -13,23 +13,23 @@ namespace eShop.Application.Utilities
             {
                 INotFoundException => new NotFoundObjectResult(new ResponseBuilder()
                     .Failed()
-                    .AddErrorMessage(exception.Message)
+                    .WithErrorMessage(exception.Message)
                     .Build()),
 
                 IBadRequestException => new BadRequestObjectResult(new ResponseBuilder()
                     .Failed()
-                    .AddErrorMessage(exception.Message)
+                    .WithErrorMessage(exception.Message)
                     .Build()),
 
                 IFailedValidationException => new BadRequestObjectResult(new ResponseBuilder()
                     .Failed()
-                    .AddErrorMessage(exception.Message)
-                    .AddErrors((exception as FailedValidationException)!.Errors.ToList())
+                    .WithErrorMessage(exception.Message)
+                    .WithErrors((exception as FailedValidationException)!.Errors.ToList())
                     .Build()),
 
                 _ => new ObjectResult(new ResponseBuilder()
                     .Failed()
-                    .AddErrorMessage(exception.Message)
+                    .WithErrorMessage(exception.Message)
                     .Build())
                 { StatusCode = 500 }
             };
