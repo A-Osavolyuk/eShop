@@ -1,4 +1,4 @@
-﻿using eShop.Domain.DTOs.Messages;
+﻿using eShop.Domain.Messages;
 using eShop.Domain.Options;
 using MailKit.Net.Smtp;
 using MassTransit;

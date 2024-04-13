@@ -1,4 +1,6 @@
-﻿namespace eShop.AuthWebApi.Services.Implementation
+﻿using eShop.Domain.Messages;
+
+namespace eShop.AuthWebApi.Services.Implementation
 {
     public class EmailSender : IEmailSender
     {

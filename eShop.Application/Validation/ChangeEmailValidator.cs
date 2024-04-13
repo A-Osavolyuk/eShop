@@ -7,7 +7,9 @@ namespace eShop.Application.Validation
     {
         public ChangeEmailValidator()
         {
-            RuleFor(x => x.NewEmail).EmailAddress().WithMessage("Invalid email address format.");
+            RuleFor(x => x.NewEmail)
+                .NotEmpty().WithMessage("New email is must!")
+                .EmailAddress().WithMessage("Invalid email address format.");
         }
     }
 }

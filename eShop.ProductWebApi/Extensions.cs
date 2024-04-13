@@ -26,7 +26,7 @@ namespace eShop.ProductWebApi
         public static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
         {
             builder.Services.AddScoped<IProductRepository, ProductsRepository>();
-            builder.Services.AddScoped<ISupplierRepository, SuppliersRepository>();
+            builder.Services.AddScoped<ISuppliersRepository, SuppliersRepository>();
             builder.Services.AddScoped<IBrandsRepository, BrandsRepository>();
             return builder;
         }

@@ -1,4 +1,4 @@
-﻿namespace eShop.Domain.DTOs.Messages
+﻿namespace eShop.Domain.Messages
 {
     public class ResetPasswordMessage : MessageBase
     {

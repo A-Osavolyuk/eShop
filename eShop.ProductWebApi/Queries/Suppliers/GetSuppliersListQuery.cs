@@ -5,9 +5,9 @@ namespace eShop.ProductWebApi.Queries.Suppliers
 {
     public record GetSuppliersListQuery : IRequest<Result<IEnumerable<SupplierDTO>>>;
 
-    public class GetSuppliersListQueryHandler(ISupplierRepository repository) : IRequestHandler<GetSuppliersListQuery, Result<IEnumerable<SupplierDTO>>>
+    public class GetSuppliersListQueryHandler(ISuppliersRepository repository) : IRequestHandler<GetSuppliersListQuery, Result<IEnumerable<SupplierDTO>>>
     {
-        private readonly ISupplierRepository repository = repository;
+        private readonly ISuppliersRepository repository = repository;
 
         public async Task<Result<IEnumerable<SupplierDTO>>> Handle(GetSuppliersListQuery request, CancellationToken cancellationToken)
         {

@@ -7,7 +7,7 @@ global using eShop.Domain.Common;
 global using eShop.Domain.DTOs;
 global using eShop.Domain.DTOs.Requests;
 global using eShop.Domain.DTOs.Responses;
-global using eShop.Domain.DTOs.Messages;
+global using eShop.Domain.Messages;
 global using eShop.Domain.Entities;
 global using eShop.Domain.Exceptions;
 global using eShop.AuthWebApi.Exceptions;

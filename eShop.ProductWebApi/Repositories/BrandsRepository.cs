@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using eShop.Domain.Entities;
 using eShop.ProductWebApi.Exceptions;
+using eShop.ProductWebApi.Exceptions.Brands;
 using Unit = LanguageExt.Unit;
 
 namespace eShop.ProductWebApi.Repositories
@@ -19,7 +19,7 @@ namespace eShop.ProductWebApi.Repositories
                 var result = await context.SaveChangesAsync();
                 var output = mapper.Map<BrandDTO>(data);
 
-                return result > 0 ? new(output) : new(new NotCreateBrandException());
+                return result > 0 ? new(output) : new(new NotCreatedBrandException());
             }
             catch (Exception ex)
             {
@@ -33,8 +33,8 @@ namespace eShop.ProductWebApi.Repositories
             {
                 var brand = await context.Brands.AsNoTracking().FirstOrDefaultAsync(_ => _.Id == Id);
 
-                if (brand is not null) 
-                { 
+                if (brand is not null)
+                {
                     context.Brands.Remove(brand);
                     var result = await context.SaveChangesAsync();
 
@@ -43,6 +43,29 @@ namespace eShop.ProductWebApi.Repositories
 
                 return new(new NotFoundBrandException(Id));
 
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
+        }
+
+        public async ValueTask<Result<BrandDTO>> UpdateBrandAsync(Brand Brand)
+        {
+            try
+            {
+                var exists = await context.Brands.AsNoTracking().AnyAsync(_ => _.Id == Brand.Id);
+
+                if (exists)
+                {
+                    var data = context.Brands.Update(Brand).Entity;
+                    var result = await context.SaveChangesAsync();
+                    var output = mapper.Map<BrandDTO>(data);
+
+                    return result > 0 ? new(output) : new(new NotUpdatedBrandException());
+                }
+
+                return new(new NotFoundBrandException(Brand.Id));
             }
             catch (Exception ex)
             {
@@ -81,29 +104,6 @@ namespace eShop.ProductWebApi.Repositories
             try
             {
                 return await context.Brands.AsNoTracking().ProjectTo<BrandDTO>(mapper.ConfigurationProvider).ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                return new(ex);
-            }
-        }
-
-        public async ValueTask<Result<BrandDTO>> UpdateBrandAsync(Brand Brand)
-        {
-            try
-            {
-                var exists = await context.Brands.AsNoTracking().AnyAsync(_ => _.Id == Brand.Id);
-
-                if (exists)
-                {
-                    var data = context.Brands.Update(Brand).Entity;
-                    var result = await context.SaveChangesAsync();
-                    var output = mapper.Map<BrandDTO>(data);
-
-                    return result > 0 ? new(output) : new(new NotUpdatedBrandException());
-                }
-
-                return new(new NotFoundBrandException(Brand.Id));
             }
             catch (Exception ex)
             {
