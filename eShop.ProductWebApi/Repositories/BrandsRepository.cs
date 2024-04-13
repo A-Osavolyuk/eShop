@@ -6,23 +6,32 @@ using Unit = LanguageExt.Unit;
 
 namespace eShop.ProductWebApi.Repositories
 {
-    public class BrandsRepository(ProductDbContext context, IMapper mapper) : IBrandsRepository
+    public class BrandsRepository(ProductDbContext context, IMapper mapper, ILogger<BrandsRepository> logger) : IBrandsRepository
     {
         private readonly ProductDbContext context = context;
         private readonly IMapper mapper = mapper;
+        private readonly ILogger<BrandsRepository> logger = logger;
 
         public async ValueTask<Result<BrandDTO>> CreateBrandAsync(Brand brand)
         {
             try
             {
+                logger.LogInformation("Trying to create new brand.");
                 var data = (await context.Brands.AddAsync(brand)).Entity;
-                var result = await context.SaveChangesAsync();
+                await context.SaveChangesAsync();
                 var output = mapper.Map<BrandDTO>(data);
 
-                return result > 0 ? new(output) : new(new NotCreatedBrandException());
+                logger.LogInformation("Brand was successfully created.");
+                return new(output);
             }
-            catch (Exception ex)
+            catch (DbUpdateException dbUpdateException)
             {
+                logger.LogError($"Failed on creating brand with error message: {dbUpdateException.InnerException}");
+                return new(new NotCreatedBrandException());
+            }
+            catch (Exception ex) 
+            {
+                logger.LogError($"Failed on creating brand with error message: {ex.Message}");
                 return new(ex);
             }
         }
@@ -31,21 +40,29 @@ namespace eShop.ProductWebApi.Repositories
         {
             try
             {
+                logger.LogInformation($"Trying to delete brand with id: {Id}.");
                 var brand = await context.Brands.AsNoTracking().FirstOrDefaultAsync(_ => _.Id == Id);
 
                 if (brand is not null)
                 {
                     context.Brands.Remove(brand);
-                    var result = await context.SaveChangesAsync();
+                    await context.SaveChangesAsync();
 
-                    return result > 0 ? new(new Unit()) : new(new NotDeletedBrandException());
+                    logger.LogInformation($"Successfully deleted brand with id: {Id}.");
+                    return new(new Unit());
                 }
 
                 return new(new NotFoundBrandException(Id));
 
             }
+            catch (DbUpdateException dbUpdateException)
+            {
+                logger.LogError($"Failed on deleting brand with id: {Id} with error message: {dbUpdateException.InnerException}");
+                return new(new NotDeletedBrandException(Id));
+            }
             catch (Exception ex)
             {
+                logger.LogError($"Failed on deleting brand with error message: {ex.Message}");
                 return new(ex);
             }
         }
@@ -54,21 +71,29 @@ namespace eShop.ProductWebApi.Repositories
         {
             try
             {
+                logger.LogInformation($"Trying to update brand with id: {Brand.Id}.");
                 var exists = await context.Brands.AsNoTracking().AnyAsync(_ => _.Id == Brand.Id);
 
                 if (exists)
                 {
                     var data = context.Brands.Update(Brand).Entity;
-                    var result = await context.SaveChangesAsync();
+                    await context.SaveChangesAsync();
                     var output = mapper.Map<BrandDTO>(data);
 
-                    return result > 0 ? new(output) : new(new NotUpdatedBrandException());
+                    logger.LogInformation($"Successfully updated brand with id: {Brand.Id}.");
+                    return new(output);
                 }
 
                 return new(new NotFoundBrandException(Brand.Id));
             }
+            catch (DbUpdateException dbUpdateException)
+            {
+                logger.LogError($"Failed on updating brand with id: {Brand.Id} with error message: {dbUpdateException.InnerException}");
+                return new(new NotUpdatedBrandException(Brand.Id));
+            }
             catch (Exception ex)
             {
+                logger.LogError($"Failed on updating brand with id: {Brand.Id} error message: {ex.Message}");
                 return new(ex);
             }
         }
@@ -77,11 +102,19 @@ namespace eShop.ProductWebApi.Repositories
         {
             try
             {
+                logger.LogInformation($"Trying to get brand with id: {Id}.");
                 var brand = await context.Brands.AsNoTracking().ProjectTo<BrandDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == Id);
-                return brand is null ? new(new NotFoundBrandException(Id)) : new(brand);
+                if (brand is not null)
+                {
+                    logger.LogInformation($"Successfully got brand with id: {Id}.");
+                    return new(brand);
+                }
+                logger.LogInformation($"Cannot find brand wih id: {Id}");
+                return new(new NotFoundBrandException(Id));
             }
             catch (Exception ex)
             {
+                logger.LogError($"Failed on getting brand with id: {Id} error message: {ex.Message}");
                 return new(ex);
             }
         }
@@ -90,11 +123,19 @@ namespace eShop.ProductWebApi.Repositories
         {
             try
             {
+                logger.LogInformation($"Trying to get brand with name: {Name}.");
                 var brand = await context.Brands.AsNoTracking().ProjectTo<BrandDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Name == Name);
-                return brand is null ? new(new NotFoundBrandException(Name)) : new(brand);
+                if (brand is not null)
+                {
+                    logger.LogInformation($"Successfully got brand with name: {Name}.");
+                    return new(brand);
+                }
+                logger.LogInformation($"Cannot find brand wih name: {Name}");
+                return new(new NotFoundBrandException(Name));
             }
             catch (Exception ex)
             {
+                logger.LogError($"Failed on getting brand with name: {Name} error message: {ex.Message}");
                 return new(ex);
             }
         }
@@ -103,10 +144,14 @@ namespace eShop.ProductWebApi.Repositories
         {
             try
             {
-                return await context.Brands.AsNoTracking().ProjectTo<BrandDTO>(mapper.ConfigurationProvider).ToListAsync();
+                logger.LogInformation($"Trying to get list of brands");
+                var brands = await context.Brands.AsNoTracking().ProjectTo<BrandDTO>(mapper.ConfigurationProvider).ToListAsync();
+                logger.LogInformation($"Successfully got list of brands");
+                return new(brands);
             }
             catch (Exception ex)
             {
+                logger.LogError($"Failed on getting list od brands with error message: {ex.Message}");
                 return new(ex);
             }
         }

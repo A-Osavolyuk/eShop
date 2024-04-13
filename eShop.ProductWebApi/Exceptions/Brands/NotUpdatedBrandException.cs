@@ -2,5 +2,5 @@
 
 namespace eShop.ProductWebApi.Exceptions.Brands
 {
-    public class NotUpdatedBrandException() : Exception("Cannot update brand due to server error."), IInternalServerError;
+    public class NotUpdatedBrandException(Guid Id) : Exception($"Cannot update brand with id: {Id} due to server error."), IInternalServerError;
 }
