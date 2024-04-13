@@ -11,6 +11,7 @@ namespace eShop.Application.MappingProfiles
         {
             CreateMap<Brand, BrandDTO>();
             CreateMap<CreateBrandRequest, Brand>();
+            CreateMap<UpdateBrandRequest, Brand>();
         }
     }
 }

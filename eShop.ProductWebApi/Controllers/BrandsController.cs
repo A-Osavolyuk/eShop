@@ -59,5 +59,14 @@ namespace eShop.ProductWebApi.Controllers
                 s => Ok(new ResponseBuilder().Succeeded().WithResult(s).WithResultMessage("Successfully deleted.").Build()),
                 f => ExceptionHandler.HandleException(f));
         }
+
+        [HttpPut]
+        public async ValueTask<ActionResult<ResponseDTO>> UpdateBrand([FromBody] UpdateBrandRequest UpdateBrandRequest)
+        {
+            var result = await sender.Send(new UpdateBrandCommand(UpdateBrandRequest));
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).WithResultMessage("Successfully updated.").Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
     }
 }
