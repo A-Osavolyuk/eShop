@@ -1,4 +1,5 @@
-﻿using eShop.ProductWebApi.Repositories;
+﻿using eShop.ProductWebApi.Behaviors;
+using eShop.ProductWebApi.Repositories;
 
 namespace eShop.ProductWebApi
 {
@@ -18,7 +19,11 @@ namespace eShop.ProductWebApi
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddMediatR(c => c.RegisterServicesFromAssemblyContaining<IAssemblyMarker>());
+            builder.Services.AddMediatR(c =>
+            {
+                c.RegisterServicesFromAssemblyContaining<IAssemblyMarker>();
+                c.AddOpenBehavior(typeof(LoggingBehavior<,>));
+            });
 
             return builder;
         }
