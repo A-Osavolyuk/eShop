@@ -2,5 +2,5 @@
 
 namespace eShop.ProductWebApi.Exceptions.Suppliers
 {
-    public class NotUpdatedSupplierException() : Exception("Cannot update supplier due to server error."), IInternalServerError;
+    public class NotUpdatedSupplierException(Guid Id) : Exception($"Cannot update supplier with id: {Id} due to server error."), IInternalServerError;
 }

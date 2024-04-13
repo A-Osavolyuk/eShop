@@ -2,68 +2,37 @@
 using AutoMapper.QueryableExtensions;
 using eShop.ProductWebApi.Exceptions;
 using eShop.ProductWebApi.Exceptions.Suppliers;
+using Microsoft.Extensions.Logging;
 using Unit = LanguageExt.Unit;
 
 namespace eShop.ProductWebApi.Repositories
 {
-    public class SuppliersRepository(ProductDbContext context, IMapper mapper) : ISuppliersRepository
+    public class SuppliersRepository(ProductDbContext context, IMapper mapper, ILogger<SuppliersRepository> logger) : ISuppliersRepository
     {
         private readonly ProductDbContext context = context;
         private readonly IMapper mapper = mapper;
+        private readonly ILogger<SuppliersRepository> logger = logger;
 
-        public async ValueTask<Result<SupplierDTO>> GetSupplierByIdAsync(Guid Id)
+        public async ValueTask<Result<SupplierDTO>> CreateSupplierAsync(Supplier supplier)
         {
             try
             {
-                var supplier = await context.Suppliers.AsNoTracking().ProjectTo<SupplierDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == Id);
-                return supplier is null ? new(new NotFoundSupplierException(Id)) : new(supplier);
-            }
-            catch (Exception ex)
-            {
-                return new(ex);
-            }
-        }
-
-        public async ValueTask<Result<SupplierDTO>> GetSupplierByNameAsync(string Name)
-        {
-            try
-            {
-                var supplier = await context.Suppliers.AsNoTracking().ProjectTo<SupplierDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Name == Name);
-                return supplier is null ? new(new NotFoundSupplierException(Name)) : new(supplier);
-            }
-            catch (Exception ex)
-            {
-                return new(ex);
-            }
-        }
-
-        public async ValueTask<Result<IEnumerable<SupplierDTO>>> GetSuppliersListAsync()
-        {
-            try
-            {
-                return new(await context.Suppliers
-                    .AsNoTracking()
-                    .ProjectTo<SupplierDTO>(mapper.ConfigurationProvider)
-                    .ToListAsync());
-            }
-            catch (Exception ex)
-            {
-                return new(ex);
-            }
-        }
-
-        public async ValueTask<Result<SupplierDTO>> CreateSupplierAsync(Supplier Supplier)
-        {
-            try
-            {
-                var data = (await context.Suppliers.AddAsync(Supplier)).Entity;
-                var result = await context.SaveChangesAsync();
+                logger.LogInformation("Trying to create new supplier.");
+                var data = (await context.Suppliers.AddAsync(supplier)).Entity;
+                await context.SaveChangesAsync();
                 var output = mapper.Map<SupplierDTO>(data);
 
-                return result > 0 ? new(output) : new(new NotCreatedSupplierException());
+                logger.LogInformation("Supplier was successfully created.");
+                return new(output);
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                logger.LogError($"Failed on creating supplier with error message: {dbUpdateException.InnerException}");
+                return new(new NotCreatedSupplierException());
             }
             catch (Exception ex)
             {
+                logger.LogError($"Failed on creating supplier with error message: {ex.Message}");
                 return new(ex);
             }
         }
@@ -72,21 +41,29 @@ namespace eShop.ProductWebApi.Repositories
         {
             try
             {
-                var Supplier = await context.Suppliers.AsNoTracking().FirstOrDefaultAsync(_ => _.Id == Id);
+                logger.LogInformation($"Trying to delete supplier with id: {Id}.");
+                var supplier = await context.Suppliers.AsNoTracking().FirstOrDefaultAsync(_ => _.Id == Id);
 
-                if (Supplier is not null)
+                if (supplier is not null)
                 {
-                    context.Suppliers.Remove(Supplier);
-                    var result = await context.SaveChangesAsync();
+                    context.Suppliers.Remove(supplier);
+                    await context.SaveChangesAsync();
 
-                    return result > 0 ? new(new Unit()) : new(new NotDeletedSupplierException());
+                    logger.LogInformation($"Successfully deleted supplier with id: {Id}.");
+                    return new(new Unit());
                 }
 
                 return new(new NotFoundSupplierException(Id));
 
             }
+            catch (DbUpdateException dbUpdateException)
+            {
+                logger.LogError($"Failed on deleting supplier with id: {Id} with error message: {dbUpdateException.InnerException}");
+                return new(new NotDeletedSupplierException(Id));
+            }
             catch (Exception ex)
             {
+                logger.LogError($"Failed on deleting supplier with error message: {ex.Message}");
                 return new(ex);
             }
         }
@@ -95,21 +72,87 @@ namespace eShop.ProductWebApi.Repositories
         {
             try
             {
+                logger.LogInformation($"Trying to update supplier with id: {Supplier.Id}.");
                 var exists = await context.Suppliers.AsNoTracking().AnyAsync(_ => _.Id == Supplier.Id);
 
                 if (exists)
                 {
                     var data = context.Suppliers.Update(Supplier).Entity;
-                    var result = await context.SaveChangesAsync();
+                    await context.SaveChangesAsync();
                     var output = mapper.Map<SupplierDTO>(data);
 
-                    return result > 0 ? new(output) : new(new NotUpdatedSupplierException());
+                    logger.LogInformation($"Successfully updated supplier with id: {Supplier.Id}.");
+                    return new(output);
                 }
 
                 return new(new NotFoundSupplierException(Supplier.Id));
             }
+            catch (DbUpdateException dbUpdateException)
+            {
+                logger.LogError($"Failed on updating supplier with id: {Supplier.Id} with error message: {dbUpdateException.InnerException}");
+                return new(new NotUpdatedSupplierException(Supplier.Id));
+            }
             catch (Exception ex)
             {
+                logger.LogError($"Failed on updating supplier with id: {Supplier.Id} error message: {ex.Message}");
+                return new(ex);
+            }
+        }
+
+        public async ValueTask<Result<SupplierDTO>> GetSupplierByIdAsync(Guid Id)
+        {
+            try
+            {
+                logger.LogInformation($"Trying to get supplier with id: {Id}.");
+                var supplier = await context.Suppliers.AsNoTracking().ProjectTo<SupplierDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == Id);
+                if (supplier is not null)
+                {
+                    logger.LogInformation($"Successfully got supplier with id: {Id}.");
+                    return new(supplier);
+                }
+                logger.LogInformation($"Cannot find supplier wih id: {Id}");
+                return new(new NotFoundSupplierException(Id));
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Failed on getting supplier with id: {Id} error message: {ex.Message}");
+                return new(ex);
+            }
+        }
+
+        public async ValueTask<Result<SupplierDTO>> GetSupplierByNameAsync(string Name)
+        {
+            try
+            {
+                logger.LogInformation($"Trying to get supplier with name: {Name}.");
+                var supplier = await context.Suppliers.AsNoTracking().ProjectTo<SupplierDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Name == Name);
+                if (supplier is not null)
+                {
+                    logger.LogInformation($"Successfully got supplier with name: {Name}.");
+                    return new(supplier);
+                }
+                logger.LogInformation($"Cannot find supplier wih name: {Name}");
+                return new(new NotFoundSupplierException(Name));
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Failed on getting supplier with name: {Name} error message: {ex.Message}");
+                return new(ex);
+            }
+        }
+
+        public async ValueTask<Result<IEnumerable<SupplierDTO>>> GetSuppliersListAsync()
+        {
+            try
+            {
+                logger.LogInformation($"Trying to get list of suppliers");
+                var suppliers = await context.Suppliers.AsNoTracking().ProjectTo<SupplierDTO>(mapper.ConfigurationProvider).ToListAsync();
+                logger.LogInformation($"Successfully got list of suppliers");
+                return new(suppliers);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Failed on getting list od suppliers with error message: {ex.Message}");
                 return new(ex);
             }
         }
