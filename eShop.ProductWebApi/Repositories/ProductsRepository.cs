@@ -1,20 +1,21 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using eShop.Domain.Enums;
 using eShop.ProductWebApi.Exceptions;
 
 namespace eShop.ProductWebApi.Repositories
 {
-    public class ProductsRepository(ProductDbContext context, IMapper mapper) : IProductRepository
+    public class ProductsRepository(ProductDbContext context, IMapper mapper, ILogger<ProductsRepository> logger) : IProductRepository
     {
         private readonly ProductDbContext context = context;
         private readonly IMapper mapper = mapper;
+        private readonly ILogger<IProductRepository> logger = logger;
 
         public async ValueTask<Result<IEnumerable<ProductDTO>>> GetProductsListAsync()
         {
             try
             {
-                return await context.Products
+                logger.LogInformation($"Trying to get list of products.");
+                var list = await context.Products
                     .AsNoTracking()
                     .Select(x => new ProductDTO()
                     {
@@ -42,30 +43,13 @@ namespace eShop.ProductWebApi.Repositories
                         },
                     })
                     .ToListAsync();
+
+                logger.LogInformation($"Successfully got list of products.");
+                return new(list);
             }
             catch (Exception ex)
             {
-                return new(ex);
-            }
-        }
-
-        public async ValueTask<Result<IEnumerable<ProductDTO>>> GetProductsListByTypeAsync(ProductType Type)
-        {
-            try
-            {
-                return Type switch
-                {
-                    ProductType.Clothing => new(await context.Products.AsNoTracking().OfType<Clothing>()
-                                                .ProjectTo<ClothingDTO>(mapper.ConfigurationProvider).ToListAsync()),
-
-                    ProductType.Shoes => new(await context.Products.AsNoTracking().OfType<Shoes>()
-                                                .ProjectTo<ShoesDTO>(mapper.ConfigurationProvider).ToListAsync()),
-
-                    _ => new(Enumerable.Empty<ProductDTO>())
-                };
-            }
-            catch (Exception ex)
-            {
+                logger.LogError($"Failed on getting list of products with error message: {ex.Message}.");
                 return new(ex);
             }
         }
@@ -74,12 +58,19 @@ namespace eShop.ProductWebApi.Repositories
         {
             try
             {
+                logger.LogInformation($"Trying to get product with id: {Id}.");
                 var product = await context.Products.AsNoTracking().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == Id);
-
-                return product is null ? new(new NotFoundProductException(Id)) : new(product);
+                if (product is not null)
+                {
+                    logger.LogInformation($"Successfully got product with id: {Id}.");
+                    return new(product);
+                }
+                logger.LogInformation($"Cannot find product wih id: {Id}");
+                return new(new NotFoundProductException(Id));
             }
             catch (Exception ex)
             {
+                logger.LogError($"Failed on getting product with id: {Id} error message: {ex.Message}");
                 return new(ex);
             }
         }
@@ -88,12 +79,19 @@ namespace eShop.ProductWebApi.Repositories
         {
             try
             {
+                logger.LogInformation($"Trying to get product with name: {Name}.");
                 var product = await context.Products.AsNoTracking().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Name == Name);
-
-                return product is null ? new(new NotFoundProductException(Name)) : new(product);
+                if (product is not null)
+                {
+                    logger.LogInformation($"Successfully got product with name: {Name}.");
+                    return new(product);
+                }
+                logger.LogInformation($"Cannot find product wih name: {Name}");
+                return new(new NotFoundProductException(Name));
             }
             catch (Exception ex)
             {
+                logger.LogError($"Failed on getting product with name: {Name} error message: {ex.Message}");
                 return new(ex);
             }
         }
@@ -102,7 +100,6 @@ namespace eShop.ProductWebApi.Repositories
     public interface IProductRepository
     {
         public ValueTask<Result<IEnumerable<ProductDTO>>> GetProductsListAsync();
-        public ValueTask<Result<IEnumerable<ProductDTO>>> GetProductsListByTypeAsync(ProductType type);
         public ValueTask<Result<ProductDTO>> GetProductByIdAsync(Guid Id);
         public ValueTask<Result<ProductDTO>> GetProductByNameAsync(string Name);
     }

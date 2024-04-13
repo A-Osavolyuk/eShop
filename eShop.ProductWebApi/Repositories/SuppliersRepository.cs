@@ -152,7 +152,7 @@ namespace eShop.ProductWebApi.Repositories
             }
             catch (Exception ex)
             {
-                logger.LogError($"Failed on getting list od suppliers with error message: {ex.Message}");
+                logger.LogError($"Failed on getting list of suppliers with error message: {ex.Message}");
                 return new(ex);
             }
         }
