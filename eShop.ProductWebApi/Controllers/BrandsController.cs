@@ -1,4 +1,6 @@
 ﻿using eShop.Application.Utilities;
+using eShop.Domain.DTOs.Requests;
+using eShop.ProductWebApi.Commands.Brands;
 using eShop.ProductWebApi.Queries.Brands;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +19,7 @@ namespace eShop.ProductWebApi.Controllers
         {
             var result = await sender.Send(new GetBrandsListQuery());
             return result.Match(
-                s => Ok(new ResponseBuilder().Succeeded().AddResult(s).Build()),
+                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 
@@ -26,7 +28,7 @@ namespace eShop.ProductWebApi.Controllers
         {
             var result = await sender.Send(new GetBrandByIdQuery(Id));
             return result.Match(
-                s => Ok(new ResponseBuilder().Succeeded().AddResult(s).Build()),
+                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 
@@ -35,7 +37,17 @@ namespace eShop.ProductWebApi.Controllers
         {
             var result = await sender.Send(new GetBrandByNameQuery(Name));
             return result.Match(
-                s => Ok(new ResponseBuilder().Succeeded().AddResult(s).Build()),
+                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
+        [HttpPost("create-brand")]
+        public async ValueTask<ActionResult<ResponseDTO>> CreateBrand([FromBody]CreateBrandRequest body)
+        {
+            var result = await sender.Send(new CreateBrandCommand(body));
+
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage("Successfully created.").WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
     }

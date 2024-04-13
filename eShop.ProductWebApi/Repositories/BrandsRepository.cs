@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using eShop.Domain.DTOs.Requests;
 using eShop.ProductWebApi.Exceptions;
 
 namespace eShop.ProductWebApi.Repositories
@@ -8,6 +9,22 @@ namespace eShop.ProductWebApi.Repositories
     {
         private readonly ProductDbContext context = context;
         private readonly IMapper mapper = mapper;
+
+        public async ValueTask<Result<BrandDTO>> CreateBrandAsync(Brand brand)
+        {
+            try
+            {
+                var data = (await context.Brands.AddAsync(brand)).Entity;
+                var result = await context.SaveChangesAsync();
+                var output = mapper.Map<BrandDTO>(data);
+
+                return result > 0 ? new(output) : new(new NotCreateBrandException());
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
+        }
 
         public async ValueTask<Result<BrandDTO>> GetBrandByIdAsync(Guid Id)
         {
@@ -53,5 +70,6 @@ namespace eShop.ProductWebApi.Repositories
         public ValueTask<Result<IEnumerable<BrandDTO>>> GetBrandsListAsync();
         public ValueTask<Result<BrandDTO>> GetBrandByIdAsync(Guid Id);
         public ValueTask<Result<BrandDTO>> GetBrandByNameAsync(string Name);
+        public ValueTask<Result<BrandDTO>> CreateBrandAsync(Brand brand);
     }
 }

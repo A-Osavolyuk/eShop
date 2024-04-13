@@ -17,13 +17,13 @@ public class ResponseBuilder
     private bool _IsSucceeded = false;
     private List<string> _Errors = [];
 
-    public ResponseBuilder AddResult(object? Result)
+    public ResponseBuilder WithResult(object? Result)
     {
         _Result = Result;
         return this;
     }
 
-    public ResponseBuilder AddResultMessage(string ResultMessage)
+    public ResponseBuilder WithResultMessage(string ResultMessage)
     {
         _ResultMessage = ResultMessage;
         return this;

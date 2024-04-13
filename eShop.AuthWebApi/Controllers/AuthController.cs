@@ -26,7 +26,7 @@ namespace eShop.AuthWebApi.Controllers
                 {
                     return Ok(new ResponseBuilder()
                         .Succeeded()
-                        .AddResultMessage(succ.Message)
+                        .WithResultMessage(succ.Message)
                         .Build());
                 },
                 fail => ExceptionHandler.HandleException(fail));
@@ -42,8 +42,8 @@ namespace eShop.AuthWebApi.Controllers
                 {
                     return Ok(new ResponseBuilder()
                         .Succeeded()
-                        .AddResult(succ)
-                        .AddResultMessage(succ.Message)
+                        .WithResult(succ)
+                        .WithResultMessage(succ.Message)
                         .Build());
                 },
                 fail => ExceptionHandler.HandleException(fail));
@@ -57,8 +57,8 @@ namespace eShop.AuthWebApi.Controllers
             return result.Match<ActionResult<ResponseDTO>>(
                 s => Ok(new ResponseBuilder()
                     .Succeeded()
-                    .AddResultMessage("Personal data was successfully changed.")
-                    .AddResult(s)
+                    .WithResultMessage("Personal data was successfully changed.")
+                    .WithResult(s)
                 .Build()),
                 f => ExceptionHandler.HandleException(f));
         }
@@ -71,7 +71,7 @@ namespace eShop.AuthWebApi.Controllers
             return result.Match<ActionResult<ResponseDTO>>(
                 s => Ok(new ResponseBuilder()
                     .Succeeded()
-                    .AddResult(s)
+                    .WithResult(s)
                     .Build()),
                 f => ExceptionHandler.HandleException(f));
         }
@@ -84,7 +84,7 @@ namespace eShop.AuthWebApi.Controllers
             return result.Match<ActionResult<ResponseDTO>>(
                 s => Ok(new ResponseBuilder()
                     .Succeeded()
-                    .AddResultMessage(s.Message)
+                    .WithResultMessage(s.Message)
                     .Build()),
                 f => ExceptionHandler.HandleException(f));
         }
@@ -97,7 +97,7 @@ namespace eShop.AuthWebApi.Controllers
             return result.Match<ActionResult<ResponseDTO>>(
                 s => Ok(new ResponseBuilder()
                     .Succeeded()
-                    .AddResultMessage(s.Message)
+                    .WithResultMessage(s.Message)
                     .Build()),
                 f => ExceptionHandler.HandleException(f));
         }
@@ -110,7 +110,7 @@ namespace eShop.AuthWebApi.Controllers
             return result.Match<ActionResult<ResponseDTO>>(
                 s => Ok(new ResponseBuilder()
                     .Succeeded()
-                    .AddResultMessage(s.Message)
+                    .WithResultMessage(s.Message)
                     .Build()),
                 f => ExceptionHandler.HandleException(f));
         }
@@ -123,7 +123,7 @@ namespace eShop.AuthWebApi.Controllers
             return result.Match<ActionResult<ResponseDTO>>(
                 s => Ok(new ResponseBuilder()
                     .Succeeded()
-                    .AddResultMessage("Your email address was successfully confirmed.")
+                    .WithResultMessage("Your email address was successfully confirmed.")
                     .Build()),
                 f => ExceptionHandler.HandleException(f));
         }
@@ -136,7 +136,7 @@ namespace eShop.AuthWebApi.Controllers
             return result.Match<ActionResult<ResponseDTO>>(
                 s => Ok(new ResponseBuilder()
                 .Succeeded()
-                .AddResultMessage(s.Message)
+                .WithResultMessage(s.Message)
                 .Build()),
                 f => ExceptionHandler.HandleException(f));
         }
@@ -149,10 +149,10 @@ namespace eShop.AuthWebApi.Controllers
             return result.Match<ActionResult<ResponseDTO>>(
                 s => Ok(new ResponseBuilder()
                 .Succeeded()
-                .AddResultMessage(s.TwoFactorAuthenticationState
+                .WithResultMessage(s.TwoFactorAuthenticationState
                     ? "Two factor authentication state is enabled."
                     : "Two factor authentication state is disabled.")
-                .AddResult(s)
+                .WithResult(s)
                 .Build()),
                 f => ExceptionHandler.HandleException(f));
         }
@@ -167,8 +167,8 @@ namespace eShop.AuthWebApi.Controllers
                 {
                     return Ok(new ResponseBuilder()
                         .Succeeded()
-                        .AddResult(succ)
-                        .AddResultMessage(succ.Message)
+                        .WithResult(succ)
+                        .WithResultMessage(succ.Message)
                         .Build());
                 },
                 fail => ExceptionHandler.HandleException(fail));
@@ -202,7 +202,7 @@ namespace eShop.AuthWebApi.Controllers
             var result = await authService.GetExternalProvidersAsync();
 
             return result.Match<ActionResult<ResponseDTO>>(
-                s => Ok(new ResponseBuilder().Succeeded().AddResult(s).Build()),
+                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 
@@ -214,7 +214,7 @@ namespace eShop.AuthWebApi.Controllers
             return result.Match<ActionResult<ResponseDTO>>(
                 s => Ok(new ResponseBuilder()
                     .Succeeded()
-                    .AddResultMessage(s.Message)
+                    .WithResultMessage(s.Message)
                     .Build()),
                 f => ExceptionHandler.HandleException(f));
         }
@@ -225,7 +225,7 @@ namespace eShop.AuthWebApi.Controllers
             var result = await authService.ConfirmChangeEmailAsync(confirmChangeEmailRequest);
 
             return result.Match(
-                s => Ok(new ResponseBuilder().Succeeded().AddResultMessage(s.Message).Build()),
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 
@@ -235,7 +235,7 @@ namespace eShop.AuthWebApi.Controllers
             var result = await authService.ChangeUserNameAsync(changeUserNameRequest);
 
             return result.Match(
-                s => Ok(new ResponseBuilder().Succeeded().AddResultMessage(s.Message).AddResult(s).Build()),
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 
@@ -245,7 +245,7 @@ namespace eShop.AuthWebApi.Controllers
             var result = authService.RefreshTokenAsync(refreshTokenRequest);
 
             return result.Match(
-                s => Ok(new ResponseBuilder().Succeeded().AddResult(s).Build()),
+                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 
@@ -255,7 +255,7 @@ namespace eShop.AuthWebApi.Controllers
             var result = await authService.RequestChangePhoneNumberAsync(changePhoneNumberRequest);
 
             return result.Match(
-                s => Ok(new ResponseBuilder().Succeeded().AddResultMessage(s.Message).Build()),
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 
@@ -265,7 +265,7 @@ namespace eShop.AuthWebApi.Controllers
             var result = await authService.ConfirmChangePhoneNumberAsync(confirmChangePhoneNumberRequest);
 
             return result.Match(
-                s => Ok(new ResponseBuilder().Succeeded().AddResultMessage(s.Message).Build()),
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 
@@ -275,7 +275,7 @@ namespace eShop.AuthWebApi.Controllers
             var result = await authService.GetPhoneNumber(Email);
 
             return result.Match(
-                s => Ok(new ResponseBuilder().Succeeded().AddResult(s).Build()),
+                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
     }

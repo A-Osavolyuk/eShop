@@ -18,7 +18,7 @@ namespace eShop.ProductWebApi.Controllers
         {
             var result = await sender.Send(new GetProductsListQuery());
             return result.Match(
-                s => Ok(new ResponseBuilder().Succeeded().AddResult(s).Build()),
+                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 
@@ -27,7 +27,7 @@ namespace eShop.ProductWebApi.Controllers
         {
             var result = await sender.Send(new GetProductsListByTypeQuery(type));
             return result.Match(
-                s => Ok(new ResponseBuilder().Succeeded().AddResult(s).Build()),
+                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 
@@ -36,7 +36,7 @@ namespace eShop.ProductWebApi.Controllers
         {
             var result = await sender.Send(new GetProductByIdQuery(Id));
             return result.Match(
-                s => Ok(new ResponseBuilder().Succeeded().AddResult(s).Build()),
+                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 
@@ -45,7 +45,7 @@ namespace eShop.ProductWebApi.Controllers
         {
             var result = await sender.Send(new GetProductByNameQuery(Name));
             return result.Match(
-                s => Ok(new ResponseBuilder().Succeeded().AddResult(s).Build()),
+                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
     }
