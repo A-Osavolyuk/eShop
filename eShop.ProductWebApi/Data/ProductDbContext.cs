@@ -1,4 +1,6 @@
-﻿namespace eShop.ProductWebApi.Data
+﻿using eShop.Domain.Enums;
+
+namespace eShop.ProductWebApi.Data
 {
     public class ProductDbContext(DbContextOptions<ProductDbContext> options) : DbContext(options)
     {
@@ -103,7 +105,6 @@
                     ContactEmail = "asics@gmail.com",
                     ContactPhone = "123456789009"
                 });
-
         }
     }
 }

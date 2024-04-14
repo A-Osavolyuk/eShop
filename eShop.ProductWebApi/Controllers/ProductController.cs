@@ -1,4 +1,5 @@
 ﻿using eShop.Application.Utilities;
+using eShop.Domain.Enums;
 using eShop.ProductWebApi.Queries.Products;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,7 @@ namespace eShop.ProductWebApi.Controllers
     {
         private readonly ISender sender = sender;
 
-        [HttpGet("get-products-list")]
+        [HttpGet]
         public async ValueTask<ActionResult<ResponseDTO>> GetProductList()
         {
             var result = await sender.Send(new GetProductsListQuery());
@@ -21,7 +22,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpGet("get-product-by-id/{Id:guid}")]
+        [HttpGet("{Id:guid}")]
         public async ValueTask<ActionResult<ResponseDTO>> GetProductById(Guid Id)
         {
             var result = await sender.Send(new GetProductByIdQuery(Id));
@@ -30,8 +31,26 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpGet("get-product-by-name/{Name}")]
+        [HttpGet("{Name}")]
         public async ValueTask<ActionResult<ResponseDTO>> GetProductByName(string Name)
+        {
+            var result = await sender.Send(new GetProductByNameQuery(Name));
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
+        [HttpGet("get-by-id/{Id:guid}/with-type/{Type}")]
+        public async ValueTask<ActionResult<ResponseDTO>> GetProductByIdWithType(Guid Id, ProductType Type)
+        {
+            var result = await sender.Send(new GetProductByIdQuery(Id));
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
+        [HttpGet("get-by-name/{Name}/with-type/{Type}")]
+        public async ValueTask<ActionResult<ResponseDTO>> GetProductByNameWithType(string Name, ProductType Type)
         {
             var result = await sender.Send(new GetProductByNameQuery(Name));
             return result.Match(
