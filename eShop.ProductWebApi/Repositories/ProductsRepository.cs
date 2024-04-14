@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using eShop.Domain.DTOs.Requests;
 using eShop.Domain.Enums;
 using eShop.ProductWebApi.Exceptions;
+using eShop.ProductWebApi.Exceptions.Brands;
 
 namespace eShop.ProductWebApi.Repositories
 {
@@ -97,7 +99,7 @@ namespace eShop.ProductWebApi.Repositories
             }
         }
 
-        public async ValueTask<Result<ProductDTO>> GetProductByIdWithType(Guid Id, ProductType Type)
+        public async ValueTask<Result<ProductDTO>> GetProductByIdWithTypeAsync(Guid Id, ProductType Type)
         {
             try
             {
@@ -125,7 +127,7 @@ namespace eShop.ProductWebApi.Repositories
             }
         }
 
-        public async ValueTask<Result<ProductDTO>> GetProductByNameWithType(string Name, ProductType Type)
+        public async ValueTask<Result<ProductDTO>> GetProductByNameWithTypeAsync(string Name, ProductType Type)
         {
             try
             {
@@ -152,6 +154,41 @@ namespace eShop.ProductWebApi.Repositories
                 return new(ex);
             }
         }
+
+        public async ValueTask<Result<ProductDTO>> CreateProductAsync(Product product)
+        {
+            try
+            {
+                logger.LogInformation($"Trying to create product of type {product.ProductType.ToString().ToLowerInvariant()}.");
+
+                var entity = product.ProductType switch
+                {
+                    ProductType.Clothing => (await context.Clothing.AddAsync(mapper.Map<Clothing>(product))).Entity,
+                    ProductType.Shoes => (await context.Shoes.AddAsync(mapper.Map<Shoes>(product))).Entity,
+                    _ => new Product()
+                };
+
+                await context.SaveChangesAsync();
+
+                logger.LogInformation($"Product of type: {product.ProductType.ToString().ToLowerInvariant()} was successfully created.");
+                return entity.ProductType switch
+                {
+                    ProductType.Clothing => new(mapper.Map<ClothingDTO>(entity)),
+                    ProductType.Shoes => new(mapper.Map<ShoesDTO>(entity)),
+                    _ => new(mapper.Map<ProductDTO>(entity))
+                };
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                logger.LogError($"Failed on creating product of type: {product.ProductType.ToString().ToLowerInvariant()} with error message: {dbUpdateException.InnerException}");
+                return new(new NotCreateProductException());
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Failed on creating product of type: {product.ProductType.ToString().ToLowerInvariant()} with error message: {ex.Message}");
+                return new(ex);
+            }
+        }
     }
 
     public interface IProductRepository
@@ -159,7 +196,8 @@ namespace eShop.ProductWebApi.Repositories
         public ValueTask<Result<IEnumerable<ProductDTO>>> GetProductsListAsync();
         public ValueTask<Result<ProductDTO>> GetProductByIdAsync(Guid Id);
         public ValueTask<Result<ProductDTO>> GetProductByNameAsync(string Name);
-        public ValueTask<Result<ProductDTO>> GetProductByIdWithType(Guid Id, ProductType Type);
-        public ValueTask<Result<ProductDTO>> GetProductByNameWithType(string Name, ProductType Type);
+        public ValueTask<Result<ProductDTO>> GetProductByIdWithTypeAsync(Guid Id, ProductType Type);
+        public ValueTask<Result<ProductDTO>> GetProductByNameWithTypeAsync(string Name, ProductType Type);
+        public ValueTask<Result<ProductDTO>> CreateProductAsync(Product product);
     }
 }

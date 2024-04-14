@@ -1,10 +1,10 @@
 ﻿using eShop.Domain.Enums;
 
-namespace eShop.Domain.DTOs
+namespace eShop.Domain.DTOs.Requests
 {
-    public class ClothingDTO : ProductDTO
+    public class CreateShoesRequest : CreateProductRequestBase
     {
-        public ClothingDTO() => this.ProductType = ProductType.Clothing;
+        public CreateShoesRequest() => ProductType = ProductType.Shoes;
         public int Size { get; set; }
         public Colors Color { get; set; }
         public Audience Audience { get; set; }

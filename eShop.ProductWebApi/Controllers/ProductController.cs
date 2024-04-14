@@ -1,5 +1,7 @@
 ﻿using eShop.Application.Utilities;
+using eShop.Domain.DTOs.Requests;
 using eShop.Domain.Enums;
+using eShop.ProductWebApi.Commands.Products;
 using eShop.ProductWebApi.Queries.Products;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -55,6 +57,26 @@ namespace eShop.ProductWebApi.Controllers
             var result = await sender.Send(new GetProductByNameQuery(Name));
             return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
+        [HttpPost("create-product-clothing")]
+        public async ValueTask<ActionResult<ResponseDTO>> CreateClothingProduct([FromBody] CreateClothingRequest createProductRequest)
+        {
+            var result = await sender.Send(new CreateClothingProductCommand(createProductRequest));
+            return result.Match(
+                s => CreatedAtAction(nameof(GetProductByIdWithType), new { s.Id, Type = s.ProductType }, 
+                    new ResponseBuilder().Succeeded().WithResultMessage("Product was successfully created.").WithResult(s).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
+        [HttpPost("create-product-shoes")]
+        public async ValueTask<ActionResult<ResponseDTO>> CreateShoesProduct([FromBody] CreateShoesRequest createProductRequest)
+        {
+            var result = await sender.Send(new CreateShoesProductCommand(createProductRequest));
+            return result.Match(
+                s => CreatedAtAction(nameof(GetProductByIdWithType), new { s.Id, Type = s.ProductType },
+                    new ResponseBuilder().Succeeded().WithResultMessage("Product was successfully created.").WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
     }
