@@ -1,4 +1,5 @@
 ﻿using eShop.Application.Utilities;
+using eShop.Domain.DTOs.Requests.Auth;
 
 namespace eShop.AuthWebApi.Controllers
 {

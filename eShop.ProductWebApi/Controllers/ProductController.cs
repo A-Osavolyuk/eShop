@@ -79,5 +79,23 @@ namespace eShop.ProductWebApi.Controllers
                     new ResponseBuilder().Succeeded().WithResultMessage("Product was successfully created.").WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
+
+        [HttpPut("update-product-clothing")]
+        public async ValueTask<ActionResult<ResponseDTO>> UpdateClothingProduct([FromBody] UpdateClothingRequest updateProductRequest)
+        {
+            var result = await sender.Send(new UpdateClothingProductCommand(updateProductRequest));
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage("Product was successfully updated.").WithResult(s).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
+        [HttpPut("update-product-shoes")]
+        public async ValueTask<ActionResult<ResponseDTO>> UpdateShoesProduct([FromBody] UpdateShoesRequest updateProductRequest)
+        {
+            var result = await sender.Send(new UpdateShoesProductCommand(updateProductRequest));
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage("Product was successfully updated.").WithResult(s).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
     }
 }

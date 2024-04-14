@@ -1,4 +1,5 @@
-﻿using LanguageExt;
+﻿using eShop.Domain.DTOs.Requests.Auth;
+using LanguageExt;
 
 namespace eShop.AuthWebApi.Services.Interfaces
 {

@@ -157,9 +157,10 @@ namespace eShop.ProductWebApi.Repositories
 
         public async ValueTask<Result<ProductDTO>> CreateProductAsync(Product product)
         {
+            var productTypeName = product.ProductType.ToString().ToLowerInvariant();
             try
             {
-                logger.LogInformation($"Trying to create product of type {product.ProductType.ToString().ToLowerInvariant()}.");
+                logger.LogInformation($"Trying to create product of type {productTypeName}.");
 
                 var bransExists = await context.Brands.AsNoTracking().AnyAsync(_ => _.Id == product.BrandId);
                 var supplierExists = await context.Suppliers.AsNoTracking().AnyAsync(_ => _.Id == product.SupplierId);
@@ -177,7 +178,7 @@ namespace eShop.ProductWebApi.Repositories
 
                         await context.SaveChangesAsync();
 
-                        logger.LogInformation($"Product of type: {product.ProductType.ToString().ToLowerInvariant()} was successfully created.");
+                        logger.LogInformation($"Product of type: {productTypeName} was successfully created.");
                         return entity.ProductType switch
                         {
                             ProductType.Clothing => new(mapper.Map<ClothingDTO>(entity)),
@@ -187,22 +188,81 @@ namespace eShop.ProductWebApi.Repositories
                     }
 
                     var notFoundSupplierException = new NotFoundSupplierException(product.SupplierId);
-                    logger.LogWarning($"Failed on creating product of type: {product.ProductType.ToString().ToLowerInvariant()} with error message: {notFoundSupplierException.Message}.");
+                    logger.LogWarning($"Failed on creating product of type: {productTypeName} with error message: {notFoundSupplierException.Message}.");
                     return new(notFoundSupplierException);
                 }
 
                 var notFoundBrandException = new NotFoundBrandException(product.BrandId);
-                logger.LogWarning($"Failed on creating product of type: {product.ProductType.ToString().ToLowerInvariant()} with error message: {notFoundBrandException.Message}.");
+                logger.LogWarning($"Failed on creating product of type: {productTypeName} with error message: {notFoundBrandException.Message}.");
                 return new(notFoundBrandException);
             }
             catch (DbUpdateException dbUpdateException)
             {
-                logger.LogError($"Failed on creating product of type: {product.ProductType.ToString().ToLowerInvariant()} with error message: {dbUpdateException.InnerException}");
-                return new(new NotCreateProductException());
+                logger.LogError($"Failed on creating product of type: {productTypeName} with error message: {dbUpdateException.InnerException}");
+                return new(new NotCreatedProductException());
             }
             catch (Exception ex)
             {
-                logger.LogError($"Failed on creating product of type: {product.ProductType.ToString().ToLowerInvariant()} with error message: {ex.Message}");
+                logger.LogError($"Failed on creating product of type: {productTypeName} with error message: {ex.Message}");
+                return new(ex);
+            }
+        }
+
+        public async ValueTask<Result<ProductDTO>> UpdateProductAsync(Product product)
+        {
+            var productTypeName = product.ProductType.ToString().ToLowerInvariant();
+            try
+            {
+                logger.LogInformation($"Trying to update product of type {productTypeName}.");
+
+                var productExists = await context.Products.AsNoTracking().AnyAsync(_ => _.Id == product.Id && _.ProductType == product.ProductType);
+                if (productExists)
+                {
+                    var bransExists = await context.Brands.AsNoTracking().AnyAsync(_ => _.Id == product.BrandId);
+                    if (bransExists)
+                    {
+                        var supplierExists = await context.Suppliers.AsNoTracking().AnyAsync(_ => _.Id == product.SupplierId);
+                        if (supplierExists)
+                        {
+                            var entity = product.ProductType switch
+                            {
+                                ProductType.Clothing => context.Clothing.Update(mapper.Map<Clothing>(product)).Entity,
+                                ProductType.Shoes => context.Shoes.Update(mapper.Map<Shoes>(product)).Entity,
+                                _ => new Product()
+                            };
+
+                            await context.SaveChangesAsync();
+
+                            logger.LogInformation($"Product of type: {productTypeName} was successfully updated.");
+                            return entity.ProductType switch
+                            {
+                                ProductType.Clothing => new(mapper.Map<ClothingDTO>(entity)),
+                                ProductType.Shoes => new(mapper.Map<ShoesDTO>(entity)),
+                                _ => new(mapper.Map<ProductDTO>(entity))
+                            };
+                        }
+
+                        var notFoundSupplierException = new NotFoundSupplierException(product.SupplierId);
+                        logger.LogWarning($"Failed on updating product of type: {productTypeName} with error message: {notFoundSupplierException.Message}.");
+                        return new(notFoundSupplierException);
+                    }
+
+                    var notFoundBrandException = new NotFoundBrandException(product.BrandId);
+                    logger.LogWarning($"Failed on updating product of type: {productTypeName} with error message: {notFoundBrandException.Message}.");
+                    return new(notFoundBrandException);
+                }
+                var notFoundProductException = new NotFoundProductException(product.Id);
+                logger.LogWarning($"Failed on updating product of type: {productTypeName} with error message: {notFoundProductException.Message}.");
+                return new(notFoundProductException);
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                logger.LogError($"Failed on updating product of type: {productTypeName} with error message: {dbUpdateException.InnerException}");
+                return new(new NotUpdatedProductException(product.Id));
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Failed on updating product of type: {productTypeName} with error message: {ex.Message}");
                 return new(ex);
             }
         }
@@ -216,5 +276,6 @@ namespace eShop.ProductWebApi.Repositories
         public ValueTask<Result<ProductDTO>> GetProductByIdWithTypeAsync(Guid Id, ProductType Type);
         public ValueTask<Result<ProductDTO>> GetProductByNameWithTypeAsync(string Name, ProductType Type);
         public ValueTask<Result<ProductDTO>> CreateProductAsync(Product product);
+        public ValueTask<Result<ProductDTO>> UpdateProductAsync(Product product);
     }
 }

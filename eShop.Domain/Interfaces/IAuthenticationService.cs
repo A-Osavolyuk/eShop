@@ -1,5 +1,5 @@
 ﻿using eShop.Domain.DTOs;
-using eShop.Domain.DTOs.Requests;
+using eShop.Domain.DTOs.Requests.Auth;
 
 namespace eShop.Domain.Interfaces
 {

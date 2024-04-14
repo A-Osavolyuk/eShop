@@ -1,4 +1,4 @@
-﻿using eShop.Domain.DTOs.Requests;
+﻿using eShop.Domain.DTOs.Requests.Auth;
 using FluentValidation;
 
 namespace eShop.Application.Validation

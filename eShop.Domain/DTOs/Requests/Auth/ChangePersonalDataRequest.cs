@@ -1,4 +1,4 @@
-﻿namespace eShop.Domain.DTOs.Requests
+﻿namespace eShop.Domain.DTOs.Requests.Auth
 {
     public class ChangePersonalDataRequest
     {

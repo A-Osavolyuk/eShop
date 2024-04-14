@@ -1,4 +1,4 @@
-﻿using eShop.Domain.DTOs.Requests;
+﻿using eShop.Domain.DTOs.Requests.Auth;
 using Microsoft.AspNetCore.Identity;
 
 namespace eShop.Domain.Entities

@@ -1,5 +1,5 @@
 ﻿using eShop.AuthWebApi.Utilities;
-using eShop.Domain.DTOs.Requests;
+using eShop.Domain.DTOs.Requests.Auth;
 using LanguageExt;
 using System.Net;
 

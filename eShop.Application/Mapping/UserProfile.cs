@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using eShop.Domain.DTOs.Requests;
+using eShop.Domain.DTOs.Requests.Auth;
 using eShop.Domain.Entities;
 
 namespace eShop.Application.MappingProfiles
