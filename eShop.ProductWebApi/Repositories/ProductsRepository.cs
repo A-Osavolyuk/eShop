@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using eShop.Domain.DTOs.Requests;
 using eShop.Domain.Enums;
 using eShop.ProductWebApi.Exceptions;
-using eShop.ProductWebApi.Exceptions.Brands;
+using Unit = LanguageExt.Unit;
 
 namespace eShop.ProductWebApi.Repositories
 {
@@ -68,8 +67,9 @@ namespace eShop.ProductWebApi.Repositories
                     logger.LogInformation($"Successfully got product with id: {Id}.");
                     return new(product);
                 }
-                logger.LogInformation($"Cannot find product with id: {Id}");
-                return new(new NotFoundProductException(Id));
+                var notFoundProductException = new NotFoundProductException(Id);
+                logger.LogInformation($"Failed on getting product with id: {Id} error message: {notFoundProductException.Message}");
+                return new(notFoundProductException);
             }
             catch (Exception ex)
             {
@@ -89,8 +89,9 @@ namespace eShop.ProductWebApi.Repositories
                     logger.LogInformation($"Successfully got product with name: {Name}.");
                     return new(product);
                 }
-                logger.LogInformation($"Cannot find product with name: {Name}");
-                return new(new NotFoundProductException(Name));
+                var notFoundProductException = new NotFoundProductException(Name);
+                logger.LogInformation($"Failed on getting product with name: {Name} error message: {notFoundProductException.Message}");
+                return new(notFoundProductException);
             }
             catch (Exception ex)
             {
@@ -101,9 +102,10 @@ namespace eShop.ProductWebApi.Repositories
 
         public async ValueTask<Result<ProductDTO>> GetProductByIdWithTypeAsync(Guid Id, ProductType Type)
         {
+            var productTypeName = Type.ToString().ToLowerInvariant();
             try
             {
-                logger.LogInformation($"Trying to get product of type {Type.ToString()} by id: {Id}.");
+                logger.LogInformation($"Trying to get product of type {productTypeName} by id: {Id}.");
 
                 var product = Type switch
                 {
@@ -114,24 +116,26 @@ namespace eShop.ProductWebApi.Repositories
 
                 if (product is not null)
                 {
-                    logger.LogInformation($"Successfully got product with type {Type.ToString()} by id: {Id}.");
+                    logger.LogInformation($"Successfully got product with type {productTypeName} by id: {Id}.");
                     return new(product);
                 }
-                logger.LogInformation($"Cannot find product with id: {Id}");
-                return new(new NotFoundProductException(Id));
+                var notFoundProductException = new NotFoundProductException(Id);
+                logger.LogInformation($"Failed on getting product of type: {productTypeName} with id: {Id} error message: {notFoundProductException.Message}");
+                return new(notFoundProductException);
             }
             catch (Exception ex)
             {
-                logger.LogError($"Failed on getting product with type: {Type.ToString()} by id: {Id} error message: {ex.Message}");
+                logger.LogError($"Failed on getting product with type: {productTypeName} by id: {Id} error message: {ex.Message}");
                 return new(ex);
             }
         }
 
         public async ValueTask<Result<ProductDTO>> GetProductByNameWithTypeAsync(string Name, ProductType Type)
         {
+            var productTypeName = Type.ToString().ToLowerInvariant();
             try
             {
-                logger.LogInformation($"Trying to get product of type {Type.ToString()} by id: {Name}.");
+                logger.LogInformation($"Trying to get product of type {productTypeName} by name: {Name}.");
 
                 var product = Type switch
                 {
@@ -142,15 +146,16 @@ namespace eShop.ProductWebApi.Repositories
 
                 if (product is not null)
                 {
-                    logger.LogInformation($"Successfully got product with type {Type.ToString()} by id: {Name}.");
+                    logger.LogInformation($"Successfully got product with type {productTypeName} by name: {Name}.");
                     return new(product);
                 }
-                logger.LogInformation($"Cannot find product with id: {Name}");
-                return new(new NotFoundProductException(Name));
+                var notFoundProductException = new NotFoundProductException(Name);
+                logger.LogInformation($"Failed on getting product with name: {Name} of type: {productTypeName} error message: {notFoundProductException.Message}");
+                return new(notFoundProductException);
             }
             catch (Exception ex)
             {
-                logger.LogError($"Failed on getting product with type: {Type.ToString()} by id: {Name} error message: {ex.Message}");
+                logger.LogError($"Failed on getting product with type: {productTypeName} by name: {Name} error message: {ex.Message}");
                 return new(ex);
             }
         }
@@ -266,6 +271,35 @@ namespace eShop.ProductWebApi.Repositories
                 return new(ex);
             }
         }
+
+        public async ValueTask<Result<Unit>> DeleteProductByIdAsync(Guid Id)
+        {
+            try
+            {
+                logger.LogInformation($"Trying to delete product with id: {Id}.");
+                var product = await context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Id == Id);
+                if (product is not null)
+                {
+                    context.Products.Remove(product);
+                    await context.SaveChangesAsync();
+                    logger.LogInformation($"Product with id: {Id} was successfully deleted.");
+                    return new(new Unit());
+                }
+                var notFoundProductException = new NotFoundProductException(Id);
+                logger.LogInformation($"Failed on deleting product with id: {Id} error message: {notFoundProductException.Message}");
+                return new(notFoundProductException);
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                logger.LogError($"Failed on deleting product with error message: {dbUpdateException.InnerException}");
+                return new(new NotDeletedProductException(Id));
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Failed on deleting product with error message: {ex.Message}");
+                return new(ex);
+            }
+        }
     }
 
     public interface IProductRepository
@@ -277,5 +311,6 @@ namespace eShop.ProductWebApi.Repositories
         public ValueTask<Result<ProductDTO>> GetProductByNameWithTypeAsync(string Name, ProductType Type);
         public ValueTask<Result<ProductDTO>> CreateProductAsync(Product product);
         public ValueTask<Result<ProductDTO>> UpdateProductAsync(Product product);
+        public ValueTask<Result<Unit>> DeleteProductByIdAsync(Guid Id);
     }
 }
