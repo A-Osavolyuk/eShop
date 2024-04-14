@@ -161,22 +161,39 @@ namespace eShop.ProductWebApi.Repositories
             {
                 logger.LogInformation($"Trying to create product of type {product.ProductType.ToString().ToLowerInvariant()}.");
 
-                var entity = product.ProductType switch
-                {
-                    ProductType.Clothing => (await context.Clothing.AddAsync(mapper.Map<Clothing>(product))).Entity,
-                    ProductType.Shoes => (await context.Shoes.AddAsync(mapper.Map<Shoes>(product))).Entity,
-                    _ => new Product()
-                };
+                var bransExists = await context.Brands.AsNoTracking().AnyAsync(_ => _.Id == product.BrandId);
+                var supplierExists = await context.Suppliers.AsNoTracking().AnyAsync(_ => _.Id == product.SupplierId);
 
-                await context.SaveChangesAsync();
-
-                logger.LogInformation($"Product of type: {product.ProductType.ToString().ToLowerInvariant()} was successfully created.");
-                return entity.ProductType switch
+                if (bransExists)
                 {
-                    ProductType.Clothing => new(mapper.Map<ClothingDTO>(entity)),
-                    ProductType.Shoes => new(mapper.Map<ShoesDTO>(entity)),
-                    _ => new(mapper.Map<ProductDTO>(entity))
-                };
+                    if (supplierExists)
+                    {
+                        var entity = product.ProductType switch
+                        {
+                            ProductType.Clothing => (await context.Clothing.AddAsync(mapper.Map<Clothing>(product))).Entity,
+                            ProductType.Shoes => (await context.Shoes.AddAsync(mapper.Map<Shoes>(product))).Entity,
+                            _ => new Product()
+                        };
+
+                        await context.SaveChangesAsync();
+
+                        logger.LogInformation($"Product of type: {product.ProductType.ToString().ToLowerInvariant()} was successfully created.");
+                        return entity.ProductType switch
+                        {
+                            ProductType.Clothing => new(mapper.Map<ClothingDTO>(entity)),
+                            ProductType.Shoes => new(mapper.Map<ShoesDTO>(entity)),
+                            _ => new(mapper.Map<ProductDTO>(entity))
+                        };
+                    }
+
+                    var notFoundSupplierException = new NotFoundSupplierException(product.SupplierId);
+                    logger.LogWarning($"Failed on creating product of type: {product.ProductType.ToString().ToLowerInvariant()} with error message: {notFoundSupplierException.Message}.");
+                    return new(notFoundSupplierException);
+                }
+
+                var notFoundBrandException = new NotFoundBrandException(product.BrandId);
+                logger.LogWarning($"Failed on creating product of type: {product.ProductType.ToString().ToLowerInvariant()} with error message: {notFoundBrandException.Message}.");
+                return new(notFoundBrandException);
             }
             catch (DbUpdateException dbUpdateException)
             {
