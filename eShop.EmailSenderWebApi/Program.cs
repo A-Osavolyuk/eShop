@@ -4,8 +4,6 @@ using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddServiceDefaults();
-
 builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("EmailOptions"));
 
 builder.Services.AddMassTransit(x =>
@@ -41,8 +39,6 @@ builder.Services.AddMassTransit(x =>
 });
 
 var app = builder.Build();
-
-app.MapDefaultEndpoints();
 
 app.UseHttpsRedirection();
 

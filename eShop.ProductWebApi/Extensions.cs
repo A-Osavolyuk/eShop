@@ -7,7 +7,6 @@ namespace eShop.ProductWebApi
     {
         public static IHostApplicationBuilder AddApiServices(this IHostApplicationBuilder builder)
         {
-            builder.AddServiceDefaults();
             builder.AddJwtAuthentication();
             builder.AddDependencyInjection();
             builder.ConfigureVersioning();

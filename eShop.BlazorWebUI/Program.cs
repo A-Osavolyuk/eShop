@@ -9,8 +9,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCascadingAuthenticationState();
 
-builder.AddServiceDefaults();
-
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
@@ -35,7 +33,6 @@ builder.Services.AddBlazoredToast();
 
 var app = builder.Build();
 
-app.MapDefaultEndpoints();
 
 if (!app.Environment.IsDevelopment())
 {

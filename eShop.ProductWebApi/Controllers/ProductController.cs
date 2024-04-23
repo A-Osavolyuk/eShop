@@ -24,7 +24,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpGet("{Id:guid}")]
+        [HttpGet("get-by-id/{Id:guid}")]
         public async ValueTask<ActionResult<ResponseDTO>> GetProductById(Guid Id)
         {
             var result = await sender.Send(new GetProductByIdQuery(Id));
@@ -33,7 +33,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpGet("{Name}")]
+        [HttpGet("get-by-name/{Name}")]
         public async ValueTask<ActionResult<ResponseDTO>> GetProductByName(string Name)
         {
             var result = await sender.Send(new GetProductByNameQuery(Name));
@@ -98,7 +98,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpDelete("{Id:guid}")]
+        [HttpDelete("delete-by-id/{Id:guid}")]
         public async ValueTask<ActionResult<ResponseDTO>> DeleteProductById(Guid Id)
         {
             var result = await sender.Send(new DeleteProductByIdCommand(Id));
