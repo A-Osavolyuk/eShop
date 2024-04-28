@@ -1,5 +1,4 @@
-﻿@page "/"
-@page "/products"
+﻿@page "/products"
 @using eShop.BlazorWebUI.Components.Layout
 @using eShop.Domain.Enums
 
@@ -10,9 +9,9 @@
 <PageTitle>Products</PageTitle>
 
 <MudGrid>
-    @if (Products.Any())
+    @if (ProductsList.Any())
     {
-        @foreach (var p in Products)
+        @foreach (var p in ProductsList)
         {
             <MudItem lg="3" md="4" sm="6" xs="12">
                 <MudCard Style="cursor:pointer">
@@ -34,7 +33,7 @@
 </MudGrid>
 
 @code {
-    private List<ProductDTO> Products { get; set; } = new();
+    private List<ProductDTO> ProductsList { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -47,7 +46,7 @@
 
         if (result.IsSucceeded)
         {
-            Products = JsonConvert.DeserializeObject<List<ProductDTO>>(result.Result!.ToString()!)!;
+            ProductsList = JsonConvert.DeserializeObject<List<ProductDTO>>(result.Result!.ToString()!)!;
         }
         else
         {

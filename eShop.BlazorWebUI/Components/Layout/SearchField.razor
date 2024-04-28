@@ -22,12 +22,19 @@
     {
         if (string.IsNullOrEmpty(SearchRequest))
         {
-            NavigationManager.NavigateTo("/products");
+            NavigationManager.NavigateTo("/products", true);
+        }
+        else if(Guid.TryParse(SearchRequest, out var Id))
+        {
+            NavigationManager.NavigateTo($"/products/search?id={Id}", true);
+        }
+        else if(long.TryParse(SearchRequest, out var Article))
+        {
+            NavigationManager.NavigateTo($"/products/search?article={Article}", true);
         }
         else
         {
-            NavigationManager.NavigateTo($"/products?search={SearchRequest}");
+            NavigationManager.NavigateTo($"/products/search?name={SearchRequest}", true);
         }
-        StateHasChanged();
     }
 }
