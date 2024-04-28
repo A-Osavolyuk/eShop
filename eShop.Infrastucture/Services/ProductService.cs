@@ -1,6 +1,5 @@
 ﻿using eShop.Domain.DTOs;
 using eShop.Domain.DTOs.Requests;
-using eShop.Domain.DTOs.Requests.Auth;
 using eShop.Domain.Enums;
 using eShop.Domain.Interfaces;
 using Microsoft.Extensions.Configuration;

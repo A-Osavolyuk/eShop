@@ -30,13 +30,13 @@ namespace eShop.ProductWebApi.Repositories
                             Amount = x.Price.Amount,
                             Currency = x.Price.Currency,
                         },
-                        Brand = new Brand
+                        Brand = new BrandDTO
                         {
                             Id = x.Brand.Id,
                             Name = x.Brand.Name,
                             Country = x.Brand.Country
                         },
-                        Supplier = new Supplier
+                        Supplier = new SupplierDTO
                         {
                             Id = x.Supplier.Id,
                             Name = x.Supplier.Name,

@@ -11,12 +11,14 @@
 <MudLayout>
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        <MudText Typo="Typo.h5" Class="ml-3">Application</MudText>
+        <MudText Align="Align.Center" Typo="Typo.h5" Class="ml-3">eShop</MudText>
+        <MudSpacer />
+        <SearchField />
         <MudSpacer />
         <Menu />
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
-        <NavMenu/>
+        <NavMenu />
     </MudDrawer>
     <MudMainContent>
         <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="py-5">
@@ -26,6 +28,7 @@
 </MudLayout>
 @code {
     bool _drawerOpen = true;
+
 
     void DrawerToggle()
     {
@@ -40,4 +43,5 @@
             await (AuthenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(token);
         }
     }
+
 }

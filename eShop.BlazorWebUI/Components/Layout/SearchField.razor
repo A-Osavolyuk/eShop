@@ -1,0 +1,33 @@
+﻿@inject NavigationManager NavigationManager
+@inject IProductService ProductService
+
+<MudTextField Placeholder="Search..." Class="rounded-0 search-field-text-input" Variant="Variant.Outlined" @bind-Value=SearchRequest></MudTextField>
+<MudButton Color="Color.Primary" Class="rounded-0 rounded-r search-field-button" ButtonType="ButtonType.Button" OnClick="OnSearchClick" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Search" />
+
+<style>
+    .search-field-button {
+        height: 56px;
+        transform: translateX(-4px);
+    }
+
+    .search-field-text-input {
+        margin-bottom: 6px;
+    }
+</style>
+
+@code {
+    private string SearchRequest { get; set; } = "";
+
+    private void OnSearchClick()
+    {
+        if (string.IsNullOrEmpty(SearchRequest))
+        {
+            NavigationManager.NavigateTo("/products");
+        }
+        else
+        {
+            NavigationManager.NavigateTo($"/products?search={SearchRequest}");
+        }
+        StateHasChanged();
+    }
+}

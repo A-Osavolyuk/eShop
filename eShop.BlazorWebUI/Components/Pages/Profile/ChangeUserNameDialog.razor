@@ -20,6 +20,8 @@
 
     private async Task Submit()
     {
+        Model.Email = await LocalDataAccessor.GetEmailAsync();
+
         var result = await AuthenticationService.ChangeUserNameAsync(Model);
 
         if (result.IsSucceeded)

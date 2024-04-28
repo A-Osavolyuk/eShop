@@ -10,7 +10,7 @@ namespace eShop.Domain.DTOs
         public string Description { get; set; } = string.Empty;
         public ProductType ProductType { get; set; }
         public Money Price { get; set; } = null!;
-        public Supplier Supplier { get; set; } = null!;
-        public Brand Brand { get; set; } = null!;
+        public SupplierDTO Supplier { get; set; } = null!;
+        public BrandDTO Brand { get; set; } = null!;
     }
 }

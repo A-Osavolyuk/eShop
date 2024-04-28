@@ -22,7 +22,7 @@ namespace eShop.Application.Validation
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Name is required.")
                 .MinimumLength(3).WithMessage("Name must contain at least 3 letters.")
-                .MaximumLength(32).WithMessage("Name must not be longer then 32 letters.");
+                .MaximumLength(64).WithMessage("Name must not be longer then 64 letters.");
 
             RuleFor(x => x.Description)
                 .NotEmpty().WithMessage("Description is required.")
@@ -56,7 +56,7 @@ namespace eShop.Application.Validation
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Name is required.")
                 .MinimumLength(3).WithMessage("Name must contain at least 3 letters.")
-                .MaximumLength(32).WithMessage("Name must not be longer then 32 letters.");
+                .MaximumLength(64).WithMessage("Name must not be longer then 64 letters.");
 
             RuleFor(x => x.Description)
                 .NotEmpty().WithMessage("Description is required.")
@@ -75,7 +75,7 @@ namespace eShop.Application.Validation
 
             RuleFor(x => x.Size)
                 .LessThan(100).WithMessage("Size must be less then 100.")
-                .GreaterThan(20).WithMessage("Price must be greater then 20.");
+                .GreaterThan(20).WithMessage("Size must be greater then 20.");
 
             RuleFor(x => x.Color)
                 .IsInEnum().WithMessage("Invalid color.");
@@ -100,7 +100,7 @@ namespace eShop.Application.Validation
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Name is required.")
                 .MinimumLength(3).WithMessage("Name must contain at least 3 letters.")
-                .MaximumLength(32).WithMessage("Name must not be longer then 32 letters.");
+                .MaximumLength(64).WithMessage("Name must not be longer then 64 letters.");
 
             RuleFor(x => x.Description)
                 .NotEmpty().WithMessage("Description is required.")
@@ -119,7 +119,7 @@ namespace eShop.Application.Validation
 
             RuleFor(x => x.Size)
                 .LessThan(100).WithMessage("Size must be less then 100.")
-                .GreaterThan(20).WithMessage("Price must be greater then 20.");
+                .GreaterThan(20).WithMessage("Size must be greater then 20.");
 
             RuleFor(x => x.Color)
                 .IsInEnum().WithMessage("Invalid color.");
@@ -148,7 +148,7 @@ namespace eShop.Application.Validation
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Name is required.")
                 .MinimumLength(3).WithMessage("Name must contain at least 3 letters.")
-                .MaximumLength(32).WithMessage("Name must not be longer then 32 letters.");
+                .MaximumLength(64).WithMessage("Name must not be longer then 64 letters.");
 
             RuleFor(x => x.Description)
                 .NotEmpty().WithMessage("Description is required.")
@@ -186,7 +186,7 @@ namespace eShop.Application.Validation
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Name is required.")
                 .MinimumLength(3).WithMessage("Name must contain at least 3 letters.")
-                .MaximumLength(32).WithMessage("Name must not be longer then 32 letters.");
+                .MaximumLength(64).WithMessage("Name must not be longer then 64 letters.");
 
             RuleFor(x => x.Description)
                 .NotEmpty().WithMessage("Description is required.")
@@ -205,7 +205,7 @@ namespace eShop.Application.Validation
 
             RuleFor(x => x.Size)
                 .LessThan(100).WithMessage("Size must be less then 100.")
-                .GreaterThan(20).WithMessage("Price must be greater then 20.");
+                .GreaterThan(20).WithMessage("Size must be greater then 20.");
 
             RuleFor(x => x.Color)
                 .IsInEnum().WithMessage("Invalid color.");
@@ -234,7 +234,7 @@ namespace eShop.Application.Validation
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Name is required.")
                 .MinimumLength(3).WithMessage("Name must contain at least 3 letters.")
-                .MaximumLength(32).WithMessage("Name must not be longer then 32 letters.");
+                .MaximumLength(64).WithMessage("Name must not be longer then 64 letters.");
 
             RuleFor(x => x.Description)
                 .NotEmpty().WithMessage("Description is required.")
@@ -253,7 +253,7 @@ namespace eShop.Application.Validation
 
             RuleFor(x => x.Size)
                 .LessThan(100).WithMessage("Size must be less then 100.")
-                .GreaterThan(20).WithMessage("Price must be greater then 20.");
+                .GreaterThan(20).WithMessage("Size must be greater then 20.");
 
             RuleFor(x => x.Color)
                 .IsInEnum().WithMessage("Invalid color.");

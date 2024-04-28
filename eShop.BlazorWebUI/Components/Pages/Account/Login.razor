@@ -100,8 +100,9 @@
             else
             {
                 await (authenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(data!.Token);
-                navigationManager.NavigateTo("/");
+                navigationManager.NavigateTo("/products");
                 Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
+                loginRequest = new();
             }
         }
         else

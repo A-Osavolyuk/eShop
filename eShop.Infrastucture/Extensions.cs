@@ -27,10 +27,12 @@ namespace eShop.Infrastructure
 
             builder.Services.AddHttpClient();
             builder.Services.AddHttpClient<IAuthenticationService, AuthenticationService>();
+            builder.Services.AddHttpClient<IProductService, ProductService>();
 
             builder.Services.AddScoped<IHttpClientService, HttpClientService>();
             builder.Services.AddScoped<ITokenProvider, TokenProvider>();
             builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+            builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<ILocalDataAccessor, LocalDataAccessor>();
 
             return builder;
