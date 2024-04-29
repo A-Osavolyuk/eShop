@@ -28,14 +28,8 @@ namespace eShop.Infrastructure.Services
         public async ValueTask<ResponseDTO> GetProductByArticleAsync(long Article) => await clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/get-by-article/{Article}", Method: HttpMethods.GET));
 
-        public async ValueTask<ResponseDTO> GetProductByIdWithTypeAsync(Guid Id, ProductType Type) => await clientService.SendAsync(
-            new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/get-by-id/{Id}/with-type/{Type}", Method: HttpMethods.GET));
-
         public async ValueTask<ResponseDTO> GetProductByNameAsync(string Name) => await clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/get-by-name/{Name}", Method: HttpMethods.GET));
-
-        public async ValueTask<ResponseDTO> GetProductByNameWithTypeAsync(string Name, ProductType Type) => await clientService.SendAsync(
-            new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/get-by-name/{Name}/with-type/{Type}", Method: HttpMethods.GET));
 
         public async ValueTask<ResponseDTO> GetProductsListAsync() => await clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products", Method: HttpMethods.GET));

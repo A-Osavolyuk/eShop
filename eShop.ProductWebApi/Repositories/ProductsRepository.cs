@@ -62,12 +62,20 @@ namespace eShop.ProductWebApi.Repositories
             try
             {
                 logger.LogInformation($"Trying to get product with id: {Id}.");
-                var product = await context.Products.AsNoTracking().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == Id);
+                var product = await context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Id == Id);
                 if (product is not null)
                 {
+                    var output = product.ProductType switch
+                    {
+                        ProductType.Clothing => await context.Products.AsNoTracking().OfType<ClothingDTO>().FirstOrDefaultAsync(x => x.Id == Id),
+                        ProductType.Shoes => await context.Products.AsNoTracking().OfType<ShoesDTO>().FirstOrDefaultAsync(x => x.Id == Id),
+                        _ => await context.Products.AsNoTracking().OfType<ProductDTO>().FirstOrDefaultAsync(x => x.Id == Id)
+                    };
+
                     logger.LogInformation($"Successfully got product with id: {Id}.");
-                    return new(product);
+                    return new(output!);
                 }
+
                 var notFoundProductException = new NotFoundProductException(Id);
                 logger.LogInformation($"Failed on getting product with id: {Id} error message: {notFoundProductException.Message}");
                 return new(notFoundProductException);
@@ -84,12 +92,20 @@ namespace eShop.ProductWebApi.Repositories
             try
             {
                 logger.LogInformation($"Trying to get product with name: {Name}.");
-                var product = await context.Products.AsNoTracking().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Name == Name);
+                var product = await context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Name == Name);
                 if (product is not null)
                 {
+                    var output = product.ProductType switch
+                    {
+                        ProductType.Clothing => await context.Products.AsNoTracking().OfType<ClothingDTO>().FirstOrDefaultAsync(x => x.Name == Name),
+                        ProductType.Shoes => await context.Products.AsNoTracking().OfType<ShoesDTO>().FirstOrDefaultAsync(x => x.Name == Name),
+                        _ => await context.Products.AsNoTracking().OfType<ProductDTO>().FirstOrDefaultAsync(x => x.Name == Name)
+                    };
+
                     logger.LogInformation($"Successfully got product with name: {Name}.");
-                    return new(product);
+                    return new(output!);
                 }
+
                 var notFoundProductException = new NotFoundProductException(Name);
                 logger.LogInformation($"Failed on getting product with name: {Name} error message: {notFoundProductException.Message}");
                 return new(notFoundProductException);
@@ -97,66 +113,6 @@ namespace eShop.ProductWebApi.Repositories
             catch (Exception ex)
             {
                 logger.LogError($"Failed on getting product with name: {Name} error message: {ex.Message}");
-                return new(ex);
-            }
-        }
-
-        public async ValueTask<Result<ProductDTO>> GetProductByIdWithTypeAsync(Guid Id, ProductType Type)
-        {
-            var productTypeName = Type.ToString().ToLowerInvariant();
-            try
-            {
-                logger.LogInformation($"Trying to get product of type {productTypeName} by id: {Id}.");
-
-                var product = Type switch
-                {
-                    ProductType.Clothing => await context.Products.AsNoTracking().OfType<ClothingDTO>().FirstOrDefaultAsync(x => x.Id == Id),
-                    ProductType.Shoes => await context.Products.AsNoTracking().OfType<ShoesDTO>().FirstOrDefaultAsync(x => x.Id == Id),
-                    _ => await context.Products.AsNoTracking().OfType<ProductDTO>().FirstOrDefaultAsync(x => x.Id == Id)
-                };
-
-                if (product is not null)
-                {
-                    logger.LogInformation($"Successfully got product with type {productTypeName} by id: {Id}.");
-                    return new(product);
-                }
-                var notFoundProductException = new NotFoundProductException(Id);
-                logger.LogInformation($"Failed on getting product of type: {productTypeName} with id: {Id} error message: {notFoundProductException.Message}");
-                return new(notFoundProductException);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError($"Failed on getting product with type: {productTypeName} by id: {Id} error message: {ex.Message}");
-                return new(ex);
-            }
-        }
-
-        public async ValueTask<Result<ProductDTO>> GetProductByNameWithTypeAsync(string Name, ProductType Type)
-        {
-            var productTypeName = Type.ToString().ToLowerInvariant();
-            try
-            {
-                logger.LogInformation($"Trying to get product of type {productTypeName} by name: {Name}.");
-
-                var product = Type switch
-                {
-                    ProductType.Clothing => await context.Products.AsNoTracking().OfType<ClothingDTO>().FirstOrDefaultAsync(x => x.Name == Name),
-                    ProductType.Shoes => await context.Products.AsNoTracking().OfType<ShoesDTO>().FirstOrDefaultAsync(x => x.Name == Name),
-                    _ => await context.Products.AsNoTracking().OfType<ProductDTO>().FirstOrDefaultAsync(x => x.Name == Name)
-                };
-
-                if (product is not null)
-                {
-                    logger.LogInformation($"Successfully got product with type {productTypeName} by name: {Name}.");
-                    return new(product);
-                }
-                var notFoundProductException = new NotFoundProductException(Name);
-                logger.LogInformation($"Failed on getting product with name: {Name} of type: {productTypeName} error message: {notFoundProductException.Message}");
-                return new(notFoundProductException);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError($"Failed on getting product with type: {productTypeName} by name: {Name} error message: {ex.Message}");
                 return new(ex);
             }
         }
@@ -314,20 +270,28 @@ namespace eShop.ProductWebApi.Repositories
         {
             try
             {
-                logger.LogInformation($"Trying to get product with article: {Article }.");
-                var product = await context.Products.AsNoTracking().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Article  == Article );
+                logger.LogInformation($"Trying to get product with article: {Article}.");
+                var product = await context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Article == Article);
                 if (product is not null)
                 {
-                    logger.LogInformation($"Successfully got product with article: {Article }.");
-                    return new(product);
+                    var output = product.ProductType switch
+                    {
+                        ProductType.Clothing => await context.Products.AsNoTracking().OfType<ClothingDTO>().FirstOrDefaultAsync(x => x.Article == Article),
+                        ProductType.Shoes => await context.Products.AsNoTracking().OfType<ShoesDTO>().FirstOrDefaultAsync(x => x.Article == Article),
+                        _ => await context.Products.AsNoTracking().OfType<ProductDTO>().FirstOrDefaultAsync(x => x.Article == Article)
+                    };
+
+                    logger.LogInformation($"Successfully got product with article: {Article}.");
+                    return new(output!);
                 }
-                var notFoundProductException = new NotFoundProductException(Article );
-                logger.LogInformation($"Failed on getting product with article: {Article } error message: {notFoundProductException.Message}");
+
+                var notFoundProductException = new NotFoundProductException(Article);
+                logger.LogInformation($"Failed on getting product with article: {Article} error message: {notFoundProductException.Message}");
                 return new(notFoundProductException);
             }
             catch (Exception ex)
             {
-                logger.LogError($"Failed on getting product with article: {Article } error message: {ex.Message}");
+                logger.LogError($"Failed on getting product with article: {Article} error message: {ex.Message}");
                 return new(ex);
             }
         }
@@ -339,8 +303,6 @@ namespace eShop.ProductWebApi.Repositories
         public ValueTask<Result<ProductDTO>> GetProductByIdAsync(Guid Id);
         public ValueTask<Result<ProductDTO>> GetProductByArticleAsync(long Article);
         public ValueTask<Result<ProductDTO>> GetProductByNameAsync(string Name);
-        public ValueTask<Result<ProductDTO>> GetProductByIdWithTypeAsync(Guid Id, ProductType Type);
-        public ValueTask<Result<ProductDTO>> GetProductByNameWithTypeAsync(string Name, ProductType Type);
         public ValueTask<Result<ProductDTO>> CreateProductAsync(Product product);
         public ValueTask<Result<ProductDTO>> UpdateProductAsync(Product product);
         public ValueTask<Result<Unit>> DeleteProductByIdAsync(Guid Id);
