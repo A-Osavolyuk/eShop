@@ -5,8 +5,9 @@
 
 <PageTitle>Search products</PageTitle>
 
+<MudProgressCircular Color="Color.Primary" Style="height:5em; width:5em;" Indeterminate="true" />
+
 @code {
-    [SupplyParameterFromQuery(Name = "id")] public Guid Id { get; set; } = Guid.Empty;
     [SupplyParameterFromQuery(Name = "name")] public string Name { get; set; } = "";
     [SupplyParameterFromQuery(Name = "article")] public long Article { get; set; }
 

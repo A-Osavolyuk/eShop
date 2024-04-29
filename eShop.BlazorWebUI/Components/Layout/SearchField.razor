@@ -24,17 +24,13 @@
         {
             NavigationManager.NavigateTo("/products", true);
         }
-        else if(Guid.TryParse(SearchRequest, out var Id))
-        {
-            NavigationManager.NavigateTo($"/products/details/id={Id}", true);
-        }
         else if(long.TryParse(SearchRequest, out var Article))
         {
-            NavigationManager.NavigateTo($"/products/details/article={Article}", true);
+            NavigationManager.NavigateTo($"/products/search?article={Article}", true);
         }
         else
         {
-            NavigationManager.NavigateTo($"/products/details/name={SearchRequest}", true);
+            NavigationManager.NavigateTo($"/products/search?name={SearchRequest}", true);
         }
     }
 }

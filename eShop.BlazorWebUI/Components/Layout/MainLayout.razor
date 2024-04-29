@@ -28,7 +28,7 @@
 </MudLayout>
 @code {
     bool _drawerOpen = true;
-
+    [CascadingParameter] Task<AuthenticationState> AuthenticationStateTask { get; set; }
 
     void DrawerToggle()
     {
@@ -39,8 +39,12 @@
     {
         if (firstRender)
         {
-            var token = await TokenProvider.GetTokenAsync();
-            await (AuthenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(token);
+            var state = await AuthenticationStateTask;
+            if (state.User.Identity is null || !state.User.Identity!.IsAuthenticated)
+            {
+                var token = await TokenProvider.GetTokenAsync();
+                await (AuthenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(token);
+            }
         }
     }
 

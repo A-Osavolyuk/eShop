@@ -24,9 +24,9 @@ namespace eShop.Infrastructure.Account
         {
             try
             {
-                if (!string.IsNullOrEmpty(JwtHandler.Token))
+                if (!string.IsNullOrEmpty(AuthenticationHandler.Token))
                 {
-                    var token = DecryptToken(JwtHandler.Token);
+                    var token = DecryptToken(AuthenticationHandler.Token);
 
                     if (token is not null || token!.Claims.Any())
                     {
@@ -34,10 +34,11 @@ namespace eShop.Infrastructure.Account
 
                         if (valid)
                         {
-                            var claims = await SetClaims(token);
+                            var claims = SetClaims(token);
 
                             if (claims.Any())
                             {
+                                claimsStore.Claims = claims;
                                 return await Task.FromResult(
                                     new AuthenticationState(new ClaimsPrincipal(
                                         new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme))));
@@ -46,7 +47,7 @@ namespace eShop.Infrastructure.Account
                             return await Task.FromResult(anonymous);
                         }
 
-                        return await RefreshTokenAsync(JwtHandler.Token);
+                        return await RefreshTokenAsync(AuthenticationHandler.Token);
                     }
 
                     return await Task.FromResult(anonymous);
@@ -65,15 +66,16 @@ namespace eShop.Infrastructure.Account
             var claimsPrincipal = new ClaimsPrincipal();
             if (!string.IsNullOrEmpty(token))
             {
-                JwtHandler.Token = token;
+                AuthenticationHandler.Token = token;
                 await tokenProvider.SetTokenAsync(token);
 
                 var rawToken = DecryptToken(token)!;
-                var claims = await SetClaims(rawToken)!;
+                var claims = SetClaims(rawToken)!;
+                await WriteToLocalStorageAsync(claims);
                 claimsPrincipal = new(new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme));
             }
             else
-                JwtHandler.Token = "";
+                AuthenticationHandler.Token = "";
 
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(claimsPrincipal)));
         }
@@ -91,7 +93,7 @@ namespace eShop.Infrastructure.Account
             return new JwtSecurityToken();
         }
 
-        private async Task<List<Claim>> SetClaims(JwtSecurityToken token)
+        private List<Claim> SetClaims(JwtSecurityToken token)
         {
             if (token is not null)
             {
@@ -103,8 +105,6 @@ namespace eShop.Infrastructure.Account
                     new(ClaimTypes.Name, claims.FirstOrDefault(x => x.Type == CustomClaimTypes.UserName)!.Value),
                     new(ClaimTypes.Email, claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email)!.Value),
                 };
-
-                await WriteToLocalStorageAsync(output);
 
                 return output;
             }
@@ -143,10 +143,11 @@ namespace eShop.Infrastructure.Account
 
                     if (token is not null || token!.Claims.Any())
                     {
-                        var claims = await SetClaims(token);
+                        var claims = SetClaims(token);
 
                         if (claims.Any())
                         {
+                            AuthenticationHandler.Token = newToken;
                             return await Task.FromResult(
                                 new AuthenticationState(new ClaimsPrincipal(
                                     new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme))));
