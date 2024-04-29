@@ -67,9 +67,9 @@ namespace eShop.ProductWebApi.Repositories
                 {
                     var output = product.ProductType switch
                     {
-                        ProductType.Clothing => await context.Products.AsNoTracking().OfType<ClothingDTO>().FirstOrDefaultAsync(x => x.Id == Id),
-                        ProductType.Shoes => await context.Products.AsNoTracking().OfType<ShoesDTO>().FirstOrDefaultAsync(x => x.Id == Id),
-                        _ => await context.Products.AsNoTracking().OfType<ProductDTO>().FirstOrDefaultAsync(x => x.Id == Id)
+                        ProductType.Clothing => await context.Products.AsNoTracking().OfType<Clothing>().ProjectTo<ClothingDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == Id),
+                        ProductType.Shoes => await context.Products.AsNoTracking().OfType<Shoes>().ProjectTo<ShoesDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == Id),
+                        _ => await context.Products.AsNoTracking().OfType<Product>().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == Id)
                     };
 
                     logger.LogInformation($"Successfully got product with id: {Id}.");
@@ -97,9 +97,9 @@ namespace eShop.ProductWebApi.Repositories
                 {
                     var output = product.ProductType switch
                     {
-                        ProductType.Clothing => await context.Products.AsNoTracking().OfType<ClothingDTO>().FirstOrDefaultAsync(x => x.Name == Name),
-                        ProductType.Shoes => await context.Products.AsNoTracking().OfType<ShoesDTO>().FirstOrDefaultAsync(x => x.Name == Name),
-                        _ => await context.Products.AsNoTracking().OfType<ProductDTO>().FirstOrDefaultAsync(x => x.Name == Name)
+                        ProductType.Clothing => await context.Products.AsNoTracking().OfType<Clothing>().ProjectTo<ClothingDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Name == Name),
+                        ProductType.Shoes => await context.Products.AsNoTracking().OfType<Shoes>().ProjectTo<ShoesDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Name == Name),
+                        _ => await context.Products.AsNoTracking().OfType<Product>().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Name == Name)
                     };
 
                     logger.LogInformation($"Successfully got product with name: {Name}.");
@@ -276,9 +276,9 @@ namespace eShop.ProductWebApi.Repositories
                 {
                     var output = product.ProductType switch
                     {
-                        ProductType.Clothing => await context.Products.AsNoTracking().OfType<ClothingDTO>().FirstOrDefaultAsync(x => x.Article == Article),
-                        ProductType.Shoes => await context.Products.AsNoTracking().OfType<ShoesDTO>().FirstOrDefaultAsync(x => x.Article == Article),
-                        _ => await context.Products.AsNoTracking().OfType<ProductDTO>().FirstOrDefaultAsync(x => x.Article == Article)
+                        ProductType.Clothing => await context.Products.AsNoTracking().OfType<Clothing>().ProjectTo<ClothingDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Article == Article),
+                        ProductType.Shoes => await context.Products.AsNoTracking().OfType<Shoes>().ProjectTo<ShoesDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Article == Article),
+                        _ => await context.Products.AsNoTracking().OfType<Product>().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Article == Article)
                     };
 
                     logger.LogInformation($"Successfully got product with article: {Article}.");

@@ -1,0 +1,56 @@
+﻿@page "/products/details/id={Id:guid}"
+@page "/products/details/article={Article:long}"
+@page "/products/details/name={Name}"
+
+@inject NavigationManager NavigationManager
+@inject IProductService ProductService
+@inject ISnackbar Snackbar
+
+<PageTitle>ProductDetails</PageTitle>
+
+@code {
+    [Parameter] public Guid Id { get; set; }
+    [Parameter] public string Name { get; set; } = string.Empty;
+    [Parameter] public long Article { get; set; }
+
+    private ProductDTO Model { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id != Guid.Empty)
+        {
+            var result = await ProductService.GetProductByIdAsync(Id);
+            Model = DeserializeResponse(result)!;
+        }
+        else if (Article != 0)
+        {
+            var result = await ProductService.GetProductByArticleAsync(Article);
+            Model = DeserializeResponse(result)!;
+        }
+        else
+        {
+            var result = await ProductService.GetProductByNameAsync(Name);
+            Model = DeserializeResponse(result)!;
+        }
+    }
+
+    private ProductDTO? DeserializeResponse(ResponseDTO response)
+    {
+        if (response.IsSucceeded)
+        {
+            var type = JsonConvert.DeserializeObject<ProductDTO>(response.Result!.ToString()!)!.ProductType;
+
+            return type switch
+            {
+                ProductType.Clothing => JsonConvert.DeserializeObject<ClothingDTO>(response.Result!.ToString()!),
+                ProductType.Shoes => JsonConvert.DeserializeObject<ShoesDTO>(response.Result!.ToString()!),
+                _ => JsonConvert.DeserializeObject<ProductDTO>(response.Result!.ToString()!)
+            };
+        }
+        else
+        {
+            Snackbar.Add(response.ErrorMessage, MudBlazor.Severity.Error);
+            return null;
+        }
+    }
+}
