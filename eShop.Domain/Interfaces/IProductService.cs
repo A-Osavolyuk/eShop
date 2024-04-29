@@ -8,6 +8,7 @@ namespace eShop.Domain.Interfaces
     {
         public ValueTask<ResponseDTO> GetProductsListAsync();
         public ValueTask<ResponseDTO> GetProductByIdAsync(Guid Id);
+        public ValueTask<ResponseDTO> GetProductByArticleAsync(long Article);
         public ValueTask<ResponseDTO> GetProductByNameAsync(string Name);
         public ValueTask<ResponseDTO> GetProductByIdWithTypeAsync(Guid Id, ProductType Type);
         public ValueTask<ResponseDTO> GetProductByNameWithTypeAsync(string Name, ProductType Type);

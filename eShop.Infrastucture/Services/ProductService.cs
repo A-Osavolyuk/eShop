@@ -13,34 +13,37 @@ namespace eShop.Infrastructure.Services
         private readonly IHttpClientService clientService = clientService;
         private readonly IConfiguration configuration = configuration;
 
-        public ValueTask<ResponseDTO> CreateProductAsync(CreateClothingRequest request) => clientService.SendAsync(
+        public async ValueTask<ResponseDTO> CreateProductAsync(CreateClothingRequest request) => await clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/create-product-clothing", Method: HttpMethods.POST, Data: request));
 
-        public ValueTask<ResponseDTO> CreateProductAsync(CreateShoesRequest request) => clientService.SendAsync(
+        public async ValueTask<ResponseDTO> CreateProductAsync(CreateShoesRequest request) => await clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/create-product-shoes", Method: HttpMethods.POST, Data: request));
 
-        public ValueTask<ResponseDTO> DeleteProductAsync(Guid Id) => clientService.SendAsync(
+        public async ValueTask<ResponseDTO> DeleteProductAsync(Guid Id) => await clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/delete-by-id/{Id}", Method: HttpMethods.DELETE));
 
-        public ValueTask<ResponseDTO> GetProductByIdAsync(Guid Id) => clientService.SendAsync(
+        public async ValueTask<ResponseDTO> GetProductByIdAsync(Guid Id) => await clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/get-by-id/{Id}", Method: HttpMethods.GET));
 
-        public ValueTask<ResponseDTO> GetProductByIdWithTypeAsync(Guid Id, ProductType Type) => clientService.SendAsync(
+        public async ValueTask<ResponseDTO> GetProductByArticleAsync(long Article) => await clientService.SendAsync(
+            new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/get-by-article/{Article}", Method: HttpMethods.GET));
+
+        public async ValueTask<ResponseDTO> GetProductByIdWithTypeAsync(Guid Id, ProductType Type) => await clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/get-by-id/{Id}/with-type/{Type}", Method: HttpMethods.GET));
 
-        public ValueTask<ResponseDTO> GetProductByNameAsync(string Name) => clientService.SendAsync(
+        public async ValueTask<ResponseDTO> GetProductByNameAsync(string Name) => await clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/get-by-name/{Name}", Method: HttpMethods.GET));
 
-        public ValueTask<ResponseDTO> GetProductByNameWithTypeAsync(string Name, ProductType Type) => clientService.SendAsync(
+        public async ValueTask<ResponseDTO> GetProductByNameWithTypeAsync(string Name, ProductType Type) => await clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/get-by-name/{Name}/with-type/{Type}", Method: HttpMethods.GET));
 
-        public ValueTask<ResponseDTO> GetProductsListAsync() => clientService.SendAsync(
+        public async ValueTask<ResponseDTO> GetProductsListAsync() => await clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products", Method: HttpMethods.GET));
 
-        public ValueTask<ResponseDTO> UpdateProductAsync(UpdateClothingRequest request) => clientService.SendAsync(
+        public async ValueTask<ResponseDTO> UpdateProductAsync(UpdateClothingRequest request) => await clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/update-product-clothing", Method: HttpMethods.PUT, Data: request));
 
-        public ValueTask<ResponseDTO> UpdateProductAsync(UpdateShoesRequest request) => clientService.SendAsync(
+        public async ValueTask<ResponseDTO> UpdateProductAsync(UpdateShoesRequest request) => await clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/update-product-clothing", Method: HttpMethods.PUT, Data: request));
     }
 }
