@@ -33,6 +33,15 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [HttpGet("get-by-article/{Article:long}")]
+        public async ValueTask<ActionResult<ResponseDTO>> GetProductByArticle(long Article)
+        {
+            var result = await sender.Send(new GetProductByArticleQuery(Article));
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
         [HttpGet("get-by-name/{Name}")]
         public async ValueTask<ActionResult<ResponseDTO>> GetProductByName(string Name)
         {

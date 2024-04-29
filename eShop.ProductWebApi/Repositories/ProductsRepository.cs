@@ -22,6 +22,7 @@ namespace eShop.ProductWebApi.Repositories
                     .Select(x => new ProductDTO()
                     {
                         Id = x.Id,
+                        Article = x.Article,
                         Name = x.Name,
                         Description = x.Description,
                         ProductType = x.ProductType,
@@ -174,6 +175,8 @@ namespace eShop.ProductWebApi.Repositories
                 {
                     if (supplierExists)
                     {
+                        product.Article = ArticleGenerator();
+
                         var entity = product.ProductType switch
                         {
                             ProductType.Clothing => (await context.Clothing.AddAsync(mapper.Map<Clothing>(product))).Entity,
@@ -300,12 +303,41 @@ namespace eShop.ProductWebApi.Repositories
                 return new(ex);
             }
         }
+
+        private long ArticleGenerator()
+        {
+            var article = new Random().NextInt64(100_000_000, 100_000_000_000);
+            return article;
+        }
+
+        public async ValueTask<Result<ProductDTO>> GetProductByArticleAsync(long Article)
+        {
+            try
+            {
+                logger.LogInformation($"Trying to get product with article: {Article }.");
+                var product = await context.Products.AsNoTracking().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Article  == Article );
+                if (product is not null)
+                {
+                    logger.LogInformation($"Successfully got product with article: {Article }.");
+                    return new(product);
+                }
+                var notFoundProductException = new NotFoundProductException(Article );
+                logger.LogInformation($"Failed on getting product with article: {Article } error message: {notFoundProductException.Message}");
+                return new(notFoundProductException);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Failed on getting product with article: {Article } error message: {ex.Message}");
+                return new(ex);
+            }
+        }
     }
 
     public interface IProductRepository
     {
         public ValueTask<Result<IEnumerable<ProductDTO>>> GetProductsListAsync();
         public ValueTask<Result<ProductDTO>> GetProductByIdAsync(Guid Id);
+        public ValueTask<Result<ProductDTO>> GetProductByArticleAsync(long Article);
         public ValueTask<Result<ProductDTO>> GetProductByNameAsync(string Name);
         public ValueTask<Result<ProductDTO>> GetProductByIdWithTypeAsync(Guid Id, ProductType Type);
         public ValueTask<Result<ProductDTO>> GetProductByNameWithTypeAsync(string Name, ProductType Type);
