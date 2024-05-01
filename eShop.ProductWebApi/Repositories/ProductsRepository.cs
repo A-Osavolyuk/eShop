@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using eShop.Domain.DTOs.Responses;
 using eShop.Domain.Enums;
 using eShop.ProductWebApi.Exceptions;
+using LanguageExt;
 using Unit = LanguageExt.Unit;
 
 namespace eShop.ProductWebApi.Repositories
@@ -83,6 +85,36 @@ namespace eShop.ProductWebApi.Repositories
             catch (Exception ex)
             {
                 logger.LogError($"Failed on getting product with id: {Id} error message: {ex.Message}");
+                return new(ex);
+            }
+        }
+
+        public async ValueTask<Result<ProductDTO>> GetProductByArticleAsync(long Article)
+        {
+            try
+            {
+                logger.LogInformation($"Trying to get product with article: {Article}.");
+                var product = await context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Article == Article);
+                if (product is not null)
+                {
+                    var output = product.ProductType switch
+                    {
+                        ProductType.Clothing => await context.Products.AsNoTracking().OfType<Clothing>().ProjectTo<ClothingDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Article == Article),
+                        ProductType.Shoes => await context.Products.AsNoTracking().OfType<Shoes>().ProjectTo<ShoesDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Article == Article),
+                        _ => await context.Products.AsNoTracking().OfType<Product>().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Article == Article)
+                    };
+
+                    logger.LogInformation($"Successfully got product with article: {Article}.");
+                    return new(output!);
+                }
+
+                var notFoundProductException = new NotFoundProductException(Article);
+                logger.LogInformation($"Failed on getting product with article: {Article} error message: {notFoundProductException.Message}");
+                return new(notFoundProductException);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Failed on getting product with article: {Article} error message: {ex.Message}");
                 return new(ex);
             }
         }
@@ -266,32 +298,48 @@ namespace eShop.ProductWebApi.Repositories
             return article;
         }
 
-        public async ValueTask<Result<ProductDTO>> GetProductByArticleAsync(long Article)
+        public async ValueTask<Result<ProductExistsResponse>> SearchAsync(long Article)
         {
             try
             {
-                logger.LogInformation($"Trying to get product with article: {Article}.");
+                logger.LogInformation($"Trying to search product with article: {Article}.");
                 var product = await context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Article == Article);
                 if (product is not null)
                 {
-                    var output = product.ProductType switch
-                    {
-                        ProductType.Clothing => await context.Products.AsNoTracking().OfType<Clothing>().ProjectTo<ClothingDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Article == Article),
-                        ProductType.Shoes => await context.Products.AsNoTracking().OfType<Shoes>().ProjectTo<ShoesDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Article == Article),
-                        _ => await context.Products.AsNoTracking().OfType<Product>().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Article == Article)
-                    };
-
-                    logger.LogInformation($"Successfully got product with article: {Article}.");
-                    return new(output!);
+                    logger.LogInformation($"Successfully found product with article: {Article}.");
+                    return new(new ProductExistsResponse() { Found = true, Count = 1 });
                 }
 
                 var notFoundProductException = new NotFoundProductException(Article);
-                logger.LogInformation($"Failed on getting product with article: {Article} error message: {notFoundProductException.Message}");
+                logger.LogInformation($"Failed on searching product with article: {Article} error message: {notFoundProductException.Message}");
                 return new(notFoundProductException);
             }
             catch (Exception ex)
             {
-                logger.LogError($"Failed on getting product with article: {Article} error message: {ex.Message}");
+                logger.LogError($"Failed on searching product with article: {Article} error message: {ex.Message}");
+                return new(ex);
+            }
+        }
+
+        public async ValueTask<Result<ProductExistsResponse>> SearchAsync(string Name)
+        {
+            try
+            {
+                logger.LogInformation($"Trying to search product(s) with name contains: {Name}.");
+                var quantity = await context.Products.AsNoTracking().Where(x => x.Name.Contains(Name)).CountAsync();
+                if (quantity > 0)
+                {
+                    logger.LogInformation($"Successfully found product(s) with name contains: {Name} in quantity: {quantity}.");
+                    return new(new ProductExistsResponse() { Found = true, Count = quantity });
+                }
+
+                var notFoundProductException = new NotFoundProductException(Name);
+                logger.LogInformation($"Failed on searching product with name contains: {Name} error message: {notFoundProductException.Message}");
+                return new(notFoundProductException);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Failed on searching product with name contains: {Name} error message: {ex.Message}");
                 return new(ex);
             }
         }
@@ -306,5 +354,7 @@ namespace eShop.ProductWebApi.Repositories
         public ValueTask<Result<ProductDTO>> CreateProductAsync(Product product);
         public ValueTask<Result<ProductDTO>> UpdateProductAsync(Product product);
         public ValueTask<Result<Unit>> DeleteProductByIdAsync(Guid Id);
+        public ValueTask<Result<ProductExistsResponse>> SearchAsync(long Article);  
+        public ValueTask<Result<ProductExistsResponse>> SearchAsync(string Name);  
     }
 }

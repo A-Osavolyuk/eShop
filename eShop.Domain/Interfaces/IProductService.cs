@@ -1,6 +1,5 @@
 ﻿using eShop.Domain.DTOs;
 using eShop.Domain.DTOs.Requests;
-using eShop.Domain.Enums;
 
 namespace eShop.Domain.Interfaces
 {
@@ -15,5 +14,7 @@ namespace eShop.Domain.Interfaces
         public ValueTask<ResponseDTO> UpdateProductAsync(UpdateClothingRequest request);
         public ValueTask<ResponseDTO> UpdateProductAsync(UpdateShoesRequest request);
         public ValueTask<ResponseDTO> DeleteProductAsync(Guid Id);
+        public ValueTask<ResponseDTO> ExistsAsync(long Article);
+        public ValueTask<ResponseDTO> ExistsAsync(string Name);
     }
 }

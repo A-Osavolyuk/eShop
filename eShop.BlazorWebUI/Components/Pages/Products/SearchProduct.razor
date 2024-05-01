@@ -11,8 +11,8 @@
     [SupplyParameterFromQuery(Name = "name")] public string Name { get; set; } = "";
     [SupplyParameterFromQuery(Name = "article")] public long Article { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        base.OnInitialized();
+        await ProductService.ExistsAsync(Article);
     }
 }

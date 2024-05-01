@@ -38,7 +38,6 @@ namespace eShop.Infrastructure.Account
 
                             if (claims.Any())
                             {
-                                claimsStore.Claims = claims;
                                 return await Task.FromResult(
                                     new AuthenticationState(new ClaimsPrincipal(
                                         new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme))));

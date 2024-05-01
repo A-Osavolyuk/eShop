@@ -97,5 +97,25 @@ namespace eShop.ProductWebApi.Controllers
                 s => Ok(new ResponseBuilder().Succeeded().WithResult(s).WithResultMessage("Product was successfully deleted.").Build()),
                 f => ExceptionHandler.HandleException(f));
         }
+
+        [HttpGet("search-by-article/{Article:long}")]
+        public async ValueTask<ActionResult<ResponseDTO>> SearchByArticle(long Article)
+        {
+            var result = await sender.Send(new SearchProductByArticleQuery(Article));
+
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
+        [HttpGet("search-by-name/{Name}")]
+        public async ValueTask<ActionResult<ResponseDTO>> SearchByName(string Name)
+        {
+            var result = await sender.Send(new SearchProductByNameQuery(Name));
+
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
     }
 }
