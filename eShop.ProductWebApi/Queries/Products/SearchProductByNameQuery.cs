@@ -4,13 +4,13 @@ using MediatR;
 
 namespace eShop.ProductWebApi.Queries.Products
 {
-    public record SearchProductByNameQuery(string Name) : IRequest<Result<ProductExistsResponse>>;
+    public record SearchProductByNameQuery(string Name) : IRequest<Result<SearchProductResponse>>;
 
-    public class SearchProductByNameQueryHandler(IProductRepository repository) : IRequestHandler<SearchProductByNameQuery, Result<ProductExistsResponse>>
+    public class SearchProductByNameQueryHandler(IProductRepository repository) : IRequestHandler<SearchProductByNameQuery, Result<SearchProductResponse>>
     {
         private readonly IProductRepository repository = repository;
 
-        public async Task<Result<ProductExistsResponse>> Handle(SearchProductByNameQuery request, CancellationToken cancellationToken)
+        public async Task<Result<SearchProductResponse>> Handle(SearchProductByNameQuery request, CancellationToken cancellationToken)
         {
             var result = await repository.SearchAsync(request.Name);
             return result;

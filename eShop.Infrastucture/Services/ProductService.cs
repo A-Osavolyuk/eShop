@@ -32,7 +32,10 @@ namespace eShop.Infrastructure.Services
             new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/get-by-name/{Name}", Method: HttpMethods.GET));
 
         public async ValueTask<ResponseDTO> GetProductsListAsync() => await clientService.SendAsync(
-            new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products", Method: HttpMethods.GET));
+            new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/get-products-list", Method: HttpMethods.GET));
+
+        public async ValueTask<ResponseDTO> GetProductsByNameAsync(string Name) => await clientService.SendAsync(
+            new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/get-products-with-name/{Name}", Method: HttpMethods.GET));
 
         public async ValueTask<ResponseDTO> UpdateProductAsync(UpdateClothingRequest request) => await clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/update-product-clothing", Method: HttpMethods.PUT, Data: request));
@@ -40,10 +43,10 @@ namespace eShop.Infrastructure.Services
         public async ValueTask<ResponseDTO> UpdateProductAsync(UpdateShoesRequest request) => await clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/update-product-clothing", Method: HttpMethods.PUT, Data: request));
 
-        public async ValueTask<ResponseDTO> ExistsAsync(long Article) => await clientService.SendAsync(
+        public async ValueTask<ResponseDTO> SearchProductAsync(long Article) => await clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/search-by-article/{Article}", Method: HttpMethods.GET));
 
-        public async ValueTask<ResponseDTO> ExistsAsync(string Name) => await clientService.SendAsync(
+        public async ValueTask<ResponseDTO> SearchProductAsync(string Name) => await clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/search-by-name/{Name}", Method: HttpMethods.GET));
     }
 }

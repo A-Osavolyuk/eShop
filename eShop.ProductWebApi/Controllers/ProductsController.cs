@@ -15,10 +15,19 @@ namespace eShop.ProductWebApi.Controllers
     {
         private readonly ISender sender = sender;
 
-        [HttpGet]
+        [HttpGet("get-products-list")]
         public async ValueTask<ActionResult<ResponseDTO>> GetProductList()
         {
             var result = await sender.Send(new GetProductsListQuery());
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
+        [HttpGet("get-products-with-name/{Name}")]
+        public async ValueTask<ActionResult<ResponseDTO>> GetProductsByName(string Name)
+        {
+            var result = await sender.Send(new GetProductsByNameQuery(Name));
             return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));

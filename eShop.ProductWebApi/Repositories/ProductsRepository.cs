@@ -59,6 +59,52 @@ namespace eShop.ProductWebApi.Repositories
             }
         }
 
+        public async ValueTask<Result<IEnumerable<ProductDTO>>> GetProductsByNameAsync(string Name)
+        {
+            try
+            {
+                logger.LogInformation($"Trying to get products with name: {Name}.");
+                var list = await context.Products
+                    .AsNoTracking()
+                    .Select(x => new ProductDTO()
+                    {
+                        Id = x.Id,
+                        Article = x.Article,
+                        Name = x.Name,
+                        Description = x.Description,
+                        ProductType = x.ProductType,
+                        Price = new Money
+                        {
+                            Amount = x.Price.Amount,
+                            Currency = x.Price.Currency,
+                        },
+                        Brand = new BrandDTO
+                        {
+                            Id = x.Brand.Id,
+                            Name = x.Brand.Name,
+                            Country = x.Brand.Country
+                        },
+                        Supplier = new SupplierDTO
+                        {
+                            Id = x.Supplier.Id,
+                            Name = x.Supplier.Name,
+                            ContactEmail = x.Supplier.ContactEmail,
+                            ContactPhone = x.Supplier.ContactPhone
+                        },
+                    })
+                    .Where(x => x.Name.Contains(Name))
+                    .ToListAsync();
+
+                logger.LogInformation($"Successfully got products with name: {Name}.");
+                return new(list);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Failed on getting products with name: {Name} with error message: {ex.Message}.");
+                return new(ex);
+            }
+        }
+
         public async ValueTask<Result<ProductDTO>> GetProductByIdAsync(Guid Id)
         {
             try
@@ -298,7 +344,7 @@ namespace eShop.ProductWebApi.Repositories
             return article;
         }
 
-        public async ValueTask<Result<ProductExistsResponse>> SearchAsync(long Article)
+        public async ValueTask<Result<SearchProductResponse>> SearchAsync(long Article)
         {
             try
             {
@@ -307,7 +353,7 @@ namespace eShop.ProductWebApi.Repositories
                 if (product is not null)
                 {
                     logger.LogInformation($"Successfully found product with article: {Article}.");
-                    return new(new ProductExistsResponse() { Found = true, Count = 1 });
+                    return new(new SearchProductResponse() { Found = true, Count = 1 });
                 }
 
                 var notFoundProductException = new NotFoundProductException(Article);
@@ -321,7 +367,7 @@ namespace eShop.ProductWebApi.Repositories
             }
         }
 
-        public async ValueTask<Result<ProductExistsResponse>> SearchAsync(string Name)
+        public async ValueTask<Result<SearchProductResponse>> SearchAsync(string Name)
         {
             try
             {
@@ -330,7 +376,7 @@ namespace eShop.ProductWebApi.Repositories
                 if (quantity > 0)
                 {
                     logger.LogInformation($"Successfully found product(s) with name contains: {Name} in quantity: {quantity}.");
-                    return new(new ProductExistsResponse() { Found = true, Count = quantity });
+                    return new(new SearchProductResponse() { Found = true, Count = quantity });
                 }
 
                 var notFoundProductException = new NotFoundProductException(Name);
@@ -348,13 +394,14 @@ namespace eShop.ProductWebApi.Repositories
     public interface IProductRepository
     {
         public ValueTask<Result<IEnumerable<ProductDTO>>> GetProductsListAsync();
+        public ValueTask<Result<IEnumerable<ProductDTO>>> GetProductsByNameAsync(string Name);
         public ValueTask<Result<ProductDTO>> GetProductByIdAsync(Guid Id);
         public ValueTask<Result<ProductDTO>> GetProductByArticleAsync(long Article);
         public ValueTask<Result<ProductDTO>> GetProductByNameAsync(string Name);
         public ValueTask<Result<ProductDTO>> CreateProductAsync(Product product);
         public ValueTask<Result<ProductDTO>> UpdateProductAsync(Product product);
         public ValueTask<Result<Unit>> DeleteProductByIdAsync(Guid Id);
-        public ValueTask<Result<ProductExistsResponse>> SearchAsync(long Article);  
-        public ValueTask<Result<ProductExistsResponse>> SearchAsync(string Name);  
+        public ValueTask<Result<SearchProductResponse>> SearchAsync(long Article);  
+        public ValueTask<Result<SearchProductResponse>> SearchAsync(string Name);  
     }
 }

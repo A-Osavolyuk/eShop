@@ -6,6 +6,7 @@ namespace eShop.Domain.Interfaces
     public interface IProductService
     {
         public ValueTask<ResponseDTO> GetProductsListAsync();
+        public ValueTask<ResponseDTO> GetProductsByNameAsync(string Name);
         public ValueTask<ResponseDTO> GetProductByIdAsync(Guid Id);
         public ValueTask<ResponseDTO> GetProductByArticleAsync(long Article);
         public ValueTask<ResponseDTO> GetProductByNameAsync(string Name);
@@ -14,7 +15,7 @@ namespace eShop.Domain.Interfaces
         public ValueTask<ResponseDTO> UpdateProductAsync(UpdateClothingRequest request);
         public ValueTask<ResponseDTO> UpdateProductAsync(UpdateShoesRequest request);
         public ValueTask<ResponseDTO> DeleteProductAsync(Guid Id);
-        public ValueTask<ResponseDTO> ExistsAsync(long Article);
-        public ValueTask<ResponseDTO> ExistsAsync(string Name);
+        public ValueTask<ResponseDTO> SearchProductAsync(long Article);
+        public ValueTask<ResponseDTO> SearchProductAsync(string Name);
     }
 }
