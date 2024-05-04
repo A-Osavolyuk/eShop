@@ -30,6 +30,7 @@ else
 @code {
     [SupplyParameterFromQuery(Name = "name")] public string Name { get; set; } = "";
     [SupplyParameterFromQuery(Name = "article")] public long Article { get; set; }
+
     private List<ProductDTO> Products { get; set; } = new();
     private string Message { get; set; } = string.Empty;
     private bool IsLoading { get; set; } = true;
@@ -56,7 +57,7 @@ else
 
             if (data.Count == 1)
             {
-                NavigationManager.NavigateTo($"/products/details/name={name}", true);
+                NavigationManager.NavigateTo($"/products/details?name={name}", true);
                 IsLoading = false;
             }
             else
@@ -89,7 +90,7 @@ else
         if (result.IsSucceeded)
         {
             var data = JsonConvert.DeserializeObject<SearchProductResponse>(result.Result!.ToString()!)!;
-            NavigationManager.NavigateTo($"/products/details/article={article}", true);
+            NavigationManager.NavigateTo($"/products/details?article={article}", true);
             IsLoading = false;
         }
         else

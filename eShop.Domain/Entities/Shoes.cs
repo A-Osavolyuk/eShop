@@ -6,7 +6,7 @@ namespace eShop.Domain.Entities
     {
         public Shoes() => this.ProductType = ProductType.Shoes;
         public int Size { get; set; }
-        public Colors Color { get; set; }
+        public ProductColor Color { get; set; }
         public Audience Audience { get; set; }
     }
 }

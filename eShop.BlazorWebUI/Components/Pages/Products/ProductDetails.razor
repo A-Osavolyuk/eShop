@@ -1,35 +1,44 @@
-﻿@page "/products/details/article={Article:long}"
-@page "/products/details/name={Name}"
+﻿@page "/products/details"
 
 @inject NavigationManager NavigationManager
 @inject IProductService ProductService
 @inject ISnackbar Snackbar
 
-<PageTitle>ProductDetails</PageTitle>
+<PageTitle>Product Details</PageTitle>
+
+<MudGrid>
+    <MudItem xs="6">
+        <MudPaper Class="pa-5" Outlined>
+            
+        </MudPaper>
+    </MudItem>
+</MudGrid>
 
 @code {
-    [Parameter] public Guid Id { get; set; }
-    [Parameter] public string Name { get; set; } = string.Empty;
-    [Parameter] public long Article { get; set; }
+    [SupplyParameterFromQuery(Name = "name")] public string Name { get; set; } = string.Empty;
+    [SupplyParameterFromQuery(Name = "article")] public long Article { get; set; }
 
     private ProductDTO Model { get; set; } = new();
+    private Type Type { get; set; } = typeof(ProductDTO);
 
     protected override async Task OnInitializedAsync()
     {
-        if (Id != Guid.Empty)
-        {
-            var result = await ProductService.GetProductByIdAsync(Id);
-            Model = DeserializeResponse(result)!;
-        }
-        else if (Article != 0)
+        await GetProduct(Name, Article);
+    }
+
+    private async Task GetProduct(string? Name, long Article)
+    {
+        if (Article != 0)
         {
             var result = await ProductService.GetProductByArticleAsync(Article);
             Model = DeserializeResponse(result)!;
+            Type = Model.GetType();
         }
-        else
+        else if(!string.IsNullOrEmpty(Name))
         {
-            var result = await ProductService.GetProductByNameAsync(Name);
+            var result = await ProductService.GetProductByNameAsync(Name!);
             Model = DeserializeResponse(result)!;
+            Type = Model.GetType();
         }
     }
 

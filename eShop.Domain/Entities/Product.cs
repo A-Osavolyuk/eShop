@@ -9,6 +9,7 @@ namespace eShop.Domain.Entities
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public ProductType ProductType { get; set; }
+        public string Compound { get; set; } = string.Empty;
         public Money Price { get; set; } = null!;
         public Guid SupplierId { get; set; }
         public Guid BrandId { get; set; }

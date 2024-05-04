@@ -117,12 +117,12 @@ namespace eShop.Application.Validation
             RuleFor(x => x.Audience)
                 .IsInEnum().WithMessage("Invalid audience.");
 
-            RuleFor(x => x.Size)
-                .LessThan(100).WithMessage("Size must be less then 100.")
-                .GreaterThan(20).WithMessage("Size must be greater then 20.");
+            //RuleFor(x => x.Sizes)
+            //    .LessThan(100).WithMessage("Size must be less then 100.")
+            //    .GreaterThan(20).WithMessage("Size must be greater then 20.");
 
-            RuleFor(x => x.Color)
-                .IsInEnum().WithMessage("Invalid color.");
+            //RuleFor(x => x.Colors)
+            //    .IsInEnum().WithMessage("Invalid color.");
         }
     }
 
@@ -251,12 +251,12 @@ namespace eShop.Application.Validation
             RuleFor(x => x.Audience)
                 .IsInEnum().WithMessage("Invalid audience.");
 
-            RuleFor(x => x.Size)
-                .LessThan(100).WithMessage("Size must be less then 100.")
-                .GreaterThan(20).WithMessage("Size must be greater then 20.");
+            //RuleFor(x => x.Size)
+            //    .LessThan(100).WithMessage("Size must be less then 100.")
+            //    .GreaterThan(20).WithMessage("Size must be greater then 20.");
 
-            RuleFor(x => x.Color)
-                .IsInEnum().WithMessage("Invalid color.");
+            //RuleFor(x => x.Colors)
+            //    .IsInEnum().WithMessage("Invalid color.");
         }
     }
 }

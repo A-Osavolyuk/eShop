@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.Enums
 {
-    public enum Colors
+    public enum ProductColor
     {
         Red,
         Green,
