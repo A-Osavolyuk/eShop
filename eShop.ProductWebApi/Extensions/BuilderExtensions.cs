@@ -1,9 +1,9 @@
 ﻿using eShop.ProductWebApi.Behaviors;
 using eShop.ProductWebApi.Repositories;
 
-namespace eShop.ProductWebApi
+namespace eShop.ProductWebApi.Extensions
 {
-    public static class Extensions
+    public static class BuilderExtensions
     {
         public static IHostApplicationBuilder AddApiServices(this IHostApplicationBuilder builder)
         {

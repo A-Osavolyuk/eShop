@@ -28,6 +28,7 @@ namespace eShop.ProductWebApi.Repositories
                         Name = x.Name,
                         Description = x.Description,
                         ProductType = x.ProductType,
+                        Compound = x.Compound,
                         Price = new Money
                         {
                             Amount = x.Price.Amount,
@@ -73,6 +74,7 @@ namespace eShop.ProductWebApi.Repositories
                         Name = x.Name,
                         Description = x.Description,
                         ProductType = x.ProductType,
+                        Compound = x.Compound,
                         Price = new Money
                         {
                             Amount = x.Price.Amount,

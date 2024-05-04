@@ -1,4 +1,5 @@
 ﻿using eShop.Domain.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace eShop.Domain.Entities
 {
