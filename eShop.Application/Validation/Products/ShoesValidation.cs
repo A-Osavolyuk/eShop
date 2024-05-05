@@ -29,10 +29,10 @@ namespace eShop.Application.Validation.Products
                 .MinimumLength(3).WithMessage("Description must contain at least 16 letters.")
                 .MaximumLength(128).WithMessage("Description must not be longer then 128 letters.");
 
-            RuleFor(x => x.Price.Currency)
+            RuleFor(x => x.Currency)
                 .IsInEnum().WithMessage("Invalid currency.");
 
-            RuleFor(x => x.Price.Amount)
+            RuleFor(x => x.Amount)
                 .LessThan(100_000m).WithMessage("Price must be less then 100 000.")
                 .GreaterThan(0.01m).WithMessage("Price must be greater then 0,01.");
 
@@ -74,10 +74,10 @@ namespace eShop.Application.Validation.Products
                 .MinimumLength(3).WithMessage("Description must contain at least 16 letters.")
                 .MaximumLength(128).WithMessage("Description must not be longer then 128 letters.");
 
-            RuleFor(x => x.Price.Currency)
+            RuleFor(x => x.Currency)
                 .IsInEnum().WithMessage("Invalid currency.");
 
-            RuleFor(x => x.Price.Amount)
+            RuleFor(x => x.Amount)
                 .LessThan(100_000m).WithMessage("Price must be less then 100 000.")
                 .GreaterThan(0.01m).WithMessage("Price must be greater then 0,01.");
 

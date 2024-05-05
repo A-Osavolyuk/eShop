@@ -31,11 +31,8 @@ namespace eShop.ProductWebApi.Repositories
                         Description = x.Description,
                         ProductType = x.ProductType,
                         Compound = x.Compound,
-                        Price = new Money
-                        {
-                            Amount = x.Price.Amount,
-                            Currency = x.Price.Currency,
-                        },
+                        Amount = x.Amount,
+                        Currency = x.Currency,
                         Brand = new BrandDTO
                         {
                             Id = x.Brand.Id,
@@ -77,11 +74,8 @@ namespace eShop.ProductWebApi.Repositories
                         Description = x.Description,
                         ProductType = x.ProductType,
                         Compound = x.Compound,
-                        Price = new Money
-                        {
-                            Amount = x.Price.Amount,
-                            Currency = x.Price.Currency,
-                        },
+                        Amount = x.Amount,
+                        Currency = x.Currency,
                         Brand = new BrandDTO
                         {
                             Id = x.Brand.Id,
@@ -233,7 +227,7 @@ namespace eShop.ProductWebApi.Repositories
                     }
 
                     var notFoundSupplierException = new NotFoundSupplierException(product.SupplierId);
-                    logger.LogWarning($"Failed on creating with error message: {notFoundSupplierException.Message}.");
+                    logger.LogWarning($"Failed on creating product with error message: {notFoundSupplierException.Message}.");
                     return new(notFoundSupplierException);
                 }
 
@@ -244,6 +238,59 @@ namespace eShop.ProductWebApi.Repositories
             catch (DbUpdateException dbUpdateException)
             {
                 logger.LogError($"Failed on creating product with error message: {dbUpdateException.InnerException}");
+                return new(new NotCreatedProductException());
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Failed on creating product with error message: {ex.Message}");
+                return new(ex);
+            }
+        }
+
+        public async ValueTask<Result<IEnumerable<ProductDTO>>> CreateProductsAsync(ProductRequestBase request)
+        {
+            try
+            {
+                logger.LogInformation($"Trying to create products.");
+
+                var bransExists = await context.Brands.AsNoTracking().AnyAsync(_ => _.Id == request.BrandId);
+                var supplierExists = await context.Suppliers.AsNoTracking().AnyAsync(_ => _.Id == request.SupplierId);
+
+                if (bransExists)
+                {
+                    if (supplierExists)
+                    {
+                        var variantId = Guid.NewGuid();
+                        var products = new List<Product>();
+                        if(request is IVariable colorable)
+                        {
+                            products = colorable.CreateVariants().ToList();
+                        }
+
+                        await context.Products.AddRangeAsync(products);
+                        await context.SaveChangesAsync();
+
+                        logger.LogInformation($"Products was successfully created.");
+                        return request.ProductType switch
+                        {
+                            ProductType.Clothing => new(products.Aggregate(new List<ClothingDTO>(), (acc, value) => acc.Append(mapper.Map<ClothingDTO>(value as Clothing)).ToList())),
+                            ProductType.Shoes => new(products.Aggregate(new List<ShoesDTO>(), (acc, value) => acc.Append(mapper.Map<ShoesDTO>(value as Shoes)).ToList())),
+                            _ => new(mapper.Map<IEnumerable<ProductDTO>>(products))
+                        };
+                    }
+
+                    var notFoundSupplierException = new NotFoundSupplierException(request.SupplierId);
+                    logger.LogWarning($"Failed on creating products with error message: {notFoundSupplierException.Message}.");
+                    return new(notFoundSupplierException);
+                }
+
+                var notFoundBrandException = new NotFoundBrandException(request.BrandId);
+                logger.LogWarning($"Failed on creating products with error message: {notFoundBrandException.Message}.");
+                return new(notFoundBrandException);
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                logger.LogError($"Failed on creating products with error message: {dbUpdateException.InnerException}");
                 return new(new NotCreatedProductException());
             }
             catch (Exception ex)
@@ -396,6 +443,7 @@ namespace eShop.ProductWebApi.Repositories
         public ValueTask<Result<ProductDTO>> GetProductByArticleAsync(long Article);
         public ValueTask<Result<ProductDTO>> GetProductByNameAsync(string Name);
         public ValueTask<Result<ProductDTO>> CreateProductAsync(Product product);
+        public ValueTask<Result<IEnumerable<ProductDTO>>> CreateProductsAsync(ProductRequestBase products);
         public ValueTask<Result<ProductDTO>> UpdateProductAsync(Product product);
         public ValueTask<Result<Unit>> DeleteProductByIdAsync(Guid Id);
         public ValueTask<Result<SearchProductResponse>> SearchAsync(long Article);

@@ -26,14 +26,7 @@ namespace eShop.ProductWebApi.Commands.Products
 
             if (validationResult.IsValid)
             {
-                var product = request.CreateProductRequest.ProductType switch
-                {
-                    ProductType.Clothing => mapper.Map<Clothing>(request.CreateProductRequest),
-                    ProductType.Shoes => mapper.Map<Shoes>(request.CreateProductRequest),
-                    _ => new Product()
-                };
-
-                var result = await repository.CreateProductAsync(product);
+                var result = await repository.CreateProductAsync(mapper.Map<Clothing>(request.CreateProductRequest));
                 return result;
             }
 

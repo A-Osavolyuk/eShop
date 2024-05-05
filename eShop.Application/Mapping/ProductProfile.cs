@@ -10,6 +10,10 @@ namespace eShop.Application.MappingProfiles
         public ProductProfile()
         {
             CreateMap<Product, ProductDTO>();
+            CreateMap<Product, ShoesDTO>();
+            CreateMap<Product, ClothingDTO>();
+            CreateMap<Product, Shoes>();
+            CreateMap<Product, Clothing>();
             CreateMap<Clothing, ClothingDTO>();
             CreateMap<Shoes, ShoesDTO>();
             CreateMap<ProductRequestBase, Product>();

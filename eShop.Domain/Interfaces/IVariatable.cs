@@ -1,7 +1,9 @@
-﻿namespace eShop.Domain.Interfaces
+﻿using eShop.Domain.Entities;
+
+namespace eShop.Domain.Interfaces
 {
     public interface IVariable
     {
-        public Guid VariantId { get; set; }
+        public IEnumerable<Product> CreateVariants();
     }
 }

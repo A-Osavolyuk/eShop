@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using eShop.Domain.DTOs.Requests;
-using eShop.Domain.Enums;
 using eShop.Domain.Exceptions;
 using eShop.ProductWebApi.Repositories;
 using FluentValidation;
@@ -26,14 +25,7 @@ namespace eShop.ProductWebApi.Commands.Products
 
             if (validationResult.IsValid)
             {
-                var product = request.CreateProductRequest.ProductType switch
-                {
-                    ProductType.Clothing => mapper.Map<Shoes>(request.CreateProductRequest),
-                    ProductType.Shoes => mapper.Map<Shoes>(request.CreateProductRequest),
-                    _ => new Product()
-                };
-
-                var result = await repository.CreateProductAsync(product);
+                var result = await repository.CreateProductAsync(mapper.Map<Shoes>(request.CreateProductRequest));
                 return result;
             }
 

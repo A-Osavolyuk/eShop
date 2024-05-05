@@ -5,7 +5,7 @@ using eShop.ProductWebApi;
 
 namespace eShop.Domain.DTOs.Requests
 {
-    public class CreateClothingRequest : ProductRequestBase, IColorable, ISizeable
+    public class CreateClothingRequest : ProductRequestBase, IVariable
     {
         public CreateClothingRequest() => ProductType = ProductType.Clothing;
         public List<ProductSize> Sizes { get; set; } = new();
@@ -21,7 +21,6 @@ namespace eShop.Domain.DTOs.Requests
             {
                 yield return new Clothing()
                 {
-                    Id = Guid.NewGuid(),
                     Audience = clothingRequest.Audience,
                     Article = Utitlites.ArticleGenerator(),
                     VariantId = variantId,
@@ -31,7 +30,8 @@ namespace eShop.Domain.DTOs.Requests
                     Compound = clothingRequest.Compound,
                     Description = clothingRequest.Description,
                     Name = clothingRequest.Name,
-                    Price = clothingRequest.Price,
+                    Amount = clothingRequest.Amount,
+                    Currency = clothingRequest.Currency,
                     ProductType = clothingRequest.ProductType,
                     Sizes = clothingRequest.Sizes
                 };

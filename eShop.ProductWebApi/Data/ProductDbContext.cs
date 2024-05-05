@@ -1,5 +1,4 @@
-﻿using eShop.Domain.Enums;
-using eShop.ProductWebApi.Extensions;
+﻿using eShop.ProductWebApi.Extensions;
 
 namespace eShop.ProductWebApi.Data
 {
@@ -21,12 +20,6 @@ namespace eShop.ProductWebApi.Data
 
             modelBuilder.Entity<Product>().HasOne(x => x.Supplier).WithMany().HasForeignKey(x => x.SupplierId);
             modelBuilder.Entity<Product>().HasOne(x => x.Brand).WithMany().HasForeignKey(x => x.BrandId);
-
-            modelBuilder.Entity<Product>().OwnsOne(x => x.Price, p =>
-            {
-                p.Property(p => p.Currency).HasColumnName("Currency");
-                p.Property(p => p.Amount).HasColumnName("Amount");
-            });
 
             modelBuilder.GenerateSeedData();
         }

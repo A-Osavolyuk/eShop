@@ -70,6 +70,15 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [HttpPost("create-products-clothing")]
+        public async ValueTask<ActionResult<ResponseDTO>> CreateClothingProducts([FromBody] CreateClothingRequest createProductRequest)
+        {
+            var result = await sender.Send(new CreateClothingProductsCommand(createProductRequest));
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage("Product was successfully created.").WithResult(s).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
         [HttpPost("create-product-shoes")]
         public async ValueTask<ActionResult<ResponseDTO>> CreateShoesProduct([FromBody] CreateShoesRequest createProductRequest)
         {
