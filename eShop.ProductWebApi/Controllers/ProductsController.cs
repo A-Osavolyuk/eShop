@@ -80,19 +80,19 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpPut("update-product-clothing")]
-        public async ValueTask<ActionResult<ResponseDTO>> UpdateClothingProduct([FromBody] UpdateClothingRequest updateProductRequest)
+        [HttpPut("update-product-clothing/{Id:guid}")]
+        public async ValueTask<ActionResult<ResponseDTO>> UpdateClothingProduct([FromBody] UpdateClothingRequest updateProductRequest, Guid Id)
         {
-            var result = await sender.Send(new UpdateClothingProductCommand(updateProductRequest));
+            var result = await sender.Send(new UpdateClothingProductCommand(updateProductRequest, Id));
             return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResultMessage("Product was successfully updated.").WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpPut("update-product-shoes")]
-        public async ValueTask<ActionResult<ResponseDTO>> UpdateShoesProduct([FromBody] UpdateShoesRequest updateProductRequest)
+        [HttpPut("update-product-shoes/{Id:guid}")]
+        public async ValueTask<ActionResult<ResponseDTO>> UpdateShoesProduct([FromBody] UpdateShoesRequest updateProductRequest, Guid Id)
         {
-            var result = await sender.Send(new UpdateShoesProductCommand(updateProductRequest));
+            var result = await sender.Send(new UpdateShoesProductCommand(updateProductRequest, Id));
             return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResultMessage("Product was successfully updated.").WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));

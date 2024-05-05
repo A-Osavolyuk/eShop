@@ -8,7 +8,7 @@ using MediatR;
 
 namespace eShop.ProductWebApi.Commands.Products
 {
-    public record UpdateClothingProductCommand(UpdateClothingRequest UpdateProductRequest) : IRequest<Result<ProductDTO>>;
+    public record UpdateClothingProductCommand(UpdateClothingRequest UpdateProductRequest, Guid Id) : IRequest<Result<ProductDTO>>;
 
     public class UpdateClothingProductCommandHandler(
         IProductRepository repository,
@@ -33,6 +33,7 @@ namespace eShop.ProductWebApi.Commands.Products
                     _ => new Product()
                 };
 
+                product.Id = request.Id;
                 var result = await repository.UpdateProductAsync(product);
                 return result;
             }

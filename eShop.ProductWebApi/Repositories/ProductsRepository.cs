@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using eShop.Domain.DTOs.Requests;
 using eShop.Domain.DTOs.Responses;
 using eShop.Domain.Enums;
+using eShop.Domain.Interfaces;
 using eShop.ProductWebApi.Exceptions;
 using LanguageExt;
 using Unit = LanguageExt.Unit;
@@ -199,10 +201,9 @@ namespace eShop.ProductWebApi.Repositories
 
         public async ValueTask<Result<ProductDTO>> CreateProductAsync(Product product)
         {
-            var productTypeName = product.ProductType.ToString().ToLowerInvariant();
             try
             {
-                logger.LogInformation($"Trying to create product of type {productTypeName}.");
+                logger.LogInformation($"Trying to create product.");
 
                 var bransExists = await context.Brands.AsNoTracking().AnyAsync(_ => _.Id == product.BrandId);
                 var supplierExists = await context.Suppliers.AsNoTracking().AnyAsync(_ => _.Id == product.SupplierId);
@@ -211,7 +212,7 @@ namespace eShop.ProductWebApi.Repositories
                 {
                     if (supplierExists)
                     {
-                        product.Article = ArticleGenerator();
+                        product.Article = Utitlites.ArticleGenerator();
 
                         var entity = product.ProductType switch
                         {
@@ -222,8 +223,8 @@ namespace eShop.ProductWebApi.Repositories
 
                         await context.SaveChangesAsync();
 
-                        logger.LogInformation($"Product of type: {productTypeName} was successfully created.");
-                        return entity.ProductType switch
+                        logger.LogInformation($"Product was successfully created.");
+                        return product.ProductType switch
                         {
                             ProductType.Clothing => new(mapper.Map<ClothingDTO>(entity)),
                             ProductType.Shoes => new(mapper.Map<ShoesDTO>(entity)),
@@ -232,22 +233,22 @@ namespace eShop.ProductWebApi.Repositories
                     }
 
                     var notFoundSupplierException = new NotFoundSupplierException(product.SupplierId);
-                    logger.LogWarning($"Failed on creating product of type: {productTypeName} with error message: {notFoundSupplierException.Message}.");
+                    logger.LogWarning($"Failed on creating with error message: {notFoundSupplierException.Message}.");
                     return new(notFoundSupplierException);
                 }
 
                 var notFoundBrandException = new NotFoundBrandException(product.BrandId);
-                logger.LogWarning($"Failed on creating product of type: {productTypeName} with error message: {notFoundBrandException.Message}.");
+                logger.LogWarning($"Failed on creating product with error message: {notFoundBrandException.Message}.");
                 return new(notFoundBrandException);
             }
             catch (DbUpdateException dbUpdateException)
             {
-                logger.LogError($"Failed on creating product of type: {productTypeName} with error message: {dbUpdateException.InnerException}");
+                logger.LogError($"Failed on creating product with error message: {dbUpdateException.InnerException}");
                 return new(new NotCreatedProductException());
             }
             catch (Exception ex)
             {
-                logger.LogError($"Failed on creating product of type: {productTypeName} with error message: {ex.Message}");
+                logger.LogError($"Failed on creating product with error message: {ex.Message}");
                 return new(ex);
             }
         }
@@ -340,12 +341,6 @@ namespace eShop.ProductWebApi.Repositories
             }
         }
 
-        private long ArticleGenerator()
-        {
-            var article = new Random().NextInt64(100_000_000, 100_000_000_000);
-            return article;
-        }
-
         public async ValueTask<Result<SearchProductResponse>> SearchAsync(long Article)
         {
             try
@@ -403,7 +398,7 @@ namespace eShop.ProductWebApi.Repositories
         public ValueTask<Result<ProductDTO>> CreateProductAsync(Product product);
         public ValueTask<Result<ProductDTO>> UpdateProductAsync(Product product);
         public ValueTask<Result<Unit>> DeleteProductByIdAsync(Guid Id);
-        public ValueTask<Result<SearchProductResponse>> SearchAsync(long Article);  
-        public ValueTask<Result<SearchProductResponse>> SearchAsync(string Name);  
+        public ValueTask<Result<SearchProductResponse>> SearchAsync(long Article);
+        public ValueTask<Result<SearchProductResponse>> SearchAsync(string Name);
     }
 }

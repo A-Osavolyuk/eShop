@@ -58,10 +58,6 @@ namespace eShop.Application.Validation.Products
                 .IsValidGuid().WithMessage("Invalid SupplierId.")
                 .NotEmpty().WithMessage("SupplierId is required.");
 
-            RuleFor(x => x.Id)
-                .IsValidGuid().WithMessage("Invalid Id.")
-                .NotEmpty().WithMessage("Id is required.");
-
             RuleFor(x => x.BrandId)
                 .IsValidGuid().WithMessage("Invalid BrandId.")
                 .NotEmpty().WithMessage("BrandId is required.");
@@ -89,7 +85,7 @@ namespace eShop.Application.Validation.Products
             RuleForEach(x => x.Sizes)
                 .IsInEnum().WithMessage("Invalid size.");
 
-            RuleForEach(x => x.Colors)
+            RuleFor(x => x.Color)
                 .IsInEnum().WithMessage("Invalid color.");
         }
     }
