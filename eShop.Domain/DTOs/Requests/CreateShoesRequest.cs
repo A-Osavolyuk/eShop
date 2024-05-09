@@ -5,7 +5,7 @@ using eShop.ProductWebApi;
 
 namespace eShop.Domain.DTOs.Requests
 {
-    public class CreateShoesRequest : ProductRequestBase, IVariable
+    public class CreateShoesRequest : CreateProductRequestBase, IVariable
     {
         public CreateShoesRequest() => ProductType = ProductType.Shoes;
         public List<ProductSize> Sizes { get; set; } = new();

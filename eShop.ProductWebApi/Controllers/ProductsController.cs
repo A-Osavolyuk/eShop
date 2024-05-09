@@ -63,9 +63,9 @@ namespace eShop.ProductWebApi.Controllers
         [HttpPost("create-product-clothing")]
         public async ValueTask<ActionResult<ResponseDTO>> CreateClothingProduct([FromBody] CreateClothingRequest createProductRequest)
         {
-            var result = await sender.Send(new CreateClothingProductCommand(createProductRequest));
+            var result = await sender.Send(new CreateProductCommand<CreateProductRequestBase, ProductDTO>(createProductRequest));
             return result.Match(
-                s => CreatedAtAction(nameof(GetProductById), new { s.Id }, 
+                s => CreatedAtAction(nameof(GetProductById), new { s.First().Id }, 
                     new ResponseBuilder().Succeeded().WithResultMessage("Product was successfully created.").WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
@@ -73,9 +73,9 @@ namespace eShop.ProductWebApi.Controllers
         [HttpPost("create-product-shoes")]
         public async ValueTask<ActionResult<ResponseDTO>> CreateShoesProduct([FromBody] CreateShoesRequest createProductRequest)
         {
-            var result = await sender.Send(new CreateShoesProductCommand(createProductRequest));
+            var result = await sender.Send(new CreateProductCommand<CreateShoesRequest, ShoesDTO>(createProductRequest));
             return result.Match(
-                s => CreatedAtAction(nameof(GetProductById), new { s.Id },
+                s => CreatedAtAction(nameof(GetProductById), new { s.First().Id },
                     new ResponseBuilder().Succeeded().WithResultMessage("Product was successfully created.").WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
@@ -83,7 +83,7 @@ namespace eShop.ProductWebApi.Controllers
         [HttpPut("update-product-clothing/{Id:guid}")]
         public async ValueTask<ActionResult<ResponseDTO>> UpdateClothingProduct([FromBody] UpdateClothingRequest updateProductRequest, Guid Id)
         {
-            var result = await sender.Send(new UpdateClothingProductCommand(updateProductRequest, Id));
+            var result = await sender.Send(new UpdateProductCommand<UpdateClothingRequest, ClothingDTO>(updateProductRequest, Id));
             return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResultMessage("Product was successfully updated.").WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
@@ -92,7 +92,7 @@ namespace eShop.ProductWebApi.Controllers
         [HttpPut("update-product-shoes/{Id:guid}")]
         public async ValueTask<ActionResult<ResponseDTO>> UpdateShoesProduct([FromBody] UpdateShoesRequest updateProductRequest, Guid Id)
         {
-            var result = await sender.Send(new UpdateShoesProductCommand(updateProductRequest, Id));
+            var result = await sender.Send(new UpdateProductCommand<UpdateShoesRequest, ShoesDTO>(updateProductRequest, Id));
             return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResultMessage("Product was successfully updated.").WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));

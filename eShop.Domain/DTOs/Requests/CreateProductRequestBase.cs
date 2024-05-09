@@ -3,7 +3,7 @@ using eShop.Domain.Enums;
 
 namespace eShop.Domain.DTOs.Requests
 {
-    public class ProductRequestBase
+    public class CreateProductRequestBase
     {
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;

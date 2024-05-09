@@ -1,9 +1,8 @@
 ﻿using eShop.Domain.Enums;
-using eShop.Domain.Interfaces;
 
 namespace eShop.Domain.DTOs.Requests
 {
-    public class UpdateClothingRequest : ProductRequestBase
+    public class UpdateClothingRequest : UpdateProductRequestBase
     {
         public UpdateClothingRequest() => ProductType = ProductType.Clothing;
         public List<ProductSize> Sizes { get; set; } = new();

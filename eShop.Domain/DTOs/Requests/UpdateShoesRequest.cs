@@ -2,7 +2,7 @@
 
 namespace eShop.Domain.DTOs.Requests
 {
-    public class UpdateShoesRequest : ProductRequestBase
+    public class UpdateShoesRequest : UpdateProductRequestBase
     {
         public UpdateShoesRequest() => ProductType = ProductType.Shoes;
         public List<ProductSize> Sizes { get; set; } = new();

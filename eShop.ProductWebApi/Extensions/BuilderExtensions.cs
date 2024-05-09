@@ -1,5 +1,8 @@
-﻿using eShop.ProductWebApi.Behaviors;
+﻿using eShop.Domain.DTOs.Requests;
+using eShop.ProductWebApi.Behaviors;
+using eShop.ProductWebApi.Commands.Products;
 using eShop.ProductWebApi.Repositories;
+using MediatR;
 
 namespace eShop.ProductWebApi.Extensions
 {
@@ -22,6 +25,7 @@ namespace eShop.ProductWebApi.Extensions
             {
                 c.RegisterServicesFromAssemblyContaining<IAssemblyMarker>();
                 c.AddOpenBehavior(typeof(LoggingBehavior<,>));
+                
             });
 
             return builder;
@@ -32,6 +36,19 @@ namespace eShop.ProductWebApi.Extensions
             builder.Services.AddScoped<IProductRepository, ProductsRepository>();
             builder.Services.AddScoped<ISuppliersRepository, SuppliersRepository>();
             builder.Services.AddScoped<IBrandsRepository, BrandsRepository>();
+
+            //Create product commands
+            builder.Services.AddTransient<IRequestHandler<CreateProductCommand<CreateClothingRequest, ClothingDTO>, Result<IEnumerable<ClothingDTO>>>, 
+                CreateProductCommandHandler<CreateClothingRequest, ClothingDTO, Clothing>>();
+            builder.Services.AddTransient<IRequestHandler<CreateProductCommand<CreateShoesRequest, ShoesDTO>, Result<IEnumerable<ShoesDTO>>>,
+                CreateProductCommandHandler<CreateShoesRequest, ShoesDTO, Shoes>>();
+
+            //Update product commands
+            builder.Services.AddTransient<IRequestHandler<UpdateProductCommand<UpdateClothingRequest, ClothingDTO>, Result<ClothingDTO>>,
+                UpdateProductCommandHandler<UpdateClothingRequest, ClothingDTO, Clothing>>();
+            builder.Services.AddTransient<IRequestHandler<UpdateProductCommand<UpdateShoesRequest, ShoesDTO>, Result<ShoesDTO>>,
+                UpdateProductCommandHandler<UpdateShoesRequest, ShoesDTO, Shoes>>();
+
             return builder;
         }
     }
