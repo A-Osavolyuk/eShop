@@ -22,7 +22,7 @@ namespace eShop.Domain.DTOs.Requests
                 yield return new Shoes()
                 {
                     Audience = clothingRequest.Audience,
-                    Article = Utitlites.ArticleGenerator(),
+                    Article = Utilities.ArticleGenerator(),
                     VariantId = variantId,
                     BrandId = clothingRequest.BrandId,
                     SupplierId = clothingRequest.SupplierId,

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Azure;
 using eShop.Domain.DTOs.Requests;
 using eShop.Domain.DTOs.Responses;
 using eShop.Domain.Enums;
@@ -206,7 +207,7 @@ namespace eShop.ProductWebApi.Repositories
                 {
                     if (supplierExists)
                     {
-                        product.Article = Utitlites.ArticleGenerator();
+                        product.Article = Utilities.ArticleGenerator();
 
                         var entity = product.ProductType switch
                         {
@@ -247,11 +248,14 @@ namespace eShop.ProductWebApi.Repositories
             }
         }
 
-        public async ValueTask<Result<IEnumerable<ProductDTO>>> CreateProductsAsync(ProductRequestBase request)
+        public async ValueTask<Result<IEnumerable<TResult>>> CreateProductsAsync<TResult, TEntity, TRequest>(TRequest request)
+            where TResult : ProductDTO
+            where TEntity : Product
+            where TRequest : ProductRequestBase
         {
             try
             {
-                logger.LogInformation($"Trying to create products.");
+                logger.LogInformation($"Trying to create product.");
 
                 var bransExists = await context.Brands.AsNoTracking().AnyAsync(_ => _.Id == request.BrandId);
                 var supplierExists = await context.Suppliers.AsNoTracking().AnyAsync(_ => _.Id == request.SupplierId);
@@ -260,37 +264,48 @@ namespace eShop.ProductWebApi.Repositories
                 {
                     if (supplierExists)
                     {
-                        var variantId = Guid.NewGuid();
-                        var products = new List<Product>();
-                        if(request is IVariable colorable)
+                        if (request is IVariable variable)
                         {
-                            products = colorable.CreateVariants().ToList();
+                            logger.LogInformation($"Creating a variety of products.");
+
+                            var products = variable.CreateVariants().ToList();
+                            await context.Products.AddRangeAsync(products);
+                            await context.SaveChangesAsync();
+
+                            logger.LogInformation($"Products were successfully created.");
+
+                            return new(await context.Products
+                                .AsNoTracking()
+                                .OfType<TEntity>()
+                                .ProjectTo<TResult>(mapper.ConfigurationProvider)
+                                .ToListAsync());
                         }
-
-                        await context.Products.AddRangeAsync(products);
-                        await context.SaveChangesAsync();
-
-                        logger.LogInformation($"Products was successfully created.");
-                        return request.ProductType switch
+                        else
                         {
-                            ProductType.Clothing => new(products.Aggregate(new List<ClothingDTO>(), (acc, value) => acc.Append(mapper.Map<ClothingDTO>(value as Clothing)).ToList())),
-                            ProductType.Shoes => new(products.Aggregate(new List<ShoesDTO>(), (acc, value) => acc.Append(mapper.Map<ShoesDTO>(value as Shoes)).ToList())),
-                            _ => new(mapper.Map<IEnumerable<ProductDTO>>(products))
-                        };
+                            logger.LogInformation($"Creating single product.");
+
+                            var product = mapper.Map<TEntity>(request);
+                            var entity = (await context.Products.AddAsync(product)).Entity;
+                            await context.SaveChangesAsync();
+
+                            logger.LogInformation($"Product was successfully created.");
+
+                            return new(new List<TResult>() { mapper.Map<TResult>(entity) });
+                        }
                     }
 
                     var notFoundSupplierException = new NotFoundSupplierException(request.SupplierId);
-                    logger.LogWarning($"Failed on creating products with error message: {notFoundSupplierException.Message}.");
+                    logger.LogWarning($"Failed on creating product with error message: {notFoundSupplierException.Message}.");
                     return new(notFoundSupplierException);
                 }
 
                 var notFoundBrandException = new NotFoundBrandException(request.BrandId);
-                logger.LogWarning($"Failed on creating products with error message: {notFoundBrandException.Message}.");
+                logger.LogWarning($"Failed on creating product with error message: {notFoundBrandException.Message}.");
                 return new(notFoundBrandException);
             }
             catch (DbUpdateException dbUpdateException)
             {
-                logger.LogError($"Failed on creating products with error message: {dbUpdateException.InnerException}");
+                logger.LogError($"Failed on creating product with error message: {dbUpdateException.InnerException}");
                 return new(new NotCreatedProductException());
             }
             catch (Exception ex)
@@ -443,7 +458,8 @@ namespace eShop.ProductWebApi.Repositories
         public ValueTask<Result<ProductDTO>> GetProductByArticleAsync(long Article);
         public ValueTask<Result<ProductDTO>> GetProductByNameAsync(string Name);
         public ValueTask<Result<ProductDTO>> CreateProductAsync(Product product);
-        public ValueTask<Result<IEnumerable<ProductDTO>>> CreateProductsAsync(ProductRequestBase products);
+        public ValueTask<Result<IEnumerable<TResult>>> CreateProductsAsync<TResult, TEntity, TRequest>(TRequest request)
+            where TResult : ProductDTO where TEntity : Product where TRequest : ProductRequestBase;
         public ValueTask<Result<ProductDTO>> UpdateProductAsync(Product product);
         public ValueTask<Result<Unit>> DeleteProductByIdAsync(Guid Id);
         public ValueTask<Result<SearchProductResponse>> SearchAsync(long Article);

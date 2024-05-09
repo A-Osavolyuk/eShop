@@ -1,6 +1,6 @@
 ﻿namespace eShop.ProductWebApi
 {
-    public static class Utitlites
+    public static class Utilities
     {
         public static long ArticleGenerator()
         {

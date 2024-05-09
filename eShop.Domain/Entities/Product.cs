@@ -1,9 +1,11 @@
 ﻿using eShop.Domain.Enums;
+using eShop.ProductWebApi;
 
 namespace eShop.Domain.Entities
 {
     public class Product
     {
+        public Product() => Article = Utilities.ArticleGenerator();
         public Guid Id { get; set; } = Guid.Empty;
         public Guid VariantId { get; set; } = Guid.Empty;
         public long Article { get; set; }
