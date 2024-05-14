@@ -1,8 +1,16 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var emailService = builder.AddProject<Projects.eShop_EmailSenderWebApi>("eshop-emailsenderwebapi");
+var rabbitMQ = builder.AddRabbitMQ("eShopRabbitMQ", port: 25001)
+    .WithManagementPlugin()
+    .WithEnvironment("RABBITMQ_DEFAULT_USER", "user")
+    .WithEnvironment("RABBITMQ_DEFAULT_PASS", "b2ce482e-9678-43b9-82e3-3b5ec7148355");
 
-var db = builder.AddSqlServer("eShopSqlServer", port: 29001).WithEnvironment("MSSQL_SA_PASSWORD", "Password_1234");
+var redisCache = builder.AddRedis("eShopRedis", 25101);
+
+var emailService = builder.AddProject<Projects.eShop_EmailSenderWebApi>("eshop-emailsenderwebapi")
+    .WithReference(rabbitMQ);
+
+var db = builder.AddSqlServer("eShopSqlServer", port: 25201).WithEnvironment("MSSQL_SA_PASSWORD", "Password_1234");
 
 var authApi = builder.AddProject<Projects.eShop_AuthWebApi>("eshop-authwebapi")
     .WithReference(db)
