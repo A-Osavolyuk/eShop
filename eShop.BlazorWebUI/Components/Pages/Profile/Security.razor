@@ -70,7 +70,7 @@
 
     private async Task ChangePassword()
     {
-        var options = new DialogOptions { CloseOnEscapeKey = true, ClassBackground = "blured", FullWidth = true };
+        var options = new DialogOptions { CloseOnEscapeKey = true, BackgroundClass = "blured", FullWidth = true };
         var dialog = await DialogService.ShowAsync<ChangePasswordDialog>("Change Password", options);
     }
 }

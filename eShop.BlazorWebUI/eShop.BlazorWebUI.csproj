@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
@@ -9,8 +9,8 @@
   <ItemGroup>
     <PackageReference Include="Blazored.FluentValidation" Version="2.1.0" />
     <PackageReference Include="Blazored.Toast" Version="4.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.0-preview.2.24128.4" />
-    <PackageReference Include="MudBlazor" Version="6.16.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.4" />
+    <PackageReference Include="MudBlazor" Version="7.0.0-preview.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
@@ -18,7 +18,7 @@
     <ProjectReference Include="..\eShop.Application\eShop.Application.csproj" />
     <ProjectReference Include="..\eShop.Domain\eShop.Domain.csproj" />
     <ProjectReference Include="..\eShop.Infrastucture\eShop.Infrastructure.csproj" />
-    <ProjectReference Include="..\eShop\eShop\eShop.ServiceDefaults\eShop.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\eShop\eShop.ServiceDefaults\eShop.ServiceDefaults.csproj" />
   </ItemGroup>
 
 </Project>

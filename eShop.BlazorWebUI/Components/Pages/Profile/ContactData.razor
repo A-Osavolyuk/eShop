@@ -53,13 +53,13 @@
     private async Task ChangeEmailAddress()
     {
         ;
-        var options = new DialogOptions { CloseOnEscapeKey = true, ClassBackground = "blured", FullWidth = true };
+        var options = new DialogOptions { CloseOnEscapeKey = true, BackgroundClass = "blured", FullWidth = true };
         var dialog = await DialogService.ShowAsync<ChangeEmailDialog>("Change email address", options);
     }
 
     private async Task ChangePhoneNumber()
     {
-        var options = new DialogOptions { CloseOnEscapeKey = true, ClassBackground = "blured", FullWidth = true };
+        var options = new DialogOptions { CloseOnEscapeKey = true, BackgroundClass = "blured", FullWidth = true };
         var dialog = await DialogService.ShowAsync<ChangePhoneNumberDialog>("Change phone number", options);
     }
 

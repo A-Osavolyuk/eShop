@@ -1,5 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+
 builder.AddApiServices();
 
 builder.Services.AddMassTransit(x =>
@@ -19,6 +21,8 @@ builder.Services.AddMassTransit(x =>
 });
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 if (app.Environment.IsDevelopment())
 {

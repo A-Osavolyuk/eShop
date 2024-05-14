@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsAspireHost>true</IsAspireHost>
+    <UserSecretsId>25917b55-256a-4dcc-95c1-ae526ad964ba</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting" Version="8.0.0-preview.7.24251.11" />
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.0.0-preview.7.24251.11" />
+    <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="8.0.0-preview.7.24251.11" />
+    <PackageReference Include="Aspire.Hosting.Redis" Version="8.0.0-preview.7.24251.11" />
+    <PackageReference Include="Aspire.Hosting.SqlServer" Version="8.0.0-preview.7.24251.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\eShop.AuthWebApi\eShop.AuthWebApi.csproj" />
+    <ProjectReference Include="..\..\eShop.BlazorWebUI\eShop.BlazorWebUI.csproj" />
+    <ProjectReference Include="..\..\eShop.EmailSenderWebApi\eShop.EmailSenderWebApi.csproj" />
+    <ProjectReference Include="..\..\eShop.ProductWebApi\eShop.ProductWebApi.csproj" />
+  </ItemGroup>
+
+</Project>

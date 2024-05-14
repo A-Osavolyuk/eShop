@@ -79,7 +79,7 @@
 
     private async Task ChangeUserName()
     {
-        var options = new DialogOptions { CloseOnEscapeKey = true, ClassBackground = "blured", FullWidth = true };
+        var options = new DialogOptions { CloseOnEscapeKey = true, BackgroundClass = "blured", FullWidth = true };
         var dialog = await DialogService.ShowAsync<ChangeUserNameDialog>("Change User Name", options);
         var result = await dialog.Result;
 
@@ -103,7 +103,7 @@
         };
         var parameters = new DialogParameters<ChangePersonalDataDialog>();
         parameters.Add(x => x.Model, model);
-        var options = new DialogOptions { CloseOnEscapeKey = true, ClassBackground = "blured", FullWidth = true };
+        var options = new DialogOptions { CloseOnEscapeKey = true, BackgroundClass = "blured", FullWidth = true };
         var dialog = await DialogService.ShowAsync<ChangePersonalDataDialog>("Change Personal Data", parameters, options);
         var result = await dialog.Result;
 

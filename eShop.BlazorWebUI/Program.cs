@@ -8,6 +8,8 @@ using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+
 builder.Services.AddCascadingAuthenticationState();
 
 builder.Services.AddRazorComponents()
@@ -33,6 +35,8 @@ builder.Services.AddMudServices(config =>
 builder.Services.AddBlazoredToast();
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 
 if (!app.Environment.IsDevelopment())

@@ -1,21 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>2fde9022-8d0d-4ca9-bdd2-c61bccefc593</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0-preview.1.24113.3" />
+	  <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0-preview.7.24251.11" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.0" />
     <PackageReference Include="LanguageExt.Core" Version="4.4.8" />
     <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.0-develop.1711" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="9.0.0-preview.2.24128.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.0-preview.2.24128.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.0-preview.1.24081.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="8.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0-preview.7.24251.11" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.4.0-preview1" />
   </ItemGroup>
@@ -23,7 +27,7 @@
   <ItemGroup>
     <ProjectReference Include="..\eShop.Application\eShop.Application.csproj" />
     <ProjectReference Include="..\eShop.Domain\eShop.Domain.csproj" />
-    <ProjectReference Include="..\eShop\eShop\eShop.ServiceDefaults\eShop.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\eShop\eShop.ServiceDefaults\eShop.ServiceDefaults.csproj" />
   </ItemGroup>
 
 </Project>

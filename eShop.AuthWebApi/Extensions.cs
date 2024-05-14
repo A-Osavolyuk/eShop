@@ -24,7 +24,7 @@ namespace eShop.AuthWebApi
             builder.AddAuth();
             builder.AddDependencyInjection();
 
-            builder.Services.AddDbContext<AuthDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("DB")));
+            builder.AddSqlServerDbContext<AuthDbContext>("SqlServer");
 
             builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOptions"));
 

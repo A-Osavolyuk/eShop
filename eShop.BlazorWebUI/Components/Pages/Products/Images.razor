@@ -1,0 +1,68 @@
+﻿@page "/imageupload"
+@using System.Net.Http
+@using Microsoft.AspNetCore.Components.Forms
+
+<h3>Upload Image</h3>
+
+<InputFile multiple="true" OnChange="HandleFileChange" />
+<InputText @bind-Value=Id></InputText>
+
+<button @onclick="UploadImage">Upload</button>
+
+@if (uploadMessage != null)
+{
+    <p>@uploadMessage</p>
+}
+
+@code {
+    private string uploadMessage;
+    private string Id = string.Empty;
+
+    private List<IFormFile> imageFiles = new List<IFormFile>();
+
+    private async Task HandleFileChange(InputFileChangeEventArgs e)
+    {
+        for (int x = 0, i = 0; x < 5 ; x++, i++)
+        {
+            var stream = e.File.OpenReadStream();
+            var memoryStream = new MemoryStream();
+            await stream.CopyToAsync(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+
+            var formFile = new FormFile(memoryStream, 0, memoryStream.Length, e.File.Name, e.File.Name + $"_{i}");
+            imageFiles.Add(formFile);
+        }
+    }
+
+
+    private async Task UploadImage()
+    {
+        if (imageFiles != null)
+        {
+            using (var client = new HttpClient())
+            {
+                var formData = new MultipartFormDataContent();
+                
+                foreach (var image in imageFiles)
+                {
+                    formData.Add(new StreamContent(image.OpenReadStream()), "Images", image.Name);
+                }
+
+                var response = await client.PostAsync($"https://localhost:8501/api/v1/Products/upload?Id={Id}", formData);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    uploadMessage = "Image uploaded successfully";
+                }
+                else
+                {
+                    uploadMessage = "Error uploading image: " + response.ReasonPhrase;
+                }
+            }
+        }
+        else
+        {
+            uploadMessage = "Please select an image to upload";
+        }
+    }
+}

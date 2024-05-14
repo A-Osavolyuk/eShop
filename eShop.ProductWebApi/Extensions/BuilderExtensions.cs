@@ -16,7 +16,7 @@ namespace eShop.ProductWebApi.Extensions
             builder.AddMapping();
             builder.AddValidation();
 
-            builder.Services.AddDbContext<ProductDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("DB")));
+            builder.AddSqlServerDbContext<ProductDbContext>("SqlServer");
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
