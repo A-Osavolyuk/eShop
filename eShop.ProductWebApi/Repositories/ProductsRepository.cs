@@ -32,21 +32,14 @@ namespace eShop.ProductWebApi.Repositories
                         Description = x.Description,
                         ProductType = x.ProductType,
                         Compound = x.Compound,
-                        Amount = x.Amount,
+                        Amount = x.Price,
                         Currency = x.Currency,
                         Brand = new BrandDTO
                         {
                             Id = x.Brand.Id,
                             Name = x.Brand.Name,
                             Country = x.Brand.Country
-                        },
-                        Supplier = new SupplierDTO
-                        {
-                            Id = x.Supplier.Id,
-                            Name = x.Supplier.Name,
-                            ContactEmail = x.Supplier.ContactEmail,
-                            ContactPhone = x.Supplier.ContactPhone
-                        },
+                        }
                     })
                     .ToListAsync();
 
@@ -75,21 +68,14 @@ namespace eShop.ProductWebApi.Repositories
                         Description = x.Description,
                         ProductType = x.ProductType,
                         Compound = x.Compound,
-                        Amount = x.Amount,
+                        Amount = x.Price,
                         Currency = x.Currency,
                         Brand = new BrandDTO
                         {
                             Id = x.Brand.Id,
                             Name = x.Brand.Name,
                             Country = x.Brand.Country
-                        },
-                        Supplier = new SupplierDTO
-                        {
-                            Id = x.Supplier.Id,
-                            Name = x.Supplier.Name,
-                            ContactEmail = x.Supplier.ContactEmail,
-                            ContactPhone = x.Supplier.ContactPhone
-                        },
+                        }
                     })
                     .Where(x => x.Name.Contains(Name))
                     .ToListAsync();
@@ -194,58 +180,33 @@ namespace eShop.ProductWebApi.Repositories
             }
         }
 
-        public async ValueTask<Result<IEnumerable<TResult>>> CreateProductsAsync<TResult, TEntity, TRequest>(TRequest request)
-            where TResult : ProductDTO
-            where TEntity : Product
-            where TRequest : CreateProductRequestBase
+        public async ValueTask<Result<IEnumerable<TResponse>>> CreateProductAsync<TResponse, TRequest>(IEnumerable<TRequest> request)
+            where TResponse : ProductDTO
+            where TRequest : Product
         {
             try
             {
                 logger.LogInformation($"Trying to create product.");
 
-                var bransExists = await context.Brands.AsNoTracking().AnyAsync(_ => _.Id == request.BrandId);
-                var supplierExists = await context.Suppliers.AsNoTracking().AnyAsync(_ => _.Id == request.SupplierId);
+                var bransExists = await context.Brands.AsNoTracking().AnyAsync(_ => _.Id == request.First().BrandId);
 
                 if (bransExists)
                 {
-                    if (supplierExists)
-                    {
-                        if (request is IVariable variable)
-                        {
-                            logger.LogInformation($"Creating a variety of products.");
+                        logger.LogInformation($"Creating a variety of products.");
 
-                            var products = variable.CreateVariants().ToList();
-                            await context.Products.AddRangeAsync(products);
-                            await context.SaveChangesAsync();
+                        await context.Products.AddRangeAsync(request);
+                        await context.SaveChangesAsync();
 
-                            logger.LogInformation($"Products were successfully created.");
+                        logger.LogInformation($"Products were successfully created.");
 
-                            return new(await context.Products
-                                .AsNoTracking()
-                                .OfType<TEntity>()
-                                .ProjectTo<TResult>(mapper.ConfigurationProvider)
-                                .ToListAsync());
-                        }
-                        else
-                        {
-                            logger.LogInformation($"Creating single product.");
-
-                            var product = mapper.Map<TEntity>(request);
-                            var entity = (await context.Products.AddAsync(product)).Entity;
-                            await context.SaveChangesAsync();
-
-                            logger.LogInformation($"Product was successfully created.");
-
-                            return new(new List<TResult>() { mapper.Map<TResult>(entity) });
-                        }
-                    }
-
-                    var notFoundSupplierException = new NotFoundSupplierException(request.SupplierId);
-                    logger.LogWarning($"Failed on creating product with error message: {notFoundSupplierException.Message}.");
-                    return new(notFoundSupplierException);
+                        return new(await context.Products
+                            .AsNoTracking()
+                            .OfType<TRequest>()
+                            .ProjectTo<TResponse>(mapper.ConfigurationProvider)
+                            .ToListAsync());                  
                 }
 
-                var notFoundBrandException = new NotFoundBrandException(request.BrandId);
+                var notFoundBrandException = new NotFoundBrandException(request.First().BrandId);
                 logger.LogWarning($"Failed on creating product with error message: {notFoundBrandException.Message}.");
                 return new(notFoundBrandException);
             }
@@ -276,9 +237,6 @@ namespace eShop.ProductWebApi.Repositories
                     var bransExists = await context.Brands.AsNoTracking().AnyAsync(_ => _.Id == request.BrandId);
                     if (bransExists)
                     {
-                        var supplierExists = await context.Suppliers.AsNoTracking().AnyAsync(_ => _.Id == request.SupplierId);
-                        if (supplierExists)
-                        {
                             logger.LogInformation($"Updating product.");
 
                             var product = mapper.Map<TEntity>(request);
@@ -288,11 +246,6 @@ namespace eShop.ProductWebApi.Repositories
                             logger.LogInformation($"Product was successfully updated.");
 
                             return new(mapper.Map<TResponse>(entity));
-                        }
-
-                        var notFoundSupplierException = new NotFoundSupplierException(request.SupplierId);
-                        logger.LogWarning($"Failed on updating product with error message: {notFoundSupplierException.Message}.");
-                        return new(notFoundSupplierException);
                     }
 
                     var notFoundBrandException = new NotFoundBrandException(request.BrandId);
@@ -398,8 +351,8 @@ namespace eShop.ProductWebApi.Repositories
         public ValueTask<Result<ProductDTO>> GetProductByIdAsync(Guid Id);
         public ValueTask<Result<ProductDTO>> GetProductByArticleAsync(long Article);
         public ValueTask<Result<ProductDTO>> GetProductByNameAsync(string Name);
-        public ValueTask<Result<IEnumerable<TResponse>>> CreateProductsAsync<TResponse, TEntity, TRequest>(TRequest request)
-            where TResponse : ProductDTO where TEntity : Product where TRequest : CreateProductRequestBase;
+        public ValueTask<Result<IEnumerable<TResponse>>> CreateProductAsync<TResponse, TRequest>(IEnumerable<TRequest> request)
+            where TResponse : ProductDTO where TRequest : Product;
         public ValueTask<Result<TResponse>> UpdateProductAsync<TResponse, TEntity, TRequest>(TRequest request)
             where TEntity : Product where TResponse : ProductDTO where TRequest : UpdateProductRequestBase;
         public ValueTask<Result<Unit>> DeleteProductByIdAsync(Guid Id);

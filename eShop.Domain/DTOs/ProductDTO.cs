@@ -12,8 +12,8 @@ namespace eShop.Domain.DTOs
         public ProductType ProductType { get; set; }
         public string Compound { get; set; } = string.Empty;
         public decimal Amount { get; set; }
+        public List<string> Images { get; set; } = new List<string>();
         public Currency Currency { get; set; }
-        public SupplierDTO Supplier { get; set; } = null!;
         public BrandDTO Brand { get; set; } = null!;
     }
 }

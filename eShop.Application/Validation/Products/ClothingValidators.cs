@@ -1,19 +1,16 @@
 ﻿using eShop.Domain.DTOs.Requests;
+using eShop.Domain.Entities;
 using eShop.Domain.Enums;
 using FluentValidation;
 
 namespace eShop.Application.Validation.Products
 {
-    public class CreateClothingRequestValidator : AbstractValidator<CreateClothingRequest>
+    public class CreateClothingRequestValidator : AbstractValidator<Clothing>
     {
         public CreateClothingRequestValidator()
         {
             RuleFor(x => x.ProductType)
                 .Equal(ProductType.Clothing).WithMessage("Invalid product type for clothing. Must be of type clothing.");
-
-            RuleFor(x => x.SupplierId)
-                .IsValidGuid().WithMessage("Invalid SupplierId.")
-                .NotEmpty().WithMessage("SupplierId is required.");
 
             RuleFor(x => x.BrandId)
                 .IsValidGuid().WithMessage("Invalid BrandId.")
@@ -32,7 +29,7 @@ namespace eShop.Application.Validation.Products
             RuleFor(x => x.Currency)
                 .IsInEnum().WithMessage("Invalid currency.");
 
-            RuleFor(x => x.Amount)
+            RuleFor(x => x.Price)
                 .LessThan(100_000m).WithMessage("Price must be less then 100 000.")
                 .GreaterThan(0.01m).WithMessage("Price must be greater then 0,01.");
 
@@ -42,7 +39,7 @@ namespace eShop.Application.Validation.Products
             RuleForEach(x => x.Sizes)
                 .IsInEnum().WithMessage("Invalid size.");
 
-            RuleForEach(x => x.Colors)
+            RuleFor(x => x.Color)
                 .IsInEnum().WithMessage("Invalid color.");
         }
     }

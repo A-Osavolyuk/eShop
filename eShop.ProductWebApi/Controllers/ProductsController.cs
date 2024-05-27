@@ -1,6 +1,5 @@
 ﻿using eShop.Application.Utilities;
 using eShop.Domain.DTOs.Requests;
-using eShop.Domain.Enums;
 using eShop.ProductWebApi.Commands.Products;
 using eShop.ProductWebApi.Queries.Products;
 using MediatR;
@@ -61,19 +60,19 @@ namespace eShop.ProductWebApi.Controllers
         }
 
         [HttpPost("create-product-clothing")]
-        public async ValueTask<ActionResult<ResponseDTO>> CreateClothingProduct([FromBody] CreateClothingRequest createProductRequest)
+        public async ValueTask<ActionResult<ResponseDTO>> CreateClothingProduct([FromBody] IEnumerable<CreateProductRequest> requests)
         {
-            var result = await sender.Send(new CreateProductCommand<CreateProductRequestBase, ProductDTO>(createProductRequest));
+            var result = await sender.Send(new CreateProductCommand<ClothingDTO, Clothing>(requests));
             return result.Match(
-                s => CreatedAtAction(nameof(GetProductById), new { s.First().Id }, 
+                s => CreatedAtAction(nameof(GetProductById), new { s.First().Id },
                     new ResponseBuilder().Succeeded().WithResultMessage("Product was successfully created.").WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 
         [HttpPost("create-product-shoes")]
-        public async ValueTask<ActionResult<ResponseDTO>> CreateShoesProduct([FromBody] CreateShoesRequest createProductRequest)
+        public async ValueTask<ActionResult<ResponseDTO>> CreateShoesProduct([FromBody] IEnumerable<CreateProductRequest> request)
         {
-            var result = await sender.Send(new CreateProductCommand<CreateShoesRequest, ShoesDTO>(createProductRequest));
+            var result = await sender.Send(new CreateProductCommand<ShoesDTO, Shoes>(request));
             return result.Match(
                 s => CreatedAtAction(nameof(GetProductById), new { s.First().Id },
                     new ResponseBuilder().Succeeded().WithResultMessage("Product was successfully created.").WithResult(s).Build()),

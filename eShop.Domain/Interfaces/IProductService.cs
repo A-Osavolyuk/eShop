@@ -10,8 +10,7 @@ namespace eShop.Domain.Interfaces
         public ValueTask<ResponseDTO> GetProductByIdAsync(Guid Id);
         public ValueTask<ResponseDTO> GetProductByArticleAsync(long Article);
         public ValueTask<ResponseDTO> GetProductByNameAsync(string Name);
-        public ValueTask<ResponseDTO> CreateProductAsync(CreateClothingRequest request);
-        public ValueTask<ResponseDTO> CreateProductAsync(CreateShoesRequest request);
+        public ValueTask<ResponseDTO> CreateProductAsync(IEnumerable<CreateProductRequest> request);
         public ValueTask<ResponseDTO> UpdateProductAsync(UpdateClothingRequest request, Guid Id);
         public ValueTask<ResponseDTO> UpdateProductAsync(UpdateShoesRequest request, Guid Id);
         public ValueTask<ResponseDTO> DeleteProductAsync(Guid Id);

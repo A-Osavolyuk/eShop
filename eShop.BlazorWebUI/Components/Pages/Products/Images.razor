@@ -1,68 +1,115 @@
-﻿@page "/imageupload"
-@using System.Net.Http
-@using Microsoft.AspNetCore.Components.Forms
+﻿@page "/products/create-product"
+@using System.ComponentModel.DataAnnotations
+@using eShop.Domain.DTOs.Requests
+@using eShop.Domain.Enums
 
-<h3>Upload Image</h3>
+@inject NavigationManager NavigationManager
+@inject IProductService ProductService
+@inject IBrandService BrandService
+@inject ISnackbar Snackbar
+@inject IMapper Mapper
 
-<InputFile multiple="true" OnChange="HandleFileChange" />
-<InputText @bind-Value=Id></InputText>
+<MudGrid Justify="Justify.Center">
+    <MudItem xs="2">
 
-<button @onclick="UploadImage">Upload</button>
+    </MudItem>
+    <MudItem xs="8">
+        <MudPaper Class="pa-5" Outlined>
+            <EditForm Model="Model">
+                <MudGrid Spacing="1">
+                    <MudItem xs="12">
+                        <MudTextField T="string" Counter="50" Variant="Variant.Outlined" For="@(() => Model.Name)"
+                                      Label="Name" ShrinkLabel Placeholder="Enter product name..." MaxLength="50" Immediate Clearable @bind-Value="Model.Name" />
+                        <MudTextField T="string" Counter="2000" Variant="Variant.Outlined" For="@(() => Model.Description)"
+                                      Label="Description" ShrinkLabel Placeholder="Enter description..." MaxLength="2000" Lines="3" AutoGrow Immediate Clearable @bind-Value="Model.Description" />
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudNumericField T="decimal" Variant="Variant.Outlined" For="@(() => Model.Price)" @bind-Value="Model.Price"
+                                         Label="Price" Max="10000" Immediate Clearable />
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudSelect T="Currency" Variant="Variant.Outlined" For="@(() => Model.Currency)" @bind-Value="Model.Currency" Immediate Label="Currency">
+                            <MudSelectItem Disabled T="Currency" Value="Currency.None"> @Currency.None </MudSelectItem>
+                            @foreach (var currency in Currencies.Where(_ => _ is not Currency.None))
+                            {
+                                <MudSelectItem T="Currency" Value="currency">@currency</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudAutocomplete T="string" ShrinkLabel Label="Brand" Placeholder="Choose your brand" @bind-Text="BrandName" ValueChanged="Choosed"
+                                         ResetValueOnEmptyText CoerceText CoerceValue AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary"
+                                         Variant="Variant.Outlined" SearchFunc="@SearchBrand" ShowProgressIndicator="true" ProgressIndicatorColor="Color.Primary" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudSelect T="ProductType" Variant="Variant.Outlined" For="@(() => Model.ProductType)" @bind-Value="Model.ProductType" Immediate Label="Product type">
+                            <MudSelectItem Disabled T="ProductType" Value="ProductType.None"> @ProductType.None </MudSelectItem>
+                            @foreach (var type in ProductTypes.Where(_ => _ is not ProductType.None))
+                            {
+                                <MudSelectItem T="ProductType" Value="type"> @type </MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+                </MudGrid>
+            </EditForm>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="2">
 
-@if (uploadMessage != null)
-{
-    <p>@uploadMessage</p>
-}
+    </MudItem>
+</MudGrid>
 
 @code {
-    private string uploadMessage;
-    private string Id = string.Empty;
+    private InputModel Model { get; set; } = new();
 
-    private List<IFormFile> imageFiles = new List<IFormFile>();
+    private IList<Currency> Currencies = Enum.GetValues<Currency>().ToList();
+    private IList<ProductColor> Colors = Enum.GetValues<ProductColor>().ToList();
+    private IList<ProductType> ProductTypes = Enum.GetValues<ProductType>().ToList();
+    private IList<BrandDTO> Brands { get; set; } = new List<BrandDTO>();
+    private string BrandName = string.Empty;
 
-    private async Task HandleFileChange(InputFileChangeEventArgs e)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        for (int x = 0, i = 0; x < 5 ; x++, i++)
+        if (firstRender)
         {
-            var stream = e.File.OpenReadStream();
-            var memoryStream = new MemoryStream();
-            await stream.CopyToAsync(memoryStream);
-            memoryStream.Seek(0, SeekOrigin.Begin);
+            var brandResponse = await BrandService.GetBrandsListAsync();
 
-            var formFile = new FormFile(memoryStream, 0, memoryStream.Length, e.File.Name, e.File.Name + $"_{i}");
-            imageFiles.Add(formFile);
+            if (brandResponse.IsSucceeded)
+            {
+                var serializedResult = brandResponse.Result;
+                Brands = JsonConvert.DeserializeObject<List<BrandDTO>>(Convert.ToString(serializedResult)!)!;
+            }
+            else
+            {
+                Snackbar.Add(brandResponse.ErrorMessage, MudBlazor.Severity.Error);
+            }
         }
     }
 
-
-    private async Task UploadImage()
+    private class InputModel
     {
-        if (imageFiles != null)
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public decimal Price { get; set; }
+        public Currency Currency { get; set; }
+        public ProductType ProductType { get; set; } = ProductType.None;
+        public Guid BrandId { get; set; }
+    }
+
+    private async Task<IEnumerable<string>> SearchBrand(string name)
+    {
+        if (string.IsNullOrEmpty(name))
         {
-            using (var client = new HttpClient())
-            {
-                var formData = new MultipartFormDataContent();
-                
-                foreach (var image in imageFiles)
-                {
-                    formData.Add(new StreamContent(image.OpenReadStream()), "Images", image.Name);
-                }
-
-                var response = await client.PostAsync($"https://localhost:8501/api/v1/Products/upload?Id={Id}", formData);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    uploadMessage = "Image uploaded successfully";
-                }
-                else
-                {
-                    uploadMessage = "Error uploading image: " + response.ReasonPhrase;
-                }
-            }
+            return new string[0];
         }
-        else
+        return Brands.Where(x => x.Name.Contains(name, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Name);
+    }
+
+    private void Choosed()
+    {
+        if (!string.IsNullOrEmpty(BrandName))
         {
-            uploadMessage = "Please select an image to upload";
+            Model.BrandId = Brands.FirstOrDefault(_ => _.Name == BrandName)!.Id;
         }
     }
 }

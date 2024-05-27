@@ -13,11 +13,15 @@ namespace eShop.Infrastructure.Services
         private readonly IHttpClientService clientService = clientService;
         private readonly IConfiguration configuration = configuration;
 
-        public async ValueTask<ResponseDTO> CreateProductAsync(CreateClothingRequest request) => await clientService.SendAsync(
-            new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/create-product-clothing", Method: HttpMethods.POST, Data: request));
-
-        public async ValueTask<ResponseDTO> CreateProductAsync(CreateShoesRequest request) => await clientService.SendAsync(
-            new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/create-product-shoes", Method: HttpMethods.POST, Data: request));
+        public async ValueTask<ResponseDTO> CreateProductAsync(IEnumerable<CreateProductRequest> request)
+        {
+            return request.First().ProductType switch 
+            {
+                ProductType.Clothing =>  await clientService.SendAsync(new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/create-product-clothing", Method: HttpMethods.POST, Data: request)),
+                ProductType.Shoes =>  await clientService.SendAsync(new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/create-product-shoes", Method: HttpMethods.POST, Data: request)),
+                ProductType.None or _ => new ResponseBuilder().Failed().WithErrorMessage("Cannot create product with product type None").Build()
+            };
+        }
 
         public async ValueTask<ResponseDTO> DeleteProductAsync(Guid Id) => await clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/delete-by-id/{Id}", Method: HttpMethods.DELETE));

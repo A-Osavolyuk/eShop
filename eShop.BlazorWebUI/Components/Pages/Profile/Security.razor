@@ -36,22 +36,26 @@
     private ChangePasswordRequest Request { get; set; } = new();
     private bool TwoFactorState { get; set; } = false;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-
-        var email = await LocalDataAccessor.GetEmailAsync();
-        var result = await AuthenticationService.GetTwoFactorStateAsync(email);
-
-        if (result.IsSucceeded)
+        if (firstRender)
         {
-            var data = JsonConvert.DeserializeObject<TwoFactorAuthenticationStateResponse>(result.Result!.ToString()!);
-            TwoFactorState = data!.TwoFactorAuthenticationState;
+            var email = await LocalDataAccessor.GetEmailAsync();
+            var result = await AuthenticationService.GetTwoFactorStateAsync(email);
+
+            if (result.IsSucceeded)
+            {
+                var data = JsonConvert.DeserializeObject<TwoFactorAuthenticationStateResponse>(result.Result!.ToString()!);
+                TwoFactorState = data!.TwoFactorAuthenticationState;
+            }
+            else
+            {
+                TwoFactorState = false;
+                Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
+            }
         }
-        else
-        {
-            TwoFactorState = false;
-            Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
-        }
+
+        StateHasChanged();
     }
 
     private async Task ChangeState()
@@ -70,7 +74,7 @@
 
     private async Task ChangePassword()
     {
-        var options = new DialogOptions { CloseOnEscapeKey = true, BackgroundClass = "blured", FullWidth = true };
+        var options = new DialogOptions { CloseOnEscapeKey = true, ClassBackground = "blured", FullWidth = true };
         var dialog = await DialogService.ShowAsync<ChangePasswordDialog>("Change Password", options);
     }
 }

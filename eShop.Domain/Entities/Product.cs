@@ -13,11 +13,10 @@ namespace eShop.Domain.Entities
         public string Description { get; set; } = string.Empty;
         public ProductType ProductType { get; set; }
         public string Compound { get; set; } = string.Empty;
-        public decimal Amount { get; set; }
+        public decimal Price { get; set; }
         public Currency Currency { get; set; }
-        public Guid SupplierId { get; set; }
+        public List<string> Images { get; set; } = new List<string>();
         public Guid BrandId { get; set; }
-        public Supplier Supplier { get; set; } = null!;
         public Brand Brand { get; set; } = null!;
     }
 }

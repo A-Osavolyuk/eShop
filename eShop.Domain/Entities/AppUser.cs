@@ -15,7 +15,7 @@ namespace eShop.Domain.Entities
             FirstName = changePersonalDataRequestDto.FirstName;
             LastName = changePersonalDataRequestDto.LastName;
             Gender = changePersonalDataRequestDto.Gender;
-            DateOfBirth = changePersonalDataRequestDto.DateOfBirth;
+            DateOfBirth = changePersonalDataRequestDto.DateOfBirth!.Value;
         }
     }
 }

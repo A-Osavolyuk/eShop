@@ -66,9 +66,14 @@
     private MainDataModel Model { get; set; } = new();
     private PersonalDataDTO PersonalData { get; set; } = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await RefreshData();
+        if (firstRender)
+        {
+            await RefreshData();
+        }
+
+        StateHasChanged();
     }
 
     private async Task RefreshData()
@@ -79,7 +84,7 @@
 
     private async Task ChangeUserName()
     {
-        var options = new DialogOptions { CloseOnEscapeKey = true, BackgroundClass = "blured", FullWidth = true };
+        var options = new DialogOptions { CloseOnEscapeKey = true, ClassBackground = "blured", FullWidth = true };
         var dialog = await DialogService.ShowAsync<ChangeUserNameDialog>("Change User Name", options);
         var result = await dialog.Result;
 
@@ -88,7 +93,6 @@
             var token = result.Data.ToString();
             await (AuthenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(token!);
             Model.UserName = await LocalStorageAccessor.GetUserNameAsync();
-            NavigationManager.Refresh(true);
         }
     }
 
@@ -103,13 +107,13 @@
         };
         var parameters = new DialogParameters<ChangePersonalDataDialog>();
         parameters.Add(x => x.Model, model);
-        var options = new DialogOptions { CloseOnEscapeKey = true, BackgroundClass = "blured", FullWidth = true };
+        var options = new DialogOptions { CloseOnEscapeKey = true, ClassBackground = "blured", FullWidth = true };
         var dialog = await DialogService.ShowAsync<ChangePersonalDataDialog>("Change Personal Data", parameters, options);
         var result = await dialog.Result;
 
         if (!result.Canceled)
         {
-            NavigationManager.Refresh(true);
+            await RefreshData();
         }
     }
 

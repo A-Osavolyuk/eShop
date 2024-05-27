@@ -9,6 +9,9 @@ namespace eShop.Application.MappingProfiles
     {
         public ProductProfile()
         {
+            CreateMap<CreateProductRequest, Product>();
+            CreateMap<CreateProductRequest, Clothing>();
+            CreateMap<CreateProductRequest, Shoes>();
             CreateMap<Product, ProductDTO>();
             CreateMap<Product, ShoesDTO>();
             CreateMap<Product, ClothingDTO>();
@@ -16,9 +19,6 @@ namespace eShop.Application.MappingProfiles
             CreateMap<Product, Clothing>();
             CreateMap<Clothing, ClothingDTO>();
             CreateMap<Shoes, ShoesDTO>();
-            CreateMap<CreateProductRequestBase, Product>();
-            CreateMap<CreateShoesRequest, Shoes>();
-            CreateMap<CreateClothingRequest, Clothing>();
             CreateMap<UpdateShoesRequest, Shoes>();
             CreateMap<UpdateClothingRequest, Clothing>();
         }

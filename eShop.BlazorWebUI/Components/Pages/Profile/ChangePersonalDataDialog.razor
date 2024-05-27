@@ -2,6 +2,7 @@
 @inject ISnackbar Snackbar
 @inject IValidator<ChangePersonalDataRequest> Validator
 @inject ILocalDataAccessor LocalDataAccessor
+@inject IMapper Mapper
 
 <MudDialog>
     <DialogContent>
@@ -10,7 +11,7 @@
             <MudTextField Class="mb-3" @bind-Value=Model.FirstName For="(() => Model.FirstName)" Variant="Variant.Outlined" Label="First Name" />
             <MudTextField Class="mb-3" @bind-Value=Model.LastName For="(() => Model.LastName)" Variant="Variant.Outlined" Label="Last Name" />
             <MudTextField Class="mb-3" @bind-Value=Model.Gender For="(() => Model.Gender)" Variant="Variant.Outlined" Label="Gender" />
-            <MudDatePicker Class="mb-3" Date="Model.DateOfBirth" @ref="DatePicker" Variant="Variant.Outlined" Label="Date of Birth" />
+            <MudDatePicker Class="mb-3" @bind-Date="Model.DateOfBirth" For="(() => Model.DateOfBirth)" Variant="Variant.Outlined" Label="Date of Birth" />
 
             <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="Cancel">Cancel</MudButton>
             <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Submit</MudButton>
@@ -24,17 +25,18 @@
 
     protected override void OnInitialized()
     {
-        DatePicker = new() { Date = Model.DateOfBirth };
+        //DatePicker = new() { Date = Model.DateOfBirth };
     }
 
     private async Task Submit()
     {
-        Model.DateOfBirth = DatePicker.Date!.Value;
         var email = await LocalDataAccessor.GetEmailAsync();
         var result = await AuthenticationService.ChangePersonalDataAsync(email, Model);
 
         if (result.IsSucceeded)
         {
+            var data = JsonConvert.DeserializeObject<PersonalDataDTO>(result.Result!.ToString()!);
+            await LocalDataAccessor.SetPersonalDataAsync(Mapper.Map<PersonalDataDTO>(data));
             Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
             MudDialog.Close(DialogResult.Ok(true));
         }

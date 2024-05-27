@@ -2,7 +2,8 @@
 {
     public enum ProductType
     {
-        Clothing = 0,
-        Shoes = 1,
+        None = 0,
+        Clothing = 1,
+        Shoes = 2,
     }
 }

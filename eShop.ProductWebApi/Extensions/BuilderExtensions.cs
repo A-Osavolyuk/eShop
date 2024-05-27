@@ -2,6 +2,7 @@
 using eShop.ProductWebApi.Behaviors;
 using eShop.ProductWebApi.Commands.Products;
 using eShop.ProductWebApi.Repositories;
+using eShop.ProductWebApi.Services;
 using MediatR;
 
 namespace eShop.ProductWebApi.Extensions
@@ -34,14 +35,14 @@ namespace eShop.ProductWebApi.Extensions
         public static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
         {
             builder.Services.AddScoped<IProductRepository, ProductsRepository>();
-            builder.Services.AddScoped<ISuppliersRepository, SuppliersRepository>();
             builder.Services.AddScoped<IBrandsRepository, BrandsRepository>();
+            builder.Services.AddScoped<IAzureBlobStorageService, AzureBlobStorageService>();
 
             //Create product commands
-            builder.Services.AddTransient<IRequestHandler<CreateProductCommand<CreateClothingRequest, ClothingDTO>, Result<IEnumerable<ClothingDTO>>>, 
-                CreateProductCommandHandler<CreateClothingRequest, ClothingDTO, Clothing>>();
-            builder.Services.AddTransient<IRequestHandler<CreateProductCommand<CreateShoesRequest, ShoesDTO>, Result<IEnumerable<ShoesDTO>>>,
-                CreateProductCommandHandler<CreateShoesRequest, ShoesDTO, Shoes>>();
+            builder.Services.AddTransient<IRequestHandler<CreateProductCommand<ClothingDTO, Clothing>, Result<IEnumerable<ClothingDTO>>>, 
+                CreateProductCommandHandler<ClothingDTO, Clothing>>();
+            builder.Services.AddTransient<IRequestHandler<CreateProductCommand<ShoesDTO, Shoes>, Result<IEnumerable<ShoesDTO>>>,
+                CreateProductCommandHandler<ShoesDTO, Shoes>>();
 
             //Update product commands
             builder.Services.AddTransient<IRequestHandler<UpdateProductCommand<UpdateClothingRequest, ClothingDTO>, Result<ClothingDTO>>,
