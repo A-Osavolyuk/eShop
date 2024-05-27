@@ -32,6 +32,15 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [HttpGet("get-products-with-variantId/{VariantId:guid}")]
+        public async ValueTask<ActionResult<ResponseDTO>> GetProductsByVariantId(Guid VariantId)
+        {
+            var result = await sender.Send(new GetProductsByVariantIdQuery(VariantId));
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
         [HttpGet("get-by-id/{Id:guid}")]
         public async ValueTask<ActionResult<ResponseDTO>> GetProductById(Guid Id)
         {
@@ -64,8 +73,7 @@ namespace eShop.ProductWebApi.Controllers
         {
             var result = await sender.Send(new CreateProductCommand<ClothingDTO, Clothing>(requests));
             return result.Match(
-                s => CreatedAtAction(nameof(GetProductById), new { s.First().Id },
-                    new ResponseBuilder().Succeeded().WithResultMessage("Product was successfully created.").WithResult(s).Build()),
+                s => HandleProductCreation(s),
                 f => ExceptionHandler.HandleException(f));
         }
 
@@ -74,8 +82,7 @@ namespace eShop.ProductWebApi.Controllers
         {
             var result = await sender.Send(new CreateProductCommand<ShoesDTO, Shoes>(request));
             return result.Match(
-                s => CreatedAtAction(nameof(GetProductById), new { s.First().Id },
-                    new ResponseBuilder().Succeeded().WithResultMessage("Product was successfully created.").WithResult(s).Build()),
+                s => HandleProductCreation(s),
                 f => ExceptionHandler.HandleException(f));
         }
 
@@ -124,6 +131,20 @@ namespace eShop.ProductWebApi.Controllers
             return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
+        }
+
+        private ActionResult<ResponseDTO> HandleProductCreation(IEnumerable<ProductDTO> products)
+        {
+            if(products.Count() > 1)
+            {
+                return CreatedAtAction(nameof(GetProductsByVariantId), new {products.First().VariantId}, 
+                    new ResponseBuilder().Succeeded().WithResult(products).WithResultMessage("Product was successfully created.").Build());
+            }
+            else
+            {
+                return CreatedAtAction(nameof(GetProductById), new { products.First().Id },
+                    new ResponseBuilder().Succeeded().WithResult(products).WithResultMessage("Product was successfully created.").Build());
+            }
         }
     }
 }
