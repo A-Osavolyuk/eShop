@@ -15,11 +15,11 @@ namespace eShop.Infrastructure.Services
 
         public async ValueTask<ResponseDTO> CreateProductAsync(IEnumerable<CreateProductRequest> request)
         {
-            return request.First().ProductType switch 
+            return request.First().Category switch 
             {
-                ProductType.Clothing =>  await clientService.SendAsync(new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/create-product-clothing", Method: HttpMethods.POST, Data: request)),
-                ProductType.Shoes =>  await clientService.SendAsync(new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/create-product-shoes", Method: HttpMethods.POST, Data: request)),
-                ProductType.None or _ => new ResponseBuilder().Failed().WithErrorMessage("Cannot create product with product type None").Build()
+                Categoty.Clothing =>  await clientService.SendAsync(new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/create-product-clothing", Method: HttpMethods.POST, Data: request)),
+                Categoty.Shoes =>  await clientService.SendAsync(new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/create-product-shoes", Method: HttpMethods.POST, Data: request)),
+                Categoty.None or _ => new ResponseBuilder().Failed().WithErrorMessage("Cannot create product with product type None").Build()
             };
         }
 

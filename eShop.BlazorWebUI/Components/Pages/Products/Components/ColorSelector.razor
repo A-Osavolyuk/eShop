@@ -1,0 +1,11 @@
+﻿<MudSelect T="ProductColor" Label="Color" Immediate @bind-Value=Model.Color Variant="Variant.Outlined" For="@(() => Model.Color)">
+    <MudSelectItem T="ProductColor" Disabled Value="ProductColor.None">None</MudSelectItem>
+    @foreach (var color in Enum.GetValues<ProductColor>().Where(_ => _ is not ProductColor.None))
+    {
+        <MudSelectItem T="ProductColor" Value="color">@color</MudSelectItem>
+    }
+</MudSelect>
+
+@code {
+    [Parameter] public CreateProductRequest Model { get; set; } = new();
+}

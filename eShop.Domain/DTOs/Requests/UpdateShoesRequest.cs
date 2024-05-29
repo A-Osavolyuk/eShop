@@ -4,7 +4,7 @@ namespace eShop.Domain.DTOs.Requests
 {
     public class UpdateShoesRequest : UpdateProductRequestBase
     {
-        public UpdateShoesRequest() => ProductType = ProductType.Shoes;
+        public UpdateShoesRequest() => ProductType = Categoty.Shoes;
         public List<ProductSize> Sizes { get; set; } = new();
         public ProductColor Color { get; set; } = new();
         public Audience Audience { get; set; }

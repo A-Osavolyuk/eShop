@@ -2,6 +2,7 @@
 {
     public enum ProductColor
     {
+        None,
         Red,
         Green,
         Blue,

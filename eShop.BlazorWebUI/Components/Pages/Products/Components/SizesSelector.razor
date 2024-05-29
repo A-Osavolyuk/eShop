@@ -1,0 +1,29 @@
+﻿<MudSelect T="ProductSize" Label="Sizes" ShrinkLabel SelectAll MultiSelection Placeholder="Select sizes..." @bind-SelectedValues="SelectedSizes"
+           @bind-SelectedValues:after="OnSizeChange" Variant="Variant.Outlined" Immediate Required RequiredError="You have to pick at least one size">
+    @foreach (var size in Enum.GetValues<ProductSize>().Where(x => x is not ProductSize.None))
+    {
+        <MudSelectItem T="ProductSize" Value="@size">@size</MudSelectItem>
+    }
+</MudSelect>
+
+@code {
+    [Parameter] public CreateProductRequest Model { get; set; } = new();
+    private IEnumerable<ProductSize> SelectedSizes { get; set; } = new HashSet<ProductSize>();
+    private List<ProductSize> SizesList { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        SizesList = Enum.GetValues<ProductSize>().ToList();
+        SelectedSizes = Model.Sizes.Select(_ => _).ToHashSet();
+    }
+
+    private void OnSizeChange()
+    {
+        var newSizesList = new List<ProductSize>();
+        foreach (var size in SelectedSizes)
+        {
+            newSizesList.Add(SizesList.FirstOrDefault(_ => _ == size));
+        }
+        Model.Sizes = newSizesList.ToHashSet();
+    }
+}

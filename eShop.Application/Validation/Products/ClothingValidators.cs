@@ -10,7 +10,7 @@ namespace eShop.Application.Validation.Products
         public CreateClothingRequestValidator()
         {
             RuleFor(x => x.ProductType)
-                .Equal(ProductType.Clothing).WithMessage("Invalid product type for clothing. Must be of type clothing.");
+                .Equal(Categoty.Clothing).WithMessage("Invalid product type for clothing. Must be of type clothing.");
 
             RuleFor(x => x.BrandId)
                 .IsValidGuid().WithMessage("Invalid BrandId.")
@@ -49,7 +49,7 @@ namespace eShop.Application.Validation.Products
         public UpdateClothingRequestValidator()
         {
             RuleFor(x => x.ProductType)
-                .Equal(ProductType.Clothing).WithMessage("Invalid product type for clothing. Must be of type clothing.");
+                .Equal(Categoty.Clothing).WithMessage("Invalid product type for clothing. Must be of type clothing.");
 
             RuleFor(x => x.SupplierId)
                 .IsValidGuid().WithMessage("Invalid SupplierId.")

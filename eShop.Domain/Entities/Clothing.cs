@@ -4,7 +4,7 @@ namespace eShop.Domain.Entities
 {
     public class Clothing : Product
     {
-        public Clothing() : base() => ProductType = ProductType.Clothing;
+        public Clothing() : base() => ProductType = Categoty.Clothing;
         public List<ProductSize> Sizes { get; set; } = new();
         public ProductColor Color { get; set; } = new();
         public Audience Audience { get; set; }

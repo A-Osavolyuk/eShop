@@ -2,6 +2,7 @@
 {
     public enum ProductSize
     {
+        None,
         XXS,
         XS,
         S,

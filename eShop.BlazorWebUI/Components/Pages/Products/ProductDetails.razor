@@ -50,8 +50,8 @@
 
             return type switch
             {
-                ProductType.Clothing => JsonConvert.DeserializeObject<ClothingDTO>(response.Result!.ToString()!),
-                ProductType.Shoes => JsonConvert.DeserializeObject<ShoesDTO>(response.Result!.ToString()!),
+                Categoty.Clothing => JsonConvert.DeserializeObject<ClothingDTO>(response.Result!.ToString()!),
+                Categoty.Shoes => JsonConvert.DeserializeObject<ShoesDTO>(response.Result!.ToString()!),
                 _ => JsonConvert.DeserializeObject<ProductDTO>(response.Result!.ToString()!)
             };
         }

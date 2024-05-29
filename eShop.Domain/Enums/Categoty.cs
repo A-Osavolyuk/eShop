@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.Enums
 {
-    public enum ProductType
+    public enum Categoty
     {
         None = 0,
         Clothing = 1,

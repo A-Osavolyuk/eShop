@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Azure;
 using eShop.Domain.DTOs.Requests;
 using eShop.Domain.DTOs.Responses;
 using eShop.Domain.Enums;
-using eShop.Domain.Interfaces;
 using eShop.ProductWebApi.Exceptions;
 using LanguageExt;
 using Unit = LanguageExt.Unit;
@@ -60,6 +58,7 @@ namespace eShop.ProductWebApi.Repositories
                 logger.LogInformation($"Trying to get products with name: {Name}.");
                 var list = await context.Products
                     .AsNoTracking()
+                    .Where(x => x.Name.Contains(Name))
                     .Select(x => new ProductDTO()
                     {
                         Id = x.Id,
@@ -77,7 +76,6 @@ namespace eShop.ProductWebApi.Repositories
                             Country = x.Brand.Country
                         }
                     })
-                    .Where(x => x.Name.Contains(Name))
                     .ToListAsync();
 
                 logger.LogInformation($"Successfully got products with name: {Name}.");
@@ -100,9 +98,9 @@ namespace eShop.ProductWebApi.Repositories
                 {
                     var output = product.ProductType switch
                     {
-                        ProductType.Clothing => await context.Products.AsNoTracking().OfType<Clothing>().ProjectTo<ClothingDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == Id),
-                        ProductType.Shoes => await context.Products.AsNoTracking().OfType<Shoes>().ProjectTo<ShoesDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == Id),
-                        _ or ProductType.None => await context.Products.AsNoTracking().OfType<Product>().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == Id)
+                        Categoty.Clothing => await context.Products.AsNoTracking().OfType<Clothing>().ProjectTo<ClothingDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == Id),
+                        Categoty.Shoes => await context.Products.AsNoTracking().OfType<Shoes>().ProjectTo<ShoesDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == Id),
+                        _ or Categoty.None => await context.Products.AsNoTracking().OfType<Product>().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == Id)
                     };
 
                     logger.LogInformation($"Successfully got product with id: {Id}.");
@@ -130,9 +128,9 @@ namespace eShop.ProductWebApi.Repositories
                 {
                     var output = product.ProductType switch
                     {
-                        ProductType.Clothing => await context.Products.AsNoTracking().OfType<Clothing>().ProjectTo<ClothingDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Article == Article),
-                        ProductType.Shoes => await context.Products.AsNoTracking().OfType<Shoes>().ProjectTo<ShoesDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Article == Article),
-                        _ or ProductType.None => await context.Products.AsNoTracking().OfType<Product>().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Article == Article)
+                        Categoty.Clothing => await context.Products.AsNoTracking().OfType<Clothing>().ProjectTo<ClothingDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Article == Article),
+                        Categoty.Shoes => await context.Products.AsNoTracking().OfType<Shoes>().ProjectTo<ShoesDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Article == Article),
+                        _ or Categoty.None => await context.Products.AsNoTracking().OfType<Product>().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Article == Article)
                     };
 
                     logger.LogInformation($"Successfully got product with article: {Article}.");
@@ -160,9 +158,9 @@ namespace eShop.ProductWebApi.Repositories
                 {
                     var output = product.ProductType switch
                     {
-                        ProductType.Clothing => await context.Products.AsNoTracking().OfType<Clothing>().ProjectTo<ClothingDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Name == Name),
-                        ProductType.Shoes => await context.Products.AsNoTracking().OfType<Shoes>().ProjectTo<ShoesDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Name == Name),
-                        _ or ProductType.None => await context.Products.AsNoTracking().OfType<Product>().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Name == Name)
+                        Categoty.Clothing => await context.Products.AsNoTracking().OfType<Clothing>().ProjectTo<ClothingDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Name == Name),
+                        Categoty.Shoes => await context.Products.AsNoTracking().OfType<Shoes>().ProjectTo<ShoesDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Name == Name),
+                        _ or Categoty.None => await context.Products.AsNoTracking().OfType<Product>().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Name == Name)
                     };
 
                     logger.LogInformation($"Successfully got product with name: {Name}.");
@@ -180,7 +178,7 @@ namespace eShop.ProductWebApi.Repositories
             }
         }
 
-        public async ValueTask<Result<ProductDTO>> GetProductsByVariantIdAsync(Guid VariantId)
+        public async ValueTask<Result<IEnumerable<ProductDTO>>> GetProductsByVariantIdAsync(Guid VariantId)
         {
             try
             {
@@ -190,13 +188,13 @@ namespace eShop.ProductWebApi.Repositories
                 {
                     var output = product.ProductType switch
                     {
-                        ProductType.Clothing => await context.Products.AsNoTracking().OfType<Clothing>().ProjectTo<ClothingDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.VariantId == VariantId),
-                        ProductType.Shoes => await context.Products.AsNoTracking().OfType<Shoes>().ProjectTo<ShoesDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.VariantId == VariantId),
-                        _ or ProductType.None => await context.Products.AsNoTracking().OfType<Product>().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.VariantId == VariantId)
+                        Categoty.Clothing => context.Products.AsNoTracking().Where(x => x.VariantId == VariantId).OfType<Clothing>().ProjectTo<ClothingDTO>(mapper.ConfigurationProvider),
+                        Categoty.Shoes => context.Products.AsNoTracking().Where(x => x.VariantId == VariantId).OfType<Shoes>().ProjectTo<ShoesDTO>(mapper.ConfigurationProvider),
+                        Categoty.None or _ => context.Products.AsNoTracking().Where(x => x.VariantId == VariantId).OfType<Product>().ProjectTo<ProductDTO>(mapper.ConfigurationProvider)
                     };
 
                     logger.LogInformation($"Successfully got product with variant id: {VariantId}.");
-                    return new(output!);
+                    return new(await output.ToListAsync()!);
                 }
 
                 var notFoundProductGroupException = new NotFoundProductGroupException(VariantId);
@@ -222,18 +220,18 @@ namespace eShop.ProductWebApi.Repositories
 
                 if (bransExists)
                 {
-                        logger.LogInformation($"Creating a variety of products.");
+                    logger.LogInformation($"Creating a variety of products.");
 
-                        await context.Products.AddRangeAsync(request);
-                        await context.SaveChangesAsync();
+                    await context.Products.AddRangeAsync(request);
+                    await context.SaveChangesAsync();
 
-                        logger.LogInformation($"Products were successfully created.");
+                    logger.LogInformation($"Products were successfully created.");
 
-                        return new(await context.Products
-                            .AsNoTracking()
-                            .OfType<TRequest>()
-                            .ProjectTo<TResponse>(mapper.ConfigurationProvider)
-                            .ToListAsync());                  
+                    return new(await context.Products
+                        .AsNoTracking()
+                        .OfType<TRequest>()
+                        .ProjectTo<TResponse>(mapper.ConfigurationProvider)
+                        .ToListAsync());
                 }
 
                 var notFoundBrandException = new NotFoundBrandException(request.First().BrandId);
@@ -267,15 +265,15 @@ namespace eShop.ProductWebApi.Repositories
                     var bransExists = await context.Brands.AsNoTracking().AnyAsync(_ => _.Id == request.BrandId);
                     if (bransExists)
                     {
-                            logger.LogInformation($"Updating product.");
+                        logger.LogInformation($"Updating product.");
 
-                            var product = mapper.Map<TEntity>(request);
-                            var entity = context.Products.Update(product).Entity;
-                            await context.SaveChangesAsync();
+                        var product = mapper.Map<TEntity>(request);
+                        var entity = context.Products.Update(product).Entity;
+                        await context.SaveChangesAsync();
 
-                            logger.LogInformation($"Product was successfully updated.");
+                        logger.LogInformation($"Product was successfully updated.");
 
-                            return new(mapper.Map<TResponse>(entity));
+                        return new(mapper.Map<TResponse>(entity));
                     }
 
                     var notFoundBrandException = new NotFoundBrandException(request.BrandId);

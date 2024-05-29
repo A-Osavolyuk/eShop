@@ -10,7 +10,7 @@ namespace eShop.Application.Validation.Products
         public CreateShoesRequestValidator()
         {
             RuleFor(x => x.ProductType)
-                .Equal(ProductType.Shoes).WithMessage("Invalid product type for shoes. Must be of type shoes.");
+                .Equal(Categoty.Shoes).WithMessage("Invalid product type for shoes. Must be of type shoes.");
 
             RuleFor(x => x.BrandId)
                 .IsValidGuid().WithMessage("Invalid BrandId.")
@@ -51,7 +51,7 @@ namespace eShop.Application.Validation.Products
         public UpdateShoesRequestValidator()
         {
             RuleFor(x => x.ProductType)
-                .Equal(ProductType.Shoes).WithMessage("Invalid product type for shoes. Must be of type shoes.");
+                .Equal(Categoty.Shoes).WithMessage("Invalid product type for shoes. Must be of type shoes.");
 
             RuleFor(x => x.SupplierId)
                 .IsValidGuid().WithMessage("Invalid SupplierId.")
