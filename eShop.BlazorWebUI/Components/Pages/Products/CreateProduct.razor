@@ -13,55 +13,67 @@
     </MudItem>
     <MudItem xs="8">
         <MudPaper Class="pa-5" Outlined>
-            <EditForm OnValidSubmit="Some" Model="Model">
-                <MudGrid Spacing="1">
-                    <FluentValidationValidator Validator="Validator" />
-                    <MudItem xs="12">
-                        <MudTextField T="string" Counter="200" Variant="Variant.Outlined" For="@(() => Model.Name)"
-                                      Label="Name" ShrinkLabel Placeholder="Enter product name..." MaxLength="200" Immediate Clearable @bind-Value="Model.Name" />
-                        <MudTextField T="string" Counter="2000" Variant="Variant.Outlined" For="@(() => Model.Description)"
-                                      Label="Description" ShrinkLabel Placeholder="Enter description..." MaxLength="2000" Lines="3" AutoGrow Immediate Clearable @bind-Value="Model.Description" />
+            <EditForm Context="formContext" OnValidSubmit="SaveProduct" Model="CurrentProduct">
+                <MudGrid>
+                    <MudItem xs="4">
+                        <ImagesDragAndDrop />
                     </MudItem>
-                    <MudItem xs="6">
-                        <MudNumericField T="decimal" Variant="Variant.Outlined" For="@(() => Model.Price)" @bind-Value="Model.Price"
-                                         Label="Price" Max="10000" Immediate Clearable />
-                    </MudItem>
-                    <MudItem xs="6">
-                        <MudSelect T="Currency" Variant="Variant.Outlined" For="@(() => Model.Currency)" @bind-Value="Model.Currency" Immediate Label="Currency">
-                            <MudSelectItem Disabled T="Currency" Value="Currency.None"> @Currency.None </MudSelectItem>
-                            @foreach (var currency in Currencies.Where(_ => _ is not Currency.None))
-                            {
-                                <MudSelectItem T="Currency" Value="currency">@currency</MudSelectItem>
-                            }
-                        </MudSelect>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudSelect T="Guid" Variant="Variant.Outlined" For="@(() => Model.BrandId)" @bind-Value="Model.BrandId" Immediate Label="Brand">
-                            <MudSelectItem T="Guid" Value="Guid.Empty"> Without brand </MudSelectItem>
-                            @foreach (var brand in Brands)
-                            {
-                                <MudSelectItem T="Guid" Value="brand.Id"> @brand.Name </MudSelectItem>
-                            }
-                        </MudSelect>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudSelect T="Categoty" Variant="Variant.Outlined" For="@(() => Model.Category)" @bind-Value="Model.Category" Immediate Label="Category">
-                            <MudSelectItem Disabled T="Categoty" Value="Categoty.None"> @Categoty.None </MudSelectItem>
-                            @foreach (var type in ProductTypes.Where(_ => _ is not Categoty.None))
-                            {
-                                <MudSelectItem T="Categoty" Value="type"> @type </MudSelectItem>
-                            }
-                        </MudSelect>
-                    </MudItem>
-                    <MudItem xs="12">
-                        @switch (Model.Category)
-                        {
-                            case Categoty.Clothing: <ClothingComponent Model="Model" /> break;
-                        }
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudButton Color="Color.Success" ButtonType="ButtonType.Submit" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save"
-                                   OnClick="OnClick">Save</MudButton>
+                    <MudItem xs="8">
+                        <MudGrid Spacing="1">
+                            <FluentValidationValidator Validator="Validator" />
+                            <MudItem xs="12">
+                                <MudTextField T="string" Counter="200" Variant="Variant.Outlined" For="@(() => CurrentProduct.Name)"
+                                              Label="Name" ShrinkLabel Placeholder="Enter product name..." MaxLength="200" Immediate Clearable @bind-Value="CurrentProduct.Name" />
+                                <MudTextField T="string" Counter="2000" Variant="Variant.Outlined" For="@(() => CurrentProduct.Description)"
+                                              Label="Description" ShrinkLabel Placeholder="Enter description..." MaxLength="2000" Lines="3" AutoGrow Immediate Clearable @bind-Value="CurrentProduct.Description" />
+                            </MudItem>
+                            <MudItem xs="6">
+                                <MudNumericField T="decimal" Variant="Variant.Outlined" For="@(() => CurrentProduct.Price)" @bind-Value="CurrentProduct.Price"
+                                                 Label="Price" Max="10000" Immediate Clearable />
+                            </MudItem>
+                            <MudItem xs="6">
+                                <MudSelect T="Currency" Variant="Variant.Outlined" For="@(() => CurrentProduct.Currency)" @bind-Value="CurrentProduct.Currency" Immediate Label="Currency">
+                                    <MudSelectItem Disabled T="Currency" Value="Currency.None"> @Currency.None </MudSelectItem>
+                                    @foreach (var currency in Currencies.Where(_ => _ is not Currency.None))
+                                    {
+                                        <MudSelectItem T="Currency" Value="currency">@currency</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudSelect T="Guid" Variant="Variant.Outlined" For="@(() => CurrentProduct.BrandId)" @bind-Value="CurrentProduct.BrandId" Immediate Label="Brand">
+                                    <MudSelectItem T="Guid" Value="Guid.Empty"> Without brand </MudSelectItem>
+                                    @foreach (var brand in Brands)
+                                    {
+                                        <MudSelectItem T="Guid" Value="brand.Id"> @brand.Name </MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudSelect T="Categoty" Variant="Variant.Outlined" For="@(() => CurrentProduct.Category)" @bind-Value="CurrentProduct.Category"
+                                           @bind-Value:after="@(() => StateHasChanged())" Immediate Label="Category">
+                                    <MudSelectItem Disabled T="Categoty" Value="Categoty.None"> @Categoty.None </MudSelectItem>
+                                    @foreach (var type in ProductTypes.Where(_ => _ is not Categoty.None))
+                                    {
+                                        <MudSelectItem T="Categoty" Value="type"> @type </MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem xs="12">
+                                @switch (CurrentProduct.Category)
+                                {
+                                    case Categoty.Clothing:
+                                        <ClothingComponent Model="CurrentProduct" />
+                                        break;
+                                    case Categoty.Shoes:
+                                        <ShoesComponent Model="CurrentProduct" />
+                                        break;
+                                }
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudButton Color="Color.Success" ButtonType="ButtonType.Submit" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save">Save</MudButton>
+                            </MudItem>
+                        </MudGrid>
                     </MudItem>
                 </MudGrid>
             </EditForm>
@@ -73,13 +85,13 @@
 </MudGrid>
 
 @code {
-    private CreateProductRequest Model { get; set; } = new();
+    private CreateProductRequest CurrentProduct { get; set; } = new();
+    private HashSet<CreateProduct> Products { get; set; } = new();
 
     private IList<Currency> Currencies = Enum.GetValues<Currency>().ToList();
     private IList<ProductColor> Colors = Enum.GetValues<ProductColor>().ToList();
     private IList<Categoty> ProductTypes = Enum.GetValues<Categoty>().ToList();
     private IList<BrandDTO> Brands { get; set; } = new List<BrandDTO>();
-    private string BrandName = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -96,10 +108,8 @@
         }
     }
 
-    private void OnClick()
+    private void SaveProduct()
     {
 
     }
-
-    private void Some(){}
 }

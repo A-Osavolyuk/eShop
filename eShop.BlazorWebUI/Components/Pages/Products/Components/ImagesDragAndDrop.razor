@@ -1,0 +1,110 @@
+﻿<MudStack Style="width: 100%">
+    <MudGrid Spacing="1">
+        <MudItem xs="12">
+            <MudFileUpload T="IReadOnlyList<IBrowserFile>"
+                           AppendMultipleFiles
+                           OnFilesChanged="OnInputFileChanged"
+                           Hidden="@false"
+                           InputClass="absolute cursor-pointer mud-width-full mud-height-full overflow-hidden z-20"
+                           InputStyle="opacity:0"
+                           @ondragenter="@SetDragClass"
+                           @ondragleave="@ClearDragClass"
+                           @ondragend="@ClearDragClass">
+                <ButtonTemplate>
+                    <MudPaper Height="300px"
+                              Outlined="true"
+                              Class="@(_dragClass + (ImageUrls.Any() ? "" : " border-2 border-dashed"))">
+                        @if (ImageUrls.Any())
+                        {
+                            <MudImage Style="height:100%;width:100%;" ObjectFit="ObjectFit.Contain" Class="border-3 rounded-lg cursor-pointer mud-border-primary" Src="@CurrentImage" />
+                        }
+                        else
+                        {
+                            <MudText Typo="Typo.h6" Class="ml-4 mt-4"> Drag and drop files here or click </MudText>
+                        }
+                    </MudPaper>
+                    <MudToolBar DisableGutters="true"
+                                Class="relative d-flex gap-1 z-30">
+                        <MudButton FullWidth HtmlTag="label"
+                                   Color="Color.Primary"
+                                   for="@context.Id"
+                                   Variant="Variant.Filled">
+                            Choose files
+                        </MudButton>
+                        <MudButton FullWidth OnClick="@Clear"
+                                   Color="Color.Error"
+                                   Disabled="@(!ImageUrls.Any())"
+                                   Variant="Variant.Filled">
+                            Clear
+                        </MudButton>
+                    </MudToolBar>
+                </ButtonTemplate>
+            </MudFileUpload>
+        </MudItem>
+        <MudItem xs=12>
+            <MudGrid Spacing="1">
+                @foreach (var image in ImageUrls)
+                {
+                    <MudItem xs="3">
+                        <MudImage @onclick=@(() => SetCurrentImage(image)) Style="height:100%;width:100%" Class="border-2 rounded-lg cursor-pointer mud-border-primary" Src="@image" />
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudItem>
+    </MudGrid>
+</MudStack>
+
+@code {
+    private const string DefaultDragClass = "relative rounded-lg mud-width-full mud-height-full z-10";
+    private string _dragClass = DefaultDragClass;
+    private readonly List<string> ImageUrls = new();
+    private string CurrentImage = "";
+
+    private async void OnInputFileChanged(InputFileChangeEventArgs e)
+    {
+        ClearDragClass();
+        var files = e.GetMultipleFiles();
+
+        foreach (var file in files)
+        {
+            ImageUrls.Add(await CreateImageUrl(file));
+        }
+
+        if (string.IsNullOrEmpty(CurrentImage))
+        {
+            CurrentImage = ImageUrls.First();
+        }
+        StateHasChanged();
+
+    }
+
+    private async Task<string> CreateImageUrl(IBrowserFile file)
+    {
+        var buffer = new byte[file.Size];
+        await using var stream = file.OpenReadStream();
+        await stream.ReadAsync(buffer);
+
+        var base64 = Convert.ToBase64String(buffer);
+        var imageUrl = $"data:{file.ContentType};base64,{base64}";
+
+        return imageUrl;
+    }
+
+    private async Task Clear()
+    {
+        ImageUrls.Clear();
+        ClearDragClass();
+        await Task.Delay(100);
+    }
+
+    private void SetCurrentImage(string uri)
+    {
+        CurrentImage = uri;
+    }
+
+    private void SetDragClass()
+        => _dragClass = $"{DefaultDragClass} mud-border-primary";
+
+    private void ClearDragClass()
+        => _dragClass = DefaultDragClass;
+}

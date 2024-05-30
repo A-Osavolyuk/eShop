@@ -30,6 +30,15 @@ namespace eShop.Application.Validation.Products
                 .LessThan(100_000m).WithMessage("Price cannot be higher then 100 000")
                 .GreaterThan(0.1m).WithMessage("Price cannot be lower then 0.1");
 
+            RuleFor(x => x.Images)
+                .Must(x => x.Any()).WithMessage("Your product must contain at least one image");
+
+            RuleForEach(x => x.Images)
+                .NotEmpty().WithMessage("Image must have a name").When((product) => product.Images.Any());
+
+            RuleFor(x => x.Compound)
+                .NotEmpty().WithMessage("Your have to specify compound of your product");
+
             RuleFor(x => x.Audience)
                 .NotEqual(Audience.None).WithMessage("Pick your audience").When((request) =>
                 {
