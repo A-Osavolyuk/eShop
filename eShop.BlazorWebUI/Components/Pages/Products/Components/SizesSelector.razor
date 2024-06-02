@@ -7,7 +7,7 @@
 </MudSelect>
 
 @code {
-    [Parameter] public CreateProductRequest Model { get; set; } = new();
+    [Parameter] public CreateProductModel Model { get; set; } = new();
     private IEnumerable<ProductSize> SelectedSizes { get; set; } = new HashSet<ProductSize>();
     private List<ProductSize> SizesList { get; set; } = new();
 
