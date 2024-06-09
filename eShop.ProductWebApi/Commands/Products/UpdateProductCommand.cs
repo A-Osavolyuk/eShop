@@ -1,34 +1,40 @@
-﻿using eShop.Domain.DTOs.Requests;
+﻿using AutoMapper;
+using eShop.Domain.DTOs.Requests;
+using eShop.Domain.DTOs.Responses;
+using eShop.Domain.Enums;
 using eShop.Domain.Exceptions;
 using eShop.ProductWebApi.Repositories;
 using FluentValidation;
 using MediatR;
-
 namespace eShop.ProductWebApi.Commands.Products
 {
-    public record UpdateProductCommand<TRequest, TResponse>(TRequest ProductRequestBase, Guid Id) : IRequest<Result<TResponse>> 
-        where TRequest : UpdateProductRequestBase 
-        where TResponse : ProductDTO;
+    public record UpdateProductCommand(UpdateProductRequest Request) : IRequest<Result<UpdateProductResponse>>;
 
-    public class UpdateProductCommandHandler<TRequest, TResponse, TEntity>(
+    public class UpdateProductCommandHandler(
         IProductRepository repository, 
-        IValidator<TRequest> validator) 
-        : IRequestHandler<UpdateProductCommand<TRequest, TResponse>, Result<TResponse>>
-        where TRequest : UpdateProductRequestBase
-        where TResponse:ProductDTO
-        where TEntity : Product
+        IValidator<UpdateProductRequest> validator,
+        IMapper mapper) 
+        : IRequestHandler<UpdateProductCommand, Result<UpdateProductResponse>>
     {
         private readonly IProductRepository repository = repository;
-        private readonly IValidator<TRequest> validator = validator;
+        private readonly IValidator<UpdateProductRequest> validator = validator;
+        private readonly IMapper mapper = mapper;
 
-        public async Task<Result<TResponse>> Handle(UpdateProductCommand<TRequest, TResponse> request, CancellationToken cancellationToken)
+        public async Task<Result<UpdateProductResponse>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
-            var validationResult = await validator.ValidateAsync(request.ProductRequestBase, cancellationToken);
+            var validationResult = await validator.ValidateAsync(request.Request, cancellationToken);
 
             if (validationResult.IsValid) 
             {
-                request.ProductRequestBase.Id = request.Id;
-                var result = await repository.UpdateProductAsync<TResponse, TEntity, TRequest>(request.ProductRequestBase);
+                var product = request.Request.Category switch
+                {
+                    Categoty.Clothing => mapper.Map<Clothing>(request.Request),
+                    Categoty.Shoes => mapper.Map<Shoes>(request.Request),
+                    Categoty.None => new Product(),
+                    _ => throw new Exception("Not specified category")
+                };
+
+                var result = await repository.UpdateProductAsync(product);
                 return result;
             }
 

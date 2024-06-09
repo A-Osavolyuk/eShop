@@ -13,15 +13,8 @@ namespace eShop.Infrastructure.Services
         private readonly IHttpClientService clientService = clientService;
         private readonly IConfiguration configuration = configuration;
 
-        public async ValueTask<ResponseDTO> CreateProductAsync(IEnumerable<CreateProductRequest> request)
-        {
-            return request.First().Category switch 
-            {
-                Categoty.Clothing =>  await clientService.SendAsync(new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/create-product-clothing", Method: HttpMethods.POST, Data: request)),
-                Categoty.Shoes =>  await clientService.SendAsync(new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/create-product-shoes", Method: HttpMethods.POST, Data: request)),
-                Categoty.None or _ => new ResponseBuilder().Failed().WithErrorMessage("Cannot create product with product type None").Build()
-            };
-        }
+        public async ValueTask<ResponseDTO> CreateProductAsync(IEnumerable<CreateProductRequest> request) => await clientService.SendAsync(
+            new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/create-product", Method: HttpMethods.POST, Data: request));
 
         public async ValueTask<ResponseDTO> DeleteProductAsync(Guid Id) => await clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/delete-by-id/{Id}", Method: HttpMethods.DELETE));
@@ -41,11 +34,8 @@ namespace eShop.Infrastructure.Services
         public async ValueTask<ResponseDTO> GetProductsByNameAsync(string Name) => await clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/get-products-with-name/{Name}", Method: HttpMethods.GET));
 
-        public async ValueTask<ResponseDTO> UpdateProductAsync(UpdateClothingRequest request, Guid Id) => await clientService.SendAsync(
-            new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/update-product-clothing/{Id}", Method: HttpMethods.PUT, Data: request));
-
-        public async ValueTask<ResponseDTO> UpdateProductAsync(UpdateShoesRequest request, Guid Id) => await clientService.SendAsync(
-            new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/update-product-clothing/{Id}", Method: HttpMethods.PUT, Data: request));
+        public async ValueTask<ResponseDTO> UpdateProductAsync(UpdateProductRequest request, Guid Id) => await clientService.SendAsync(
+            new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/update-product/{Id}", Method: HttpMethods.PUT, Data: request));
 
         public async ValueTask<ResponseDTO> SearchProductAsync(long Article) => await clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Products/search-by-article/{Article}", Method: HttpMethods.GET));

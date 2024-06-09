@@ -1,37 +1,33 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using eShop.Domain.DTOs.Requests;
+using eShop.Domain.DTOs.Responses;
+using eShop.Domain.Enums;
 using eShop.Domain.Exceptions;
 using eShop.ProductWebApi.Repositories;
 using FluentValidation;
+using LanguageExt;
 using MediatR;
 
 namespace eShop.ProductWebApi.Commands.Products
 {
-    public record CreateProductCommand<TResponse, TRequest>(IEnumerable<CreateProductRequest> Request) : IRequest<Result<IEnumerable<TResponse>>>
-        where TResponse : ProductDTO
-        where TRequest : Product;
+    public record CreateProductCommand(IEnumerable<CreateProductRequest> CreateRequest) : IRequest<Result<CreateProductResponse>>;
     
 
-    public class CreateProductCommandHandler<TResponse, TRequest>(
+    public class CreateProductCommandHandler(
         IProductRepository repository,
-        IValidator<TRequest> validator,
-        IMapper mapper)
-        : IRequestHandler<CreateProductCommand<TResponse, TRequest>, Result<IEnumerable<TResponse>>>
-        where TRequest : Product
-        where TResponse : ProductDTO
+        IValidator<CreateProductRequest> validator,
+        IMapper mapper) : IRequestHandler<CreateProductCommand, Result<CreateProductResponse>>
     {
         private readonly IProductRepository repository = repository;
-        private readonly IValidator<TRequest> validator = validator;
+        private readonly IValidator<CreateProductRequest> validator = validator;
         private readonly IMapper mapper = mapper;
 
-        public async Task<Result<IEnumerable<TResponse>>> Handle(CreateProductCommand<TResponse, TRequest> request, CancellationToken cancellationToken)
+        public async Task<Result<CreateProductResponse>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
-            var entities = request.Request.AsQueryable().ProjectTo<TRequest>(mapper.ConfigurationProvider);
-
-            foreach (var entity in entities) 
+            foreach (var product in request.CreateRequest) 
             {
-                var validationResult = await validator.ValidateAsync(entity);
+                var validationResult = await validator.ValidateAsync(product);
 
                 if (!validationResult.IsValid)
                 {
@@ -39,7 +35,15 @@ namespace eShop.ProductWebApi.Commands.Products
                 }
             }
 
-            var result = await repository.CreateProductAsync<TResponse, TRequest>(entities);
+            var entities = request.CreateRequest.First().Category switch
+            {
+                Categoty.Clothing => request.CreateRequest.AsQueryable().ProjectTo<Clothing>(mapper.ConfigurationProvider),
+                Categoty.Shoes => request.CreateRequest.AsQueryable().ProjectTo<Shoes>(mapper.ConfigurationProvider),
+                Categoty.None => Enumerable.Empty<Product>(),
+                _ => throw new NotImplementedException()
+            };
+
+            var result = await repository.CreateProductAsync(entities);
             return result;
         }
     }

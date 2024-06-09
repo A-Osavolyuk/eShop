@@ -38,12 +38,6 @@ namespace eShop.ProductWebApi.Extensions
             builder.Services.AddScoped<IBrandsRepository, BrandsRepository>();
             builder.Services.AddScoped<IAzureBlobStorageService, AzureBlobStorageService>();
 
-            //Create product commands
-            builder.Services.AddTransient<IRequestHandler<CreateProductCommand<ClothingDTO, Clothing>, Result<IEnumerable<ClothingDTO>>>, 
-                CreateProductCommandHandler<ClothingDTO, Clothing>>();
-            builder.Services.AddTransient<IRequestHandler<CreateProductCommand<ShoesDTO, Shoes>, Result<IEnumerable<ShoesDTO>>>,
-                CreateProductCommandHandler<ShoesDTO, Shoes>>();
-
             //Update product commands
             builder.Services.AddTransient<IRequestHandler<UpdateProductCommand<UpdateClothingRequest, ClothingDTO>, Result<ClothingDTO>>,
                 UpdateProductCommandHandler<UpdateClothingRequest, ClothingDTO, Clothing>>();

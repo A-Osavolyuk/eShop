@@ -5,6 +5,7 @@ namespace eShop.Domain.DTOs.Requests
     public class CreateProductRequest
     {
         public Guid Id { get; set; }
+        public Guid VariantId {  get; set; } 
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public Categoty Category { get; set; }

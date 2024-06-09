@@ -1,11 +1,11 @@
 ﻿using eShop.Domain.Enums;
-using Microsoft.AspNetCore.Components.Forms;
 
-namespace eShop.Domain.Models
+namespace eShop.Domain.DTOs.Requests
 {
-    public record CreateProductModel
+    public class UpdateProductRequest
     {
         public Guid Id { get; set; }
+        public Guid VariantId { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public Categoty Category { get; set; }
@@ -13,9 +13,8 @@ namespace eShop.Domain.Models
         public decimal Price { get; set; }
         public Currency Currency { get; set; }
         public List<string> Images { get; set; } = new List<string>();
-        public IReadOnlyList<IBrowserFile> Files { get; set; } = [];
         public Guid BrandId { get; set; } = Guid.Empty;
-        public IEnumerable<ProductSize> Sizes { get; set; } = Enumerable.Empty<ProductSize>();
+        public HashSet<ProductSize> Sizes { get; set; } = new();
         public ProductColor Color { get; set; }
         public Audience Audience { get; set; }
     }

@@ -14,14 +14,18 @@
                            @ondragenter="@SetDragClass"
                            @ondragleave="@ClearDragClass"
                            @ondragend="@ClearDragClass"
-                           For="@(() => Model.Files)">
+                           For="@(() => Model.Files)"
+                           SuppressOnChangeWhenInvalid>
                 <ButtonTemplate>
                     <MudPaper Height="300px"
                               Outlined="true"
-                              Class="@(_dragClass + (Images.Any() ? "" : " border-2 border-dashed"))">
-                        @if (Images.Any())
+                              Class="@(_dragClass + (Model.Images.Any() ? "" : " border-2 border-dashed"))">
+                        @if (Model.Images.Any())
                         {
-                            <MudImage Style="height:100%;width:100%;" ObjectFit="ObjectFit.Contain" Class="border-3 rounded-lg cursor-pointer mud-border-primary" Src="@CurrentImage" />
+                            <MudImage Style="height:100%;width:100%;"
+                                      ObjectFit="ObjectFit.Contain"
+                                      Class="border-3 rounded-lg cursor-pointer mud-border-inherit"
+                                      Src="@CurrentImage" />
                         }
                         else
                         {
@@ -38,7 +42,7 @@
                         </MudButton>
                         <MudButton FullWidth OnClick="@(async () => await Clear())"
                                    Color="Color.Error"
-                                   Disabled="@(!Images.Any())"
+                                   Disabled="@(!Model.Images.Any())"
                                    Variant="Variant.Filled">
                             Clear
                         </MudButton>
@@ -48,10 +52,14 @@
         </MudItem>
         <MudItem xs=12>
             <MudGrid Spacing="1">
-                @foreach (var image in Images)
+                @foreach(var image in Model.Images.Where(x => !x.Equals(CurrentImage)))
                 {
-                    <MudItem xs="3">
-                        <MudImage @onclick=@(() => SetCurrentImage(image)) Style="height:100%;width:100%" Class="border-2 rounded-lg cursor-pointer mud-border-primary" Src="@image" />
+                    <MudItem xs="3" Class="position-relative">
+                        <MudImage @onclick=@(() => SetCurrentImage(image))
+                                  Style="height:100%;width:100%; min-height:90px; min-width:90px"
+                                  Class="border-2 rounded-lg cursor-pointer mud-border-inherit"
+                                  Src="@image">
+                        </MudImage>
                     </MudItem>
                 }
             </MudGrid>
@@ -66,7 +74,6 @@
     private const string DefaultDragClass = "relative rounded-lg mud-width-full mud-height-full z-10";
     private string _dragClass = DefaultDragClass;
     private string CurrentImage = "";
-    private List<string> Images { get; set; } = new();
 
     private async void OnInputFileChanged(InputFileChangeEventArgs e)
     {
@@ -74,11 +81,11 @@
         var files = e.GetMultipleFiles();
         foreach (var file in files)
         {
-            Images.Add(await CreateImageUrl(file));
+            Model.Images.Add(await CreateImageUrl(file));
         }
         if (string.IsNullOrEmpty(CurrentImage))
         {
-            CurrentImage = Images.First();
+            CurrentImage = Model.Images.First();
         }
         StateHasChanged();
     }
@@ -95,7 +102,7 @@
 
     private async Task Clear()
     {
-        Images.Clear();
+        Model.Images.Clear();
         Model.Files = [];
         CurrentImage = string.Empty;
         ClearDragClass();

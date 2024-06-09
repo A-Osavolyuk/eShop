@@ -1,5 +1,6 @@
 ﻿using eShop.Application.Utilities;
 using eShop.Domain.DTOs.Requests;
+using eShop.Domain.DTOs.Responses;
 using eShop.ProductWebApi.Commands.Products;
 using eShop.ProductWebApi.Queries.Products;
 using MediatR;
@@ -68,37 +69,19 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpPost("create-product-clothing")]
-        public async ValueTask<ActionResult<ResponseDTO>> CreateClothingProduct([FromBody] IEnumerable<CreateProductRequest> requests)
+        [HttpPost("create-product")]
+        public async ValueTask<ActionResult<ResponseDTO>> CreateProduct([FromBody] IEnumerable<CreateProductRequest> requests)
         {
-            var result = await sender.Send(new CreateProductCommand<ClothingDTO, Clothing>(requests));
+            var result = await sender.Send(new CreateProductCommand(requests));
             return result.Match(
                 s => HandleProductCreation(s),
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpPost("create-product-shoes")]
-        public async ValueTask<ActionResult<ResponseDTO>> CreateShoesProduct([FromBody] IEnumerable<CreateProductRequest> request)
+        [HttpPut("update-product/{Id:guid}")]
+        public async ValueTask<ActionResult<ResponseDTO>> UpdateProduct([FromBody] UpdateProductRequest updateProductRequest)
         {
-            var result = await sender.Send(new CreateProductCommand<ShoesDTO, Shoes>(request));
-            return result.Match(
-                s => HandleProductCreation(s),
-                f => ExceptionHandler.HandleException(f));
-        }
-
-        [HttpPut("update-product-clothing/{Id:guid}")]
-        public async ValueTask<ActionResult<ResponseDTO>> UpdateClothingProduct([FromBody] UpdateClothingRequest updateProductRequest, Guid Id)
-        {
-            var result = await sender.Send(new UpdateProductCommand<UpdateClothingRequest, ClothingDTO>(updateProductRequest, Id));
-            return result.Match(
-                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage("Product was successfully updated.").WithResult(s).Build()),
-                f => ExceptionHandler.HandleException(f));
-        }
-
-        [HttpPut("update-product-shoes/{Id:guid}")]
-        public async ValueTask<ActionResult<ResponseDTO>> UpdateShoesProduct([FromBody] UpdateShoesRequest updateProductRequest, Guid Id)
-        {
-            var result = await sender.Send(new UpdateProductCommand<UpdateShoesRequest, ShoesDTO>(updateProductRequest, Id));
+            var result = await sender.Send(new UpdateProductCommand(updateProductRequest));
             return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResultMessage("Product was successfully updated.").WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
@@ -133,17 +116,17 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        private ActionResult<ResponseDTO> HandleProductCreation(IEnumerable<ProductDTO> products)
+        private ActionResult<ResponseDTO> HandleProductCreation(CreateProductResponse response)
         {
-            if(products.Count() > 1)
+            if(response.Count > 1)
             {
-                return CreatedAtAction(nameof(GetProductsByVariantId), new {products.First().VariantId}, 
-                    new ResponseBuilder().Succeeded().WithResult(products).WithResultMessage("Product was successfully created.").Build());
+                return CreatedAtAction(nameof(GetProductsByVariantId), new { response.VariantId}, 
+                    new ResponseBuilder().Succeeded().WithResult(response).WithResultMessage("Products were successfully created.").Build());
             }
             else
             {
-                return CreatedAtAction(nameof(GetProductById), new { products.First().Id },
-                    new ResponseBuilder().Succeeded().WithResult(products).WithResultMessage("Product was successfully created.").Build());
+                return CreatedAtAction(nameof(GetProductById), new { response.ProductId },
+                    new ResponseBuilder().Succeeded().WithResult(response).WithResultMessage("Product was successfully created.").Build());
             }
         }
     }

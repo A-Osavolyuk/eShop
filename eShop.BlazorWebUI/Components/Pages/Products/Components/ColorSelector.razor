@@ -2,10 +2,20 @@
     <MudSelectItem T="ProductColor" Disabled Value="ProductColor.None">None</MudSelectItem>
     @foreach (var color in Enum.GetValues<ProductColor>().Where(_ => _ is not ProductColor.None))
     {
-        <MudSelectItem T="ProductColor" Value="color">@color</MudSelectItem>
+        <MudSelectItem T="ProductColor" Value="color" Class="d-flex align-content-center justify-content-center">
+            <div class="d-flex align-content-center">
+                <span class="mx-1 border-1" style="@(SetColorIndicatorStyles(color))"></span> @color
+            </div>
+        </MudSelectItem>
     }
 </MudSelect>
 
 @code {
     [Parameter] public CreateProductModel Model { get; set; } = new();
+
+    private string SetColorIndicatorStyles(ProductColor color)
+    {
+        const string DefaultStyles = "width:20px; height:14px; margin-top:4px; margin-bottom:0px;";
+        return new StringBuilder(DefaultStyles).Append($"background-color:{color.ToString().ToLowerInvariant()};").ToString();
+    }
 }
