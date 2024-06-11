@@ -209,7 +209,7 @@ namespace eShop.ProductWebApi.Repositories
             }
         }
 
-        public async ValueTask<Result<CreateProductResponse>> CreateProductAsync(IEnumerable<Product> products)
+        public async ValueTask<Result<Unit>> CreateProductAsync(IEnumerable<Product> products)
         {
             try
             {
@@ -226,18 +226,7 @@ namespace eShop.ProductWebApi.Repositories
 
                         logger.LogInformation($"Product was successfully created.");
 
-                        return new(products.Count() > 1
-                            ? new CreateProductResponse()
-                            {
-                                Count = products.Count(),
-                                CreatedAt = DateTime.UtcNow,
-                                VariantId = products.First().VariantId
-                            } : new CreateProductResponse()
-                            {
-                                Count = products.Count(),
-                                CreatedAt = DateTime.UtcNow,
-                                ProductId = products.First().Id
-                            });
+                        return new(new Unit());
                     }
 
                     var notFoundBrandException = new NotFoundBrandException(products.First().BrandId);
@@ -261,7 +250,7 @@ namespace eShop.ProductWebApi.Repositories
             }
         }
 
-        public async ValueTask<Result<UpdateProductResponse>> UpdateProductAsync(Product product)
+        public async ValueTask<Result<Unit>> UpdateProductAsync(Product product)
         {
             try
             {
@@ -278,7 +267,7 @@ namespace eShop.ProductWebApi.Repositories
 
                         logger.LogInformation($"Product was successfully updated.");
 
-                        return new(new UpdateProductResponse() { ProductId = product.Id, UpdatedAt = DateTime.UtcNow });
+                        return new();
                     }
 
                     var notFoundBrandException = new NotFoundBrandException(product.BrandId);
@@ -385,9 +374,9 @@ namespace eShop.ProductWebApi.Repositories
         public ValueTask<Result<ProductDTO>> GetProductByIdAsync(Guid Id);
         public ValueTask<Result<ProductDTO>> GetProductByArticleAsync(long Article);
         public ValueTask<Result<ProductDTO>> GetProductByNameAsync(string Name);
-        public ValueTask<Result<CreateProductResponse>> CreateProductAsync(IEnumerable<Product> products);
+        public ValueTask<Result<Unit>> CreateProductAsync(IEnumerable<Product> products);
 
-        public ValueTask<Result<UpdateProductResponse>> UpdateProductAsync(Product request);
+        public ValueTask<Result<Unit>> UpdateProductAsync(Product request);
         public ValueTask<Result<Unit>> DeleteProductByIdAsync(Guid Id);
         public ValueTask<Result<SearchProductResponse>> SearchAsync(long Article);
         public ValueTask<Result<SearchProductResponse>> SearchAsync(string Name);

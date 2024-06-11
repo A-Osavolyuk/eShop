@@ -2,7 +2,7 @@
 
 namespace eShop.Domain.DTOs
 {
-    public class ProductDTO
+    public record class ProductDTO
     {
         public Guid Id { get; set; } = Guid.Empty;
         public Guid VariantId { get; set; } = Guid.Empty;
@@ -15,5 +15,7 @@ namespace eShop.Domain.DTOs
         public List<string> Images { get; set; } = new List<string>();
         public Currency Currency { get; set; }
         public BrandDTO Brand { get; set; } = null!;
+        public int ReviewsCount { get; set; }
+        public int Rating { get; set; }
     }
 }

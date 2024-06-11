@@ -1,5 +1,4 @@
 ﻿@page "/products"
-@page "/"
 
 @inject NavigationManager NavigationManager
 @inject IProductService ProductService
@@ -17,7 +16,9 @@
     }
     else
     {
-        <MudText>Null</MudText>
+        <MudItem xs="12">
+            <MudText Align="Align.Center" Typo="Typo.h5">No products at the moment</MudText>
+        </MudItem>
     }
 </MudGrid>
 

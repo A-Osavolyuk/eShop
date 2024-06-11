@@ -2,7 +2,7 @@
 
 namespace eShop.Domain.DTOs
 {
-    public class ShoesDTO : ProductDTO
+    public record class ShoesDTO : ProductDTO
     {
         public ShoesDTO() => this.ProductType = Categoty.Shoes;
         public List<ProductSize> Sizes { get; set; } = new();

@@ -1,4 +1,5 @@
-﻿using eShop.Application.Utilities;
+﻿using Azure;
+using eShop.Application.Utilities;
 using eShop.Domain.DTOs.Requests;
 using eShop.Domain.DTOs.Responses;
 using eShop.ProductWebApi.Commands.Products;
@@ -12,7 +13,7 @@ namespace eShop.ProductWebApi.Controllers
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     [ApiVersion("1.0")]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class ProductsController(ISender sender) : ControllerBase
     {
         private readonly ISender sender = sender;
@@ -104,7 +105,7 @@ namespace eShop.ProductWebApi.Controllers
         {
             var result = await sender.Send(new CreateProductCommand(requests));
             return result.Match(
-                s => HandleProductCreation(s),
+                s => StatusCode(201, new ResponseBuilder().Succeeded().WithResult(s).WithResultMessage("Products were successfully created.").Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 
@@ -124,20 +125,6 @@ namespace eShop.ProductWebApi.Controllers
             return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResult(s).WithResultMessage("Product was successfully deleted.").Build()),
                 f => ExceptionHandler.HandleException(f));
-        }
-
-        private ActionResult<ResponseDTO> HandleProductCreation(CreateProductResponse response)
-        {
-            if(response.Count > 1)
-            {
-                return CreatedAtAction(nameof(GetProductsByVariantId), new { response.VariantId}, 
-                    new ResponseBuilder().Succeeded().WithResult(response).WithResultMessage("Products were successfully created.").Build());
-            }
-            else
-            {
-                return CreatedAtAction(nameof(GetProductById), new { response.ProductId },
-                    new ResponseBuilder().Succeeded().WithResult(response).WithResultMessage("Product was successfully created.").Build());
-            }
         }
     }
 }

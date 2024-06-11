@@ -8,22 +8,23 @@ using eShop.ProductWebApi.Repositories;
 using FluentValidation;
 using LanguageExt;
 using MediatR;
+using Unit = LanguageExt.Unit;
 
 namespace eShop.ProductWebApi.Commands.Products
 {
-    public record CreateProductCommand(IEnumerable<CreateProductRequest> CreateRequest) : IRequest<Result<CreateProductResponse>>;
+    public record CreateProductCommand(IEnumerable<CreateProductRequest> CreateRequest) : IRequest<Result<Unit>>;
     
 
     public class CreateProductCommandHandler(
         IProductRepository repository,
         IValidator<CreateProductRequest> validator,
-        IMapper mapper) : IRequestHandler<CreateProductCommand, Result<CreateProductResponse>>
+        IMapper mapper) : IRequestHandler<CreateProductCommand, Result<Unit>>
     {
         private readonly IProductRepository repository = repository;
         private readonly IValidator<CreateProductRequest> validator = validator;
         private readonly IMapper mapper = mapper;
 
-        public async Task<Result<CreateProductResponse>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
             foreach (var product in request.CreateRequest) 
             {
