@@ -19,8 +19,6 @@ namespace eShop.Application.MappingProfiles
             CreateMap<Product, Clothing>();
             CreateMap<Clothing, ClothingDTO>();
             CreateMap<Shoes, ShoesDTO>();
-            CreateMap<UpdateShoesRequest, Shoes>();
-            CreateMap<UpdateClothingRequest, Clothing>();
         }
     }
 }

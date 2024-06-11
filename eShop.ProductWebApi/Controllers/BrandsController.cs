@@ -3,6 +3,7 @@ using eShop.Domain.DTOs.Requests;
 using eShop.ProductWebApi.Commands.Brands;
 using eShop.ProductWebApi.Queries.Brands;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eShop.ProductWebApi.Controllers
@@ -10,11 +11,13 @@ namespace eShop.ProductWebApi.Controllers
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     [ApiVersion("1.0")]
+    [Authorize(Roles = "Admin")]
     public class BrandsController(ISender sender) : ControllerBase
     {
         private readonly ISender sender = sender;
 
         [HttpGet("get-brands")]
+        [AllowAnonymous]
         public async ValueTask<ActionResult<ResponseDTO>> GetBrandsList()
         {
             var result = await sender.Send(new GetBrandsListQuery());
@@ -24,6 +27,7 @@ namespace eShop.ProductWebApi.Controllers
         }
 
         [HttpGet("get-brands-names")]
+        [AllowAnonymous]
         public async ValueTask<ActionResult<ResponseDTO>> GetBrandsNamesList()
         {
             var result = await sender.Send(new GetBrandsNamesListQuery());
@@ -33,6 +37,7 @@ namespace eShop.ProductWebApi.Controllers
         }
 
         [HttpGet("get-brand-by-id/{Id:guid}")]
+        [AllowAnonymous]
         public async ValueTask<ActionResult<ResponseDTO>> GetBrandById(Guid Id)
         {
             var result = await sender.Send(new GetBrandByIdQuery(Id));
@@ -42,6 +47,7 @@ namespace eShop.ProductWebApi.Controllers
         }
 
         [HttpGet("get-brand-by-name/{Name}")]
+        [AllowAnonymous]
         public async ValueTask<ActionResult<ResponseDTO>> GetBrandById(string Name)
         {
             var result = await sender.Send(new GetBrandByNameQuery(Name));

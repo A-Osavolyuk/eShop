@@ -1,9 +1,8 @@
-﻿using eShop.Domain.DTOs.Requests;
-using eShop.ProductWebApi.Behaviors;
-using eShop.ProductWebApi.Commands.Products;
+﻿using eShop.ProductWebApi.Behaviors;
 using eShop.ProductWebApi.Repositories;
 using eShop.ProductWebApi.Services;
-using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
 
 namespace eShop.ProductWebApi.Extensions
 {
@@ -16,19 +15,51 @@ namespace eShop.ProductWebApi.Extensions
             builder.ConfigureVersioning();
             builder.AddMapping();
             builder.AddValidation();
+            builder.AddSwaggerWithSecurity();
 
             builder.AddSqlServerDbContext<ProductDbContext>("SqlServer");
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+
+
             builder.Services.AddMediatR(c =>
             {
                 c.RegisterServicesFromAssemblyContaining<IAssemblyMarker>();
                 c.AddOpenBehavior(typeof(LoggingBehavior<,>));
-                
+
             });
 
+            return builder;
+        }
+
+        public static IHostApplicationBuilder AddSwaggerWithSecurity(this IHostApplicationBuilder builder)
+        {
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new()
+                {
+                    Name = "Authorization",
+                    Description = "Enter the Bearer Authorization string as following: 'Bearer Generated-JWT-Token'",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = JwtBearerDefaults.AuthenticationScheme
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme()
+                        {
+                            Reference = new OpenApiReference()
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = JwtBearerDefaults.AuthenticationScheme
+                            }
+                        }, new string[] { }
+                    }
+                });
+            });
             return builder;
         }
 
@@ -37,12 +68,6 @@ namespace eShop.ProductWebApi.Extensions
             builder.Services.AddScoped<IProductRepository, ProductsRepository>();
             builder.Services.AddScoped<IBrandsRepository, BrandsRepository>();
             builder.Services.AddScoped<IAzureBlobStorageService, AzureBlobStorageService>();
-
-            //Update product commands
-            builder.Services.AddTransient<IRequestHandler<UpdateProductCommand<UpdateClothingRequest, ClothingDTO>, Result<ClothingDTO>>,
-                UpdateProductCommandHandler<UpdateClothingRequest, ClothingDTO, Clothing>>();
-            builder.Services.AddTransient<IRequestHandler<UpdateProductCommand<UpdateShoesRequest, ShoesDTO>, Result<ShoesDTO>>,
-                UpdateProductCommandHandler<UpdateShoesRequest, ShoesDTO, Shoes>>();
 
             return builder;
         }
