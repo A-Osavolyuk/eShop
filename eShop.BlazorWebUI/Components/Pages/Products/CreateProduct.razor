@@ -8,6 +8,7 @@
 @inject IBrandService BrandService
 @inject ISnackbar Snackbar
 @inject IMapper Mapper
+@inject IStoreService StoreService
 
 <PageTitle>Create product</PageTitle>
 
@@ -76,7 +77,7 @@
                 Duplicate variant
             </MudButton>
 
-            <MudButton OnClick="@(() => CreateProducts())"
+            <MudButton OnClick="@(() => CreateProducts_OnClick())"
                        Color="Color.Success"
                        ButtonType="ButtonType.Button"
                        Variant="Variant.Filled"
@@ -94,7 +95,7 @@
             <MudForm @ref="Form"
                      Model="CurrentProduct"
                      Validation="ProductValidation.ValidateValue"
-                     ReadOnly="@IsFormReadOnly">
+                     ReadOnly="@IsReadMode">
                 <MudGrid>
                     <MudItem xs="4">
                         <ImagesDragAndDrop Model="CurrentProduct" />
@@ -112,7 +113,7 @@
                                               Placeholder="Enter product name..."
                                               MaxLength="200"
                                               Immediate
-                                              Clearable="@(!IsFormReadOnly)"
+                                              Clearable="@(!IsReadMode)"
                                               @bind-Value="CurrentProduct.Name" />
 
                                 <MudTextField T="string"
@@ -126,8 +127,22 @@
                                               Lines="3"
                                               AutoGrow
                                               Immediate
-                                              Clearable="@(!IsFormReadOnly)"
+                                              Clearable="@(!IsReadMode)"
                                               @bind-Value="CurrentProduct.Description" />
+
+                                <MudTextField T="string"
+                                              Counter="2000"
+                                              Variant="Variant.Outlined"
+                                              For="@(() => CurrentProduct.Compound)"
+                                              Label="Compound"
+                                              ShrinkLabel
+                                              Placeholder="Enter compound..."
+                                              MaxLength="2000"
+                                              Lines="1"
+                                              AutoGrow
+                                              Immediate
+                                              Clearable="@(!IsReadMode)"
+                                              @bind-Value="CurrentProduct.Compound" />
                             </MudItem>
                             <MudItem xs="6">
                                 <MudNumericField T="decimal"
@@ -137,7 +152,7 @@
                                                  Label="Price"
                                                  Max="10000"
                                                  Immediate
-                                                 Clearable="@(!IsFormReadOnly)" />
+                                                 Clearable="@(!IsReadMode)" />
                             </MudItem>
                             <MudItem xs="6">
                                 <MudSelect T="Currency"
@@ -199,15 +214,30 @@
                                         break;
                                 }
                             </MudItem>
-                            <MudItem xs="12">
-                                <MudButton Color="Color.Success"
-                                           OnClick="@(async () => await SaveProduct())"
-                                           Variant="Variant.Filled"
-                                           StartIcon="@Icons.Material.Filled.Save"
-                                           Disabled="@(IsFormReadOnly || Products.Count() == 30)"
-                                           title="Save product">
-                                    Save
-                                </MudButton>
+                            <MudItem>
+                                @if (IsEditMode)
+                                {
+                                    <MudButton Color="Color.Success"
+                                               OnClick="@(async () => await SaveChanges())"
+                                               Variant="Variant.Filled"
+                                               StartIcon="@Icons.Material.Filled.Save"
+                                               title="Save changes">
+                                        Save changes
+                                    </MudButton>
+                                }
+                                else
+                                {
+                                    <MudButton Color="Color.Success"
+                                               OnClick="@(async () => await SaveProduct())"
+                                               Variant="Variant.Filled"
+                                               StartIcon="@Icons.Material.Filled.Save"
+                                               Disabled="@(IsReadMode || Products.Count() == 30)"
+                                               title="Save product">
+                                        Save
+                                    </MudButton>
+                                }
+                            </MudItem>
+                            <MudItem>
                                 <MudButton Color="Color.Error"
                                            OnClick="@(() => ClearForm_OnClick())"
                                            Variant="Variant.Filled"
@@ -237,8 +267,10 @@
     private IList<ProductColor> Colors = Enum.GetValues<ProductColor>().ToList();
     private IList<Categoty> ProductCategories = Enum.GetValues<Categoty>().ToList();
     private IList<BrandDTO> Brands = new List<BrandDTO>();
-    private bool IsFormReadOnly = false;
+    private bool IsReadMode = false;
+    private bool IsEditMode = false;
     private int SelectedProductIndex = -1;
+    private int EditingProductIndex = -1;
     private Categoty ProductCategory;
 
     protected override async Task OnInitializedAsync()
@@ -269,14 +301,63 @@
 
             Products.Add(CurrentProduct);
             CurrentProduct = new CreateProductModel() with { Category = ProductCategory };
-
-            Snackbar.Add("Product was successfully saved", MudBlazor.Severity.Success);
         }
     }
 
-    private async Task CreateProducts()
+    private async Task SaveChanges()
     {
+        await Form.Validate();
 
+        if (Form.IsValid)
+        {
+            if (Products.Count() == 0)
+            {
+                ProductCategory = CurrentProduct.Category;
+            }
+
+            Products[EditingProductIndex] = CurrentProduct;
+            CurrentProduct = new CreateProductModel() with { Category = ProductCategory };
+            IsEditMode = false;
+            EditingProductIndex = -1;
+        }
+    }
+
+    private async Task CreateProducts_OnClick()
+    {
+        var requests = new List<CreateProductRequest>();
+
+        if (Products.Count() == 1)
+        {
+            var productId = Guid.NewGuid();
+            var images = await StoreService.AddProductImagesAsync(Products[0].Files, productId);
+            requests.Add(Mapper.Map<CreateProductRequest>(Products[0]) with { Id = productId, Images = images.ToList(), VariantId = Guid.Empty });
+        }
+        else
+        {
+            var variantId = Guid.NewGuid();
+            foreach(var product in Products)
+            {
+                var productId = Guid.NewGuid();
+                var images = await StoreService.AddProductImagesAsync(product.Files, productId);
+                requests.Add(Mapper.Map<CreateProductRequest>(product) with { Id = productId, Images = images.ToList(), VariantId = variantId });
+            }
+        }
+
+        await SendRequest(requests);
+    }
+
+    private async Task SendRequest(List<CreateProductRequest> requests)
+    {
+        var response = await ProductService.CreateProductAsync(requests);
+
+        if (response.IsSucceeded)
+        {
+            Snackbar.Add(response.ResultMessage, MudBlazor.Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add(response.ErrorMessage, MudBlazor.Severity.Error);
+        }
     }
 
     private string FormatName(string Name)
@@ -294,14 +375,19 @@
 
     private void SetCurrentProduct_OnClick(CreateProductModel model)
     {
+        if (IsEditMode)
+        {
+            IsEditMode = false;
+        }
+
         CurrentProduct = model;
         SelectedProductIndex = Products.IndexOf(model);
-        IsFormReadOnly = true;
+        IsReadMode = true;
     }
 
     private void AddNewVariant_OnClick()
     {
-        IsFormReadOnly = false;
+        IsReadMode = false;
         SelectedProductIndex = -1;
         CurrentProduct = Products.Count() > 0 ? new CreateProductModel() with { Category = ProductCategory } : new();
     }
@@ -332,7 +418,7 @@
             };
 
         SelectedProductIndex = -1;
-        IsFormReadOnly = false;
+        IsReadMode = false;
     }
 
     private void DeleteProduct_OnClick(CreateProductModel model)
@@ -351,8 +437,10 @@
 
     private void EditProduct_OnClick(CreateProductModel model)
     {
+        IsReadMode = false;
+        IsEditMode = true;
         CurrentProduct = model;
-        Products.Remove(model);
+        EditingProductIndex = Products.IndexOf(model);
     }
 
     private void ClearForm_OnClick() => CurrentProduct = Products.Any() ? new CreateProductModel() with { Category = ProductCategory } : new();

@@ -36,6 +36,7 @@ namespace eShop.Infrastructure
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IBrandService, BrandSevice>();
             builder.Services.AddScoped<ILocalDataAccessor, LocalDataAccessor>();
+            builder.Services.AddScoped<IStoreService, StoreService>();
 
             return builder;
         }

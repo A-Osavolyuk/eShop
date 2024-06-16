@@ -5,6 +5,6 @@ namespace eShop.Domain.Interfaces
 {
     public interface IHttpClientService
     {
-        public ValueTask<ResponseDTO> SendAsync(RequestDto request, bool withBearer = false);
+        public ValueTask<ResponseDTO> SendAsync(RequestDto request, bool withBearer = true);
     }
 }

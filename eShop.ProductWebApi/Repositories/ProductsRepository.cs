@@ -23,23 +23,7 @@ namespace eShop.ProductWebApi.Repositories
                 logger.LogInformation($"Trying to get list of products.");
                 var list = await context.Products
                     .AsNoTracking()
-                    .Select(x => new ProductDTO()
-                    {
-                        Id = x.Id,
-                        Article = x.Article,
-                        Name = x.Name,
-                        Description = x.Description,
-                        ProductType = x.ProductType,
-                        Compound = x.Compound,
-                        Amount = x.Price,
-                        Currency = x.Currency,
-                        Brand = new BrandDTO
-                        {
-                            Id = x.Brand.Id,
-                            Name = x.Brand.Name,
-                            Country = x.Brand.Country
-                        }
-                    })
+                    .ProjectTo<ProductDTO>(mapper.ConfigurationProvider)
                     .ToListAsync();
 
                 logger.LogInformation($"Successfully got list of products.");
@@ -60,23 +44,7 @@ namespace eShop.ProductWebApi.Repositories
                 var list = await context.Products
                     .AsNoTracking()
                     .Where(x => x.Name.Contains(Name))
-                    .Select(x => new ProductDTO()
-                    {
-                        Id = x.Id,
-                        Article = x.Article,
-                        Name = x.Name,
-                        Description = x.Description,
-                        ProductType = x.ProductType,
-                        Compound = x.Compound,
-                        Amount = x.Price,
-                        Currency = x.Currency,
-                        Brand = new BrandDTO
-                        {
-                            Id = x.Brand.Id,
-                            Name = x.Brand.Name,
-                            Country = x.Brand.Country
-                        }
-                    })
+                    .ProjectTo<ProductDTO>(mapper.ConfigurationProvider)
                     .ToListAsync();
 
                 logger.LogInformation($"Successfully got products with name: {Name}.");

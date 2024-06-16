@@ -2,6 +2,7 @@
 using eShop.Domain.DTOs;
 using eShop.Domain.DTOs.Requests;
 using eShop.Domain.Entities;
+using eShop.Domain.Models;
 
 namespace eShop.Application.MappingProfiles
 {
@@ -9,6 +10,7 @@ namespace eShop.Application.MappingProfiles
     {
         public ProductProfile()
         {
+            CreateMap<CreateProductModel, CreateProductRequest>();
             CreateMap<CreateProductRequest, Product>();
             CreateMap<CreateProductRequest, Clothing>();
             CreateMap<CreateProductRequest, Shoes>();

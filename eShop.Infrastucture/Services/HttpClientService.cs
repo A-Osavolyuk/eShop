@@ -2,6 +2,7 @@
 using eShop.Domain.DTOs.Requests;
 using eShop.Domain.Enums;
 using eShop.Domain.Interfaces;
+using eShop.Infrastructure.Account;
 using Newtonsoft.Json;
 using System.Net;
 using System.Text;
@@ -29,7 +30,7 @@ namespace eShop.Infrastructure.Services
 
                 if (withBearer)
                 {
-                    var token = await tokenProvider.GetTokenAsync();
+                    var token = AuthenticationHandler.Token;
                     message.Headers.Add("Authorization", $"Bearer {token}");
                 }
 
