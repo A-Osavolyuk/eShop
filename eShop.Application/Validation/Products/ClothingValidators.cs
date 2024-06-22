@@ -9,7 +9,7 @@ namespace eShop.Application.Validation.Products
     {
         public CreateClothingRequestValidator()
         {
-            RuleFor(x => x.ProductType)
+            RuleFor(x => x.Category)
                 .Equal(Categoty.Clothing).WithMessage("Invalid product type for clothing. Must be of type clothing.");
 
             RuleFor(x => x.BrandId)

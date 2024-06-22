@@ -24,10 +24,12 @@
         if(long.TryParse(SearchRequest, out var Article))
         {
             NavigationManager.NavigateTo($"/products/search?article={Article}", true);
+            StateHasChanged();
         }
         else if(!string.IsNullOrEmpty(SearchRequest))
         {
             NavigationManager.NavigateTo($"/products/search?name={SearchRequest}", true);
+            StateHasChanged();
         }
     }
 }

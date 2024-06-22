@@ -1,0 +1,18 @@
+﻿@if(Model is not null)
+{
+    <MudItem xs="12">
+        <MudPaper Outlined Class="pa-5">
+            <MudGrid>
+                <MudItem Class="d-flex" xs="12">
+                    <MudText Typo="Typo.h6"> Reviews </MudText>
+                    <MudText Typo="Typo.subtitle2"> (@Model.ReviewsCount) </MudText>
+                    <MudRating ReadOnly SelectedValue="Model.Rating" />
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+    </MudItem>
+
+}
+@code {
+    [Parameter, NotNull] public ProductDTO Model { get; set; } = new();
+}

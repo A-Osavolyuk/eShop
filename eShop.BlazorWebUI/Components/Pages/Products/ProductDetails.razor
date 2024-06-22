@@ -4,41 +4,96 @@
 @inject IProductService ProductService
 @inject ISnackbar Snackbar
 
-<PageTitle>Product Details</PageTitle>
+<PageTitle>@(string.IsNullOrEmpty(Model.Name) ? "Product Details" : Model.Name)</PageTitle>
 
-<MudGrid>
-    <MudItem xs="6">
-        <MudPaper Class="pa-5" Outlined>
-            
-        </MudPaper>
-    </MudItem>
-</MudGrid>
+@if (Model is not null && Model.Brand is not null)
+{
+    <MudGrid Justify="Justify.Center">
+        <MudItem xs="10">
+            <MudGrid>
+
+                <MudItem xs="8">
+                    <MudGrid>
+                        <ImagesPreview Model="Model" />
+                        <PropsAndDescription Model="Model" />
+                        <Reviews Model="Model" />
+                        
+                    </MudGrid>
+                </MudItem>
+
+                <MudItem xs="4">
+                    <MudGrid>
+                        <MudItem xs="12">
+                            <MudPaper Outlined Class="pa-5">
+                                <MudGrid Spacing="1" Justify="Justify.Center">
+                                    <MudItem Class="pb-0" xs="11">
+                                        <MudText Typo="Typo.h6">@Model.Name</MudText>
+                                    </MudItem>
+                                    <MudItem xs="1">
+                                        <MudIcon Color="Color.Error" Icon="@Icons.Material.Outlined.FavoriteBorder" />
+                                    </MudItem>
+                                    <MudItem Class="pt-0 pb-0" xs="12">
+                                        <MudText Style="opacity:0.5" Typo="Typo.subtitle2">Article: @Model.Article</MudText>
+                                    </MudItem>
+                                    <MudItem Class="pt-0 pb-0" xs="12">
+                                        <MudText Typo="Typo.subtitle2" Color="Color.Success">Ready to ship</MudText>
+                                    </MudItem>
+                                    <MudItem Class="my-2" xs="12">
+                                        <MudText Color="Color.Error" Typo="Typo.h4">
+                                            @Convert.ToInt32(Model.Price)
+                                            <MudText Inline Color="Color.Error" Typo="Typo.subtitle2">&dollar;</MudText>
+                                        </MudText>
+                                    </MudItem>
+                                    <MudItem xs="6">
+                                        <MudButton Color="Color.Primary"
+                                                   Variant="Variant.Filled"
+                                                   ButtonType="ButtonType.Button"
+                                                   StartIcon="@Icons.Material.Filled.Sell"
+                                                   FullWidth>
+                                            Buy now
+                                        </MudButton>
+                                    </MudItem>
+                                    <MudItem xs="6">
+                                        <MudButton Color="Color.Primary"
+                                                   Variant="Variant.Filled"
+                                                   ButtonType="ButtonType.Button"
+                                                   StartIcon="@Icons.Material.Filled.ShoppingCart"
+                                                   FullWidth>
+                                            Add to card
+                                        </MudButton>
+                                    </MudItem>
+                                    <MudItem Class="mt-1" xs="12">
+                                        <MudLink Href="#seller" Class="cursor-pointer" Typo="Typo.subtitle2" Color="Color.Default">
+                                            Seller: Some seller name
+                                        </MudLink>
+                                    </MudItem>
+                                </MudGrid>
+                            </MudPaper>
+                        </MudItem>
+                    </MudGrid>
+                </MudItem>
+            </MudGrid>
+        </MudItem>
+    </MudGrid>
+}
 
 @code {
     [SupplyParameterFromQuery(Name = "name")] public string Name { get; set; } = string.Empty;
     [SupplyParameterFromQuery(Name = "article")] public long Article { get; set; }
 
     private ProductDTO Model { get; set; } = new();
-    private Type Type { get; set; } = typeof(ProductDTO);
 
     protected override async Task OnInitializedAsync()
-    {
-        await GetProduct(Name, Article);
-    }
-
-    private async Task GetProduct(string? Name, long Article)
     {
         if (Article != 0)
         {
             var result = await ProductService.GetProductByArticleAsync(Article);
             Model = DeserializeResponse(result)!;
-            Type = Model.GetType();
         }
-        else if(!string.IsNullOrEmpty(Name))
+        else if (!string.IsNullOrEmpty(Name))
         {
             var result = await ProductService.GetProductByNameAsync(Name!);
             Model = DeserializeResponse(result)!;
-            Type = Model.GetType();
         }
     }
 
@@ -46,7 +101,7 @@
     {
         if (response.IsSucceeded)
         {
-            var type = JsonConvert.DeserializeObject<ProductDTO>(response.Result!.ToString()!)!.ProductType;
+            var type = JsonConvert.DeserializeObject<ProductDTO>(response.Result!.ToString()!)!.Category;
 
             return type switch
             {
@@ -61,4 +116,5 @@
             return null;
         }
     }
+
 }

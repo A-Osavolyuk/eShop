@@ -4,9 +4,6 @@ namespace eShop.Domain.DTOs
 {
     public record class ShoesDTO : ProductDTO
     {
-        public ShoesDTO() => this.ProductType = Categoty.Shoes;
-        public List<ProductSize> Sizes { get; set; } = new();
-        public ProductColor Color { get; set; } = new();
-        public Audience Audience { get; set; }
+        public ShoesDTO() => this.Category = Categoty.Shoes;
     }
 }

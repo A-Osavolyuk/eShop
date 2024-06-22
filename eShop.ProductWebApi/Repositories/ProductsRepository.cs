@@ -65,10 +65,10 @@ namespace eShop.ProductWebApi.Repositories
                 var product = await context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Id == Id);
                 if (product is not null)
                 {
-                    var output = product.ProductType switch
+                    var output = product.Category switch
                     {
-                        Categoty.Clothing => await context.Products.AsNoTracking().OfType<Clothing>().ProjectTo<ClothingDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == Id),
-                        Categoty.Shoes => await context.Products.AsNoTracking().OfType<Shoes>().ProjectTo<ShoesDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == Id),
+                        Categoty.Clothing => await context.Products.AsNoTracking().OfType<Clothing>().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == Id),
+                        Categoty.Shoes => await context.Products.AsNoTracking().OfType<Shoes>().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == Id),
                         _ or Categoty.None => await context.Products.AsNoTracking().OfType<Product>().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == Id)
                     };
 
@@ -95,10 +95,10 @@ namespace eShop.ProductWebApi.Repositories
                 var product = await context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Article == Article);
                 if (product is not null)
                 {
-                    var output = product.ProductType switch
+                    var output = product.Category switch
                     {
-                        Categoty.Clothing => await context.Products.AsNoTracking().OfType<Clothing>().ProjectTo<ClothingDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Article == Article),
-                        Categoty.Shoes => await context.Products.AsNoTracking().OfType<Shoes>().ProjectTo<ShoesDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Article == Article),
+                        Categoty.Clothing => await context.Products.AsNoTracking().OfType<Clothing>().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Article == Article),
+                        Categoty.Shoes => await context.Products.AsNoTracking().OfType<Shoes>().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Article == Article),
                         _ or Categoty.None => await context.Products.AsNoTracking().OfType<Product>().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Article == Article)
                     };
 
@@ -125,10 +125,10 @@ namespace eShop.ProductWebApi.Repositories
                 var product = await context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Name == Name);
                 if (product is not null)
                 {
-                    var output = product.ProductType switch
+                    var output = product.Category switch
                     {
-                        Categoty.Clothing => await context.Products.AsNoTracking().OfType<Clothing>().ProjectTo<ClothingDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Name == Name),
-                        Categoty.Shoes => await context.Products.AsNoTracking().OfType<Shoes>().ProjectTo<ShoesDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Name == Name),
+                        Categoty.Clothing => await context.Products.AsNoTracking().OfType<Clothing>().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Name == Name),
+                        Categoty.Shoes => await context.Products.AsNoTracking().OfType<Shoes>().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Name == Name),
                         _ or Categoty.None => await context.Products.AsNoTracking().OfType<Product>().ProjectTo<ProductDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Name == Name)
                     };
 
@@ -155,10 +155,10 @@ namespace eShop.ProductWebApi.Repositories
                 var product = await context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.VariantId == VariantId);
                 if (product is not null)
                 {
-                    var output = product.ProductType switch
+                    var output = product.Category switch
                     {
-                        Categoty.Clothing => context.Products.AsNoTracking().Where(x => x.VariantId == VariantId).OfType<Clothing>().ProjectTo<ClothingDTO>(mapper.ConfigurationProvider),
-                        Categoty.Shoes => context.Products.AsNoTracking().Where(x => x.VariantId == VariantId).OfType<Shoes>().ProjectTo<ShoesDTO>(mapper.ConfigurationProvider),
+                        Categoty.Clothing => context.Products.AsNoTracking().Where(x => x.VariantId == VariantId).OfType<Clothing>().ProjectTo<ProductDTO>(mapper.ConfigurationProvider),
+                        Categoty.Shoes => context.Products.AsNoTracking().Where(x => x.VariantId == VariantId).OfType<Shoes>().ProjectTo<ProductDTO>(mapper.ConfigurationProvider),
                         Categoty.None or _ => context.Products.AsNoTracking().Where(x => x.VariantId == VariantId).OfType<Product>().ProjectTo<ProductDTO>(mapper.ConfigurationProvider)
                     };
 
@@ -224,7 +224,7 @@ namespace eShop.ProductWebApi.Repositories
             {
                 logger.LogInformation($"Trying to update product.");
 
-                var productExists = await context.Products.AsNoTracking().AnyAsync(_ => _.Id == product.Id && _.ProductType == product.ProductType);
+                var productExists = await context.Products.AsNoTracking().AnyAsync(_ => _.Id == product.Id && _.Category == product.Category);
                 if (productExists)
                 {
                     var bransExists = await context.Brands.AsNoTracking().AnyAsync(_ => _.Id == product.BrandId);

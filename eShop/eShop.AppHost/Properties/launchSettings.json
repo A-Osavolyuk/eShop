@@ -1,23 +1,37 @@
 {
-  "$schema": "https://json.schemastore.org/launchsettings.json",
   "profiles": {
     "https": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:17290;http://localhost:15283",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOTNET_ENVIRONMENT": "Development",
         "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "https://localhost:21039",
         "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "https://localhost:22274"
-      }
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:17290;http://localhost:15283"
     },
     "http": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:15283",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DOTNET_ENVIRONMENT": "Development",
+        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:19234",
+        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "http://localhost:20115"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:15283"
+    },
+    "Watch": {
+      "commandName": "Executable",
+      "executablePath": "dotnet",
+      "workingDirectory": "./",
+      "hotReloadEnabled": true,
+      "hotReloadProfile": "aspnetcore",
+      "commandLineArgs": "watch run",
+      "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOTNET_ENVIRONMENT": "Development",
@@ -25,5 +39,6 @@
         "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "http://localhost:20115"
       }
     }
-  }
+  },
+  "$schema": "https://json.schemastore.org/launchsettings.json"
 }

@@ -1,0 +1,41 @@
+﻿@if(Model is not null)
+{
+    @switch (Model.Category)
+    {
+        case (Categoty.Clothing):
+            <PropertyText Title="Color" Text="@(Model.Color.ToString())" />
+            <PropertyText Title="Sizes" Text="@(FromListToString(Model.Sizes))" />
+            <PropertyText Title="Audience" Text="@(Model.Audience.ToString())" />
+            break;
+
+        case (Categoty.Shoes):
+            <PropertyText Title="Color" Text="@(Model.Color.ToString())" />
+            <PropertyText Title="Sizes" Text="@(FromListToString(Model.Sizes))" />
+            <PropertyText Title="Audience" Text="@(Model.Audience.ToString())" />
+            break;
+    }
+}
+
+@code {
+    [Parameter, NotNull] public ProductDTO Model { get; set; } = new();
+
+
+    private string FromListToString(List<ProductSize> sizes)
+    {
+        var sb = new StringBuilder("");
+        foreach (var size in sizes)
+        {
+            if (sizes.IndexOf(size) == sizes.Count - 1)
+            {
+                sb.Append(size.ToString());
+            }
+            else
+            {
+                sb.Append($"{size.ToString()}, ");
+            }
+            Console.WriteLine(size);
+        }
+
+        return sb.ToString();
+    }
+}

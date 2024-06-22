@@ -1,5 +1,6 @@
 ﻿@page "/products/create-product"
 
+@using Azure.Storage.Blobs
 @using Product = Domain.Entities.Product
 
 @inject NavigationManager NavigationManager
@@ -200,7 +201,7 @@
                             <MudItem xs="12">
                                 @if (CurrentProduct.Category is not Categoty.None)
                                 {
-                                    <MudText Class="my-3" Typo="Typo.h5">Addition information</MudText>
+                                    <MudText Class="my-3" Typo="Typo.h5">Additional information</MudText>
                                 }
 
                                 @switch (CurrentProduct.Category)
@@ -334,7 +335,7 @@
         else
         {
             var variantId = Guid.NewGuid();
-            foreach(var product in Products)
+            foreach (var product in Products)
             {
                 var productId = Guid.NewGuid();
                 var images = await StoreService.AddProductImagesAsync(product.Files, productId);
@@ -352,6 +353,7 @@
         if (response.IsSucceeded)
         {
             Snackbar.Add(response.ResultMessage, MudBlazor.Severity.Success);
+            NavigationManager.NavigateTo("/products");
         }
         else
         {
@@ -399,26 +401,11 @@
 
     private void Duplicate_OnClick()
     {
-        CurrentProduct = new()
-            {
-                Id = Guid.NewGuid(),
-                Audience = Products[SelectedProductIndex].Audience,
-                BrandId = Products[SelectedProductIndex].BrandId,
-                Category = Products[SelectedProductIndex].Category,
-                Color = Products[SelectedProductIndex].Color,
-                Compound = Products[SelectedProductIndex].Compound,
-                Currency = Products[SelectedProductIndex].Currency,
-                Description = Products[SelectedProductIndex].Description,
-                Files = Products[SelectedProductIndex].Files,
-                Images = Products[SelectedProductIndex].Images,
-                Name = Products[SelectedProductIndex].Name,
-                Price = Products[SelectedProductIndex].Price,
-                Sizes = Products[SelectedProductIndex].Sizes,
-            };
-
+        CurrentProduct = Products[SelectedProductIndex] with { Id = Guid.NewGuid() };
         SelectedProductIndex = -1;
         IsReadMode = false;
     }
+
 
     private void DeleteProduct_OnClick(CreateProductModel model)
     {

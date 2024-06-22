@@ -3,6 +3,7 @@ using eShop.Domain.Interfaces;
 using eShop.Infrastructure.Account;
 using eShop.Infrastructure.Services;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -15,6 +16,17 @@ namespace eShop.Infrastructure
             builder.AddDependencyInjection();
 
             builder.Services.AddBlazoredLocalStorage();
+
+            return builder;
+        }
+
+        public static IHostApplicationBuilder AddAzureLocalStorage(this IHostApplicationBuilder builder) 
+        {
+            builder.Services.AddAzureClients(clientBuilder =>
+            {
+                clientBuilder.AddBlobServiceClient(builder.Configuration["AzureStorage:blob"]!, preferMsi: true);
+                clientBuilder.AddQueueServiceClient(builder.Configuration["AzureStorage:queue"]!, preferMsi: true);
+            });
 
             return builder;
         }

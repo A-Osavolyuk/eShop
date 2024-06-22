@@ -37,7 +37,9 @@ namespace eShop.Application.Validation.Products
                 .NotEmpty().WithMessage("Image must have a name").When((product) => product.Images.Any());
 
             RuleFor(x => x.Compound)
-                .NotEmpty().WithMessage("Your have to specify compound of your product");
+                .NotEmpty().WithMessage("Your have to specify compound of your product")
+                .MinimumLength(8).WithMessage("Compound must contain at least 8 characters")
+                .MaximumLength(2000).WithMessage("Compound cannot be longer then 2000 characters");
 
             RuleFor(x => x.Audience)
                 .NotEqual(Audience.None).WithMessage("Pick your audience").When((request) =>
