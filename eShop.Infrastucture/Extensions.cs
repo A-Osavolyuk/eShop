@@ -20,17 +20,6 @@ namespace eShop.Infrastructure
             return builder;
         }
 
-        public static IHostApplicationBuilder AddAzureLocalStorage(this IHostApplicationBuilder builder) 
-        {
-            builder.Services.AddAzureClients(clientBuilder =>
-            {
-                clientBuilder.AddBlobServiceClient(builder.Configuration["AzureStorage:blob"]!, preferMsi: true);
-                clientBuilder.AddQueueServiceClient(builder.Configuration["AzureStorage:queue"]!, preferMsi: true);
-            });
-
-            return builder;
-        }
-
         private static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
         {
             builder.Services.AddScoped<AuthenticationStateProvider, ApplicationAuthenticationStateProvider>();

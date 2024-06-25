@@ -19,7 +19,6 @@ builder.AddValidation();
 builder.AddMapping();
 builder.AddJwtAuthentication();
 builder.AddInfrastructureLayer();
-builder.AddAzureLocalStorage();
 
 builder.Services.AddMudServices(config =>
 {

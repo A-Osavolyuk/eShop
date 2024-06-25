@@ -22,4 +22,6 @@ builder.AddProject<Projects.eShop_ProductWebApi>("eshop-productwebapi")
 builder.AddProject<Projects.eShop_BlazorWebUI>("eshop-blazorwebui")
     .WithReference(authApi);
 
+builder.AddProject<Projects.eShop_ReviewsWebApi>("eshop-reviewswebapi");
+
 builder.Build().Run();
