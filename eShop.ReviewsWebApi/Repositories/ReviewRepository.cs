@@ -31,6 +31,35 @@ namespace eShop.ReviewsWebApi.Repositories
             }
         }
 
+        public async Task<Result<Unit>> DeleteReviewsWithProductIdAsync(Guid Id)
+        {
+            try
+            {
+                logger.LogInformation($"Trying to delete reviews with product id: {Id}");
+
+                var reviews = await context.Reviews.AsNoTracking().Where(x => x.ReviewId == Id).ToListAsync();
+
+                if (reviews.Any()) 
+                {
+                    context.Reviews.RemoveRange(reviews);
+                    await context.SaveChangesAsync();
+
+                    logger.LogInformation($"Reviews with product id: {Id} were successfully deleted");
+                    return new(new Unit());
+                }
+
+                var notDeletedException = new NotDeletedReviewsException(Id);
+                logger.LogError($"Failed on deleting reviews with product id: {Id} with error message: {notDeletedException}")
+                return new(notDeletedException);
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Failed on deleting reviews with product id: {Id} with error message: {ex.Message}");
+                return new(ex);
+            }
+        }
+
         public async Task<Result<IEnumerable<ReviewDTO>>> GetReviewListByProductIdAsync(Guid Id)
         {
             try
@@ -84,5 +113,6 @@ namespace eShop.ReviewsWebApi.Repositories
     {
         public Task<Result<IEnumerable<ReviewDTO>>> GetReviewListByProductIdAsync(Guid Id);
         public Task<Result<Unit>> CreateReviewAsync(CreateReviewRequest request);
+        public Task<Result<Unit>> DeleteReviewsWithProductIdAsync(Guid Id);
     }
 }

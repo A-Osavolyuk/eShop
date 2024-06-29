@@ -25,5 +25,14 @@
                 s => StatusCode(201, new ResponseBuilder().Succeeded().WithResultMessage("Review was successfully created").Build()),
                 f => ExceptionHandler.HandleException(f));
         }
+
+        [HttpDelete("delete-reviews-with-product-id/{Id:guid}")]
+        public async ValueTask<ActionResult<ResponseDTO>> DeleteReviewsWithProductId([FromRoute] Guid Id)
+        {
+            var result = await sender.Send(new DeleteReviewsWithProductIdCommand(Id));
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage($"Reviews with product id: {Id} were successfully deleted").Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
     }
 }

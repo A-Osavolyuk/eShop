@@ -1,4 +1,6 @@
-﻿using eShop.ReviewsWebApi.Repositories;
+﻿using eShop.ReviewsWebApi.Receivers;
+using eShop.ReviewsWebApi.Repositories;
+using MassTransit;
 
 namespace eShop.ReviewsWebApi
 {
@@ -12,6 +14,7 @@ namespace eShop.ReviewsWebApi
             builder.AddValidation();
             builder.AddSwaggerWithSecurity();
             builder.AddDependencyInjection();
+            builder.AddMessageBus();
 
             builder.AddSqlServerDbContext<ReviewsDbContext>("SqlServer");
 
@@ -52,9 +55,34 @@ namespace eShop.ReviewsWebApi
             return builder;
         }
 
-        public static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder) 
+        public static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
         {
             builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+
+            return builder;
+        }
+
+        public static IHostApplicationBuilder AddMessageBus(this IHostApplicationBuilder builder)
+        {
+            builder.Services.AddMassTransit(x =>
+            {
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    var uri = builder.Configuration["RabbitMQConfigurations:HostUri"]!;
+                    var username = builder.Configuration["RabbitMQConfigurations:UserName"]!;
+                    var password = builder.Configuration["RabbitMQConfigurations:Password"]!;
+
+                    cfg.Host(new Uri(uri), h =>
+                    {
+                        h.Username(username);
+                        h.Password(password);
+                    });
+
+                    cfg.ReceiveEndpoint("product-deleted", e => e.ConfigureConsumer<ProductDeletedReceiver>(context));
+                });
+
+                x.AddConsumer<ProductDeletedReceiver>();
+            });
 
             return builder;
         }
