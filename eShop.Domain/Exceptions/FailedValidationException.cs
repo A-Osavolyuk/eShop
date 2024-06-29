@@ -1,12 +1,13 @@
 ﻿using eShop.Domain.Interfaces;
+using FluentValidation.Results;
 
 namespace eShop.Domain.Exceptions
 {
     public class FailedValidationException : Exception, IFailedValidationException
     {
-        public FailedValidationException(string ErrorMessage, IEnumerable<string> Errors) : base(ErrorMessage)
+        public FailedValidationException(IEnumerable<ValidationFailure> Errors, string ErrorMessage = "Validation error(s)") : base(ErrorMessage)
         {
-            this.Errors = Errors;
+            this.Errors = Errors.Select(x => x.ErrorMessage);
         }
 
         public IEnumerable<string> Errors { get; }

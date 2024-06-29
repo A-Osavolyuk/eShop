@@ -16,8 +16,7 @@ namespace eShop.ProductWebApi.Controllers
     {
         private readonly ISender sender = sender;
 
-        [HttpGet("get-brands")]
-        [AllowAnonymous]
+        [HttpGet("get-brands"), AllowAnonymous]
         public async ValueTask<ActionResult<ResponseDTO>> GetBrandsList()
         {
             var result = await sender.Send(new GetBrandsListQuery());
@@ -26,8 +25,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpGet("get-brands-names")]
-        [AllowAnonymous]
+        [HttpGet("get-brands-names"), AllowAnonymous]
         public async ValueTask<ActionResult<ResponseDTO>> GetBrandsNamesList()
         {
             var result = await sender.Send(new GetBrandsNamesListQuery());
@@ -36,8 +34,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpGet("get-brand-by-id/{Id:guid}")]
-        [AllowAnonymous]
+        [HttpGet("get-brand-by-id/{Id:guid}"), AllowAnonymous]
         public async ValueTask<ActionResult<ResponseDTO>> GetBrandById(Guid Id)
         {
             var result = await sender.Send(new GetBrandByIdQuery(Id));
@@ -46,8 +43,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpGet("get-brand-by-name/{Name}")]
-        [AllowAnonymous]
+        [HttpGet("get-brand-by-name/{Name}"), AllowAnonymous]
         public async ValueTask<ActionResult<ResponseDTO>> GetBrandById(string Name)
         {
             var result = await sender.Send(new GetBrandByNameQuery(Name));

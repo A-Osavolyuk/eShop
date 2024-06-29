@@ -1,4 +1,6 @@
-﻿namespace eShop.ReviewsWebApi
+﻿using eShop.ReviewsWebApi.Repositories;
+
+namespace eShop.ReviewsWebApi
 {
     public static class Extensions
     {
@@ -9,6 +11,7 @@
             builder.AddMapping();
             builder.AddValidation();
             builder.AddSwaggerWithSecurity();
+            builder.AddDependencyInjection();
 
             builder.AddSqlServerDbContext<ReviewsDbContext>("SqlServer");
 
@@ -46,6 +49,13 @@
                     }
                 });
             });
+            return builder;
+        }
+
+        public static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder) 
+        {
+            builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+
             return builder;
         }
     }

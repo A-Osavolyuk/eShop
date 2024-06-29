@@ -2,7 +2,7 @@
 using FluentValidation;
 using System.Text.RegularExpressions;
 
-namespace eShop.Application.Validation
+namespace eShop.Application.Validation.Auth
 {
     public class PersonalDataValidator : AbstractValidator<ChangePersonalDataRequest>
     {

@@ -38,7 +38,7 @@ namespace eShop.ProductWebApi.Commands.Products
                 return result;
             }
 
-            return new(new FailedValidationException("Validation Error(s).", validationResult.Errors.Select(x => x.ErrorMessage)));
+            return new(new FailedValidationException(validationResult.Errors));
         }
     }
 }

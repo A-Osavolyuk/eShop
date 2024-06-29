@@ -66,7 +66,7 @@ namespace eShop.AuthWebApi.Services.Implementation
                         return new(new WrongPasswordException());
                     }
 
-                    return new(new FailedValidationException("Validation Error(s).", validationResult.Errors.Select(x => x.ErrorMessage)));
+                    return new(new FailedValidationException(validationResult.Errors));
                 }
 
                 return new(new NotFoundUserByEmailException(Email));
@@ -107,7 +107,7 @@ namespace eShop.AuthWebApi.Services.Implementation
                         return new(new NotChangedPersonalDataException());
                     }
 
-                    return new(new FailedValidationException("Validation Error(s)", validationResult.Errors.Select(x => x.ErrorMessage)));
+                    return new(new FailedValidationException(validationResult.Errors));
                 }
 
                 return new(new NotFoundUserByIdException(Email));
@@ -175,7 +175,7 @@ namespace eShop.AuthWebApi.Services.Implementation
                         return new(new NotResetPasswordException());
                     }
 
-                    return new(new FailedValidationException("Validation Error(s).", validationResult.Errors.Select(x => x.ErrorMessage)));
+                    return new(new FailedValidationException(validationResult.Errors));
                 }
 
                 return new(new NotFoundUserByEmailException(Email));
@@ -238,8 +238,7 @@ namespace eShop.AuthWebApi.Services.Implementation
                 var validationResult = await loginValidator.ValidateAsync(loginRequest);
 
                 if (!validationResult.IsValid)
-                    return new(new FailedValidationException("Validation Error(s)",
-                        validationResult.Errors.Select(x => x.ErrorMessage)));
+                    return new(new FailedValidationException(validationResult.Errors));
 
                 var user = await userManager.FindByEmailAsync(loginRequest.Email);
 
@@ -305,8 +304,7 @@ namespace eShop.AuthWebApi.Services.Implementation
                 var validationResult = await registrationValidator.ValidateAsync(registrationRequest);
 
                 if (!validationResult.IsValid)
-                    return new(new FailedValidationException("Validation Error(s)",
-                        validationResult.Errors.Select(x => x.ErrorMessage)));
+                    return new(new FailedValidationException(validationResult.Errors));
 
                 var exists = await userManager.FindByEmailAsync(registrationRequest.Email);
 
@@ -622,7 +620,7 @@ namespace eShop.AuthWebApi.Services.Implementation
                         });
                     }
 
-                    return new(new FailedValidationException("Validation Error(s).", validationResult.Errors.Select(x => x.ErrorMessage)));
+                    return new(new FailedValidationException(validationResult.Errors));
 
                 }
 
@@ -693,7 +691,7 @@ namespace eShop.AuthWebApi.Services.Implementation
                         return new(new NotChangedUserNameException());
                     }
 
-                    return new(new FailedValidationException("Validation Error(s).", validationResult.Errors.Select(x => x.ErrorMessage)));
+                    return new(new FailedValidationException(validationResult.Errors));
                 }
 
                 return new(new NotFoundUserByEmailException(changeUserNameRequest.Email));
@@ -753,7 +751,7 @@ namespace eShop.AuthWebApi.Services.Implementation
                         });
                     }
 
-                    return new(new FailedValidationException("Validation error(s).", validationResult.Errors.Select(x => x.ErrorMessage)));
+                    return new(new FailedValidationException(validationResult.Errors));
                 }
 
                 return new(new NotFoundUserByEmailException(changePhoneNumberRequest.Email));

@@ -32,7 +32,7 @@ namespace eShop.ProductWebApi.Commands.Products
 
                 if (!validationResult.IsValid)
                 {
-                    return new(new FailedValidationException("Validation Error(s).", validationResult.Errors.Select(x => x.ErrorMessage)));
+                    return new(new FailedValidationException(validationResult.Errors));
                 }
             }
 

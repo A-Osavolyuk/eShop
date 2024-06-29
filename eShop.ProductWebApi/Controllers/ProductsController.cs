@@ -1,7 +1,5 @@
-﻿using Azure;
-using eShop.Application.Utilities;
+﻿using eShop.Application.Utilities;
 using eShop.Domain.DTOs.Requests;
-using eShop.Domain.DTOs.Responses;
 using eShop.ProductWebApi.Commands.Products;
 using eShop.ProductWebApi.Queries.Products;
 using MediatR;
@@ -18,8 +16,7 @@ namespace eShop.ProductWebApi.Controllers
     {
         private readonly ISender sender = sender;
 
-        [HttpGet("get-products-list")]
-        [AllowAnonymous]
+        [HttpGet("get-products-list"), AllowAnonymous]
         public async ValueTask<ActionResult<ResponseDTO>> GetProductList()
         {
             var result = await sender.Send(new GetProductsListQuery());
@@ -28,8 +25,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpGet("get-products-with-name/{Name}")]
-        [AllowAnonymous]
+        [HttpGet("get-products-with-name/{Name}"), AllowAnonymous]
         public async ValueTask<ActionResult<ResponseDTO>> GetProductsByName(string Name)
         {
             var result = await sender.Send(new GetProductsByNameQuery(Name));
@@ -38,8 +34,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpGet("get-products-with-variantId/{VariantId:guid}")]
-        [AllowAnonymous]
+        [HttpGet("get-products-with-variantId/{VariantId:guid}"), AllowAnonymous]
         public async ValueTask<ActionResult<ResponseDTO>> GetProductsByVariantId(Guid VariantId)
         {
             var result = await sender.Send(new GetProductsByVariantIdQuery(VariantId));
@@ -48,8 +43,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpGet("get-by-id/{Id:guid}")]
-        [AllowAnonymous]
+        [HttpGet("get-by-id/{Id:guid}"), AllowAnonymous]
         public async ValueTask<ActionResult<ResponseDTO>> GetProductById(Guid Id)
         {
             var result = await sender.Send(new GetProductByIdQuery(Id));
@@ -58,8 +52,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpGet("get-by-article/{Article:long}")]
-        [AllowAnonymous]
+        [HttpGet("get-by-article/{Article:long}"), AllowAnonymous]
         public async ValueTask<ActionResult<ResponseDTO>> GetProductByArticle(long Article)
         {
             var result = await sender.Send(new GetProductByArticleQuery(Article));
@@ -68,8 +61,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpGet("get-by-name/{Name}")]
-        [AllowAnonymous]
+        [HttpGet("get-by-name/{Name}"), AllowAnonymous]
         public async ValueTask<ActionResult<ResponseDTO>> GetProductByName(string Name)
         {
             var result = await sender.Send(new GetProductByNameQuery(Name));
@@ -78,8 +70,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpGet("search-by-article/{Article:long}")]
-        [AllowAnonymous]
+        [HttpGet("search-by-article/{Article:long}"), AllowAnonymous]
         public async ValueTask<ActionResult<ResponseDTO>> SearchByArticle(long Article)
         {
             var result = await sender.Send(new SearchProductByArticleQuery(Article));
@@ -89,8 +80,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpGet("search-by-name/{Name}")]
-        [AllowAnonymous]
+        [HttpGet("search-by-name/{Name}"), AllowAnonymous]
         public async ValueTask<ActionResult<ResponseDTO>> SearchByName(string Name)
         {
             var result = await sender.Send(new SearchProductByNameQuery(Name));

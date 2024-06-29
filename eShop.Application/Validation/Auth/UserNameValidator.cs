@@ -1,7 +1,7 @@
 ﻿using eShop.Domain.DTOs.Requests.Auth;
 using FluentValidation;
 
-namespace eShop.Application.Validation
+namespace eShop.Application.Validation.Auth
 {
     public class UserNameValidator : AbstractValidator<ChangeUserNameRequest>
     {
