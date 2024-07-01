@@ -2,7 +2,7 @@
 
 namespace eShop.ReviewsWebApi.Data
 {
-    public class ReviewsDbContext(DbContextOptions<ReviewsDbContext> options) : DbContext(options)
+    public class ReviewDbContext(DbContextOptions<ReviewDbContext> options) : DbContext(options)
     {
         public DbSet<Review> Reviews => Set<Review>();
         public DbSet<Comment> Comments => Set<Comment>();

@@ -3,11 +3,11 @@
 namespace eShop.ReviewsWebApi.Repositories
 {
     public class ReviewRepository(
-        ReviewsDbContext context,
+        ReviewDbContext context,
         IMapper mapper,
         ILogger<ReviewRepository> logger) : IReviewRepository
     {
-        private readonly ReviewsDbContext context = context;
+        private readonly ReviewDbContext context = context;
         private readonly IMapper mapper = mapper;
         private readonly ILogger<ReviewRepository> logger = logger;
 
@@ -26,7 +26,7 @@ namespace eShop.ReviewsWebApi.Repositories
             }
             catch (Exception ex)
             {
-                logger.LogError($"Failed on creating reviews with error message: {ex.Message}");
+                logger.LogError($"Failed on creating review with error message: {ex.Message}");
                 return new(ex);
             }
         }
@@ -107,6 +107,38 @@ namespace eShop.ReviewsWebApi.Repositories
                 return new(ex);
             }
         }
+
+        public async Task<Result<Unit>> UpdateReviewAsync(UpdateReviewRequest request)
+        {
+            try
+            {
+                var review = await context.Reviews.FirstOrDefaultAsync(x => x.ReviewId == request.ReviewId);
+
+                if (review is not null)
+                {
+                    if(review.UserId == request.UserId)
+                    {
+                        var newReview = mapper.Map<Review>(request) with { UpdatedAt = DateTime.UtcNow };
+
+                        context.Reviews.Update(newReview);
+                        await context.SaveChangesAsync();
+
+                        return new(new Unit());
+                    }
+
+                    return new(new DeniedUpdateException());
+                }
+
+                var notFoundException = new NotFoundReviewException(request.ReviewId);
+                logger.LogError($"Failed no updating review with id: {request.ReviewId} with error message: {notFoundException.Message}");
+                return new(notFoundException);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Failed on updating review with id: {request.ReviewId} with error message: {ex.Message}");
+                return new(ex);
+            }
+        }
     }
 
     public interface IReviewRepository
@@ -114,5 +146,6 @@ namespace eShop.ReviewsWebApi.Repositories
         public Task<Result<IEnumerable<ReviewDTO>>> GetReviewListByProductIdAsync(Guid Id);
         public Task<Result<Unit>> CreateReviewAsync(CreateReviewRequest request);
         public Task<Result<Unit>> DeleteReviewsWithProductIdAsync(Guid Id);
+        public Task<Result<Unit>> UpdateReviewAsync(UpdateReviewRequest request);
     }
 }

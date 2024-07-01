@@ -16,7 +16,7 @@ namespace eShop.ReviewsWebApi
             builder.AddDependencyInjection();
             builder.AddMessageBus();
 
-            builder.AddSqlServerDbContext<ReviewsDbContext>("SqlServer");
+            builder.AddSqlServerDbContext<ReviewDbContext>("SqlServer");
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
@@ -58,6 +58,7 @@ namespace eShop.ReviewsWebApi
         public static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
         {
             builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+            builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 
             return builder;
         }

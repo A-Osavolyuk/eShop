@@ -10,6 +10,7 @@ namespace eShop.Application.Mapping
         public ReviewProfile()
         {
             CreateMap<CreateReviewRequest, Review>();
+            CreateMap<UpdateReviewRequest, Review>();
             CreateMap<Review, ReviewDTO>();
         }
     }

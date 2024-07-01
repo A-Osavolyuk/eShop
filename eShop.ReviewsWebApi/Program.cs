@@ -16,7 +16,7 @@ if (app.Environment.IsDevelopment())
 
     using (var scope = app.Services.CreateScope())
     {
-        var context = scope.ServiceProvider.GetRequiredService<ReviewsDbContext>();
+        var context = scope.ServiceProvider.GetRequiredService<ReviewDbContext>();
         context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
     }

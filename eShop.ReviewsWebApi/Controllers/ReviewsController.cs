@@ -26,6 +26,15 @@
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [HttpPut("update-review")]
+        public async ValueTask<ActionResult<ResponseDTO>> UpdateReview([FromBody] UpdateReviewRequest request)
+        {
+            var result = await sender.Send(new UpdateReviewCommand(request));
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage("Review was successfully updated.").Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
         [HttpDelete("delete-reviews-with-product-id/{Id:guid}")]
         public async ValueTask<ActionResult<ResponseDTO>> DeleteReviewsWithProductId([FromRoute] Guid Id)
         {
