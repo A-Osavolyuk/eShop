@@ -30,6 +30,8 @@ namespace eShop.Infrastructure
             builder.Services.AddHttpClient<IAuthenticationService, AuthenticationService>();
             builder.Services.AddHttpClient<IProductService, ProductService>();
             builder.Services.AddHttpClient<IBrandService, BrandSevice>();
+            builder.Services.AddHttpClient<ICommentService, CommentService>();
+            builder.Services.AddHttpClient<IReviewService, ReviewService>();
 
             builder.Services.AddScoped<IHttpClientService, HttpClientService>();
             builder.Services.AddScoped<ITokenProvider, TokenProvider>();
@@ -38,6 +40,8 @@ namespace eShop.Infrastructure
             builder.Services.AddScoped<IBrandService, BrandSevice>();
             builder.Services.AddScoped<ILocalDataAccessor, LocalDataAccessor>();
             builder.Services.AddScoped<IStoreService, StoreService>();
+            builder.Services.AddScoped<IReviewService, ReviewService>();
+            builder.Services.AddScoped<ICommentService, CommentService>();
 
             return builder;
         }
