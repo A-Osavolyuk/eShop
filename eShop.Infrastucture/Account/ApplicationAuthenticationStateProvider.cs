@@ -1,6 +1,6 @@
 ﻿using eShop.Domain.Common;
 using eShop.Domain.DTOs.Requests.Auth;
-using eShop.Domain.DTOs.Responses;
+using eShop.Domain.DTOs.Responses.Auth;
 using eShop.Domain.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Components.Authorization;

@@ -9,10 +9,20 @@ namespace eShop.ReviewsWebApi.Receivers
         private readonly ILogger<ProductDeletedMessage> logger = logger;
 
         public async Task Consume(ConsumeContext<ProductDeletedMessage> context)
-        {
+            {
             logger.LogInformation($"Got message with command to delete reviews with product id: {context.Message.Id}");
-            await sender.Send(new DeleteReviewsWithProductIdCommand(context.Message.Id));
+
+            var result = await sender.Send(new DeleteReviewsWithProductIdCommand(context.Message.Id));
+
             logger.LogInformation($"Command was successfully executed");
+
+            var response = result.Match(
+                s => new ReviewsDeletedMessage() { IsSucceeded = true, Status = $"Reviews with product id: {context.Message.Id} were successfully deleted" },
+                f => new ReviewsDeletedMessage() { IsSucceeded = false, Status = f.Message });
+
+            await context.RespondAsync(response);
+
+            logger.LogInformation($"Response was successfully sent");
         }
     }
 }

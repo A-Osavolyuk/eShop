@@ -47,10 +47,11 @@ namespace eShop.ReviewsWebApi.Repositories
                     logger.LogInformation($"Reviews with product id: {Id} were successfully deleted");
                     return new(new Unit());
                 }
-
-                var notDeletedException = new NotDeletedReviewsException(Id);
-                logger.LogError($"Failed on deleting reviews with product id: {Id} with error message: {notDeletedException}")
-                return new(notDeletedException);
+                else
+                {
+                    logger.LogInformation($"Not found any review with product id: {Id}");
+                    return new(new Unit());
+                }
 
             }
             catch (Exception ex)

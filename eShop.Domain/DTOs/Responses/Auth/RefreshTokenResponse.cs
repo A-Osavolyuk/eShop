@@ -1,4 +1,4 @@
-﻿namespace eShop.Domain.DTOs.Responses
+﻿namespace eShop.Domain.DTOs.Responses.Auth
 {
     public class RefreshTokenResponse
     {

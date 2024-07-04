@@ -1,6 +1,7 @@
-﻿using eShop.ProductWebApi.Behaviors;
+﻿using eShop.Domain.Messages;
+using eShop.ProductWebApi.Behaviors;
 using eShop.ProductWebApi.Repositories;
-using eShop.ProductWebApi.Services;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 
@@ -16,6 +17,7 @@ namespace eShop.ProductWebApi.Extensions
             builder.AddMapping();
             builder.AddValidation();
             builder.AddSwaggerWithSecurity();
+            builder.AddMessageBus();    
 
             builder.AddSqlServerDbContext<ProductDbContext>("SqlServer");
 
@@ -67,7 +69,28 @@ namespace eShop.ProductWebApi.Extensions
         {
             builder.Services.AddScoped<IProductRepository, ProductsRepository>();
             builder.Services.AddScoped<IBrandsRepository, BrandsRepository>();
-            builder.Services.AddScoped<IAzureBlobStorageService, AzureBlobStorageService>();
+
+            return builder;
+        }
+
+        public static IHostApplicationBuilder AddMessageBus(this IHostApplicationBuilder builder)
+        {
+            builder.Services.AddMassTransit(x =>
+            {
+                x.AddRequestClient<ProductDeletedMessage>();
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    var uri = builder.Configuration["RabbitMQConfigurations:HostUri"]!;
+                    var username = builder.Configuration["RabbitMQConfigurations:UserName"]!;
+                    var password = builder.Configuration["RabbitMQConfigurations:Password"]!;
+
+                    cfg.Host(new Uri(uri), h =>
+                    {
+                        h.Username(username);
+                        h.Password(password);
+                    });
+                });
+            });
 
             return builder;
         }
