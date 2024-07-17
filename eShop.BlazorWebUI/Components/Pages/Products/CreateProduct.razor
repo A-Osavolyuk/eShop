@@ -183,7 +183,7 @@
                                 </MudSelect>
                             </MudItem>
                             <MudItem xs="12">
-                                <MudSelect T="Categoty"
+                                <MudSelect T="Category"
                                            Variant="Variant.Outlined"
                                            For="@(() => CurrentProduct.Category)"
                                            @bind-Value="CurrentProduct.Category"
@@ -191,25 +191,25 @@
                                            Immediate
                                            Label="Category"
                                            ReadOnly="@(Products.Count() > 0)">
-                                    <MudSelectItem Disabled T="Categoty" Value="Categoty.None"> @Categoty.None </MudSelectItem>
-                                    @foreach (var type in ProductCategories.Where(_ => _ is not Categoty.None))
+                                    <MudSelectItem Disabled T="Category" Value="Category.None"> @Category.None </MudSelectItem>
+                                    @foreach (var type in ProductCategories.Where(_ => _ is not Category.None))
                                     {
-                                        <MudSelectItem T="Categoty" Value="type"> @type </MudSelectItem>
+                                        <MudSelectItem T="Category" Value="type"> @type </MudSelectItem>
                                     }
                                 </MudSelect>
                             </MudItem>
                             <MudItem xs="12">
-                                @if (CurrentProduct.Category is not Categoty.None)
+                                @if (CurrentProduct.Category is not Category.None)
                                 {
                                     <MudText Class="my-3" Typo="Typo.h5">Additional information</MudText>
                                 }
 
                                 @switch (CurrentProduct.Category)
                                 {
-                                    case Categoty.Clothing:
+                                    case Category.Clothing:
                                         <ClothingComponent Model="CurrentProduct" />
                                         break;
-                                    case Categoty.Shoes:
+                                    case Category.Shoes:
                                         <ShoesComponent Model="CurrentProduct" />
                                         break;
                                 }
@@ -265,13 +265,13 @@
 
     private IList<Currency> Currencies = Enum.GetValues<Currency>().ToList();
     private IList<ProductColor> Colors = Enum.GetValues<ProductColor>().ToList();
-    private IList<Categoty> ProductCategories = Enum.GetValues<Categoty>().ToList();
+    private IList<Category> ProductCategories = Enum.GetValues<Category>().ToList();
     private IList<BrandDTO> Brands = new List<BrandDTO>();
     private bool IsReadMode = false;
     private bool IsEditMode = false;
     private int SelectedProductIndex = -1;
     private int EditingProductIndex = -1;
-    private Categoty ProductCategory;
+    private Category ProductCategory;
 
     protected override async Task OnInitializedAsync()
     {

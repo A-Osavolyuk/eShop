@@ -1,18 +1,71 @@
-﻿@if(Model is not null)
-{
-    <MudItem xs="12">
-        <MudPaper Outlined Class="pa-5">
-            <MudGrid>
-                <MudItem Class="d-flex" xs="12">
-                    <MudText Typo="Typo.h6"> Reviews </MudText>
-                    <MudText Typo="Typo.subtitle2"> (@Model.ReviewsCount) </MudText>
-                    <MudRating ReadOnly SelectedValue="Model.Rating" />
-                </MudItem>
-            </MudGrid>
-        </MudPaper>
-    </MudItem>
+﻿@inject IReviewService ReviewService
+@inject ISnackbar Snackbar
 
+@if (ReviewList is not null)
+{
+    if (ReviewList.Any())
+    {
+        <MudItem xs="12">
+            <MudPaper Outlined Class="pa-5">
+                <MudGrid>
+                    <MudItem Class="d-flex" xs="12">
+                        <MudText Typo="Typo.h6"> Reviews </MudText>
+                        <MudText Typo="Typo.subtitle2"> (@Model.ReviewsCount) </MudText>
+                        <MudRating ReadOnly SelectedValue="Model.Rating" />
+
+                        <Review></Review>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        </MudItem>
+    }
+    else
+    {
+        <MudItem xs="12">
+            <MudPaper Outlined Class="pa-5">
+                <MudGrid>
+                    <MudItem Class="d-flex" xs="12">
+                        <MudText Typo="Typo.h6"> Reviews </MudText>
+                        <MudText Typo="Typo.subtitle2"> (0) </MudText>
+                        <MudRating Class="mx-3" ReadOnly SelectedValue="0" />
+                        <MudSpacer/>
+                        <MudLink Typo="Typo.subtitle1" Href=@($"/review/all/{Model.Article}")>All</MudLink>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudText Typo="Typo.h5">This product has no any reviews yet</MudText>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        </MudItem>
+    }
+}
+else
+{
+    <MudGrid Justify="Justify.Center">
+        <MudItem xs="12">
+            <MudProgressCircular Color="Color.Primary" />
+        </MudItem>
+    </MudGrid>
 }
 @code {
+    #nullable disable
+
     [Parameter, NotNull] public ProductDTO Model { get; set; } = new();
+    private List<ReviewDTO> ReviewList { get; set; } = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var response = await ReviewService.GetReviewListByProductIdAsync(Model.Id);
+
+        if (response.IsSucceeded)
+        {
+            ReviewList = JsonConvert.DeserializeObject<List<ReviewDTO>>(response.Result.ToString());
+        }
+        else
+        {
+            Snackbar.Add(response.ErrorMessage, MudBlazor.Severity.Error);
+        }
+
+        StateHasChanged();
+    }
 }

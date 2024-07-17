@@ -2,13 +2,13 @@
 {
     @switch (Model.Category)
     {
-        case (Categoty.Clothing):
+        case (Category.Clothing):
             <PropertyText Title="Color" Text="@(Model.Color.ToString())" />
             <PropertyText Title="Sizes" Text="@(FromListToString(Model.Sizes))" />
             <PropertyText Title="Audience" Text="@(Model.Audience.ToString())" />
             break;
 
-        case (Categoty.Shoes):
+        case (Category.Shoes):
             <PropertyText Title="Color" Text="@(Model.Color.ToString())" />
             <PropertyText Title="Sizes" Text="@(FromListToString(Model.Sizes))" />
             <PropertyText Title="Audience" Text="@(Model.Audience.ToString())" />

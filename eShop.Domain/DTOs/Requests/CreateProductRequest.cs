@@ -8,7 +8,7 @@ namespace eShop.Domain.DTOs.Requests
         public Guid VariantId {  get; set; } 
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public Categoty Category { get; set; }
+        public Category Category { get; set; }
         public string Compound { get; set; } = string.Empty;
         public decimal Price { get; set; }
         public Currency Currency { get; set; }

@@ -39,7 +39,7 @@ namespace eShop.ReviewsWebApi.Repositories
 
                 var reviews = await context.Reviews.AsNoTracking().Where(x => x.ReviewId == Id).ToListAsync();
 
-                if (reviews.Any()) 
+                if (reviews.Any())
                 {
                     context.Reviews.RemoveRange(reviews);
                     await context.SaveChangesAsync();
@@ -67,40 +67,34 @@ namespace eShop.ReviewsWebApi.Repositories
             {
                 logger.LogInformation($"Trying to get reviews with product id: {Id}");
 
-                if (context.Reviews.Any(x => x.ProductId == Id))
-                {
-                    var list = await context.Reviews
-                        .AsNoTracking()
-                        .Where(x => x.ProductId == Id)
-                        .Select(x => new ReviewDTO()
+                var list = await context.Reviews
+                    .AsNoTracking()
+                    .Where(x => x.ProductId == Id)
+                    .Select(x => new ReviewDTO()
+                    {
+                        ReviewId = x.ProductId,
+                        ProductId = x.ProductId,
+                        UserId = x.UserId,
+                        CreatedAt = x.CreatedAt,
+                        Rating = x.Rating,
+                        Text = x.Text,
+                        UserName = x.UserName,
+                        Comments = x.Comments.Select(x => new CommentDTO()
                         {
-                            ReviewId = x.ProductId,
-                            ProductId = x.ProductId,
-                            UserId = x.UserId,
+                            CommentId = x.CommentId,
                             CreatedAt = x.CreatedAt,
-                            Rating = x.Rating,
+                            ReviewId = x.ReviewId,
                             Text = x.Text,
-                            UserName = x.UserName,
-                            Comments = x.Comments.Select(x => new CommentDTO()
-                            {
-                                CommentId = x.CommentId,
-                                CreatedAt = x.CreatedAt,
-                                ReviewId = x.ReviewId,
-                                Text = x.Text,
-                                UserId = x.UserId,
-                                UserName = x.UserName
-                            })
+                            UserId = x.UserId,
+                            UserName = x.UserName
                         })
-                        .ToListAsync();
+                    })
+                    .ToListAsync();
 
-                    logger.LogInformation($"Successfully got reviews with product id: {Id}");
+                logger.LogInformation($"Successfully got reviews with product id: {Id}");
 
-                    return new(list);
-                }
+                return new(list);
 
-                var notFoundException = new NotFoundReviewException(Id);
-                logger.LogError($"Failed on getting reviews with product id: {Id} with error message: {notFoundException.Message}");
-                return new(notFoundException);
             }
             catch (Exception ex)
             {
@@ -117,7 +111,7 @@ namespace eShop.ReviewsWebApi.Repositories
 
                 if (review is not null)
                 {
-                    if(review.UserId == request.UserId)
+                    if (review.UserId == request.UserId)
                     {
                         var newReview = mapper.Map<Review>(request) with { UpdatedAt = DateTime.UtcNow };
 

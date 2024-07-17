@@ -17,7 +17,6 @@
                         <ImagesPreview Model="Model" />
                         <PropsAndDescription Model="Model" />
                         <Reviews Model="Model" />
-                        
                     </MudGrid>
                 </MudItem>
 
@@ -105,8 +104,8 @@
 
             return type switch
             {
-                Categoty.Clothing => JsonConvert.DeserializeObject<ClothingDTO>(response.Result!.ToString()!),
-                Categoty.Shoes => JsonConvert.DeserializeObject<ShoesDTO>(response.Result!.ToString()!),
+                Category.Clothing => JsonConvert.DeserializeObject<ClothingDTO>(response.Result!.ToString()!),
+                Category.Shoes => JsonConvert.DeserializeObject<ShoesDTO>(response.Result!.ToString()!),
                 _ => JsonConvert.DeserializeObject<ProductDTO>(response.Result!.ToString()!)
             };
         }

@@ -28,7 +28,7 @@ namespace eShop.Application.Validation.Products
 
             RuleFor(x => x.Category)
                 .IsInEnum().WithMessage("Invalid value")
-                .NotEqual(Categoty.None).WithMessage("Choose your category");
+                .NotEqual(Category.None).WithMessage("Choose your category");
 
             RuleFor(x => x.Currency)
                 .IsInEnum().WithMessage("Invalid value")
@@ -51,9 +51,9 @@ namespace eShop.Application.Validation.Products
                 {
                     return request.Category switch
                     {
-                        Categoty.Clothing => true,
-                        Categoty.Shoes => true,
-                        Categoty.None or _ => false,
+                        Category.Clothing => true,
+                        Category.Shoes => true,
+                        Category.None or _ => false,
                     };
                 });
 
@@ -62,9 +62,9 @@ namespace eShop.Application.Validation.Products
                 {
                     return request.Category switch
                     {
-                        Categoty.Clothing => true,
-                        Categoty.Shoes => true,
-                        Categoty.None or _ => false,
+                        Category.Clothing => true,
+                        Category.Shoes => true,
+                        Category.None or _ => false,
                     };
                 });
 
@@ -75,9 +75,9 @@ namespace eShop.Application.Validation.Products
                 {
                     return request.Category switch
                     {
-                        Categoty.Clothing => true,
-                        Categoty.Shoes => true,
-                        Categoty.None or _ => false,
+                        Category.Clothing => true,
+                        Category.Shoes => true,
+                        Category.None or _ => false,
                     };
                 });
         }

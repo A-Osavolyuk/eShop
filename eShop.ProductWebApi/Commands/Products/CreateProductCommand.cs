@@ -38,9 +38,9 @@ namespace eShop.ProductWebApi.Commands.Products
 
             var entities = request.CreateRequest.First().Category switch
             {
-                Categoty.Clothing => request.CreateRequest.AsQueryable().ProjectTo<Clothing>(mapper.ConfigurationProvider),
-                Categoty.Shoes => request.CreateRequest.AsQueryable().ProjectTo<Shoes>(mapper.ConfigurationProvider),
-                Categoty.None => Enumerable.Empty<Product>(),
+                Category.Clothing => request.CreateRequest.AsQueryable().ProjectTo<Clothing>(mapper.ConfigurationProvider),
+                Category.Shoes => request.CreateRequest.AsQueryable().ProjectTo<Shoes>(mapper.ConfigurationProvider),
+                Category.None => Enumerable.Empty<Product>(),
                 _ => throw new NotImplementedException()
             };
 
