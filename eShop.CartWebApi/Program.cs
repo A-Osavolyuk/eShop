@@ -1,11 +1,10 @@
+using eShop.CartWebApi.Data;
+using eShop.CartWebApi.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
-
-
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.AddApiServices();
 
 var app = builder.Build();
 
@@ -15,6 +14,13 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    using (var scope = app.Services.CreateScope())
+    {
+        var context = scope.ServiceProvider.GetRequiredService<CartDbContext>();
+        context.Database.EnsureDeleted();
+        context.Database.EnsureCreated();
+    }
 }
 
 app.UseHttpsRedirection();
