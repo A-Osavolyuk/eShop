@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\eShop.AuthWebApi\eShop.AuthWebApi.csproj" />
     <ProjectReference Include="..\..\eShop.BlazorWebUI\eShop.BlazorWebUI.csproj" />
+    <ProjectReference Include="..\..\eShop.CartWebApi\eShop.CartWebApi.csproj" />
     <ProjectReference Include="..\..\eShop.EmailSenderWebApi\eShop.EmailSenderWebApi.csproj" />
     <ProjectReference Include="..\..\eShop.ProductWebApi\eShop.ProductWebApi.csproj" />
     <ProjectReference Include="..\..\eShop.ReviewsWebApi\eShop.ReviewsWebApi.csproj" />

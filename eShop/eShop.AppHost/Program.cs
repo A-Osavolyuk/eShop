@@ -24,4 +24,6 @@ builder.AddProject<Projects.eShop_BlazorWebUI>("eshop-blazorwebui")
 
 builder.AddProject<Projects.eShop_ReviewsWebApi>("eshop-reviewswebapi");
 
+builder.AddProject<Projects.eShop_CartWebApi>("eshop-cartwebapi");
+
 builder.Build().Run();
