@@ -1,12 +1,4 @@
-﻿using eShop.CartWebApi.Repositories;
-using eShop.Domain.DTOs.Requests.Cart;
-using eShop.Domain.Exceptions;
-using FluentValidation;
-using LanguageExt.Common;
-using MediatR;
-using Unit = LanguageExt.Unit;
-
-namespace eShop.CartWebApi.Commands.Cart
+﻿namespace eShop.CartWebApi.Commands.Cart
 {
     public record AddGoodToCartCommand(AddGoodToCartRequest AddGoodRequest) : IRequest<Result<Unit>>;
     public class AddGoodToCartCommandHandler(ICartRepository repository, IValidator<AddGoodToCartRequest> validator) : IRequestHandler<AddGoodToCartCommand, Result<Unit>>

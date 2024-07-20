@@ -1,16 +1,4 @@
-﻿using AutoMapper;
-using eShop.CartWebApi.Data;
-using eShop.CartWebApi.Exceptions;
-using eShop.Domain.DTOs.Requests.Cart;
-using LanguageExt;
-using LanguageExt.Common;
-using Microsoft.EntityFrameworkCore;
-using eShop.CartWebApi.Extensions;
-using eShop.Domain.Entities;
-using eShop.Domain.DTOs;
-using AutoMapper.QueryableExtensions;
-
-namespace eShop.CartWebApi.Repositories
+﻿namespace eShop.CartWebApi.Repositories
 {
     public class CartRepository(CartDbContext context, ILogger<CartRepository> logger, IMapper mapper) : ICartRepository
     {

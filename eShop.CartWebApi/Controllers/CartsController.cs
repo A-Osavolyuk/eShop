@@ -1,12 +1,4 @@
-﻿using eShop.Application.Utilities;
-using eShop.CartWebApi.Commands.Cart;
-using eShop.CartWebApi.Queries.Cart;
-using eShop.Domain.DTOs;
-using eShop.Domain.DTOs.Requests.Cart;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-
-namespace eShop.CartWebApi.Controllers
+﻿namespace eShop.CartWebApi.Controllers
 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]

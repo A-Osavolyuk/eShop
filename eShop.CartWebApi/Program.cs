@@ -1,6 +1,3 @@
-using eShop.CartWebApi.Data;
-using eShop.CartWebApi.Extensions;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();

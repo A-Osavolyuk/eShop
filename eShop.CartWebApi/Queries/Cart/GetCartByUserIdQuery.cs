@@ -1,10 +1,4 @@
-﻿using Unit = LanguageExt.Unit;
-using LanguageExt.Common;
-using MediatR;
-using eShop.CartWebApi.Repositories;
-using eShop.Domain.DTOs;
-
-namespace eShop.CartWebApi.Queries.Cart
+﻿namespace eShop.CartWebApi.Queries.Cart
 {
     public record GetCartByUserIdQuery(Guid UserId) : IRequest<Result<CartDTO>>;
 

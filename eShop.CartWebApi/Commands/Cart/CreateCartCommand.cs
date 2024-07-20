@@ -1,15 +1,4 @@
-﻿using eShop.CartWebApi.Exceptions;
-using eShop.CartWebApi.Repositories;
-using eShop.Domain.DTOs.Requests.Cart;
-using eShop.Domain.DTOs.Responses.Cart;
-using eShop.Domain.Exceptions;
-using FluentValidation;
-using LanguageExt.Common;
-using MassTransit;
-using MediatR;
-using Unit = LanguageExt.Unit;
-
-namespace eShop.CartWebApi.Commands.Cart
+﻿namespace eShop.CartWebApi.Commands.Cart
 {
     public record CreateCartCommand(CreateCartRequest CreateCartRequest) : IRequest<Result<Unit>>;
 
