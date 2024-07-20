@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using eShop.Domain.DTOs;
+using eShop.Domain.DTOs.Requests.Cart;
 using eShop.Domain.Entities;
 
 namespace eShop.Application.Mapping
@@ -10,6 +11,7 @@ namespace eShop.Application.Mapping
         {
             CreateMap<Cart, CartDTO>();
             CreateMap<Good, GoodDTO>();
+            CreateMap<UpdateCartRequest, Cart>();
         }
     }
 }

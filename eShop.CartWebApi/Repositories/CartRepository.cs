@@ -66,11 +66,48 @@
                     .ProjectTo<CartDTO>(mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync(x => x.UserId == UserId);
 
-                return cart is not null ? new(cart) : new(new NotFoundCartByUserIdException(UserId));
+                if (cart is not null)
+                {
+                    logger.LogInformation($"Successfully found cart by user id: {UserId}.");
+                    return new(cart); 
+                }
+
+                var notFoundCartByUserId = new NotFoundCartByUserIdException(UserId);
+                logger.LogError($"Failed on getting cart by user id: {UserId} with error message: {notFoundCartByUserId}");
+                return new(notFoundCartByUserId);
             }
             catch (Exception ex)
             {
                 logger.LogInformation($"Failed on getting cart by user id: {UserId} with error message: {ex.Message}.");
+                return new(ex);
+            }
+        }
+
+        public async ValueTask<Result<Unit>> UpdateCartAsync(UpdateCartRequest request)
+        {
+            try
+            {
+                logger.LogInformation($"Trying to update cart with id: {request.CartId}.", request.RequestId);
+
+                var exists = await context.Carts.AsNoTracking().AnyAsync(x => x.CartId == request.CartId && x.UserId == request.UserId);
+
+                if (exists) 
+                {
+                    var cart = mapper.Map<Cart>(request);
+                    context.Carts.Update(cart);
+                    await context.SaveChangesAsync();
+
+                    logger.LogInformation($"Cart with id: {request.CartId} was successfully updated.", request.RequestId);
+                    return new(new Unit());
+                }
+
+                var notFoundCartException = new NotFoundCartException(request.CartId);
+                logger.LogInformation($"Failed on updating cart with id: {request.CartId} with error message: {notFoundCartException.Message}");
+                return new(notFoundCartException);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Failed on updating cart with id: {request.CartId} with error message: {ex.Message}.");
                 return new(ex);
             }
         }
@@ -81,5 +118,6 @@
         public ValueTask<Result<Unit>> AddGoodAsync(AddGoodToCartRequest request);
         public ValueTask<Result<Unit>> CreateCartAsync(CreateCartRequest request);
         public ValueTask<Result<CartDTO>> GetCartByUserIdAsync(Guid UserId);
+        public ValueTask<Result<Unit>> UpdateCartAsync(UpdateCartRequest request);
     }
 }

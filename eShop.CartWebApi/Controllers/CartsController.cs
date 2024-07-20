@@ -33,5 +33,14 @@
                 s => new ResponseBuilder().Succeeded().WithResult(s).Build(),
                 f => ExceptionHandler.HandleException(f)!);
         }
+
+        [HttpPut("update-cart")]
+        public async ValueTask<ActionResult<ResponseDTO>> UpdateCartAsync([FromBody] UpdateCartRequest request)
+        {
+            var result = await sender.Send(new UpdateCartCommand(request));
+            return result.Match(
+                s => new ResponseBuilder().Succeeded().WithResultMessage("Cart was successfully updated.").Build(),
+                f => ExceptionHandler.HandleException(f));
+        }
     }
 }
