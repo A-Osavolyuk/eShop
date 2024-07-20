@@ -1,0 +1,26 @@
+﻿using eShop.Application.Utilities;
+using eShop.CartWebApi.Commands.Cart;
+using eShop.Domain.DTOs;
+using eShop.Domain.DTOs.Requests.Cart;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+
+namespace eShop.CartWebApi.Controllers
+{
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiController]
+    [ApiVersion("1.0")]
+    public class CartsController(ISender sender) : ControllerBase
+    {
+        private readonly ISender sender = sender;
+
+        [HttpPost("add-good-to-cart")]
+        public async ValueTask<ActionResult<ResponseDTO>> AddGoodToCartAsync([FromBody] AddGoodToCartRequest request)
+        {
+            var result = await sender.Send(new AddGoodToCartCommand(request));
+            return result.Match(
+                s => new ResponseBuilder().Succeeded().WithResultMessage("Good was successfully added to cart").Build(),
+                f => ExceptionHandler.HandleException(f));
+        }
+    }
+}

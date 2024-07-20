@@ -3,6 +3,7 @@ using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using eShop.Application;
 using Microsoft.OpenApi.Models;
+using eShop.CartWebApi.Repositories;
 
 namespace eShop.CartWebApi.Extensions
 {
@@ -59,7 +60,7 @@ namespace eShop.CartWebApi.Extensions
 
         public static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
         {
-
+            builder.Services.AddScoped<ICartRepository, CartRepository>();
             return builder;
         }
 
