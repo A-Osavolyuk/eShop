@@ -1,6 +1,8 @@
 ﻿using eShop.AuthWebApi.Utilities;
 using eShop.Domain.DTOs.Requests.Auth;
+using eShop.Domain.DTOs.Requests.Cart;
 using eShop.Domain.DTOs.Responses.Auth;
+using eShop.Domain.DTOs.Responses.Cart;
 using LanguageExt;
 using System.Net;
 
@@ -210,7 +212,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
-        public async ValueTask<Result<PhoneNumberResponse>> GetPhoneNumber(string Email)
+        public async ValueTask<Result<PhoneNumberResponse>> GetPhoneNumberAsync(string Email)
         {
             try
             {
@@ -783,6 +785,20 @@ namespace eShop.AuthWebApi.Services.Implementation
                 }
 
                 return new(new NotFoundUserByEmailException(confirmChangePhoneNumberRequest.Email));
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
+        }
+
+        public async ValueTask<Result<UserExistsResponse>> UserExistsAsync(UserExistsRequest userExistsRequest)
+        {
+            try
+            {
+                var exists = await userManager.FindByIdAsync(userExistsRequest.UserId.ToString());
+
+                return new(new UserExistsResponse() { Exists = exists is not null });
             }
             catch (Exception ex)
             {

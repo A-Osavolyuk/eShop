@@ -6,6 +6,7 @@ using LanguageExt;
 using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 using eShop.CartWebApi.Extensions;
+using eShop.Domain.Entities;
 
 namespace eShop.CartWebApi.Repositories
 {
@@ -19,7 +20,7 @@ namespace eShop.CartWebApi.Repositories
         {
             try
             {
-                logger.LogInformation($"Trying to add good to cart", request.RequestId);
+                logger.LogInformation($"Trying to add good to cart.", request.RequestId);
 
                 var cart = await context.Carts.FirstOrDefaultAsync(x => x.CartId == request.CartId);
 
@@ -34,12 +35,32 @@ namespace eShop.CartWebApi.Repositories
                 }
 
                 var notFoundCartException = new NotFoundCartException(request.CartId);
-                logger.LogError($"Failed on adding good to cart with error message: {notFoundCartException.Message}", request.RequestId);
+                logger.LogError($"Failed on adding good to cart with error message: {notFoundCartException.Message}.", request.RequestId);
                 return new(notFoundCartException);
             }
             catch (Exception ex)
             {
-                logger.LogError($"Failed on adding good to cart with error message: {ex.Message}", request.RequestId);
+                logger.LogError($"Failed on adding good to cart with error message: {ex.Message}.", request.RequestId);
+                return new(ex);
+            }
+        }
+
+        public async ValueTask<Result<Unit>> CreateCartAsync(CreateCartRequest request)
+        {
+            try
+            {
+                logger.LogInformation($"Trying to create cart.", request.RequestId);
+
+                await context.Carts.AddAsync(new Cart() { UserId = request.UserId });
+                await context.SaveChangesAsync();
+
+                logger.LogInformation("Cart was successfully created.", request.RequestId);
+
+                return new(new Unit());
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Failed on creating cart with error message: {ex.Message}.", request.RequestId);
                 return new(ex);
             }
         }
@@ -48,5 +69,6 @@ namespace eShop.CartWebApi.Repositories
     public interface ICartRepository
     {
         public ValueTask<Result<Unit>> AddGoodAsync(AddGoodToCartRequest request);
+        public ValueTask<Result<Unit>> CreateCartAsync(CreateCartRequest request);
     }
 }

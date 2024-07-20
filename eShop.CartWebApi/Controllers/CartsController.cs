@@ -19,7 +19,16 @@ namespace eShop.CartWebApi.Controllers
         {
             var result = await sender.Send(new AddGoodToCartCommand(request));
             return result.Match(
-                s => new ResponseBuilder().Succeeded().WithResultMessage("Good was successfully added to cart").Build(),
+                s => new ResponseBuilder().Succeeded().WithResultMessage("Good was successfully added to cart.").Build(),
+                f => ExceptionHandler.HandleException(f));
+        }
+
+        [HttpPost("create-cart")]
+        public async ValueTask<ActionResult<ResponseDTO>> CreateCartAsync([FromBody] CreateCartRequest request)
+        {
+            var result = await sender.Send(new CreateCartCommand(request));
+            return result.Match(
+                s => new ResponseBuilder().Succeeded().WithResultMessage("Cart was successfully created.").Build(),
                 f => ExceptionHandler.HandleException(f));
         }
     }

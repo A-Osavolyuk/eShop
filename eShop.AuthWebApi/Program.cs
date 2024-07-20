@@ -1,3 +1,5 @@
+using eShop.AuthWebApi.Receivers;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
@@ -17,7 +19,11 @@ builder.Services.AddMassTransit(x =>
             h.Username(username);
             h.Password(password);
         });
+
+        cfg.ReceiveEndpoint("user-exists", e => e.ConfigureConsumer<UserExistsReceiver>(context));
     });
+
+    x.AddConsumer<UserExistsReceiver>();
 });
 
 

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using eShop.Application;
 using Microsoft.OpenApi.Models;
 using eShop.CartWebApi.Repositories;
+using eShop.Domain.DTOs.Requests.Cart;
 
 namespace eShop.CartWebApi.Extensions
 {
@@ -68,6 +69,7 @@ namespace eShop.CartWebApi.Extensions
         {
             builder.Services.AddMassTransit(x =>
             {
+                x.AddRequestClient<UserExistsRequest>();
                 x.UsingRabbitMq((context, cfg) =>
                 {
                     var uri = builder.Configuration["RabbitMQConfigurations:HostUri"]!;

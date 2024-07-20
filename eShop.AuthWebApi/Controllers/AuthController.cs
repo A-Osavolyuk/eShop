@@ -273,7 +273,7 @@ namespace eShop.AuthWebApi.Controllers
         [HttpGet("get-phone-number/{Email}")]
         public async ValueTask<ActionResult<ResponseDTO>> GetPhoneNumber(string Email)
         {
-            var result = await authService.GetPhoneNumber(Email);
+            var result = await authService.GetPhoneNumberAsync(Email);
 
             return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),

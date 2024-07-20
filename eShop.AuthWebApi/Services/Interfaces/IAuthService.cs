@@ -1,5 +1,7 @@
 ﻿using eShop.Domain.DTOs.Requests.Auth;
+using eShop.Domain.DTOs.Requests.Cart;
 using eShop.Domain.DTOs.Responses.Auth;
+using eShop.Domain.DTOs.Responses.Cart;
 using LanguageExt;
 
 namespace eShop.AuthWebApi.Services.Interfaces
@@ -26,6 +28,7 @@ namespace eShop.AuthWebApi.Services.Interfaces
         public Result<RefreshTokenResponse> RefreshTokenAsync(RefreshTokenRequest refreshTokenRequest);
         public ValueTask<Result<ChangePhoneNumberResponse>> RequestChangePhoneNumberAsync(ChangePhoneNumberRequest changePhoneNumberRequest);
         public ValueTask<Result<ConfirmChangePhoneNumberResponse>> ConfirmChangePhoneNumberAsync(ConfirmChangePhoneNumberRequest confirmChangePhoneNumberRequest);
-        public ValueTask<Result<PhoneNumberResponse>> GetPhoneNumber(string Email);
+        public ValueTask<Result<PhoneNumberResponse>> GetPhoneNumberAsync(string Email);
+        public ValueTask<Result<UserExistsResponse>> UserExistsAsync(UserExistsRequest userExistsRequest);
     }
 }
