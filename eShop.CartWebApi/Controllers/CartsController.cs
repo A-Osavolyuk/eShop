@@ -1,5 +1,6 @@
 ﻿using eShop.Application.Utilities;
 using eShop.CartWebApi.Commands.Cart;
+using eShop.CartWebApi.Queries.Cart;
 using eShop.Domain.DTOs;
 using eShop.Domain.DTOs.Requests.Cart;
 using MediatR;
@@ -29,7 +30,16 @@ namespace eShop.CartWebApi.Controllers
             var result = await sender.Send(new CreateCartCommand(request));
             return result.Match(
                 s => new ResponseBuilder().Succeeded().WithResultMessage("Cart was successfully created.").Build(),
-                f => ExceptionHandler.HandleException(f));
+                f => ExceptionHandler.HandleException(f)!);
+        }
+
+        [HttpGet("get-cart/{UserId:guid}")]
+        public async ValueTask<ActionResult<ResponseDTO>> GetCartByIdAsync(Guid UserId)
+        {
+            var result = await sender.Send(new GetCartByUserIdQuery(UserId));
+            return result.Match(
+                s => new ResponseBuilder().Succeeded().WithResult(s).Build(),
+                f => ExceptionHandler.HandleException(f)!);
         }
     }
 }

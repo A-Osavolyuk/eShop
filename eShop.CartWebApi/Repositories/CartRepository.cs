@@ -7,6 +7,8 @@ using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 using eShop.CartWebApi.Extensions;
 using eShop.Domain.Entities;
+using eShop.Domain.DTOs;
+using AutoMapper.QueryableExtensions;
 
 namespace eShop.CartWebApi.Repositories
 {
@@ -64,11 +66,32 @@ namespace eShop.CartWebApi.Repositories
                 return new(ex);
             }
         }
+
+        public async ValueTask<Result<CartDTO>> GetCartByUserIdAsync(Guid UserId)
+        {
+            try
+            {
+                logger.LogInformation($"Trying to get cart by user id: {UserId}.");
+
+                var cart = await context.Carts.AsNoTracking()
+                    .AsQueryable()
+                    .ProjectTo<CartDTO>(mapper.ConfigurationProvider)
+                    .FirstOrDefaultAsync(x => x.UserId == UserId);
+
+                return cart is not null ? new(cart) : new(new NotFoundCartByUserIdException(UserId));
+            }
+            catch (Exception ex)
+            {
+                logger.LogInformation($"Failed on getting cart by user id: {UserId} with error message: {ex.Message}.");
+                return new(ex);
+            }
+        }
     }
 
     public interface ICartRepository
     {
         public ValueTask<Result<Unit>> AddGoodAsync(AddGoodToCartRequest request);
         public ValueTask<Result<Unit>> CreateCartAsync(CreateCartRequest request);
+        public ValueTask<Result<CartDTO>> GetCartByUserIdAsync(Guid UserId);
     }
 }
