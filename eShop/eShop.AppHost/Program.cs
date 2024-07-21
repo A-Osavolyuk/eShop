@@ -26,4 +26,6 @@ builder.AddProject<Projects.eShop_ReviewsWebApi>("eshop-reviewswebapi");
 
 builder.AddProject<Projects.eShop_CartWebApi>("eshop-cartwebapi");
 
+builder.AddProject<Projects.eShop_Gateway>("eshop-gateway");
+
 builder.Build().Run();

@@ -3,7 +3,6 @@ using eShop.Domain.Interfaces;
 using eShop.Infrastructure.Account;
 using eShop.Infrastructure.Services;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
