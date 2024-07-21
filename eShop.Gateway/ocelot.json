@@ -11,7 +11,11 @@
           "Port": 8503
         }
       ],
-      "DownstreamPathTemplate": "/api/v1/Carts/add-good-to-cart"
+      "DownstreamPathTemplate": "/api/v1/Carts/add-good-to-cart",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
     },
     {
       "UpstreamPathTemplate": "/api/v1/Carts/create-cart",
@@ -23,7 +27,11 @@
           "Port": 8503
         }
       ],
-      "DownstreamPathTemplate": "/api/v1/Carts/create-cart"
+      "DownstreamPathTemplate": "/api/v1/Carts/create-cart",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
     },
     {
       "UpstreamPathTemplate": "/api/v1/Carts/get-cart/{UserId}",
@@ -47,7 +55,11 @@
           "Port": 8503
         }
       ],
-      "DownstreamPathTemplate": "/api/v1/Carts/update-cart"
+      "DownstreamPathTemplate": "/api/v1/Carts/update-cart",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
     },
     //ReviewWebApi
     {
@@ -72,7 +84,11 @@
           "Port": 8502
         }
       ],
-      "DownstreamPathTemplate": "/api/v1/Reviews/create-review"
+      "DownstreamPathTemplate": "/api/v1/Reviews/create-review",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
     },
     {
       "UpstreamPathTemplate": "/api/v1/Reviews/update-review",
@@ -84,7 +100,11 @@
           "Port": 8502
         }
       ],
-      "DownstreamPathTemplate": "/api/v1/Reviews/update-review"
+      "DownstreamPathTemplate": "/api/v1/Reviews/update-review",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
     },
     {
       "UpstreamPathTemplate": "/api/v1/Reviews/delete-review-with-product-id/{Id}",
@@ -96,7 +116,11 @@
           "Port": 8502
         }
       ],
-      "DownstreamPathTemplate": "/api/v1/Reviews/delete-review-with-product-id/{Id}"
+      "DownstreamPathTemplate": "/api/v1/Reviews/delete-review-with-product-id/{Id}",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
     },
     {
       "UpstreamPathTemplate": "/api/v1/Comments/get-comments-by-review-id/{Id}",
@@ -109,7 +133,8 @@
         }
       ],
       "DownstreamPathTemplate": "/api/v1/Comments/get-comments-by-review-id/{Id}"
-    }
+    },
+    //ProductWebApi
   ],
   "GlobalConfiguration": {
     "BaseUri": "https://localhost:8000"
