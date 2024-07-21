@@ -73,12 +73,12 @@
                 }
 
                 var notFoundCartByUserId = new NotFoundCartByUserIdException(UserId);
-                logger.LogError($"Failed on getting cart by user id: {UserId} with error message: {notFoundCartByUserId}");
+                logger.LogInformation($"Failed on getting cart by user id: {UserId} with error message: {notFoundCartByUserId}");
                 return new(notFoundCartByUserId);
             }
             catch (Exception ex)
             {
-                logger.LogInformation($"Failed on getting cart by user id: {UserId} with error message: {ex.Message}.");
+                logger.LogError($"Failed on getting cart by user id: {UserId} with error message: {ex.Message}.");
                 return new(ex);
             }
         }

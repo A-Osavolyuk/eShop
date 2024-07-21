@@ -1,0 +1,56 @@
+{
+  "Routes": [
+    //CartWebApi
+    {
+      "UpstreamPathTemplate": "/api/v1/Carts/add-good-to-cart",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8503
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Carts/add-good-to-cart"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Carts/create-cart",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8503
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Carts/create-cart"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Carts/get-cart/{UserId}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8503
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Carts/get-cart/{UserId}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Carts/update-cart",
+      "UpstreamHttpMethod": [ "Put" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8503
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Carts/update-cart"
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUri": "https://localhost:8000"
+  }
+}
