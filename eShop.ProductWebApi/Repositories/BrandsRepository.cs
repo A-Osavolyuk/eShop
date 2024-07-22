@@ -155,28 +155,11 @@ namespace eShop.ProductWebApi.Repositories
                 return new(ex);
             }
         }
-
-        public async ValueTask<Result<IEnumerable<string>>> GetBrandsNamesListAsync()
-        {
-            try
-            {
-                logger.LogInformation($"Trying to get list of brands");
-                var brandsNames = await context.Brands.AsNoTracking().Select(_ => _.Name).ToListAsync();
-                logger.LogInformation($"Successfully got list of brands");
-                return new(brandsNames);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError($"Failed on getting list od brands with error message: {ex.Message}");
-                return new(ex);
-            }
-        }
     }
 
     public interface IBrandsRepository
     {
         public ValueTask<Result<IEnumerable<BrandDTO>>> GetBrandsListAsync();
-        public ValueTask<Result<IEnumerable<string>>> GetBrandsNamesListAsync();
         public ValueTask<Result<BrandDTO>> GetBrandByIdAsync(Guid Id);
         public ValueTask<Result<BrandDTO>> GetBrandByNameAsync(string Name);
         public ValueTask<Result<BrandDTO>> CreateBrandAsync(Brand brand);

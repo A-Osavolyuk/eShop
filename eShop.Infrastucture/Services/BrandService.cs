@@ -13,9 +13,6 @@ namespace eShop.Infrastructure.Services
         private readonly IHttpClientService clientService = clientService;
         private readonly IConfiguration configuration = configuration;
         public async ValueTask<ResponseDTO> GetBrandsListAsync() => await clientService.SendAsync(
-            new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Brands/get-brands", Method: HttpMethods.GET));
-
-        public async ValueTask<ResponseDTO> GetBrandsNamesListAsync() => await clientService.SendAsync(
-            new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Brands/get-brands-names", Method: HttpMethods.GET));
+            new RequestDto(Url: $"{configuration["Services:ProductWebApi"]}/api/v1/Brands", Method: HttpMethods.GET));
     }
 }

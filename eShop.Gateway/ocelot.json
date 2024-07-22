@@ -43,7 +43,7 @@
           "Port": 8503
         }
       ],
-      "DownstreamPathTemplate": "/api/v1/Carts/get-cart/{UserId}"
+      "DownstreamPathTemplate": "/api/v1/Carts/get-cart/{Id:guid}"
     },
     {
       "UpstreamPathTemplate": "/api/v1/Carts/update-cart",
@@ -63,7 +63,7 @@
     },
     //ReviewWebApi
     {
-      "UpstreamPathTemplate": "/api/v1/Reviews/get-reviews-by-product-id/{Id}",
+      "UpstreamPathTemplate": "/api/v1/Reviews/get-reviews-by-product-id/{Id:guid}",
       "UpstreamHttpMethod": [ "Get" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -72,7 +72,7 @@
           "Port": 8502
         }
       ],
-      "DownstreamPathTemplate": "/api/v1/Reviews/get-reviews-by-product-id/{Id}"
+      "DownstreamPathTemplate": "/api/v1/Reviews/get-reviews-by-product-id/{Id:guid}"
     },
     {
       "UpstreamPathTemplate": "/api/v1/Reviews/create-review",
@@ -107,7 +107,7 @@
       }
     },
     {
-      "UpstreamPathTemplate": "/api/v1/Reviews/delete-review-with-product-id/{Id}",
+      "UpstreamPathTemplate": "/api/v1/Reviews/delete-review-with-product-id/{Id:guid}",
       "UpstreamHttpMethod": [ "Delete" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -116,14 +116,14 @@
           "Port": 8502
         }
       ],
-      "DownstreamPathTemplate": "/api/v1/Reviews/delete-review-with-product-id/{Id}",
+      "DownstreamPathTemplate": "/api/v1/Reviews/delete-review-with-product-id/{Id:guid}",
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       }
     },
     {
-      "UpstreamPathTemplate": "/api/v1/Comments/get-comments-by-review-id/{Id}",
+      "UpstreamPathTemplate": "/api/v1/Comments/get-comments-by-review-id/{Id:guid}",
       "UpstreamHttpMethod": [ "Get" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -132,9 +132,141 @@
           "Port": 8502
         }
       ],
-      "DownstreamPathTemplate": "/api/v1/Comments/get-comments-by-review-id/{Id}"
+      "DownstreamPathTemplate": "/api/v1/Comments/get-comments-by-review-id/{Id:guid}"
     },
     //ProductWebApi
+    {
+      "UpstreamPathTemplate": "/api/v1/Brands",
+      "UpstreamHttpMethod": [ "Get, Post, Put" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8501
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Brands"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Brands/{Id:guid}",
+      "UpstreamHttpMethod": [ "Get, Delete" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8501
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Brands/{Id:guid}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Brands/{Name}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8501
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Brands/{Name}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Products",
+      "UpstreamHttpMethod": [ "Get, Post, Put" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8501
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Products"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Products/get-products-with-name/{Name}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8501
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Products/get-products-with-name/{Name}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Products/get-products-with-variantId/{VariantId:guid}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8501
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Products/get-products-with-variantId/{VariantId:guid}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Products/{Id:guid}",
+      "UpstreamHttpMethod": [ "Get", "Delete" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8501
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Products/{Id:guid}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Products/{Name}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8501
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Products/{Name}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Products/{Article:long}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8501
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Products/{Article:long}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Products/search-by-article/{Article:long}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8501
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Products/search-by-article/{Article:long}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Products/search-by-name/{Name}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8501
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Products/search-by-name/{Name}"
+    }
   ],
   "GlobalConfiguration": {
     "BaseUri": "https://localhost:8000"

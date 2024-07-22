@@ -16,7 +16,7 @@ namespace eShop.ProductWebApi.Controllers
     {
         private readonly ISender sender = sender;
 
-        [HttpGet("get-products-list"), AllowAnonymous]
+        [HttpGet, AllowAnonymous]
         public async ValueTask<ActionResult<ResponseDTO>> GetProductList()
         {
             var result = await sender.Send(new GetProductsListQuery());
@@ -43,7 +43,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpGet("get-by-id/{Id:guid}"), AllowAnonymous]
+        [HttpGet("{Id:guid}"), AllowAnonymous]
         public async ValueTask<ActionResult<ResponseDTO>> GetProductById(Guid Id)
         {
             var result = await sender.Send(new GetProductByIdQuery(Id));
@@ -52,7 +52,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpGet("get-by-article/{Article:long}"), AllowAnonymous]
+        [HttpGet("{Article:long}"), AllowAnonymous]
         public async ValueTask<ActionResult<ResponseDTO>> GetProductByArticle(long Article)
         {
             var result = await sender.Send(new GetProductByArticleQuery(Article));
@@ -61,7 +61,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpGet("get-by-name/{Name}"), AllowAnonymous]
+        [HttpGet("{Name}"), AllowAnonymous]
         public async ValueTask<ActionResult<ResponseDTO>> GetProductByName(string Name)
         {
             var result = await sender.Send(new GetProductByNameQuery(Name));
@@ -90,7 +90,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpPost("create-product")]
+        [HttpPost]
         public async ValueTask<ActionResult<ResponseDTO>> CreateProduct([FromBody] IEnumerable<CreateProductRequest> requests)
         {
             var result = await sender.Send(new CreateProductCommand(requests));
@@ -99,7 +99,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpPut("update-product/{Id:guid}")]
+        [HttpPut]
         public async ValueTask<ActionResult<ResponseDTO>> UpdateProduct([FromBody] UpdateProductRequest updateProductRequest)
         {
             var result = await sender.Send(new UpdateProductCommand(updateProductRequest));
@@ -108,7 +108,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpDelete("delete-by-id/{Id:guid}")]
+        [HttpDelete("{Id:guid}")]
         public async ValueTask<ActionResult<ResponseDTO>> DeleteProductById(Guid Id)
         {
             var result = await sender.Send(new DeleteProductByIdCommand(Id));

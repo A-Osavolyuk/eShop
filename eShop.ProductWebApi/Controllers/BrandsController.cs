@@ -16,7 +16,7 @@ namespace eShop.ProductWebApi.Controllers
     {
         private readonly ISender sender = sender;
 
-        [HttpGet("get-brands"), AllowAnonymous]
+        [HttpGet, AllowAnonymous]
         public async ValueTask<ActionResult<ResponseDTO>> GetBrandsList()
         {
             var result = await sender.Send(new GetBrandsListQuery());
@@ -25,16 +25,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpGet("get-brands-names"), AllowAnonymous]
-        public async ValueTask<ActionResult<ResponseDTO>> GetBrandsNamesList()
-        {
-            var result = await sender.Send(new GetBrandsNamesListQuery());
-            return result.Match(
-                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
-                f => ExceptionHandler.HandleException(f));
-        }
-
-        [HttpGet("get-brand-by-id/{Id:guid}"), AllowAnonymous]
+        [HttpGet("{Id:guid}"), AllowAnonymous]
         public async ValueTask<ActionResult<ResponseDTO>> GetBrandById(Guid Id)
         {
             var result = await sender.Send(new GetBrandByIdQuery(Id));
@@ -43,7 +34,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpGet("get-brand-by-name/{Name}"), AllowAnonymous]
+        [HttpGet("{Name}"), AllowAnonymous]
         public async ValueTask<ActionResult<ResponseDTO>> GetBrandById(string Name)
         {
             var result = await sender.Send(new GetBrandByNameQuery(Name));
@@ -52,7 +43,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpPost("create-brand")]
+        [HttpPost]
         public async ValueTask<ActionResult<ResponseDTO>> CreateBrand([FromBody]CreateBrandRequest body)
         {
             var result = await sender.Send(new CreateBrandCommand(body));
@@ -62,7 +53,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpDelete("delete-brand-by-id/{Id:guid}")]
+        [HttpDelete("{Id:guid}")]
         public async ValueTask<ActionResult<ResponseDTO>> DeleteBrandById(Guid Id)
         {
             var result = await sender.Send(new DeleteBrandCommand(Id));
@@ -71,7 +62,7 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpPut("update-brand")]
+        [HttpPut]
         public async ValueTask<ActionResult<ResponseDTO>> UpdateBrand([FromBody] UpdateBrandRequest UpdateBrandRequest)
         {
             var result = await sender.Send(new UpdateBrandCommand(UpdateBrandRequest));
