@@ -34,7 +34,7 @@
       }
     },
     {
-      "UpstreamPathTemplate": "/api/v1/Carts/get-cart/{UserId}",
+      "UpstreamPathTemplate": "/api/v1/Carts/get-cart/{UserId:guid}",
       "UpstreamHttpMethod": [ "Get" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -43,7 +43,7 @@
           "Port": 8503
         }
       ],
-      "DownstreamPathTemplate": "/api/v1/Carts/get-cart/{Id:guid}"
+      "DownstreamPathTemplate": "/api/v1/Carts/get-cart/{UserId:guid}"
     },
     {
       "UpstreamPathTemplate": "/api/v1/Carts/update-cart",

@@ -1,11 +1,11 @@
-﻿@page "/shop/user-cart"
+﻿@page "/shop/user-cart/{UserId:guid}"
 
 @inject ICartService CartService
 @inject ILocalDataAccessor LocalDataAccessor
 @inject NavigationManager NavigationManager
 @inject ISnackbar Snackbar
 
-@if(UserCart is null)
+@if (UserCart is null)
 {
     <MudGrid Justify="Justify.Center">
         <MudItem xs="12">
@@ -16,7 +16,7 @@
 }
 else
 {
-    if(UserCart.GoodsCount > 0)
+    if (UserCart.GoodsCount > 0)
     {
         <MudGrid Justify="Justify.Center">
             <MudItem xs="12">
@@ -35,20 +35,27 @@ else
 }
 
 @code {
+    [Parameter] public Guid UserId { get; set; }
     private CartDTO? UserCart;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var userId = await LocalDataAccessor.GetUserIdAsync();
-        var response = await CartService.GetCartByUserIdAsync(Guid.Parse(userId));
+        if (firstRender)
+        {
+            var userId = await LocalDataAccessor.GetUserIdAsync();
+            var response = await CartService.GetCartByUserIdAsync(Guid.Parse(userId));
 
-        if (response.IsSucceeded)
-        {
-            UserCart = JsonConvert.DeserializeObject<CartDTO>(response.Result!.ToString()!)!;
+            if (response.IsSucceeded)
+            {
+                UserCart = JsonConvert.DeserializeObject<CartDTO>(response.Result!.ToString()!)!;
+            }
+            else
+            {
+                Snackbar.Add(response.ErrorMessage, MudBlazor.Severity.Error);
+                UserCart = new();
+            }
         }
-        else
-        {
-            Snackbar.Add(response.ErrorMessage, MudBlazor.Severity.Error);
-        }
+
+        StateHasChanged();
     }
 }
