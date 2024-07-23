@@ -266,6 +266,259 @@
         }
       ],
       "DownstreamPathTemplate": "/api/v1/Products/search-by-name/{Name}"
+    },
+    //AuthWebApi
+    {
+      "UpstreamPathTemplate": "/api/v1/Auth/register",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8101
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Auth/register"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Auth/login",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8101
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Auth/login"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Auth/change-personal-data/{Email}",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8101
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Auth/change-personal-data/{Email}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Auth/get-personal-data/{Email}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8101
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Auth/get-personal-data/{Email}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Auth/change-password/{Email}",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8101
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Auth/change-password/{Email}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Auth/request-reset-password/{Email}",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8101
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Auth/request-reset-password/{Email}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Auth/confirm-reset-password/{Email}",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8101
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Auth/confirm-reset-password/{Email}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Auth/confirm-email/{Email}",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8101
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Auth/confirm-email/{Email}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Auth/change-2fa-state/{Email}",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8101
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Auth/change-2fa-state/{Email}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Auth/get-2fa-state/{Email}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8101
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Auth/get-2fa-state/{Email}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Auth/2fa-login/{Email}",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8101
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Auth/2fa-login/{Email}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Auth/external-login/{provider}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8101
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Auth/external-login/{provider}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Auth/handle-external-login-response",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8101
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Auth/handle-external-login-response"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Auth/get-external-providers",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8101
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Auth/get-external-providers"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Auth/request-change-email",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8101
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Auth/request-change-email"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Auth/confirm-change-email",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8101
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Auth/confirm-change-email"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Auth/change-user-name",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8101
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Auth/change-user-name"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Auth/refresh-token",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8101
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Auth/refresh-token"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Auth/request-change-phone-number",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8101
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Auth/request-change-phone-number"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Auth/confirm-change-phone-number",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8101
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Auth/confirm-change-phone-number"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Auth/get-phone-number",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8101
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Auth/get-phone-number"
     }
   ],
   "GlobalConfiguration": {
