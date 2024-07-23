@@ -1,4 +1,6 @@
-﻿namespace eShop.CartWebApi.Extensions
+﻿using Microsoft.Extensions.Logging;
+
+namespace eShop.Application.Extensions
 {
     public static class LoggerExtensions
     {

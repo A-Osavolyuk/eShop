@@ -1,4 +1,5 @@
 using eShop.AuthWebApi.Receivers;
+using eShop.Domain.DTOs.Requests.Cart;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,7 @@ builder.AddApiServices();
 
 builder.Services.AddMassTransit(x =>
 {
+    x.AddRequestClient<CreateCartRequest>();
     x.UsingRabbitMq((context, cfg) =>
     {
         var uri = builder.Configuration["RabbitMQConfigurations:HostUri"]!;

@@ -1,4 +1,4 @@
-﻿using eShop.Domain.Messages;
+﻿using eShop.Domain.DTOs.Requests.Review;
 using eShop.ProductWebApi.Behaviors;
 using eShop.ProductWebApi.Repositories;
 using MassTransit;
@@ -77,7 +77,7 @@ namespace eShop.ProductWebApi.Extensions
         {
             builder.Services.AddMassTransit(x =>
             {
-                x.AddRequestClient<ProductDeletedMessage>();
+                x.AddRequestClient<DeleteReviewsRequest>();
                 x.UsingRabbitMq((context, cfg) =>
                 {
                     var uri = builder.Configuration["RabbitMQConfigurations:HostUri"]!;

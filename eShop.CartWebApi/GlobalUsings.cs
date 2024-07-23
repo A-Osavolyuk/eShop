@@ -19,3 +19,4 @@ global using eShop.Application.Utilities;
 global using eShop.CartWebApi.Commands.Cart;
 global using eShop.CartWebApi.Queries.Cart;
 global using Microsoft.AspNetCore.Mvc;
+global using eShop.Application.Extensions;

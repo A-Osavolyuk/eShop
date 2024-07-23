@@ -22,7 +22,8 @@ namespace eShop.AuthWebApi.Services.Implementation
         IValidator<ChangePhoneNumberRequest> phoneValidator,
         IMapper mapper,
         IEmailSender emailSender,
-        IConfiguration configuration) : IAuthService
+        IConfiguration configuration,
+        IRequestClient<CreateCartRequest> createCartRequestClient) : IAuthService
     {
         private readonly ITokenHandler tokenHandler = tokenHandler;
         private readonly UserManager<AppUser> userManager = userManager;
@@ -38,6 +39,7 @@ namespace eShop.AuthWebApi.Services.Implementation
         private readonly IMapper mapper = mapper;
         private readonly IEmailSender emailSender = emailSender;
         private readonly IConfiguration configuration = configuration;
+        private readonly IRequestClient<CreateCartRequest> createCartRequestClient = createCartRequestClient;
         private readonly string frontendUri = configuration["GeneralSettings:FrontendBaseUri"]!;
 
         public async ValueTask<Result<ChangePasswordResponse>> ChangePasswordAsync(string Email, ChangePasswordRequest changePasswordRequest)
@@ -141,7 +143,15 @@ namespace eShop.AuthWebApi.Services.Implementation
                             UserName = user.UserName!
                         });
 
-                        return new(new Unit());
+                        var handler = createCartRequestClient.Create(new CreateCartRequest() { UserId = Guid.Parse(user.Id) });
+                        var response = await handler.GetResponse<ResponseDTO>();
+
+                        if (response.Message.IsSucceeded)
+                        {
+                            return new(new Unit());
+                        }
+
+                        return new(new FailedRpcException(response.Message.ErrorMessage));
                     }
 
                     return new(new NotConfirmedEmailException());

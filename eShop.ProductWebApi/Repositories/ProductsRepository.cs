@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Azure;
-using eShop.Domain.DTOs.Requests;
+using eShop.Domain.DTOs.Requests.Review;
 using eShop.Domain.DTOs.Responses;
 using eShop.Domain.Enums;
 using eShop.Domain.Exceptions;
-using eShop.Domain.Messages;
 using eShop.ProductWebApi.Exceptions;
 using LanguageExt;
 using MassTransit;
@@ -16,12 +14,12 @@ namespace eShop.ProductWebApi.Repositories
     public class ProductsRepository(ProductDbContext context,
         IMapper mapper,
         ILogger<ProductsRepository> logger,
-        IRequestClient<ProductDeletedMessage> requestClient) : IProductRepository
+        IRequestClient<DeleteReviewsRequest> requestClient) : IProductRepository
     {
         private readonly ProductDbContext context = context;
         private readonly IMapper mapper = mapper;
         private readonly ILogger<IProductRepository> logger = logger;
-        private readonly IRequestClient<ProductDeletedMessage> requestClient = requestClient;
+        private readonly IRequestClient<DeleteReviewsRequest> requestClient = requestClient;
 
         public async ValueTask<Result<IEnumerable<ProductDTO>>> GetProductsListAsync()
         {
@@ -273,7 +271,7 @@ namespace eShop.ProductWebApi.Repositories
                 var product = await context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Id == Id);
                 if (product is not null)
                 {
-                    var response = await requestClient.GetResponse<ReviewsDeletedMessage>(new ProductDeletedMessage() { Id = Id });
+                    var response = await requestClient.GetResponse<ResponseDTO>(new DeleteReviewsRequest() { Id = Id });
                     if (response.Message.IsSucceeded)
                     {
                         context.Products.Remove(product);
@@ -281,8 +279,8 @@ namespace eShop.ProductWebApi.Repositories
                         logger.LogInformation($"Product with id: {Id} was successfully deleted.");
                         return new(new Unit());
                     }
-                    var failedRpcException = new FailedRpcException(response.Message.Status);
-                    logger.LogInformation($"Failed on deleting product with id: {Id} error message: {new FailedRpcException(response.Message.Status)}");
+                    var failedRpcException = new FailedRpcException(response.Message.ErrorMessage);
+                    logger.LogInformation($"Failed on deleting product with id: {Id} error message: {new FailedRpcException(response.Message.ErrorMessage)}");
                     return new(failedRpcException);
                 }
                 var notFoundProductException = new NotFoundProductException(Id);

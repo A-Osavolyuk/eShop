@@ -9,11 +9,11 @@ using System.Text;
 
 namespace eShop.Application;
 
-public static class Extensions
+public static class BuilderExtensions
 {
     public static IHostApplicationBuilder AddValidation(this IHostApplicationBuilder builder)
     {
-        builder.Services.AddValidatorsFromAssemblyContaining(typeof(Extensions));
+        builder.Services.AddValidatorsFromAssemblyContaining(typeof(BuilderExtensions));
         return builder;
     }
 
