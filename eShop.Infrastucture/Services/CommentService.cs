@@ -12,6 +12,6 @@ namespace eShop.Infrastructure.Services
         private readonly IConfiguration configuration = configuration;
 
         public async ValueTask<ResponseDTO> GetCommentListWithReviewId(Guid Id) => await httpClient.SendAsync(new RequestDto(
-            Url: $"{configuration["Services:ReviewsWebAPi"]}/api/v1/Comments/get-comments-by-review-id/{Id}", Method: HttpMethods.GET));
+            Url: $"{configuration["Services:Gateway"]}/api/v1/Comments/get-comments-by-review-id/{Id}", Method: HttpMethods.GET));
     }
 }

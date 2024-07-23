@@ -14,15 +14,15 @@ namespace eShop.Infrastructure.Services
         private readonly IConfiguration configuration = configuration;
 
         public async ValueTask<ResponseDTO> AddGoodAsync(AddGoodToCartRequest request) => await httpClient.SendAsync(new RequestDto(
-            Url: $"{configuration["Services:CartWebApi"]}/api/v1/Carts/add-good-to-cart", Data: request, Method: HttpMethods.POST));
+            Url: $"{configuration["Services:Gateway"]}/api/v1/Carts/add-good-to-cart", Data: request, Method: HttpMethods.POST));
 
         public async ValueTask<ResponseDTO> CreateCartAsync(CreateCartRequest request) => await httpClient.SendAsync(new RequestDto(
-            Url: $"{configuration["Services:CartWebApi"]}/api/v1/Carts/create-cart", Data: request, Method: HttpMethods.POST));
+            Url: $"{configuration["Services:Gateway"]}/api/v1/Carts/create-cart", Data: request, Method: HttpMethods.POST));
 
         public async ValueTask<ResponseDTO> GetCartByUserIdAsync(Guid UserId) => await httpClient.SendAsync(new RequestDto(
-            Url: $"{configuration["Services:CartWebApi"]}/api/v1/Carts/get-cart/{UserId}", Method: HttpMethods.GET));
+            Url: $"{configuration["Services:Gateway"]}/api/v1/Carts/get-cart/{UserId}", Method: HttpMethods.GET));
 
         public async ValueTask<ResponseDTO> UpdateCartAsync(UpdateCartRequest request) => await httpClient.SendAsync(new RequestDto(
-            Url: $"{configuration["Services:CartWebApi"]}/api/v1/Carts/update-cart", Data: request, Method: HttpMethods.POST));
+            Url: $"{configuration["Services:Gateway"]}/api/v1/Carts/update-cart", Data: request, Method: HttpMethods.POST));
     }
 }
