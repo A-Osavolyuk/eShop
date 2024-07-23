@@ -509,7 +509,7 @@
       "DownstreamPathTemplate": "/api/v1/Auth/confirm-change-phone-number"
     },
     {
-      "UpstreamPathTemplate": "/api/v1/Auth/get-phone-number",
+      "UpstreamPathTemplate": "/api/v1/Auth/get-phone-number/{Email}",
       "UpstreamHttpMethod": [ "Get" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -518,7 +518,7 @@
           "Port": 8101
         }
       ],
-      "DownstreamPathTemplate": "/api/v1/Auth/get-phone-number"
+      "DownstreamPathTemplate": "/api/v1/Auth/get-phone-number/{Email}"
     }
   ],
   "GlobalConfiguration": {
