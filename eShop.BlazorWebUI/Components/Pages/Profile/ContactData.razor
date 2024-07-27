@@ -89,7 +89,7 @@
 
             if (result.IsSucceeded)
             {
-                var response = JsonConvert.DeserializeObject<PhoneNumberResponse>(result!.Result!.ToString()!)!;
+                var response = JsonConvert.DeserializeObject<GetPhoneNumberResponse>(result!.Result!.ToString()!)!;
                 await LocalDataAccessor.SetPhoneNumberAsync(response.PhoneNumber);
                 ContactDataModel.PhoneNumber = response.PhoneNumber ?? "None";
             }

@@ -10,7 +10,7 @@ namespace eShop.AuthWebApi
             builder.ConfigureVersioning();
             builder.AddMapping();
             builder.AddValidation();
-
+            builder.Services.AddMediatR(x => x.RegisterServicesFromAssemblyContaining<IAssemblyMarker>());
             builder.Services.AddCors(o =>
             {
                 o.AddDefaultPolicy(p =>

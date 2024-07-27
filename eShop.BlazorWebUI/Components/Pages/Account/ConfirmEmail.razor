@@ -19,7 +19,7 @@
         query.TryGetValue("Email", out var email);
         query.TryGetValue("Token", out var token);
 
-        Result = await AuthenticationService.ConfirmEmailAsync(email!, new ConfirmEmailRequest() { Token = token! });
+        Result = await AuthenticationService.ConfirmEmailAsync(new ConfirmEmailRequest() { Token = token!, Email = email! });
 
         if (Result.IsSucceeded)
         {

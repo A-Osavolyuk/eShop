@@ -1,153 +1,114 @@
 ﻿using eShop.Application.Utilities;
-using eShop.Domain.DTOs.Requests.Auth;
+using eShop.AuthWebApi.Commands.Auth;
+using eShop.AuthWebApi.Queries.Auth;
 
 namespace eShop.AuthWebApi.Controllers
 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     [ApiVersion("1.0")]
-    public class AuthController : ControllerBase
+    public class AuthController(IAuthService authService, SignInManager<AppUser> signInManager, ISender sender) : ControllerBase
     {
-        private readonly IAuthService authService;
-        private readonly SignInManager<AppUser> signInManager;
-
-        public AuthController(IAuthService authService, SignInManager<AppUser> signInManager)
-        {
-            this.authService = authService;
-            this.signInManager = signInManager;
-        }
+        private readonly IAuthService authService = authService;
+        private readonly SignInManager<AppUser> signInManager = signInManager;
+        private readonly ISender sender = sender;
 
         [HttpPost("register")]
         public async ValueTask<ActionResult<ResponseDTO>> Register([FromBody] RegistrationRequest registrationRequest)
         {
-            var result = await authService.RegisterAsync(registrationRequest);
+            var result = await sender.Send(new RegisterCommand(registrationRequest));
 
-            return result.Match<ActionResult<ResponseDTO>>(
-                succ =>
-                {
-                    return Ok(new ResponseBuilder()
-                        .Succeeded()
-                        .WithResultMessage(succ.Message)
-                        .Build());
-                },
+            return result.Match(
+                succ => Ok(new ResponseBuilder().Succeeded().WithResultMessage(succ.Message).Build()),
                 fail => ExceptionHandler.HandleException(fail));
         }
 
         [HttpPost("login")]
         public async ValueTask<ActionResult<ResponseDTO>> Login([FromBody] LoginRequest loginRequest)
         {
-            var result = await authService.LoginAsync(loginRequest);
+            var result = await sender.Send(new LoginCommand(loginRequest));
 
-            return result.Match<ActionResult<ResponseDTO>>(
-                succ =>
-                {
-                    return Ok(new ResponseBuilder()
-                        .Succeeded()
-                        .WithResult(succ)
-                        .WithResultMessage(succ.Message)
-                        .Build());
-                },
+            return result.Match(
+                succ => Ok(new ResponseBuilder().Succeeded().WithResult(succ).WithResultMessage(succ.Message).Build()),
                 fail => ExceptionHandler.HandleException(fail));
         }
 
-        [HttpPost("change-personal-data/{Email}")]
-        public async ValueTask<ActionResult<ResponseDTO>> ChangePersonalData([FromBody] ChangePersonalDataRequest changePersonalDataRequest, string Email)
+        [HttpPost("change-personal-data")]
+        public async ValueTask<ActionResult<ResponseDTO>> ChangePersonalData([FromBody] ChangePersonalDataRequest changePersonalDataRequest)
         {
-            var result = await authService.ChangePersonalDataAsync(Email, changePersonalDataRequest);
+            var result = await sender.Send(new ChangePersonalDataCommand(changePersonalDataRequest));
 
-            return result.Match<ActionResult<ResponseDTO>>(
-                s => Ok(new ResponseBuilder()
-                    .Succeeded()
-                    .WithResultMessage("Personal data was successfully changed.")
-                    .WithResult(s)
-                .Build()),
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage("Personal data was successfully changed.").WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 
         [HttpGet("get-personal-data/{Email}")]
-        public async ValueTask<ActionResult<ResponseDTO>> GetPersonalData(string Email)
+        public async ValueTask<ActionResult<ResponseDTO>> GetPersonalData([FromQuery] string Email)
         {
-            var result = await authService.GetPersonalDataAsync(Email);
+            var result = await sender.Send(new GetPersonalDataQuery(Email));
 
-            return result.Match<ActionResult<ResponseDTO>>(
-                s => Ok(new ResponseBuilder()
-                    .Succeeded()
-                    .WithResult(s)
-                    .Build()),
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpPost("change-password/{Email}")]
-        public async ValueTask<ActionResult<ResponseDTO>> ChangePassword([FromBody] ChangePasswordRequest changePasswordRequest, string Email)
+        [HttpPost("change-password")]
+        public async ValueTask<ActionResult<ResponseDTO>> ChangePassword([FromBody] ChangePasswordRequest changePasswordRequest)
         {
-            var result = await authService.ChangePasswordAsync(Email, changePasswordRequest);
+            var result = await sender.Send(new ChangePasswordCommand(changePasswordRequest));
 
-            return result.Match<ActionResult<ResponseDTO>>(
-                s => Ok(new ResponseBuilder()
-                    .Succeeded()
-                    .WithResultMessage(s.Message)
-                    .Build()),
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 
         [HttpPost("request-reset-password/{Email}")]
-        public async ValueTask<ActionResult<ResponseDTO>> ResetPasswordRequest(string Email)
+        public async ValueTask<ActionResult<ResponseDTO>> ResetPasswordRequest([FromQuery] string Email)
         {
-            var result = await authService.RequestResetPasswordAsync(Email);
+            var result = await sender.Send(new RequestResetPasswordCommand(Email));
 
-            return result.Match<ActionResult<ResponseDTO>>(
-                s => Ok(new ResponseBuilder()
-                    .Succeeded()
-                    .WithResultMessage(s.Message)
-                    .Build()),
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpPost("confirm-reset-password/{Email}")]
-        public async ValueTask<ActionResult<ResponseDTO>> ConfirmResetPassword(string Email, [FromBody] ConfirmPasswordResetRequest confirmPasswordResetRequest)
+        [HttpPost("confirm-reset-password")]
+        public async ValueTask<ActionResult<ResponseDTO>> ConfirmResetPassword([FromBody] ConfirmResetPasswordRequest confirmPasswordResetRequest)
         {
-            var result = await authService.ConfirmResetPasswordAsync(Email, confirmPasswordResetRequest);
+            var result = await sender.Send(new ConfirmResetPasswordCommand(confirmPasswordResetRequest));
 
-            return result.Match<ActionResult<ResponseDTO>>(
-                s => Ok(new ResponseBuilder()
-                    .Succeeded()
-                    .WithResultMessage(s.Message)
-                    .Build()),
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpPost("confirm-email/{Email}")]
-        public async ValueTask<ActionResult<ResponseDTO>> ConfirmEmail(string Email, [FromBody] ConfirmEmailRequest confirmEmailRequest)
+        [HttpPost("confirm-email")]
+        public async ValueTask<ActionResult<ResponseDTO>> ConfirmEmail([FromBody] ConfirmEmailRequest confirmEmailRequest)
         {
-            var result = await authService.ConfirmEmailAsync(Email, confirmEmailRequest);
+            var result = await sender.Send(new ConfirmEmailCommand(confirmEmailRequest));
 
-            return result.Match<ActionResult<ResponseDTO>>(
-                s => Ok(new ResponseBuilder()
-                    .Succeeded()
-                    .WithResultMessage("Your email address was successfully confirmed.")
-                    .Build()),
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpPost("change-2fa-state/{Email}")]
-        public async ValueTask<ActionResult<ResponseDTO>> ChangeTwoFactorAuthentication(string Email)
+        [HttpPost("change-2fa-state")]
+        public async ValueTask<ActionResult<ResponseDTO>> ChangeTwoFactorAuthentication([FromBody] ChangeTwoFactorAuthenticationRequest request)
         {
-            var result = await authService.ChangeTwoFactorAuthenticationStateAsync(Email);
+            var result = await sender.Send(new ChangeTwoFactorAuthenticationStateCommand(request));
 
-            return result.Match<ActionResult<ResponseDTO>>(
-                s => Ok(new ResponseBuilder()
-                .Succeeded()
-                .WithResultMessage(s.Message)
-                .Build()),
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 
         [HttpGet("get-2fa-state/{Email}")]
-        public async ValueTask<ActionResult<ResponseDTO>> GetTwoFactorAuthenticationState(string Email)
+        public async ValueTask<ActionResult<ResponseDTO>> GetTwoFactorAuthenticationState([FromQuery] string Email)
         {
             var result = await authService.GetTwoFactorAuthenticationStateAsync(Email);
 
-            return result.Match<ActionResult<ResponseDTO>>(
+            return result.Match(
                 s => Ok(new ResponseBuilder()
                 .Succeeded()
                 .WithResultMessage(s.TwoFactorAuthenticationState
@@ -158,29 +119,22 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpPost("2fa-login/{Email}")]
-        public async ValueTask<ActionResult<ResponseDTO>> LoginWithTwoFactorAuthenticationCode(string Email, [FromBody] TwoFactorAuthenticationLoginRequest twoFactorAuthenticationLoginRequest)
+        [HttpPost("2fa-login")]
+        public async ValueTask<ActionResult<ResponseDTO>> LoginWithTwoFactorAuthenticationCode([FromBody] TwoFactorAuthenticationLoginRequest twoFactorAuthenticationLoginRequest)
         {
-            var result = await authService.LoginWithTwoFactorAuthenticationCodeAsync(Email, twoFactorAuthenticationLoginRequest);
+            var result = await sender.Send(new TwoFactorAuthenticationLoginCommand(twoFactorAuthenticationLoginRequest));
 
-            return result.Match<ActionResult<ResponseDTO>>(
-                succ =>
-                {
-                    return Ok(new ResponseBuilder()
-                        .Succeeded()
-                        .WithResult(succ)
-                        .WithResultMessage(succ.Message)
-                        .Build());
-                },
+            return result.Match(
+                succ => Ok(new ResponseBuilder().Succeeded().WithResult(succ).WithResultMessage(succ.Message).Build()),
                 fail => ExceptionHandler.HandleException(fail));
         }
 
         [HttpGet("external-login/{provider}")]
         public async ValueTask<ActionResult<ResponseDTO>> ExternalLogin(string provider, string? returnUri = null)
         {
-            var result = await authService.RequestExternalLogin(provider, returnUri);
+            var result = await sender.Send(new ExternalLoginQuery(provider, returnUri));
 
-            return result.Match<ActionResult<ResponseDTO>>(
+            return result.Match(
                 s => Challenge(s.AuthenticationProperties, s.Provider),
                 f => ExceptionHandler.HandleException(f));
         }
@@ -190,9 +144,9 @@ namespace eShop.AuthWebApi.Controllers
         {
             var info = await signInManager.GetExternalLoginInfoAsync();
 
-            var result = await authService.HandleExternalLoginResponseAsync(info!, returnUri ?? "/");
+            var result = await sender.Send(new HandleExternalLoginResponseQuery(info!, remoteError, returnUri));
 
-            return result.Match<ActionResult<ResponseDTO>>(
+            return result.Match(
                 s => Redirect(s),
                 f => ExceptionHandler.HandleException(f));
         }
@@ -200,30 +154,27 @@ namespace eShop.AuthWebApi.Controllers
         [HttpGet("get-external-providers")]
         public async ValueTask<ActionResult<ResponseDTO>> GetExternalProvidersList()
         {
-            var result = await authService.GetExternalProvidersAsync();
+            var result = await sender.Send(new GetExternalProvidersQuery());
 
-            return result.Match<ActionResult<ResponseDTO>>(
+            return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 
         [HttpPost("request-change-email")]
-        public async ValueTask<ActionResult<ResponseDTO>> RequestChangeEmail([FromBody]ChangeEmailRequest changeEmailRequest)
+        public async ValueTask<ActionResult<ResponseDTO>> RequestChangeEmail([FromBody] ChangeEmailRequest changeEmailRequest)
         {
-            var result = await authService.RequestChangeEmailAsync(changeEmailRequest);
+            var result = await sender.Send(new RequestChangeEmailCommand(changeEmailRequest));
 
-            return result.Match<ActionResult<ResponseDTO>>(
-                s => Ok(new ResponseBuilder()
-                    .Succeeded()
-                    .WithResultMessage(s.Message)
-                    .Build()),
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 
         [HttpPost("confirm-change-email")]
         public async ValueTask<ActionResult<ResponseDTO>> ConfirmChangeEmail([FromBody] ConfirmChangeEmailRequest confirmChangeEmailRequest)
         {
-            var result = await authService.ConfirmChangeEmailAsync(confirmChangeEmailRequest);
+            var result = await sender.Send(new ConfirmChangeEmailCommand(confirmChangeEmailRequest));
 
             return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
@@ -233,7 +184,7 @@ namespace eShop.AuthWebApi.Controllers
         [HttpPost("change-user-name")]
         public async ValueTask<ActionResult<ResponseDTO>> ChangeUserName([FromBody] ChangeUserNameRequest changeUserNameRequest)
         {
-            var result = await authService.ChangeUserNameAsync(changeUserNameRequest);
+            var result = await sender.Send(new ChangeUserNameCommand(changeUserNameRequest));
 
             return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).WithResult(s).Build()),
@@ -241,9 +192,9 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpPost("refresh-token")]
-        public ActionResult<ResponseDTO> RefreshToken([FromBody] RefreshTokenRequest refreshTokenRequest) 
-        { 
-            var result = authService.RefreshTokenAsync(refreshTokenRequest);
+        public async ValueTask<ActionResult<ResponseDTO>> RefreshToken([FromBody] RefreshTokenRequest refreshTokenRequest)
+        {
+            var result = await sender.Send(new RefreshTokenCommand(refreshTokenRequest));
 
             return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
@@ -253,7 +204,7 @@ namespace eShop.AuthWebApi.Controllers
         [HttpPost("request-change-phone-number")]
         public async ValueTask<ActionResult<ResponseDTO>> RequestChangePhoneNumber([FromBody] ChangePhoneNumberRequest changePhoneNumberRequest)
         {
-            var result = await authService.RequestChangePhoneNumberAsync(changePhoneNumberRequest);
+            var result = await sender.Send(new RequestChangePhoneNumberCommand(changePhoneNumberRequest));
 
             return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
@@ -263,7 +214,7 @@ namespace eShop.AuthWebApi.Controllers
         [HttpPost("confirm-change-phone-number")]
         public async ValueTask<ActionResult<ResponseDTO>> ConfirmChangePhoneNumber([FromBody] ConfirmChangePhoneNumberRequest confirmChangePhoneNumberRequest)
         {
-            var result = await authService.ConfirmChangePhoneNumberAsync(confirmChangePhoneNumberRequest);
+            var result = await sender.Send(new ConfirmChangePhoneNumberCommand(confirmChangePhoneNumberRequest));
 
             return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
@@ -271,9 +222,9 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpGet("get-phone-number/{Email}")]
-        public async ValueTask<ActionResult<ResponseDTO>> GetPhoneNumber(string Email)
+        public async ValueTask<ActionResult<ResponseDTO>> GetPhoneNumber([FromQuery] string Email)
         {
-            var result = await authService.GetPhoneNumberAsync(Email);
+            var result = await sender.Send(new GetPhoneNumberQuery(Email));
 
             return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),

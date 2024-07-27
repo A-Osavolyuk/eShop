@@ -31,7 +31,7 @@
     private async Task Submit()
     {
         var email = await LocalDataAccessor.GetEmailAsync();
-        var result = await AuthenticationService.ChangePersonalDataAsync(email, Model);
+        var result = await AuthenticationService.ChangePersonalDataAsync(Model with { Email = email });
 
         if (result.IsSucceeded)
         {

@@ -293,7 +293,7 @@
       "DownstreamPathTemplate": "/api/v1/Auth/login"
     },
     {
-      "UpstreamPathTemplate": "/api/v1/Auth/change-personal-data/{Email}",
+      "UpstreamPathTemplate": "/api/v1/Auth/change-personal-data",
       "UpstreamHttpMethod": [ "Post" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -302,7 +302,7 @@
           "Port": 8101
         }
       ],
-      "DownstreamPathTemplate": "/api/v1/Auth/change-personal-data/{Email}"
+      "DownstreamPathTemplate": "/api/v1/Auth/change-personal-data"
     },
     {
       "UpstreamPathTemplate": "/api/v1/Auth/get-personal-data/{Email}",
@@ -317,7 +317,7 @@
       "DownstreamPathTemplate": "/api/v1/Auth/get-personal-data/{Email}"
     },
     {
-      "UpstreamPathTemplate": "/api/v1/Auth/change-password/{Email}",
+      "UpstreamPathTemplate": "/api/v1/Auth/change-password",
       "UpstreamHttpMethod": [ "Post" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -326,7 +326,7 @@
           "Port": 8101
         }
       ],
-      "DownstreamPathTemplate": "/api/v1/Auth/change-password/{Email}"
+      "DownstreamPathTemplate": "/api/v1/Auth/change-password"
     },
     {
       "UpstreamPathTemplate": "/api/v1/Auth/request-reset-password/{Email}",
@@ -341,7 +341,7 @@
       "DownstreamPathTemplate": "/api/v1/Auth/request-reset-password/{Email}"
     },
     {
-      "UpstreamPathTemplate": "/api/v1/Auth/confirm-reset-password/{Email}",
+      "UpstreamPathTemplate": "/api/v1/Auth/confirm-reset-password",
       "UpstreamHttpMethod": [ "Post" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -350,10 +350,10 @@
           "Port": 8101
         }
       ],
-      "DownstreamPathTemplate": "/api/v1/Auth/confirm-reset-password/{Email}"
+      "DownstreamPathTemplate": "/api/v1/Auth/confirm-reset-password"
     },
     {
-      "UpstreamPathTemplate": "/api/v1/Auth/confirm-email/{Email}",
+      "UpstreamPathTemplate": "/api/v1/Auth/confirm-email",
       "UpstreamHttpMethod": [ "Post" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -362,10 +362,10 @@
           "Port": 8101
         }
       ],
-      "DownstreamPathTemplate": "/api/v1/Auth/confirm-email/{Email}"
+      "DownstreamPathTemplate": "/api/v1/Auth/confirm-email"
     },
     {
-      "UpstreamPathTemplate": "/api/v1/Auth/change-2fa-state/{Email}",
+      "UpstreamPathTemplate": "/api/v1/Auth/change-2fa-state/",
       "UpstreamHttpMethod": [ "Post" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -374,7 +374,7 @@
           "Port": 8101
         }
       ],
-      "DownstreamPathTemplate": "/api/v1/Auth/change-2fa-state/{Email}"
+      "DownstreamPathTemplate": "/api/v1/Auth/change-2fa-state/"
     },
     {
       "UpstreamPathTemplate": "/api/v1/Auth/get-2fa-state/{Email}",
@@ -389,7 +389,7 @@
       "DownstreamPathTemplate": "/api/v1/Auth/get-2fa-state/{Email}"
     },
     {
-      "UpstreamPathTemplate": "/api/v1/Auth/2fa-login/{Email}",
+      "UpstreamPathTemplate": "/api/v1/Auth/2fa-login",
       "UpstreamHttpMethod": [ "Post" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -398,7 +398,7 @@
           "Port": 8101
         }
       ],
-      "DownstreamPathTemplate": "/api/v1/Auth/2fa-login/{Email}"
+      "DownstreamPathTemplate": "/api/v1/Auth/2fa-login"
     },
     {
       "UpstreamPathTemplate": "/api/v1/Auth/external-login/{provider}",

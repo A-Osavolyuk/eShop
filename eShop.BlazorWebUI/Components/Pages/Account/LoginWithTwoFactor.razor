@@ -39,7 +39,7 @@
 
     private async Task OnValidSubmit()
     {
-        var result = await AuthenticationService.LoginWithTwoFactorAuthenticationAsync(Email, Model);
+        var result = await AuthenticationService.LoginWithTwoFactorAuthenticationAsync(Model with { Email = Email });
 
         if (result.IsSucceeded)
         {

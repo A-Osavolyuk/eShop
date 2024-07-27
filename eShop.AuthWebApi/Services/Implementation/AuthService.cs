@@ -12,13 +12,7 @@ namespace eShop.AuthWebApi.Services.Implementation
         ITokenHandler tokenHandler,
         UserManager<AppUser> userManager,
         SignInManager<AppUser> signInManager,
-        IValidator<RegistrationRequest> registrationValidator,
-        IValidator<LoginRequest> loginValidator,
-        IValidator<ChangePersonalDataRequest> personalDataValidator,
-        IValidator<ChangePasswordRequest> passwordValidator,
-        IValidator<ConfirmPasswordResetRequest> resetPasswordValidator,
         IValidator<ChangeUserNameRequest> userNameValidator,
-        IValidator<ChangeEmailRequest> emailValidator,
         IValidator<ChangePhoneNumberRequest> phoneValidator,
         IMapper mapper,
         IEmailSender emailSender,
@@ -28,13 +22,7 @@ namespace eShop.AuthWebApi.Services.Implementation
         private readonly ITokenHandler tokenHandler = tokenHandler;
         private readonly UserManager<AppUser> userManager = userManager;
         private readonly SignInManager<AppUser> signInManager = signInManager;
-        private readonly IValidator<RegistrationRequest> registrationValidator = registrationValidator;
-        private readonly IValidator<LoginRequest> loginValidator = loginValidator;
-        private readonly IValidator<ChangePersonalDataRequest> personalDataValidator = personalDataValidator;
-        private readonly IValidator<ChangePasswordRequest> passwordValidator = passwordValidator;
-        private readonly IValidator<ConfirmPasswordResetRequest> resetPasswordValidator = resetPasswordValidator;
         private readonly IValidator<ChangeUserNameRequest> userNameValidator = userNameValidator;
-        private readonly IValidator<ChangeEmailRequest> emailValidator = emailValidator;
         private readonly IValidator<ChangePhoneNumberRequest> phoneValidator = phoneValidator;
         private readonly IMapper mapper = mapper;
         private readonly IEmailSender emailSender = emailSender;
@@ -42,80 +30,32 @@ namespace eShop.AuthWebApi.Services.Implementation
         private readonly IRequestClient<CreateCartRequest> createCartRequestClient = createCartRequestClient;
         private readonly string frontendUri = configuration["GeneralSettings:FrontendBaseUri"]!;
 
-        public async ValueTask<Result<ChangePasswordResponse>> ChangePasswordAsync(string Email, ChangePasswordRequest changePasswordRequest)
+        public async ValueTask<Result<ChangePasswordResponse>> ChangePasswordAsync(ChangePasswordRequest changePasswordRequest)
         {
             try
             {
-                var user = await userManager.FindByEmailAsync(Email);
+                var user = await userManager.FindByEmailAsync(changePasswordRequest.Email);
 
                 if (user is not null)
                 {
-                    var validationResult = await passwordValidator.ValidateAsync(changePasswordRequest);
+                    var isCorrectPassword = await userManager.CheckPasswordAsync(user, changePasswordRequest.OldPassword);
 
-                    if (validationResult.IsValid)
+                    if (isCorrectPassword)
                     {
-                        var isCorrectPassword = await userManager.CheckPasswordAsync(user, changePasswordRequest.OldPassword);
-
-                        if (isCorrectPassword)
-                        {
-                            var result = await userManager.ChangePasswordAsync(user, changePasswordRequest.OldPassword, changePasswordRequest.NewPassword);
-
-                            if (result.Succeeded)
-                            {
-                                return new(new ChangePasswordResponse() { Message = "Password has been successfully changed." });
-                            }
-
-                            return new(new NotChangedPasswordException(result.Errors.First().Description));
-                        }
-
-                        return new(new WrongPasswordException());
-                    }
-
-                    return new(new FailedValidationException(validationResult.Errors));
-                }
-
-                return new(new NotFoundUserByEmailException(Email));
-            }
-            catch (Exception ex)
-            {
-                return new(ex);
-            }
-        }
-
-        public async ValueTask<Result<ChangePersonalDataResponse>> ChangePersonalDataAsync(string Email, ChangePersonalDataRequest changePersonalDataRequest)
-        {
-            try
-            {
-                var user = await userManager.FindByEmailAsync(Email);
-
-                if (user is not null)
-                {
-                    var validationResult = await personalDataValidator.ValidateAsync(changePersonalDataRequest);
-
-                    if (validationResult.IsValid)
-                    {
-                        user.AddPersonalData(changePersonalDataRequest);
-
-                        var result = await userManager.UpdateAsync(user);
+                        var result = await userManager.ChangePasswordAsync(user, changePasswordRequest.OldPassword, changePasswordRequest.NewPassword);
 
                         if (result.Succeeded)
                         {
-                            return new(new ChangePersonalDataResponse()
-                            {
-                                FirstName = user.FirstName,
-                                LastName = user.LastName,
-                                Gender = user.Gender,
-                                DateOfBirth = user.DateOfBirth,
-                            });
+                            return new(new ChangePasswordResponse() { Message = "Password has been successfully changed." });
                         }
 
-                        return new(new NotChangedPersonalDataException());
+                        return new(new NotChangedPasswordException(result.Errors.First().Description));
                     }
 
-                    return new(new FailedValidationException(validationResult.Errors));
+                    return new(new WrongPasswordException());
                 }
 
-                return new(new NotFoundUserByIdException(Email));
+                return new(new NotFoundUserByEmailException(changePasswordRequest.Email));
             }
             catch (Exception ex)
             {
@@ -123,11 +63,45 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
-        public async ValueTask<Result<Unit>> ConfirmEmailAsync(string Email, ConfirmEmailRequest confirmEmailRequest)
+        public async ValueTask<Result<ChangePersonalDataResponse>> ChangePersonalDataAsync(ChangePersonalDataRequest changePersonalDataRequest)
         {
             try
             {
-                var user = await userManager.FindByEmailAsync(Email);
+                var user = await userManager.FindByEmailAsync(changePersonalDataRequest.Email);
+
+                if (user is not null)
+                {
+                    user.AddPersonalData(changePersonalDataRequest);
+
+                    var result = await userManager.UpdateAsync(user);
+
+                    if (result.Succeeded)
+                    {
+                        return new(new ChangePersonalDataResponse()
+                        {
+                            FirstName = user.FirstName,
+                            LastName = user.LastName,
+                            Gender = user.Gender,
+                            DateOfBirth = user.DateOfBirth,
+                        });
+                    }
+
+                    return new(new NotChangedPersonalDataException());
+                }
+
+                return new(new NotFoundUserByIdException(changePersonalDataRequest.Email));
+            }
+            catch (Exception ex)
+            {
+                return new(ex);
+            }
+        }
+
+        public async ValueTask<Result<ConfirmEmailResponse>> ConfirmEmailAsync(ConfirmEmailRequest confirmEmailRequest)
+        {
+            try
+            {
+                var user = await userManager.FindByEmailAsync(confirmEmailRequest.Email);
 
                 if (user is not null)
                 {
@@ -138,7 +112,7 @@ namespace eShop.AuthWebApi.Services.Implementation
                     {
                         await emailSender.SendAccountRegisteredMessage(new AccountRegisteredMessage()
                         {
-                            To = Email,
+                            To = confirmEmailRequest.Email,
                             Subject = "Successful Account Registration",
                             UserName = user.UserName!
                         });
@@ -148,7 +122,7 @@ namespace eShop.AuthWebApi.Services.Implementation
 
                         if (response.Message.IsSucceeded)
                         {
-                            return new(new Unit());
+                            return new(new ConfirmEmailResponse() { Message = "Your email address was successfully confirmed." });
                         }
 
                         return new(new FailedRpcException(response.Message.ErrorMessage));
@@ -157,7 +131,7 @@ namespace eShop.AuthWebApi.Services.Implementation
                     return new(new NotConfirmedEmailException());
                 }
 
-                return new(new NotFoundUserByEmailException(Email));
+                return new(new NotFoundUserByEmailException(confirmEmailRequest.Email));
             }
             catch (Exception ex)
             {
@@ -165,33 +139,26 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
-        public async ValueTask<Result<ConfirmPasswordResetResponse>> ConfirmResetPasswordAsync(string Email, ConfirmPasswordResetRequest confirmPasswordResetRequest)
+        public async ValueTask<Result<ConfirmResetPasswordResponse>> ConfirmResetPasswordAsync(ConfirmResetPasswordRequest confirmPasswordResetRequest)
         {
             try
             {
-                var user = await userManager.FindByEmailAsync(Email);
+                var user = await userManager.FindByEmailAsync(confirmPasswordResetRequest.Email);
 
                 if (user is not null)
                 {
-                    var validationResult = await resetPasswordValidator.ValidateAsync(confirmPasswordResetRequest);
+                    var token = Uri.UnescapeDataString(confirmPasswordResetRequest.ResetToken);
+                    var resetResult = await userManager.ResetPasswordAsync(user, token, confirmPasswordResetRequest.NewPassword);
 
-                    if (validationResult.IsValid)
+                    if (resetResult.Succeeded)
                     {
-                        var token = Uri.UnescapeDataString(confirmPasswordResetRequest.ResetToken);
-                        var resetResult = await userManager.ResetPasswordAsync(user, token, confirmPasswordResetRequest.NewPassword);
-
-                        if (resetResult.Succeeded)
-                        {
-                            return new(new ConfirmPasswordResetResponse() { Message = "Your password has been successfully reset." });
-                        }
-
-                        return new(new NotResetPasswordException());
+                        return new(new ConfirmResetPasswordResponse() { Message = "Your password has been successfully reset." });
                     }
 
-                    return new(new FailedValidationException(validationResult.Errors));
+                    return new(new NotResetPasswordException());
                 }
 
-                return new(new NotFoundUserByEmailException(Email));
+                return new(new NotFoundUserByEmailException(confirmPasswordResetRequest.Email));
             }
             catch (Exception ex)
             {
@@ -222,15 +189,15 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
-        public async ValueTask<Result<PhoneNumberResponse>> GetPhoneNumberAsync(string Email)
+        public async ValueTask<Result<GetPhoneNumberResponse>> GetPhoneNumberAsync(string Email)
         {
             try
             {
                 var user = await userManager.FindByEmailAsync(Email);
 
-                if(user is not null)
+                if (user is not null)
                 {
-                    return new(new PhoneNumberResponse()
+                    return new(new GetPhoneNumberResponse()
                     {
                         PhoneNumber = user.PhoneNumber!
                     });
@@ -248,11 +215,6 @@ namespace eShop.AuthWebApi.Services.Implementation
         {
             try
             {
-                var validationResult = await loginValidator.ValidateAsync(loginRequest);
-
-                if (!validationResult.IsValid)
-                    return new(new FailedValidationException(validationResult.Errors));
-
                 var user = await userManager.FindByEmailAsync(loginRequest.Email);
 
                 if (user is not null)
@@ -314,11 +276,6 @@ namespace eShop.AuthWebApi.Services.Implementation
         {
             try
             {
-                var validationResult = await registrationValidator.ValidateAsync(registrationRequest);
-
-                if (!validationResult.IsValid)
-                    return new(new FailedValidationException(validationResult.Errors));
-
                 var exists = await userManager.FindByEmailAsync(registrationRequest.Email);
 
                 if (exists is null)
@@ -396,11 +353,11 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
-        public async ValueTask<Result<ChangeTwoFactorAuthenticationResponse>> ChangeTwoFactorAuthenticationStateAsync(string Email)
+        public async ValueTask<Result<ChangeTwoFactorAuthenticationResponse>> ChangeTwoFactorAuthenticationStateAsync(ChangeTwoFactorAuthenticationRequest request)
         {
             try
             {
-                var user = await userManager.FindByEmailAsync(Email);
+                var user = await userManager.FindByEmailAsync(request.Email);
 
                 if (user is not null)
                 {
@@ -438,7 +395,7 @@ namespace eShop.AuthWebApi.Services.Implementation
                     }
                 }
 
-                return new(new NotFoundUserByEmailException(Email));
+                return new(new NotFoundUserByEmailException(request.Email));
             }
             catch (Exception ex)
             {
@@ -467,12 +424,11 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
-        public async ValueTask<Result<LoginResponse>> LoginWithTwoFactorAuthenticationCodeAsync(string Email,
-            TwoFactorAuthenticationLoginRequest twoFactorAuthenticationLoginRequest)
+        public async ValueTask<Result<LoginResponse>> LoginWithTwoFactorAuthenticationCodeAsync(TwoFactorAuthenticationLoginRequest twoFactorAuthenticationLoginRequest)
         {
             try
             {
-                var user = await userManager.FindByEmailAsync(Email);
+                var user = await userManager.FindByEmailAsync(twoFactorAuthenticationLoginRequest.Email);
 
                 if (user is not null)
                 {
@@ -494,7 +450,7 @@ namespace eShop.AuthWebApi.Services.Implementation
                     return new(new InvalidTwoFactorAuthenticationCodeException());
                 }
 
-                return new(new NotFoundUserByEmailException(Email));
+                return new(new NotFoundUserByEmailException(twoFactorAuthenticationLoginRequest.Email));
             }
             catch (Exception ex)
             {
@@ -605,35 +561,28 @@ namespace eShop.AuthWebApi.Services.Implementation
 
                 if (user is not null)
                 {
-                    var validationResult = await emailValidator.ValidateAsync(changeEmailRequest);
-
-                    if (validationResult.IsValid)
+                    var token = await userManager.GenerateChangeEmailTokenAsync(user, changeEmailRequest.NewEmail);
+                    var encodedToken = Uri.EscapeDataString(token);
+                    var link = UrlGenerator.ActionLink("/account/change-email", frontendUri, new
                     {
-                        var token = await userManager.GenerateChangeEmailTokenAsync(user, changeEmailRequest.NewEmail);
-                        var encodedToken = Uri.EscapeDataString(token);
-                        var link = UrlGenerator.ActionLink("/account/change-email", frontendUri, new
-                        {
-                            changeEmailRequest.CurrentEmail,
-                            changeEmailRequest.NewEmail,
-                            Token = encodedToken
-                        });
+                        changeEmailRequest.CurrentEmail,
+                        changeEmailRequest.NewEmail,
+                        Token = encodedToken
+                    });
 
-                        await emailSender.SendChangeEmailMessage(new ChangeEmailMessage()
-                        {
-                            Link = link,
-                            To = changeEmailRequest.CurrentEmail,
-                            Subject = "Change email address request",
-                            UserName = changeEmailRequest.CurrentEmail,
-                            NewEmail = changeEmailRequest.NewEmail,
-                        });
+                    await emailSender.SendChangeEmailMessage(new ChangeEmailMessage()
+                    {
+                        Link = link,
+                        To = changeEmailRequest.CurrentEmail,
+                        Subject = "Change email address request",
+                        UserName = changeEmailRequest.CurrentEmail,
+                        NewEmail = changeEmailRequest.NewEmail,
+                    });
 
-                        return new(new ChangeEmailResponse()
-                        {
-                            Message = "We have sent an email with instructions to your email."
-                        });
-                    }
-
-                    return new(new FailedValidationException(validationResult.Errors));
+                    return new(new ChangeEmailResponse()
+                    {
+                        Message = "We have sent an email with instructions to your email."
+                    });
 
                 }
 
@@ -715,7 +664,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             }
         }
 
-        public Result<RefreshTokenResponse> RefreshTokenAsync(RefreshTokenRequest refreshTokenRequest)
+        public Result<RefreshTokenResponse> RefreshToken(RefreshTokenRequest refreshTokenRequest)
         {
             try
             {

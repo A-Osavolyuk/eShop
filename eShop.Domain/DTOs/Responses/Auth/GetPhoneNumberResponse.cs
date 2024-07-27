@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.DTOs.Responses.Auth
 {
-    public class PhoneNumberResponse
+    public class GetPhoneNumberResponse
     {
         public string PhoneNumber { get; set; } = string.Empty;
     }

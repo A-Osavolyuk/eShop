@@ -61,7 +61,7 @@
     private async Task ChangeState()
     {
         var email = await LocalDataAccessor.GetEmailAsync();
-        var result = await AuthenticationService.ChangeTwoFactorStateAsync(email);
+        var result = await AuthenticationService.ChangeTwoFactorAuthenticationStateAsync(new() { Email = email });
 
         if (result.IsSucceeded)
         {
