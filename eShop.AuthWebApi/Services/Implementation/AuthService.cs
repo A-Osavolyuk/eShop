@@ -12,8 +12,6 @@ namespace eShop.AuthWebApi.Services.Implementation
         ITokenHandler tokenHandler,
         UserManager<AppUser> userManager,
         SignInManager<AppUser> signInManager,
-        IValidator<ChangeUserNameRequest> userNameValidator,
-        IValidator<ChangePhoneNumberRequest> phoneValidator,
         IMapper mapper,
         IEmailSender emailSender,
         IConfiguration configuration,
@@ -22,8 +20,6 @@ namespace eShop.AuthWebApi.Services.Implementation
         private readonly ITokenHandler tokenHandler = tokenHandler;
         private readonly UserManager<AppUser> userManager = userManager;
         private readonly SignInManager<AppUser> signInManager = signInManager;
-        private readonly IValidator<ChangeUserNameRequest> userNameValidator = userNameValidator;
-        private readonly IValidator<ChangePhoneNumberRequest> phoneValidator = phoneValidator;
         private readonly IMapper mapper = mapper;
         private readonly IEmailSender emailSender = emailSender;
         private readonly IConfiguration configuration = configuration;
@@ -632,28 +628,21 @@ namespace eShop.AuthWebApi.Services.Implementation
 
                 if (user is not null)
                 {
-                    var validationResult = await userNameValidator.ValidateAsync(changeUserNameRequest);
+                    var result = await userManager.SetUserNameAsync(user, changeUserNameRequest.UserName);
 
-                    if (validationResult.IsValid)
+                    if (result.Succeeded)
                     {
-                        var result = await userManager.SetUserNameAsync(user, changeUserNameRequest.UserName);
+                        user = await userManager.FindByEmailAsync(changeUserNameRequest.Email);
+                        var token = tokenHandler.GenerateToken(user!);
 
-                        if (result.Succeeded)
+                        return new(new ChangeUserNameResponse()
                         {
-                            user = await userManager.FindByEmailAsync(changeUserNameRequest.Email);
-                            var token = tokenHandler.GenerateToken(user!);
-
-                            return new(new ChangeUserNameResponse()
-                            {
-                                Message = "Your user name was successfully changed.",
-                                Token = token
-                            });
-                        }
-
-                        return new(new NotChangedUserNameException());
+                            Message = "Your user name was successfully changed.",
+                            Token = token
+                        });
                     }
 
-                    return new(new FailedValidationException(validationResult.Errors));
+                    return new(new NotChangedUserNameException());
                 }
 
                 return new(new NotFoundUserByEmailException(changeUserNameRequest.Email));
@@ -686,34 +675,27 @@ namespace eShop.AuthWebApi.Services.Implementation
 
                 if (user is not null)
                 {
-                    var validationResult = await phoneValidator.ValidateAsync(changePhoneNumberRequest);
-
-                    if (validationResult.IsValid)
+                    var token = await userManager.GenerateChangePhoneNumberTokenAsync(user, changePhoneNumberRequest.PhoneNumber);
+                    var link = UrlGenerator.ActionLink("/account/change-phone-number", frontendUri, new
                     {
-                        var token = await userManager.GenerateChangePhoneNumberTokenAsync(user, changePhoneNumberRequest.PhoneNumber);
-                        var link = UrlGenerator.ActionLink("/account/change-phone-number", frontendUri, new
-                        {
-                            Token = token,
-                            Email = changePhoneNumberRequest.Email,
-                            PhoneNumber = changePhoneNumberRequest.PhoneNumber
-                        });
+                        Token = token,
+                        Email = changePhoneNumberRequest.Email,
+                        PhoneNumber = changePhoneNumberRequest.PhoneNumber
+                    });
 
-                        await emailSender.SendChangePhoneNumberMessage(new ChangePhoneNumberMessage()
-                        {
-                            Link = link,
-                            To = changePhoneNumberRequest.Email,
-                            Subject = "Change phone number request",
-                            UserName = changePhoneNumberRequest.Email,
-                            PhoneNumber = changePhoneNumberRequest.PhoneNumber
-                        });
+                    await emailSender.SendChangePhoneNumberMessage(new ChangePhoneNumberMessage()
+                    {
+                        Link = link,
+                        To = changePhoneNumberRequest.Email,
+                        Subject = "Change phone number request",
+                        UserName = changePhoneNumberRequest.Email,
+                        PhoneNumber = changePhoneNumberRequest.PhoneNumber
+                    });
 
-                        return new(new ChangePhoneNumberResponse()
-                        {
-                            Message = "We have sent you an email with instructions."
-                        });
-                    }
-
-                    return new(new FailedValidationException(validationResult.Errors));
+                    return new(new ChangePhoneNumberResponse()
+                    {
+                        Message = "We have sent you an email with instructions."
+                    });
                 }
 
                 return new(new NotFoundUserByEmailException(changePhoneNumberRequest.Email));
