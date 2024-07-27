@@ -1,5 +1,7 @@
 ﻿using eShop.Application;
+using eShop.AuthWebApi.Receivers;
 using eShop.AuthWebApi.Services.Implementation;
+using eShop.Domain.DTOs.Requests.Cart;
 
 namespace eShop.AuthWebApi
 {
@@ -31,6 +33,27 @@ namespace eShop.AuthWebApi
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddMassTransit(x =>
+            {
+                x.AddRequestClient<CreateCartRequest>();
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    var uri = builder.Configuration["RabbitMQConfigurations:HostUri"]!;
+                    var username = builder.Configuration["RabbitMQConfigurations:UserName"]!;
+                    var password = builder.Configuration["RabbitMQConfigurations:Password"]!;
+
+                    cfg.Host(new Uri(uri), h =>
+                    {
+                        h.Username(username);
+                        h.Password(password);
+                    });
+
+                    cfg.ReceiveEndpoint("user-exists", e => e.ConfigureConsumer<UserExistsReceiver>(context));
+                });
+
+                x.AddConsumer<UserExistsReceiver>();
+            });
 
             return builder;
         }
@@ -65,6 +88,8 @@ namespace eShop.AuthWebApi
             builder.Services.AddScoped<ITokenHandler, TokenHandler>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IEmailSender, EmailSender>();
+
+            builder.Services.AddScoped<AppManager>();
 
             return builder;
         }

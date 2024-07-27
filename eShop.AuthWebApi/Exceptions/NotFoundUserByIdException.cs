@@ -1,4 +1,8 @@
 ﻿namespace eShop.AuthWebApi.Exceptions
 {
-    public class NotFoundUserByIdException(string Id) : Exception($"Cannot find user with id: {Id}"), INotFoundException;
+    public class NotFoundUserByIdException : Exception, INotFoundException
+    {
+        public NotFoundUserByIdException(string Id) : base(string.Format("Cannot find user with ID {Id}", Id)) { }
+        public NotFoundUserByIdException(Guid Id) : base(string.Format("Cannot find user with ID {Id}", Id)) { }
+    }
 }

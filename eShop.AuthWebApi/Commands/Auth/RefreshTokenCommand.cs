@@ -1,5 +1,4 @@
-﻿
-namespace eShop.AuthWebApi.Controllers
+﻿namespace eShop.AuthWebApi.Commands.Auth
 {
     public record RefreshTokenCommand(RefreshTokenRequest RefreshTokenRequest) : IRequest<Result<RefreshTokenResponse>>;
 

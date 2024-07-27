@@ -7,9 +7,8 @@ namespace eShop.AuthWebApi.Controllers
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     [ApiVersion("1.0")]
-    public class AuthController(IAuthService authService, SignInManager<AppUser> signInManager, ISender sender) : ControllerBase
+    public class AuthController(SignInManager<AppUser> signInManager, ISender sender) : ControllerBase
     {
-        private readonly IAuthService authService = authService;
         private readonly SignInManager<AppUser> signInManager = signInManager;
         private readonly ISender sender = sender;
 
@@ -106,7 +105,7 @@ namespace eShop.AuthWebApi.Controllers
         [HttpGet("get-2fa-state/{Email}")]
         public async ValueTask<ActionResult<ResponseDTO>> GetTwoFactorAuthenticationState([FromQuery] string Email)
         {
-            var result = await authService.GetTwoFactorAuthenticationStateAsync(Email);
+            var result = await sender.Send(new GetTwoFactorAuthenticationStateQuery(Email));
 
             return result.Match(
                 s => Ok(new ResponseBuilder()
