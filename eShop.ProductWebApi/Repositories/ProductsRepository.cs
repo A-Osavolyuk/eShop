@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using eShop.Domain.DTOs.Requests.Review;
-using eShop.Domain.DTOs.Responses;
 using eShop.Domain.Enums;
 using eShop.Domain.Exceptions;
+using eShop.Domain.Responses.Product;
 using eShop.ProductWebApi.Exceptions;
 using LanguageExt;
 using MassTransit;

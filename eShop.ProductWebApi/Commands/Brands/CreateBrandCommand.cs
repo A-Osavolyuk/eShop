@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using eShop.Domain.DTOs.Requests;
 using eShop.Domain.Exceptions;
+using eShop.Domain.Requests.Brand;
 using eShop.ProductWebApi.Repositories;
 using FluentValidation;
 using MediatR;

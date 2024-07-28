@@ -3,9 +3,9 @@ using eShop.AuthWebApi.Receivers;
 using eShop.AuthWebApi.Services.Implementation;
 using eShop.Domain.DTOs.Requests.Cart;
 
-namespace eShop.AuthWebApi
+namespace eShop.AuthWebApi.Extensions
 {
-    public static class Extensions
+    public static class BuilderExtensions
     {
         public static IHostApplicationBuilder AddApiServices(this IHostApplicationBuilder builder)
         {

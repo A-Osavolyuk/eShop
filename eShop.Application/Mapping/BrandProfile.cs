@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using eShop.Domain.DTOs;
-using eShop.Domain.DTOs.Requests;
 using eShop.Domain.Entities;
+using eShop.Domain.Requests.Brand;
 
 namespace eShop.Application.MappingProfiles
 {

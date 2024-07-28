@@ -1,4 +1,4 @@
-﻿namespace eShop.Domain.DTOs.Responses
+﻿namespace eShop.Domain.Responses.Product
 {
     public class UpdateProductResponse
     {

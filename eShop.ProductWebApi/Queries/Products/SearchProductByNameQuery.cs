@@ -1,4 +1,4 @@
-﻿using eShop.Domain.DTOs.Responses;
+﻿using eShop.Domain.Responses.Product;
 using eShop.ProductWebApi.Repositories;
 using MediatR;
 

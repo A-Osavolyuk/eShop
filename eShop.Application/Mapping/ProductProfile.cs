@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using eShop.Domain.DTOs;
-using eShop.Domain.DTOs.Requests;
 using eShop.Domain.Entities;
 using eShop.Domain.Models;
+using eShop.Domain.Requests.Product;
 
 namespace eShop.Application.MappingProfiles
 {

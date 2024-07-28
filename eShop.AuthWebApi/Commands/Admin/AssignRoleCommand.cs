@@ -28,11 +28,7 @@
                         {
                             logger.LogInformation("Successfully assigned role {roleName} to user with ID {userId}. Request ID {requestID}",
                                     request.Request.RoleName, request.Request.UserId, request.Request.RequestId);
-                            return new(new AssignRoleResponse()
-                            {
-                                Succeeded = true,
-                                Message = "Role was successfully assigned"
-                            });
+                            return new(new AssignRoleResponse() { Succeeded = true, Message = "Role was successfully assigned" });
                         }
 
                         var assignException = new NotAssignRoleException(result.Errors.First().Description);

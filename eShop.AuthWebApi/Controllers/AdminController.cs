@@ -19,5 +19,14 @@ namespace eShop.AuthWebApi.Controllers
                 s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
+
+        [HttpPost("remove-user-roles")]
+        public async ValueTask<ActionResult<ResponseDTO>> RemoveUserRolesAsync([FromBody] RemoveUserRolesRequest request)
+        {
+            var result = await sender.Send(new RemoveUserRolesCommand(request));
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using eShop.Domain.DTOs;
-using eShop.Domain.DTOs.Requests;
+using eShop.Domain.Requests.Product;
 
 namespace eShop.Domain.Interfaces
 {

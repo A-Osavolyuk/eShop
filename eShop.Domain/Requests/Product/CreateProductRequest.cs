@@ -1,11 +1,11 @@
 ﻿using eShop.Domain.Enums;
 
-namespace eShop.Domain.DTOs.Requests
+namespace eShop.Domain.Requests.Product
 {
     public record class CreateProductRequest
     {
         public Guid Id { get; set; }
-        public Guid VariantId {  get; set; } 
+        public Guid VariantId { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public Category Category { get; set; }

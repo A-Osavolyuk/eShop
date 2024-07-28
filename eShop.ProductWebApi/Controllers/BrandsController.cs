@@ -1,5 +1,5 @@
 ﻿using eShop.Application.Utilities;
-using eShop.Domain.DTOs.Requests;
+using eShop.Domain.Requests.Brand;
 using eShop.ProductWebApi.Commands.Brands;
 using eShop.ProductWebApi.Queries.Brands;
 using MediatR;

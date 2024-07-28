@@ -1,5 +1,5 @@
-﻿using eShop.Domain.DTOs.Requests;
-using eShop.Domain.Enums;
+﻿using eShop.Domain.Enums;
+using eShop.Domain.Requests.Product;
 using FluentValidation;
 
 namespace eShop.Application.Validation.Products

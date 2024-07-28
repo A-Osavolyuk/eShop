@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using eShop.Domain.DTOs.Requests;
 using eShop.Domain.DTOs.Responses;
 using eShop.Domain.Enums;
 using eShop.Domain.Exceptions;
+using eShop.Domain.Requests.Product;
 using eShop.ProductWebApi.Repositories;
 using FluentValidation;
 using LanguageExt;

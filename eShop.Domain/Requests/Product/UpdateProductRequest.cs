@@ -1,6 +1,6 @@
 ﻿using eShop.Domain.Enums;
 
-namespace eShop.Domain.DTOs.Requests
+namespace eShop.Domain.Requests.Product
 {
     public class UpdateProductRequest
     {
