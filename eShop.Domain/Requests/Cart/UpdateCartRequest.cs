@@ -2,7 +2,7 @@
 
 namespace eShop.Domain.DTOs.Requests.Cart
 {
-    public class UpdateCartRequest : RequestBase
+    public record class UpdateCartRequest : RequestBase
     {
         public Guid CartId { get; set; }
         public Guid UserId { get; set; }

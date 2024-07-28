@@ -1,6 +1,7 @@
 ﻿using eShop.Application.Utilities;
 using eShop.AuthWebApi.Commands.Auth;
 using eShop.AuthWebApi.Queries.Auth;
+using eShop.Domain.Requests.Auth;
 
 namespace eShop.AuthWebApi.Controllers
 {
@@ -43,7 +44,7 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpGet("get-personal-data/{Email}")]
-        public async ValueTask<ActionResult<ResponseDTO>> GetPersonalData([FromQuery] string Email)
+        public async ValueTask<ActionResult<ResponseDTO>> GetPersonalData(string Email)
         {
             var result = await sender.Send(new GetPersonalDataQuery(Email));
 
@@ -62,10 +63,10 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpPost("request-reset-password/{Email}")]
-        public async ValueTask<ActionResult<ResponseDTO>> ResetPasswordRequest([FromQuery] string Email)
+        [HttpPost("request-reset-password")]
+        public async ValueTask<ActionResult<ResponseDTO>> ResetPasswordRequest(ResetPasswordRequest request)
         {
-            var result = await sender.Send(new RequestResetPasswordCommand(Email));
+            var result = await sender.Send(new RequestResetPasswordCommand(request));
 
             return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
@@ -103,7 +104,7 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpGet("get-2fa-state/{Email}")]
-        public async ValueTask<ActionResult<ResponseDTO>> GetTwoFactorAuthenticationState([FromQuery] string Email)
+        public async ValueTask<ActionResult<ResponseDTO>> GetTwoFactorAuthenticationState(string Email)
         {
             var result = await sender.Send(new GetTwoFactorAuthenticationStateQuery(Email));
 
@@ -221,7 +222,7 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [HttpGet("get-phone-number/{Email}")]
-        public async ValueTask<ActionResult<ResponseDTO>> GetPhoneNumber([FromQuery] string Email)
+        public async ValueTask<ActionResult<ResponseDTO>> GetPhoneNumber(string Email)
         {
             var result = await sender.Send(new GetPhoneNumberQuery(Email));
 

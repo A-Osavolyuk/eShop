@@ -86,7 +86,6 @@ namespace eShop.AuthWebApi.Extensions
         public static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
         {
             builder.Services.AddScoped<ITokenHandler, TokenHandler>();
-            builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IEmailSender, EmailSender>();
 
             builder.Services.AddScoped<AppManager>();

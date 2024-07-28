@@ -3,6 +3,7 @@ using eShop.Domain.DTOs.Requests;
 using eShop.Domain.DTOs.Requests.Auth;
 using eShop.Domain.Enums;
 using eShop.Domain.Interfaces;
+using eShop.Domain.Requests.Auth;
 using Microsoft.Extensions.Configuration;
 
 namespace eShop.Infrastructure.Services
@@ -24,9 +25,9 @@ namespace eShop.Infrastructure.Services
                     new RequestDto(Url: $"{configuration["Services:Gateway"]}/api/v1/Auth/change-personal-data",
                         Method: HttpMethods.POST, Data: changePersonalDataRequestDto));
 
-        public async ValueTask<ResponseDTO> RequestResetPasswordAsync(string Email) => await clientService.SendAsync(
-                    new RequestDto(Url: $"{configuration["Services:Gateway"]}/api/v1/Auth/request-reset-password/{Email}",
-                        Method: HttpMethods.POST));
+        public async ValueTask<ResponseDTO> RequestResetPasswordAsync(ResetPasswordRequest request) => await clientService.SendAsync(
+                    new RequestDto(Url: $"{configuration["Services:Gateway"]}/api/v1/Auth/request-reset-password",
+                        Method: HttpMethods.POST, Data: request));
 
         public async ValueTask<ResponseDTO> ConfirmResetPasswordAsync(ConfirmResetPasswordRequest confirmPasswordResetRequest) => await clientService.SendAsync(
                     new RequestDto(Url: $"{configuration["Services:Gateway"]}/api/v1/Auth/confirm-reset-password",

@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.DTOs.Requests.Auth;
 
-public class RegistrationRequest
+public record class RegistrationRequest : RequestBase
 {
     public string Email { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;

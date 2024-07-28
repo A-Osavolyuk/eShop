@@ -2,6 +2,7 @@
 using eShop.Domain.DTOs;
 using eShop.Domain.DTOs.Requests.Auth;
 using eShop.Domain.DTOs.Responses.Auth;
+using eShop.Domain.Entities;
 
 namespace eShop.Application.MappingProfiles
 {
@@ -11,6 +12,7 @@ namespace eShop.Application.MappingProfiles
         {
             CreateMap<PersonalDataDTO, ChangePersonalDataRequest>();
             CreateMap<PersonalDataResponse, PersonalDataDTO>();
+            CreateMap<AppUser, PersonalDataResponse>();
         }
     }
 }

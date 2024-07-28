@@ -329,7 +329,7 @@
       "DownstreamPathTemplate": "/api/v1/Auth/change-password"
     },
     {
-      "UpstreamPathTemplate": "/api/v1/Auth/request-reset-password/{Email}",
+      "UpstreamPathTemplate": "/api/v1/Auth/request-reset-password",
       "UpstreamHttpMethod": [ "Post" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -338,7 +338,7 @@
           "Port": 8101
         }
       ],
-      "DownstreamPathTemplate": "/api/v1/Auth/request-reset-password/{Email}"
+      "DownstreamPathTemplate": "/api/v1/Auth/request-reset-password"
     },
     {
       "UpstreamPathTemplate": "/api/v1/Auth/confirm-reset-password",

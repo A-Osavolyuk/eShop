@@ -1,16 +1,37 @@
-﻿
-namespace eShop.AuthWebApi.Queries.Auth
+﻿namespace eShop.AuthWebApi.Queries.Auth
 {
     public record GetPhoneNumberQuery(string Email) : IRequest<Result<GetPhoneNumberResponse>>;
 
-    public class GetPhoneNumberQueryHandler(IAuthService authService) : IRequestHandler<GetPhoneNumberQuery, Result<GetPhoneNumberResponse>>
+    public class GetPhoneNumberQueryHandler(
+        AppManager appManager,
+        ILogger<GetPhoneNumberQueryHandler> logger) : IRequestHandler<GetPhoneNumberQuery, Result<GetPhoneNumberResponse>>
     {
-        private readonly IAuthService authService = authService;
+        private readonly AppManager appManager = appManager;
+        private readonly ILogger<GetPhoneNumberQueryHandler> logger = logger;
 
         public async Task<Result<GetPhoneNumberResponse>> Handle(GetPhoneNumberQuery request, CancellationToken cancellationToken)
         {
-            var result = await authService.GetPhoneNumberAsync(request.Email);
-            return result;  
+            var actionMessage = new ActionMessage("find phone number of user with email {0}", request.Email);
+            try
+            {
+                logger.LogInformation("Attempting to find a phone number of user with email {email}", request.Email);
+                var user = await appManager.UserManager.FindByEmailAsync(request.Email);
+
+                if (user is not null)
+                {
+                    logger.LogInformation("Successfully found a phone number of user with email {email}", request.Email);
+                    return new(new GetPhoneNumberResponse()
+                    {
+                        PhoneNumber = user.PhoneNumber!
+                    });
+                }
+
+                return logger.LogErrorWithException<GetPhoneNumberResponse>(new NotFoundUserByEmailException(request.Email), actionMessage);
+            }
+            catch (Exception ex)
+            {
+                return logger.LogErrorWithException<GetPhoneNumberResponse>(ex, actionMessage);
+            }
         }
     }
 }

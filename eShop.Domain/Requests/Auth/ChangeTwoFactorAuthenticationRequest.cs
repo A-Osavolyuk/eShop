@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.DTOs.Requests.Auth
 {
-    public class ChangeTwoFactorAuthenticationRequest
+    public record class ChangeTwoFactorAuthenticationRequest : RequestBase
     {
         public string Email { get; set; } = string.Empty;
     }

@@ -1,27 +1,92 @@
-﻿using eShop.Domain.DTOs.Requests.Auth;
-using eShop.Domain.DTOs.Responses.Auth;
-using MediatR;
-
-namespace eShop.AuthWebApi.Commands.Auth
+﻿namespace eShop.AuthWebApi.Commands.Auth
 {
-    public record LoginCommand(LoginRequest loginRequest) : IRequest<Result<LoginResponse>>;
+    public record LoginCommand(LoginRequest Request) : IRequest<Result<LoginResponse>>;
 
-    public class LoginCommandHandler(IAuthService authService, IValidator<LoginRequest> validator) : IRequestHandler<LoginCommand, Result<LoginResponse>>
+    public class LoginCommandHandler(
+        IValidator<LoginRequest> validator,
+        ILogger<LoginCommandHandler> logger,
+        AppManager appManager,
+        IEmailSender emailSender,
+        ITokenHandler tokenHandler) : IRequestHandler<LoginCommand, Result<LoginResponse>>
     {
-        private readonly IAuthService authService = authService;
         private readonly IValidator<LoginRequest> validator = validator;
+        private readonly ILogger<LoginCommandHandler> logger = logger;
+        private readonly AppManager appManager = appManager;
+        private readonly IEmailSender emailSender = emailSender;
+        private readonly ITokenHandler tokenHandler = tokenHandler;
 
         public async Task<Result<LoginResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
-            var validationResult = await validator.ValidateAsync(request.loginRequest, cancellationToken);
-
-            if (validationResult.IsValid)
+            var actionMessage = new ActionMessage("login user with email {0}", request.Request.Email);
+            try
             {
-                var result = await authService.LoginAsync(request.loginRequest);
-                return result;
-            }
+                logger.LogInformation("Attempting to login user with email {email}. Request ID {requestId}", request.Request.Email, request.Request.RequestId);
+                var validationResult = await validator.ValidateAsync(request.Request, cancellationToken);
 
-            return new(new FailedValidationException(validationResult.Errors));
+                if (validationResult.IsValid)
+                {
+                    var user = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
+
+                    if (user is not null)
+                    {
+                        if (user.EmailConfirmed)
+                        {
+                            var isValidPassword = await appManager.UserManager.CheckPasswordAsync(user, request.Request.Password);
+
+                            if (isValidPassword)
+                            {
+                                var userDto = new UserDTO(user.Email!, user.UserName!, user.Id);
+
+                                if (user.TwoFactorEnabled)
+                                {
+                                    var loginCode = await appManager.UserManager.GenerateTwoFactorTokenAsync(user, "Email");
+
+                                    await emailSender.SendTwoFactorAuthenticationCodeMessage(new TwoFactorAuthenticationCodeMessage()
+                                    {
+                                        To = user.Email!,
+                                        Subject = "Login with 2FA code",
+                                        UserName = user.UserName!,
+                                        Code = loginCode
+                                    });
+
+                                    logger.LogInformation("Successfully sent an email with 2FA code to user email {email}. Request ID {requestId}", 
+                                        request.Request.Email, request.Request.RequestId);
+                                    return new(new LoginResponse()
+                                    {
+                                        User = userDto,
+                                        Message = "We have sent an email with 2FA code at your email address.",
+                                        HasTwoFactorAuthentication = true
+                                    });
+                                }
+
+                                var token = tokenHandler.GenerateToken(user);
+
+                                logger.LogInformation("Successfully logged in user with email {email}. Request ID {requestID}", 
+                                    request.Request.Email, request.Request.RequestId);
+                                return new(new LoginResponse()
+                                {
+                                    User = userDto,
+                                    Token = token,
+                                    Message = "Successfully logged in.",
+                                    HasTwoFactorAuthentication = false
+                                });
+                            }
+
+                            return logger.LogErrorWithException<LoginResponse>(new InvalidLoginAttemptException(), actionMessage, request.Request.RequestId);
+                        }
+
+                        return logger.LogErrorWithException<LoginResponse>(new InvalidLoginAttemptWithNotConfirmedEmailException(), 
+                            actionMessage, request.Request.RequestId);
+                    }
+
+                    return logger.LogErrorWithException<LoginResponse>(new NotFoundUserByEmailException(request.Request.Email), actionMessage, request.Request.RequestId);
+                }
+                return logger.LogErrorWithException<LoginResponse>(new FailedValidationException(validationResult.Errors), actionMessage, request.Request.RequestId);
+            }
+            catch (Exception ex)
+            {
+                return logger.LogErrorWithException<LoginResponse>(ex, actionMessage, request.Request.RequestId);
+            }
         }
     }
 }

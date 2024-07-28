@@ -1,26 +1,61 @@
-﻿
-namespace eShop.AuthWebApi.Commands.Auth
+﻿namespace eShop.AuthWebApi.Commands.Auth
 {
-    public record ChangePersonalDataCommand(ChangePersonalDataRequest ChangePersonalDataRequest) : IRequest<Result<ChangePersonalDataResponse>>;
+    public record ChangePersonalDataCommand(ChangePersonalDataRequest Request) : IRequest<Result<ChangePersonalDataResponse>>;
 
     public class ChangePersonalDataCommandHandler(
-        IAuthService authService,
-        IValidator<ChangePersonalDataRequest> validator) : IRequestHandler<ChangePersonalDataCommand, Result<ChangePersonalDataResponse>>
+        AppManager appManager,
+        IValidator<ChangePersonalDataRequest> validator,
+        ILogger<ChangePasswordCommandHandler> logger) : IRequestHandler<ChangePersonalDataCommand, Result<ChangePersonalDataResponse>>
     {
-        private readonly IAuthService authService = authService;
+        private readonly AppManager appManager = appManager;
         private readonly IValidator<ChangePersonalDataRequest> validator = validator;
+        private readonly ILogger<ChangePasswordCommandHandler> logger = logger;
 
         public async Task<Result<ChangePersonalDataResponse>> Handle(ChangePersonalDataCommand request, CancellationToken cancellationToken)
         {
-            var validationResult = await validator.ValidateAsync(request.ChangePersonalDataRequest, cancellationToken);
-
-            if (validationResult.IsValid)
+            var actionMessage = new ActionMessage("change personal data of user with email {0}", request.Request.Email);
+            try
             {
-                var result = await authService.ChangePersonalDataAsync(request.ChangePersonalDataRequest);
-                return result;
-            }
+                logger.LogInformation("Attempting to change personal data of user with email {email}. Request ID {requestId}",
+                    request.Request.Email, request.Request.RequestId);
+                var validationResult = await validator.ValidateAsync(request.Request, cancellationToken);
+                if (validationResult.IsValid)
+                {
+                    var user = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
 
-            return new(new FailedValidationException(validationResult.Errors));
+                    if (user is not null)
+                    {
+                        user.AddPersonalData(request.Request);
+
+                        var result = await appManager.UserManager.UpdateAsync(user);
+
+                        if (result.Succeeded)
+                        {
+                            logger.LogInformation("Successfully change personal data of user with email {email}. Request ID {requestId}",
+                                request.Request.Email, request.Request.RequestId);
+
+                            return new(new ChangePersonalDataResponse()
+                            {
+                                FirstName = user.FirstName,
+                                LastName = user.LastName,
+                                Gender = user.Gender,
+                                DateOfBirth = user.DateOfBirth,
+                            });
+                        }
+                        return logger.LogErrorWithException<ChangePersonalDataResponse>(new NotChangedPersonalDataException(), actionMessage, request.Request.RequestId);
+                    }
+
+                    return logger.LogErrorWithException<ChangePersonalDataResponse>(new NotFoundUserByIdException(request.Request.Email), 
+                        actionMessage, request.Request.RequestId);
+                }
+
+                return logger.LogErrorWithException<ChangePersonalDataResponse>(new NotFoundUserByIdException(request.Request.Email), 
+                    actionMessage, request.Request.RequestId);
+            }
+            catch (Exception ex)
+            {
+                return logger.LogErrorWithException<ChangePersonalDataResponse>(ex, actionMessage, request.Request.RequestId);
+            }
         }
     }
 }

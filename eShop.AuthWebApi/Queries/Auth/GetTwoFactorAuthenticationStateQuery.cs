@@ -1,14 +1,33 @@
-﻿
-namespace eShop.AuthWebApi.Queries.Auth
+﻿namespace eShop.AuthWebApi.Queries.Auth
 {
     public record GetTwoFactorAuthenticationStateQuery(string Email) : IRequest<Result<TwoFactorAuthenticationStateResponse>>;
-    public class GetTwoFactorAuthenticationStateQueryHandler(IAuthService authService) : IRequestHandler<GetTwoFactorAuthenticationStateQuery, Result<TwoFactorAuthenticationStateResponse>>
+    public class GetTwoFactorAuthenticationStateQueryHandler(
+        AppManager appManager,
+        ILogger<GetTwoFactorAuthenticationStateQueryHandler> logger) : IRequestHandler<GetTwoFactorAuthenticationStateQuery, Result<TwoFactorAuthenticationStateResponse>>
     {
-        private readonly IAuthService authService = authService;
+        private readonly AppManager appManager = appManager;
+        private readonly ILogger<GetTwoFactorAuthenticationStateQueryHandler> logger = logger;
+
         public async Task<Result<TwoFactorAuthenticationStateResponse>> Handle(GetTwoFactorAuthenticationStateQuery request, CancellationToken cancellationToken)
         {
-            var result = await authService.GetTwoFactorAuthenticationStateAsync(request.Email);
-            return result;
+            var actionMessage = new ActionMessage("get 2FA state of user with email {0}", request.Email);
+            try
+            {
+                logger.LogInformation("Attempting get 2FA state of user with email {email}", request.Email);
+                var user = await appManager.UserManager.FindByEmailAsync(request.Email);
+
+                if (user is not null)
+                {
+                    logger.LogInformation("Successfully got 2FA state of user with email {email}", request.Email);
+                    return new(new TwoFactorAuthenticationStateResponse() { TwoFactorAuthenticationState = user.TwoFactorEnabled });
+                }
+
+                return logger.LogErrorWithException<TwoFactorAuthenticationStateResponse>(new NotFoundUserByEmailException(request.Email), actionMessage);
+            }
+            catch (Exception ex)
+            {
+                return logger.LogErrorWithException<TwoFactorAuthenticationStateResponse>(ex, actionMessage);
+            }
         }
     }
 }

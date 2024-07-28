@@ -10,6 +10,7 @@
 
         public async Task<Result<AssignRoleResponse>> Handle(AssignRoleCommand request, CancellationToken cancellationToken)
         {
+            var actionMessage = new ActionMessage("assigned role {0} to user with ID {1}", request.Request.RoleName, request.Request.UserId);
             try
             {
                 logger.LogInformation("Attempting to assign role {roleName} to user with ID {userId}. Request ID {requestId}",
@@ -30,29 +31,20 @@
                                     request.Request.RoleName, request.Request.UserId, request.Request.RequestId);
                             return new(new AssignRoleResponse() { Succeeded = true, Message = "Role was successfully assigned" });
                         }
-
-                        var assignException = new NotAssignRoleException(result.Errors.First().Description);
-                        logger.LogError("Failed to assign role {roleName} to user with ID {userId}: {Message}. Request ID {requestId}",
-                        request.Request.RoleName, request.Request.UserId, assignException.Message, request.Request.RequestId);
-                        return new(assignException);
+                        return logger.LogErrorWithException<AssignRoleResponse>(new NotAssignRoleException(result.Errors.First().Description),
+                            actionMessage, request.Request.RequestId);
                     }
 
-                    var userException = new NotFoundUserByIdException(request.Request.UserId);
-                    logger.LogError("Failed to assign role {roleName} to user with ID {userId}: {Message}. Request ID {requestId}",
-                    request.Request.RoleName, request.Request.UserId, userException.Message, request.Request.RequestId);
-                    return new();
+                    return logger.LogErrorWithException<AssignRoleResponse>(new NotFoundUserByIdException(request.Request.UserId),
+                            actionMessage, request.Request.RequestId);
                 }
 
-                var roleException = new NotFoundRoleException(request.Request.RoleName);
-                logger.LogError("Failed to assign role {roleName} to user with ID {userId}: {Message}. Request ID {requestId}",
-                    request.Request.RoleName, request.Request.UserId, roleException.Message, request.Request.RequestId);
-                return new(roleException);
+                return logger.LogErrorWithException<AssignRoleResponse>(new NotFoundRoleException(request.Request.RoleName),
+                            actionMessage, request.Request.RequestId);
             }
             catch (Exception ex)
             {
-                logger.LogError("Failed to assign role {roleName} to user with ID {userId}: {Message}. Request ID {requestId}",
-                    request.Request.RoleName, request.Request.UserId, ex.Message, request.Request.RequestId);
-                return new(ex);
+                return logger.LogErrorWithException<AssignRoleResponse>(ex, actionMessage, request.Request.RequestId);
             }
         }
     }

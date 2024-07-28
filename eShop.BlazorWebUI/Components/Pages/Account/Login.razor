@@ -81,7 +81,7 @@
     protected override async Task OnInitializedAsync()
     {
         var result = await authenticationService.GetExternalProvidersAsync();
-        Providers = JsonConvert.DeserializeObject<List<ExternalProviderDto>>(result.Result.ToString()!)!;
+        Providers = JsonConvert.DeserializeObject<List<ExternalProviderDto>>(result.Result!.ToString()!)!;
     }
 
     private async Task LoginClick()
@@ -109,9 +109,9 @@
             Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
     }
 
-    private async Task ExternalLogin(string ProviderName)
+    private void ExternalLogin(string ProviderName)
     {
-        var authUrl = $"{Configuration["Services:AuthWebApiUrl"]!}/api/v1/Auth/external-login/{ProviderName}";
+        var authUrl = $"{Configuration["Services:Gateway"]!}/api/v1/Auth/external-login/{ProviderName}";
         navigationManager.NavigateTo(authUrl);
     }
 }

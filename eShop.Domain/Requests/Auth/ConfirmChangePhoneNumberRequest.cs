@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.DTOs.Requests.Auth
 {
-    public class ConfirmChangePhoneNumberRequest
+    public record class ConfirmChangePhoneNumberRequest : RequestBase
     {
         public string Email { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;

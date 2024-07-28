@@ -1,6 +1,6 @@
 ﻿using eShop.Domain.DTOs;
 using eShop.Domain.DTOs.Requests.Auth;
-using eShop.Domain.DTOs.Requests.Cart;
+using eShop.Domain.Requests.Auth;
 
 namespace eShop.Domain.Interfaces
 {
@@ -10,7 +10,7 @@ namespace eShop.Domain.Interfaces
         public ValueTask<ResponseDTO> RegisterAsync(RegistrationRequest registrationRequest);
         public ValueTask<ResponseDTO> ChangePersonalDataAsync(ChangePersonalDataRequest changePersonalDataRequestDto);
         public ValueTask<ResponseDTO> GetPersonalDataAsync(string Email);
-        public ValueTask<ResponseDTO> RequestResetPasswordAsync(string Email);
+        public ValueTask<ResponseDTO> RequestResetPasswordAsync(ResetPasswordRequest request);
         public ValueTask<ResponseDTO> ConfirmResetPasswordAsync(ConfirmResetPasswordRequest confirmPasswordResetRequest);
         public ValueTask<ResponseDTO> ConfirmEmailAsync(ConfirmEmailRequest confirmEmailRequest);
         public ValueTask<ResponseDTO> GetExternalProvidersAsync();

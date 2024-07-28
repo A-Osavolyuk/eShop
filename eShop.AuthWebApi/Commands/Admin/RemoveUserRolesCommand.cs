@@ -1,9 +1,10 @@
 ﻿
+using eShop.Domain.Common;
 using eShop.Domain.Entities;
 
 namespace eShop.AuthWebApi.Commands.Admin
 {
-    public record RemoveUserRolesCommand(RemoveUserRolesRequest RemoveUserRoles) : IRequest<Result<RemoveUserRolesResponse>>;
+    public record RemoveUserRolesCommand(RemoveUserRolesRequest Request) : IRequest<Result<RemoveUserRolesResponse>>;
 
     public class RemoveUserRolesCommandHandler(
         AppManager appManager,
@@ -14,15 +15,16 @@ namespace eShop.AuthWebApi.Commands.Admin
 
         public async Task<Result<RemoveUserRolesResponse>> Handle(RemoveUserRolesCommand request, CancellationToken cancellationToken)
         {
+            var actionMessage = new ActionMessage("remove roles from user with ID {0}", request.Request.UserId);
             try
             {
                 logger.LogInformation("Attempting to remove roles from user with ID {userId}. Request ID {requestID}", 
-                    request.RemoveUserRoles.UserId, request.RemoveUserRoles.RequestId);
-                var user = await appManager.UserManager.FindByIdAsync(request.RemoveUserRoles.UserId);
+                    request.Request.UserId, request.Request.RequestId);
+                var user = await appManager.UserManager.FindByIdAsync(request.Request.UserId);
 
                 if (user is not null)
                 {
-                    foreach(var role in request.RemoveUserRoles.Roles)
+                    foreach(var role in request.Request.Roles)
                     {
                         var isInRole = await appManager.UserManager.IsInRoleAsync(user, role.Name);
 
@@ -32,35 +34,27 @@ namespace eShop.AuthWebApi.Commands.Admin
 
                             if (!result.Succeeded)
                             {
-                                var notRemovedRoleException = new NotRemovedRoleException(result.Errors.First().Description);
-                                logger.LogError("Failed to remove roles from user with ID {userId}: {message}. Request ID {requestId}",
-                                    request.RemoveUserRoles.UserId, notRemovedRoleException.Message, request.RemoveUserRoles.RequestId);
-                                return new(notRemovedRoleException);
+                                return logger.LogErrorWithException<RemoveUserRolesResponse>(new NotRemovedRoleException(result.Errors.First().Description), 
+                                    actionMessage, request.Request.RequestId);
                             }
                         }
                         else
                         {
-                            var userNotInRoleException = new UserNotInRoleException(role.Name);
-                            logger.LogError("Failed to remove roles from user with ID {userId}: {message}. Request ID {requestId}",
-                                request.RemoveUserRoles.UserId, userNotInRoleException.Message, request.RemoveUserRoles.RequestId);
-                            return new(userNotInRoleException);
+                            return logger.LogErrorWithException<RemoveUserRolesResponse>(new UserNotInRoleException(role.Name), actionMessage, request.Request.RequestId);
                         }
                     }
 
                     logger.LogInformation("Successfully removed roles from user with ID {userId}.Request ID {requestId}.", 
-                        request.RemoveUserRoles.UserId, request.RemoveUserRoles.RequestId);
+                        request.Request.UserId, request.Request.RequestId);
                     return new(new RemoveUserRolesResponse() { Succeeded = true, Message = "Roles were successfully removed from user" });
                 }
-                var notFoundUserException = new NotFoundUserByIdException(request.RemoveUserRoles.RequestId);
-                logger.LogError("Failed to remove roles from user with ID {userId}: {message}. Request ID {requestId}",
-                    request.RemoveUserRoles.UserId, notFoundUserException.Message, request.RemoveUserRoles.RequestId);
-                return new(notFoundUserException);
+
+                return logger.LogErrorWithException<RemoveUserRolesResponse>(new NotFoundUserByIdException(request.Request.RequestId), 
+                    actionMessage, request.Request.RequestId);
             }
             catch (Exception ex)
             {
-                logger.LogError("Failed to remove roles from user with ID {userId}: {message}. Request ID {requestId}", 
-                    request.RemoveUserRoles.UserId, ex.Message, request.RemoveUserRoles.RequestId);
-                return new(ex);
+                return logger.LogErrorWithException<RemoveUserRolesResponse>(ex, actionMessage, request.Request.RequestId);
             }
         }
     }

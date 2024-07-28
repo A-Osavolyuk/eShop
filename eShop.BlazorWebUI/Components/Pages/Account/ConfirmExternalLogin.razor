@@ -18,7 +18,7 @@
         query.TryGetValue("ReturnUri", out var returnUri);
 
         await (authenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(token!);
-        NavigationManager.NavigateTo(returnUri!);
+        NavigationManager.NavigateTo("/products");
 
         Snackbar.Add("Successfully logged in.", MudBlazor.Severity.Success);
     }
