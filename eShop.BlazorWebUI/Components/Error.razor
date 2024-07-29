@@ -20,11 +20,19 @@
         {
             <MudText Align="Align.Center" Typo="Typo.h4">Not Authorized</MudText>
             <MudText Align="Align.Center" Typo="Typo.h5">Sorry, you have to be authorized to navigate this page.</MudText>
-            <MudLink Style="text-align:center" Class="d-block" Typo="Typo.h5" Href="/account/login">Go to Login page</MudLink>
+            <MudLink Style="text-align:center" Class="d-block" Typo="Typo.h5" Href="@LoginWithReturnUri()">Go to Login page</MudLink>
         }
     </MudItem>
 </MudGrid>
 
 @code {
     [SupplyParameterFromQuery(Name = "code")] public int Code { get; set; }
+    [SupplyParameterFromQuery(Name = "returnUri")] public string? ReturnUri { get; set; }
+
+    private string LoginWithReturnUri()
+    {
+        var builder = new StringBuilder("/account/login");
+
+        return !string.IsNullOrEmpty(ReturnUri) ? builder.Append($"?returnUri={ReturnUri}").ToString() : builder.ToString(); 
+    }
 }
