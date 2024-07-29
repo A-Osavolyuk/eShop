@@ -1,0 +1,10 @@
+﻿@inject NavigationManager NavigationManager
+@code {
+    protected override void OnAfterRender(bool firstRender)
+    {
+        var builder = new StringBuilder(NavigationManager.Uri);
+        var returnUri = builder.Replace(NavigationManager.BaseUri, "/").ToString();
+        var uri = string.Format("/account/login?returnUri={0}", returnUri);
+        NavigationManager.NavigateTo(uri);
+    }
+}

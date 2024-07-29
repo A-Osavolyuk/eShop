@@ -13,250 +13,257 @@
 
 <PageTitle>Create product</PageTitle>
 
-<MudGrid Justify="Justify.Center">
-    <MudItem xs="2">
-        <MudPaper Class="pa-3 mb-3" Outlined>
-            <MudText Typo="Typo.subtitle1">Product cards: @Products.Count() / 30 </MudText>
-        </MudPaper>
-        @if (Products.Any())
-        {
-            @foreach (var product in Products)
-            {
-                <MudPaper @onclick="@(() => SetCurrentProduct_OnClick(product))" Class=@(SetCardClasses(product)) Outlined>
-                    <MudGrid Class="mb-2" Spacing="1">
-                        @foreach (var image in product.Images)
-                        {
-                            <MudItem xs="3">
-                                <MudImage Src="@image"
-                                          Style="height:100%;width:100%"
-                                          Class="border-2 rounded-lg cursor-pointer mud-border-inherit" />
-                            </MudItem>
-                        }
-                    </MudGrid>
-                    <MudText Typo="Typo.subtitle2">Name: @FormatName(product.Name)</MudText>
-                    <MudText Typo="Typo.subtitle2">Category: @product.Category</MudText>
-                    <MudText Class="d-flex mb-3" Typo="Typo.subtitle2">
-                        Color: @product.Color
-                        <span class="mx-1 border-1" style="@(SetColorIndicatorStyles(product.Color))"></span>
-                    </MudText>
-
-                    <div class="d-flex gap-1 justify-content-end">
-                        <MudIconButton ButtonType="ButtonType.Button"
-                                       Color="Color.Error"
-                                       Icon="@Icons.Material.Filled.Delete"
-                                       Variant="Variant.Filled"
-                                       OnClick="@(() => DeleteProduct_OnClick(product))"
-                                       Title="Delete product variant" />
-
-                        <MudIconButton ButtonType="ButtonType.Button"
-                                       Color="Color.Info"
-                                       Icon="@Icons.Material.Filled.Edit"
-                                       Variant="Variant.Filled"
-                                       OnClick="@(() => EditProduct_OnClick(product))"
-                                       Title="Edit product variant" />
-                    </div>
-
+<AuthorizeView>
+    <Authorized>
+        <MudGrid Justify="Justify.Center">
+            <MudItem xs="2">
+                <MudPaper Class="pa-3 mb-3" Outlined>
+                    <MudText Typo="Typo.subtitle1">Product cards: @Products.Count() / 30 </MudText>
                 </MudPaper>
-            }
-        }
-        <MudStack Spacing="1">
-            <MudButton OnClick="AddNewVariant_OnClick"
-                       Color="Color.Surface"
-                       ButtonType="ButtonType.Button"
-                       Variant="Variant.Filled"
-                       Disabled="@(Products.Count() == 30)"
-                       title="Add product variant">
-                Add new variant
-            </MudButton>
-
-            <MudButton OnClick="Duplicate_OnClick"
-                       Color="Color.Surface"
-                       ButtonType="ButtonType.Button"
-                       Variant="Variant.Filled"
-                       Disabled="@(SelectedProductIndex != -1 ? false : true)"
-                       title="Duplicate product variant">
-                Duplicate variant
-            </MudButton>
-
-            <MudButton OnClick="@(() => CreateProducts_OnClick())"
-                       Color="Color.Success"
-                       ButtonType="ButtonType.Button"
-                       Variant="Variant.Filled"
-                       Disabled="@(!Products.Any())"
-                       title="Create products">
-                Create Products
-            </MudButton>
-        </MudStack>
-    </MudItem>
-    <MudItem xs="8">
-        <MudPaper Class="pa-3 mb-3" Outlined>
-            <MudText Align="Align.Center" Typo="Typo.subtitle1"> Add product information and pictures </MudText>
-        </MudPaper>
-        <MudPaper Class="pa-5" Outlined>
-            <MudForm @ref="Form"
-                     Model="CurrentProduct"
-                     Validation="ProductValidation.ValidateValue"
-                     ReadOnly="@IsReadMode">
-                <MudGrid>
-                    <MudItem xs="4">
-                        <ImagesDragAndDrop Model="CurrentProduct" />
-                    </MudItem>
-                    <MudItem xs="8">
-                        <MudGrid Spacing="1">
-                            <MudItem xs="12">
-                                <MudText Class="mb-3" Typo="Typo.h5">Main Information</MudText>
-
-                                <MudTextField T="string"
-                                              Counter="200" Variant="Variant.Outlined"
-                                              For="@(() => CurrentProduct.Name)"
-                                              Label="Name"
-                                              ShrinkLabel
-                                              Placeholder="Enter product name..."
-                                              MaxLength="200"
-                                              Immediate
-                                              Clearable="@(!IsReadMode)"
-                                              @bind-Value="CurrentProduct.Name" />
-
-                                <MudTextField T="string"
-                                              Counter="2000"
-                                              Variant="Variant.Outlined"
-                                              For="@(() => CurrentProduct.Description)"
-                                              Label="Description"
-                                              ShrinkLabel
-                                              Placeholder="Enter description..."
-                                              MaxLength="2000"
-                                              Lines="3"
-                                              AutoGrow
-                                              Immediate
-                                              Clearable="@(!IsReadMode)"
-                                              @bind-Value="CurrentProduct.Description" />
-
-                                <MudTextField T="string"
-                                              Counter="2000"
-                                              Variant="Variant.Outlined"
-                                              For="@(() => CurrentProduct.Compound)"
-                                              Label="Compound"
-                                              ShrinkLabel
-                                              Placeholder="Enter compound..."
-                                              MaxLength="2000"
-                                              Lines="1"
-                                              AutoGrow
-                                              Immediate
-                                              Clearable="@(!IsReadMode)"
-                                              @bind-Value="CurrentProduct.Compound" />
-                            </MudItem>
-                            <MudItem xs="6">
-                                <MudNumericField T="decimal"
-                                                 Variant="Variant.Outlined"
-                                                 For="@(() => CurrentProduct.Price)"
-                                                 @bind-Value="CurrentProduct.Price"
-                                                 Label="Price"
-                                                 Max="10000"
-                                                 Immediate
-                                                 Clearable="@(!IsReadMode)" />
-                            </MudItem>
-                            <MudItem xs="6">
-                                <MudSelect T="Currency"
-                                           Variant="Variant.Outlined"
-                                           For="@(() => CurrentProduct.Currency)"
-                                           @bind-Value="CurrentProduct.Currency"
-                                           Immediate
-                                           Label="Currency">
-                                    <MudSelectItem Disabled T="Currency" Value="Currency.None"> @Currency.None </MudSelectItem>
-                                    @foreach (var currency in Currencies.Where(_ => _ is not Currency.None))
-                                    {
-                                        <MudSelectItem T="Currency" Value="currency">@currency</MudSelectItem>
-                                    }
-                                </MudSelect>
-                            </MudItem>
-                            <MudItem xs="12">
-                                <MudSelect T="Guid"
-                                           Variant="Variant.Outlined"
-                                           For="@(() => CurrentProduct.BrandId)"
-                                           @bind-Value="CurrentProduct.BrandId"
-                                           Immediate
-                                           Label="Brand">
-                                    <MudSelectItem T="Guid" Value="Guid.Empty"> Without brand </MudSelectItem>
-                                    @foreach (var brand in Brands)
-                                    {
-                                        <MudSelectItem T="Guid" Value="brand.Id"> @brand.Name </MudSelectItem>
-                                    }
-                                </MudSelect>
-                            </MudItem>
-                            <MudItem xs="12">
-                                <MudSelect T="Category"
-                                           Variant="Variant.Outlined"
-                                           For="@(() => CurrentProduct.Category)"
-                                           @bind-Value="CurrentProduct.Category"
-                                           @bind-Value:after="@(() => StateHasChanged())"
-                                           Immediate
-                                           Label="Category"
-                                           ReadOnly="@(Products.Count() > 0)">
-                                    <MudSelectItem Disabled T="Category" Value="Category.None"> @Category.None </MudSelectItem>
-                                    @foreach (var type in ProductCategories.Where(_ => _ is not Category.None))
-                                    {
-                                        <MudSelectItem T="Category" Value="type"> @type </MudSelectItem>
-                                    }
-                                </MudSelect>
-                            </MudItem>
-                            <MudItem xs="12">
-                                @if (CurrentProduct.Category is not Category.None)
+                @if (Products.Any())
+                {
+                    @foreach (var product in Products)
+                    {
+                        <MudPaper @onclick="@(() => SetCurrentProduct_OnClick(product))" Class=@(SetCardClasses(product)) Outlined>
+                            <MudGrid Class="mb-2" Spacing="1">
+                                @foreach (var image in product.Images)
                                 {
-                                    <MudText Class="my-3" Typo="Typo.h5">Additional information</MudText>
+                                    <MudItem xs="3">
+                                        <MudImage Src="@image"
+                                                  Style="height:100%;width:100%"
+                                                  Class="border-2 rounded-lg cursor-pointer mud-border-inherit" />
+                                    </MudItem>
                                 }
+                            </MudGrid>
+                            <MudText Typo="Typo.subtitle2">Name: @FormatName(product.Name)</MudText>
+                            <MudText Typo="Typo.subtitle2">Category: @product.Category</MudText>
+                            <MudText Class="d-flex mb-3" Typo="Typo.subtitle2">
+                                Color: @product.Color
+                                <span class="mx-1 border-1" style="@(SetColorIndicatorStyles(product.Color))"></span>
+                            </MudText>
 
-                                @switch (CurrentProduct.Category)
-                                {
-                                    case Category.Clothing:
-                                        <ClothingComponent Model="CurrentProduct" />
-                                        break;
-                                    case Category.Shoes:
-                                        <ShoesComponent Model="CurrentProduct" />
-                                        break;
-                                }
-                            </MudItem>
-                            <MudItem>
-                                @if (IsEditMode)
-                                {
-                                    <MudButton Color="Color.Success"
-                                               OnClick="@(async () => await SaveChanges())"
+                            <div class="d-flex gap-1 justify-content-end">
+                                <MudIconButton ButtonType="ButtonType.Button"
+                                               Color="Color.Error"
+                                               Icon="@Icons.Material.Filled.Delete"
                                                Variant="Variant.Filled"
-                                               StartIcon="@Icons.Material.Filled.Save"
-                                               title="Save changes">
-                                        Save changes
-                                    </MudButton>
-                                }
-                                else
-                                {
-                                    <MudButton Color="Color.Success"
-                                               OnClick="@(async () => await SaveProduct())"
+                                               OnClick="@(() => DeleteProduct_OnClick(product))"
+                                               Title="Delete product variant" />
+
+                                <MudIconButton ButtonType="ButtonType.Button"
+                                               Color="Color.Info"
+                                               Icon="@Icons.Material.Filled.Edit"
                                                Variant="Variant.Filled"
-                                               StartIcon="@Icons.Material.Filled.Save"
-                                               Disabled="@(IsReadMode || Products.Count() == 30)"
-                                               title="Save product">
-                                        Save
-                                    </MudButton>
-                                }
+                                               OnClick="@(() => EditProduct_OnClick(product))"
+                                               Title="Edit product variant" />
+                            </div>
+
+                        </MudPaper>
+                    }
+                }
+                <MudStack Spacing="1">
+                    <MudButton OnClick="AddNewVariant_OnClick"
+                               Color="Color.Surface"
+                               ButtonType="ButtonType.Button"
+                               Variant="Variant.Filled"
+                               Disabled="@(Products.Count() == 30)"
+                               title="Add product variant">
+                        Add new variant
+                    </MudButton>
+
+                    <MudButton OnClick="Duplicate_OnClick"
+                               Color="Color.Surface"
+                               ButtonType="ButtonType.Button"
+                               Variant="Variant.Filled"
+                               Disabled="@(SelectedProductIndex != -1 ? false : true)"
+                               title="Duplicate product variant">
+                        Duplicate variant
+                    </MudButton>
+
+                    <MudButton OnClick="@(() => CreateProducts_OnClick())"
+                               Color="Color.Success"
+                               ButtonType="ButtonType.Button"
+                               Variant="Variant.Filled"
+                               Disabled="@(!Products.Any())"
+                               title="Create products">
+                        Create Products
+                    </MudButton>
+                </MudStack>
+            </MudItem>
+            <MudItem xs="8">
+                <MudPaper Class="pa-3 mb-3" Outlined>
+                    <MudText Align="Align.Center" Typo="Typo.subtitle1"> Add product information and pictures </MudText>
+                </MudPaper>
+                <MudPaper Class="pa-5" Outlined>
+                    <MudForm @ref="Form"
+                             Model="CurrentProduct"
+                             Validation="ProductValidation.ValidateValue"
+                             ReadOnly="@IsReadMode">
+                        <MudGrid>
+                            <MudItem xs="4">
+                                <ImagesDragAndDrop Model="CurrentProduct" />
                             </MudItem>
-                            <MudItem>
-                                <MudButton Color="Color.Error"
-                                           OnClick="@(() => ClearForm_OnClick())"
-                                           Variant="Variant.Filled"
-                                           StartIcon="@Icons.Material.Filled.Clear"
-                                           title="Clear form">
-                                    Clear form
-                                </MudButton>
+                            <MudItem xs="8">
+                                <MudGrid Spacing="1">
+                                    <MudItem xs="12">
+                                        <MudText Class="mb-3" Typo="Typo.h5">Main Information</MudText>
+
+                                        <MudTextField T="string"
+                                                      Counter="200" Variant="Variant.Outlined"
+                                                      For="@(() => CurrentProduct.Name)"
+                                                      Label="Name"
+                                                      ShrinkLabel
+                                                      Placeholder="Enter product name..."
+                                                      MaxLength="200"
+                                                      Immediate
+                                                      Clearable="@(!IsReadMode)"
+                                                      @bind-Value="CurrentProduct.Name" />
+
+                                        <MudTextField T="string"
+                                                      Counter="2000"
+                                                      Variant="Variant.Outlined"
+                                                      For="@(() => CurrentProduct.Description)"
+                                                      Label="Description"
+                                                      ShrinkLabel
+                                                      Placeholder="Enter description..."
+                                                      MaxLength="2000"
+                                                      Lines="3"
+                                                      AutoGrow
+                                                      Immediate
+                                                      Clearable="@(!IsReadMode)"
+                                                      @bind-Value="CurrentProduct.Description" />
+
+                                        <MudTextField T="string"
+                                                      Counter="2000"
+                                                      Variant="Variant.Outlined"
+                                                      For="@(() => CurrentProduct.Compound)"
+                                                      Label="Compound"
+                                                      ShrinkLabel
+                                                      Placeholder="Enter compound..."
+                                                      MaxLength="2000"
+                                                      Lines="1"
+                                                      AutoGrow
+                                                      Immediate
+                                                      Clearable="@(!IsReadMode)"
+                                                      @bind-Value="CurrentProduct.Compound" />
+                                    </MudItem>
+                                    <MudItem xs="6">
+                                        <MudNumericField T="decimal"
+                                                         Variant="Variant.Outlined"
+                                                         For="@(() => CurrentProduct.Price)"
+                                                         @bind-Value="CurrentProduct.Price"
+                                                         Label="Price"
+                                                         Max="10000"
+                                                         Immediate
+                                                         Clearable="@(!IsReadMode)" />
+                                    </MudItem>
+                                    <MudItem xs="6">
+                                        <MudSelect T="Currency"
+                                                   Variant="Variant.Outlined"
+                                                   For="@(() => CurrentProduct.Currency)"
+                                                   @bind-Value="CurrentProduct.Currency"
+                                                   Immediate
+                                                   Label="Currency">
+                                            <MudSelectItem Disabled T="Currency" Value="Currency.None"> @Currency.None </MudSelectItem>
+                                            @foreach (var currency in Currencies.Where(_ => _ is not Currency.None))
+                                            {
+                                                <MudSelectItem T="Currency" Value="currency">@currency</MudSelectItem>
+                                            }
+                                        </MudSelect>
+                                    </MudItem>
+                                    <MudItem xs="12">
+                                        <MudSelect T="Guid"
+                                                   Variant="Variant.Outlined"
+                                                   For="@(() => CurrentProduct.BrandId)"
+                                                   @bind-Value="CurrentProduct.BrandId"
+                                                   Immediate
+                                                   Label="Brand">
+                                            <MudSelectItem T="Guid" Value="Guid.Empty"> Without brand </MudSelectItem>
+                                            @foreach (var brand in Brands)
+                                            {
+                                                <MudSelectItem T="Guid" Value="brand.Id"> @brand.Name </MudSelectItem>
+                                            }
+                                        </MudSelect>
+                                    </MudItem>
+                                    <MudItem xs="12">
+                                        <MudSelect T="Category"
+                                                   Variant="Variant.Outlined"
+                                                   For="@(() => CurrentProduct.Category)"
+                                                   @bind-Value="CurrentProduct.Category"
+                                                   @bind-Value:after="@(() => StateHasChanged())"
+                                                   Immediate
+                                                   Label="Category"
+                                                   ReadOnly="@(Products.Count() > 0)">
+                                            <MudSelectItem Disabled T="Category" Value="Category.None"> @Category.None </MudSelectItem>
+                                            @foreach (var type in ProductCategories.Where(_ => _ is not Category.None))
+                                            {
+                                                <MudSelectItem T="Category" Value="type"> @type </MudSelectItem>
+                                            }
+                                        </MudSelect>
+                                    </MudItem>
+                                    <MudItem xs="12">
+                                        @if (CurrentProduct.Category is not Category.None)
+                                        {
+                                            <MudText Class="my-3" Typo="Typo.h5">Additional information</MudText>
+                                        }
+
+                                        @switch (CurrentProduct.Category)
+                                        {
+                                            case Category.Clothing:
+                                                <ClothingComponent Model="CurrentProduct" />
+                                                break;
+                                            case Category.Shoes:
+                                                <ShoesComponent Model="CurrentProduct" />
+                                                break;
+                                        }
+                                    </MudItem>
+                                    <MudItem>
+                                        @if (IsEditMode)
+                                        {
+                                            <MudButton Color="Color.Success"
+                                                       OnClick="@(async () => await SaveChanges())"
+                                                       Variant="Variant.Filled"
+                                                       StartIcon="@Icons.Material.Filled.Save"
+                                                       title="Save changes">
+                                                Save changes
+                                            </MudButton>
+                                        }
+                                        else
+                                        {
+                                            <MudButton Color="Color.Success"
+                                                       OnClick="@(async () => await SaveProduct())"
+                                                       Variant="Variant.Filled"
+                                                       StartIcon="@Icons.Material.Filled.Save"
+                                                       Disabled="@(IsReadMode || Products.Count() == 30)"
+                                                       title="Save product">
+                                                Save
+                                            </MudButton>
+                                        }
+                                    </MudItem>
+                                    <MudItem>
+                                        <MudButton Color="Color.Error"
+                                                   OnClick="@(() => ClearForm_OnClick())"
+                                                   Variant="Variant.Filled"
+                                                   StartIcon="@Icons.Material.Filled.Clear"
+                                                   title="Clear form">
+                                            Clear form
+                                        </MudButton>
+                                    </MudItem>
+                                </MudGrid>
                             </MudItem>
                         </MudGrid>
-                    </MudItem>
-                </MudGrid>
-            </MudForm>
-        </MudPaper>
-    </MudItem>
-    <MudItem xs="2">
+                    </MudForm>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="2">
 
-    </MudItem>
-</MudGrid>
+            </MudItem>
+        </MudGrid>
+    </Authorized>
+    <NotAuthorized>
+        <AuthManager />
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     private CreateProductModel CurrentProduct { get; set; } = new();
