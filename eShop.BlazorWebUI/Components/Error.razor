@@ -1,0 +1,30 @@
+﻿@page "/Error"
+
+<PageTitle>Error</PageTitle>
+
+<MudGrid Justify="Justify.Center">
+    <MudItem xs="6">
+        @if (Code == StatusCodes.Status404NotFound)
+        {
+            <MudText Align="Align.Center" Typo="Typo.h4">Page Not Found</MudText>
+            <MudText Align="Align.Center" Typo="Typo.h5">Sorry, the page you are looking for does not exist.</MudText>
+            <MudLink Style="text-align:center" Class="d-block" Typo="Typo.h5" Href="/products">Go to Home page</MudLink>
+        }
+        else @if (Code == StatusCodes.Status403Forbidden)
+        {
+            <MudText Align="Align.Center" Typo="Typo.h4">Have No Permission</MudText>
+            <MudText Align="Align.Center" Typo="Typo.h5">Sorry, the page you are navigating for has access restrictions.</MudText>
+            <MudLink Style="text-align:center" Class="d-block" Typo="Typo.h5" Href="/products">Go to Home page</MudLink>
+        }
+        else @if (Code == StatusCodes.Status401Unauthorized)
+        {
+            <MudText Align="Align.Center" Typo="Typo.h4">Not Authorized</MudText>
+            <MudText Align="Align.Center" Typo="Typo.h5">Sorry, you have to be authorized to navigate this page.</MudText>
+            <MudLink Style="text-align:center" Class="d-block" Typo="Typo.h5" Href="/account/login">Go to Login page</MudLink>
+        }
+    </MudItem>
+</MudGrid>
+
+@code {
+    [SupplyParameterFromQuery(Name = "code")] public int Code { get; set; }
+}

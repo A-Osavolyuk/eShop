@@ -45,13 +45,14 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
+app.UseRouting();
 app.UseAuthorization();
-
-app.UseStaticFiles();
 app.UseAntiforgery();
+app.UseStatusCodePagesWithRedirects("/Error?code={0}");
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();

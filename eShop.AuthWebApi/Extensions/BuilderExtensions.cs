@@ -12,6 +12,7 @@ namespace eShop.AuthWebApi.Extensions
             builder.ConfigureVersioning();
             builder.AddMapping();
             builder.AddValidation();
+            builder.AddMessageBus();
             builder.Services.AddMediatR(x => x.RegisterServicesFromAssemblyContaining<IAssemblyMarker>());
             builder.Services.AddCors(o =>
             {
@@ -34,26 +35,7 @@ namespace eShop.AuthWebApi.Extensions
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddMassTransit(x =>
-            {
-                x.AddRequestClient<CreateCartRequest>();
-                x.UsingRabbitMq((context, cfg) =>
-                {
-                    var uri = builder.Configuration["RabbitMQConfigurations:HostUri"]!;
-                    var username = builder.Configuration["RabbitMQConfigurations:UserName"]!;
-                    var password = builder.Configuration["RabbitMQConfigurations:Password"]!;
-
-                    cfg.Host(new Uri(uri), h =>
-                    {
-                        h.Username(username);
-                        h.Password(password);
-                    });
-
-                    cfg.ReceiveEndpoint("user-exists", e => e.ConfigureConsumer<UserExistsReceiver>(context));
-                });
-
-                x.AddConsumer<UserExistsReceiver>();
-            });
+            
 
             return builder;
         }
@@ -89,6 +71,32 @@ namespace eShop.AuthWebApi.Extensions
             builder.Services.AddScoped<IEmailSender, EmailSender>();
 
             builder.Services.AddScoped<AppManager>();
+
+            return builder;
+        }
+
+        public static IHostApplicationBuilder AddMessageBus(this IHostApplicationBuilder builder)
+        {
+            builder.Services.AddMassTransit(x =>
+            {
+                x.AddRequestClient<CreateCartRequest>();
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    var uri = builder.Configuration["RabbitMQConfigurations:HostUri"]!;
+                    var username = builder.Configuration["RabbitMQConfigurations:UserName"]!;
+                    var password = builder.Configuration["RabbitMQConfigurations:Password"]!;
+
+                    cfg.Host(new Uri(uri), h =>
+                    {
+                        h.Username(username);
+                        h.Password(password);
+                    });
+
+                    cfg.ReceiveEndpoint("user-exists", e => e.ConfigureConsumer<UserExistsReceiver>(context));
+                });
+
+                x.AddConsumer<UserExistsReceiver>();
+            });
 
             return builder;
         }

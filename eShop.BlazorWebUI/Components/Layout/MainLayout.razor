@@ -29,7 +29,7 @@
 
 @code {
     bool _drawerOpen = false;
-    [CascadingParameter] Task<AuthenticationState> AuthenticationStateTask { get; set; }
+    [CascadingParameter] Task<AuthenticationState>? AuthenticationStateTask { get; set; }
 
     void DrawerToggle()
     {
