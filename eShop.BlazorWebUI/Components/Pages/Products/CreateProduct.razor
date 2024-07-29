@@ -14,6 +14,9 @@
 <PageTitle>Create product</PageTitle>
 
 <AuthorizeView>
+    <NotAuthorized>
+        <AuthenticationManager />
+    </NotAuthorized>
     <Authorized>
         <MudGrid Justify="Justify.Center">
             <MudItem xs="2">
@@ -260,9 +263,6 @@
             </MudItem>
         </MudGrid>
     </Authorized>
-    <NotAuthorized>
-        <AuthManager />
-    </NotAuthorized>
 </AuthorizeView>
 
 @code {

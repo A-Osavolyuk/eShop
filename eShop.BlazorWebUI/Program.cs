@@ -4,7 +4,6 @@ using eShop.BlazorWebUI.Components;
 using eShop.Infrastructure;
 using MudBlazor;
 using MudBlazor.Services;
-using Microsoft.Extensions.Azure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +16,6 @@ builder.Services.AddRazorComponents()
 
 builder.AddValidation();
 builder.AddMapping();
-builder.AddJwtAuthentication();
 builder.AddInfrastructureLayer();
 
 builder.Services.AddMudServices(config =>

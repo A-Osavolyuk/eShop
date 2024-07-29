@@ -5,34 +5,41 @@
 @inject NavigationManager NavigationManager
 @inject ISnackbar Snackbar
 
-@if (UserCart is null)
-{
-    <MudGrid Justify="Justify.Center">
-        <MudItem xs="12">
-            <MudProgressCircular Color="Color.Primary" />
-            <MudText Inline Typo="Typo.h4">Loading your cart. Please wait</MudText>
-        </MudItem>
-    </MudGrid>
-}
-else
-{
-    if (UserCart.GoodsCount > 0)
-    {
-        <MudGrid Justify="Justify.Center">
-            <MudItem xs="12">
-                <MudText Inline Typo="Typo.h4">Goods count: @UserCart.GoodsCount</MudText>
-            </MudItem>
-        </MudGrid>
-    }
-    else
-    {
-        <MudGrid Justify="Justify.Center">
-            <MudItem xs="12">
-                <MudText Inline Typo="Typo.h4">Your cart is empty</MudText>
-            </MudItem>
-        </MudGrid>
-    }
-}
+<AuthorizeView>
+    <Authorized>
+        @if (UserCart is null)
+        {
+            <MudGrid Justify="Justify.Center">
+                <MudItem xs="12">
+                    <MudProgressCircular Color="Color.Primary" />
+                    <MudText Inline Typo="Typo.h4">Loading your cart. Please wait</MudText>
+                </MudItem>
+            </MudGrid>
+        }
+        else
+        {
+            if (UserCart.GoodsCount > 0)
+            {
+                <MudGrid Justify="Justify.Center">
+                    <MudItem xs="12">
+                        <MudText Inline Typo="Typo.h4">Goods count: @UserCart.GoodsCount</MudText>
+                    </MudItem>
+                </MudGrid>
+            }
+            else
+            {
+                <MudGrid Justify="Justify.Center">
+                    <MudItem xs="12">
+                        <MudText Inline Typo="Typo.h4">Your cart is empty</MudText>
+                    </MudItem>
+                </MudGrid>
+            }
+        }
+    </Authorized>
+    <NotAuthorized>
+        <AuthenticationManager />
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     [Parameter] public Guid UserId { get; set; }

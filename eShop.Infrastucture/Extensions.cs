@@ -2,9 +2,12 @@
 using eShop.Domain.Interfaces;
 using eShop.Infrastructure.Account;
 using eShop.Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace eShop.Infrastructure
 {
@@ -13,8 +16,33 @@ namespace eShop.Infrastructure
         public static IHostApplicationBuilder AddInfrastructureLayer(this IHostApplicationBuilder builder)
         {
             builder.AddDependencyInjection();
+            builder.AddJwtAuthentication();
 
             builder.Services.AddBlazoredLocalStorage();
+            return builder;
+        }
+
+        public static IHostApplicationBuilder AddJwtAuthentication(this IHostApplicationBuilder builder)
+        {
+            builder.Services.AddAuthorization();
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateAudience = true,
+                    ValidateIssuer = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidAudience = builder.Configuration["JwtOptions:Audience"],
+                    ValidIssuer = builder.Configuration["JwtOptions:Issuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtOptions:Key"]!))
+                };
+            });
 
             return builder;
         }
