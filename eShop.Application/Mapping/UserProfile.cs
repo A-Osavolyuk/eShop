@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using eShop.Domain.DTOs.Requests.Auth;
 using eShop.Domain.Entities;
+using eShop.Domain.Responses.Admin;
 
 namespace eShop.Application.MappingProfiles
 {
@@ -14,6 +15,8 @@ namespace eShop.Application.MappingProfiles
                 .ForMember(x => x.UserName, opt => opt.MapFrom(src => src.Email))
                 .ForMember(x => x.NormalizedEmail, opt => opt.MapFrom(src => src.Email.ToUpper()))
                 .ForMember(x => x.NormalizedUserName, opt => opt.MapFrom(src => src.Email.ToUpper()));
+
+            CreateMap<AppUser, FindUserResponse>();
         }
     }
 }

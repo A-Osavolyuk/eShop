@@ -1,7 +1,4 @@
-﻿using eShop.Application.Utilities;
-using eShop.AuthWebApi.Commands.Admin;
-
-namespace eShop.AuthWebApi.Controllers
+﻿namespace eShop.AuthWebApi.Controllers
 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
@@ -26,6 +23,26 @@ namespace eShop.AuthWebApi.Controllers
             var result = await sender.Send(new RemoveUserRolesCommand(request));
             return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
+        [HttpGet("find-user-by-email/{Email}")]
+        public async ValueTask<ActionResult<ResponseDTO>> FindUserByEmailAsync(string Email)
+        {
+            var result = await sender.Send(new FindUserByEmailQuery(Email));
+
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
+        [HttpGet("find-user-by-id/{Id:guid}")]
+        public async ValueTask<ActionResult<ResponseDTO>> FindUserByIdAsync(Guid Id)
+        {
+            var result = await sender.Send(new FindUserByIdQuery(Id));
+
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
     }

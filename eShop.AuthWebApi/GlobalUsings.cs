@@ -34,3 +34,6 @@ global using System.Security.Claims;
 global using System.Text;
 global using TokenHandler = eShop.AuthWebApi.Services.Implementation.TokenHandler;
 global using eShop.AuthWebApi.Extensions;
+global using eShop.Application.Utilities;
+global using eShop.AuthWebApi.Commands.Admin;
+global using eShop.AuthWebApi.Queries.Admin;
