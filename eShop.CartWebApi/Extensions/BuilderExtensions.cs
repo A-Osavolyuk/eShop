@@ -61,7 +61,6 @@ namespace eShop.CartWebApi.Extensions
 
         public static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
         {
-            builder.Services.AddScoped<ICartRepository, CartRepository>();
             return builder;
         }
 

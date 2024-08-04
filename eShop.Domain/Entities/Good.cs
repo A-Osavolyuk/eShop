@@ -2,7 +2,7 @@
 
 namespace eShop.Domain.Entities
 {
-    public class Good
+    public record class Good
     {
         public Guid GoodId { get; set; }
         public string Name { get; set; } = string.Empty;

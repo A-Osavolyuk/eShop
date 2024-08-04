@@ -24,4 +24,10 @@
     <ProjectReference Include="..\eShop\eShop.ServiceDefaults\eShop.ServiceDefaults.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Commands\Cart\" />
+    <Folder Include="Queries\Cart\" />
+    <Folder Include="Repositories\" />
+  </ItemGroup>
+
 </Project>

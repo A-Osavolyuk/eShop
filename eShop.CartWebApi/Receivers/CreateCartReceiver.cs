@@ -1,23 +1,30 @@
-﻿namespace eShop.CartWebApi.Receivers
+﻿using eShop.Domain.Common;
+
+namespace eShop.CartWebApi.Receivers
 {
-    public class CreateCartReceiver(ISender sender, ILogger<CreateCartReceiver> logger) : IConsumer<CreateCartRequest>
+    public class CreateCartReceiver(ISender sender, ILogger<CreateCartReceiver> logger, CartDbContext context) : IConsumer<CreateCartRequest>
     {
         private readonly ISender sender = sender;
         private readonly ILogger<CreateCartReceiver> logger = logger;
+        private readonly CartDbContext dbContext = context;
 
         public async Task Consume(ConsumeContext<CreateCartRequest> context)
         {
-            logger.LogInformation($"Received message with command to create cart for user with id: {context.Message.UserId}.", context.Message.RequestId);
+            var actionMessage = new ActionMessage("create cart for user with ID {0}", context.Message.UserId);
+            try
+            {
+                logger.LogInformation("Received command to create cart for user with ID {userId}. Request ID {requestId}", context.Message.UserId, context.Message.RequestId);
 
-            var result = await sender.Send(new CreateCartCommand(context.Message));
+                await dbContext.Carts.AddAsync(new Cart() { UserId = context.Message.UserId });
+                await dbContext.SaveChangesAsync();
 
-            logger.LogInformation($"Command was executed.", context.Message.RequestId);
-
-            var response = result.Match(
-               s => new ResponseBuilder().Succeeded().WithResultMessage("Cart was successfully created.").Build(),
-               f => new ResponseBuilder().Succeeded().WithErrorMessage(f.Message).Build());
-
-            logger.LogInformation("Response was successfully sent.", context.Message.RequestId);
+                logger.LogInformation("Command was successfully executed. Cart for user with ID {userId} was successfully created. Request ID {requestId}",
+                    context.Message.UserId, context.Message.RequestId);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, actionMessage, context.Message.RequestId);
+            }
         }
     }
 }

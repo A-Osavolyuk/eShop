@@ -30,5 +30,15 @@ namespace eShop.Application.Extensions
 
             return new(exception);
         }
+
+        public static void LogError(this ILogger logger, Exception exception, ActionMessage actionMessage, Guid requestId)
+        {
+            logger.LogError("Failed to {action}: {message}. Request ID {requestId}", string.Format(actionMessage.Message, actionMessage.Args), exception.Message, requestId);
+        }
+
+        public static void LogError(this ILogger logger, Exception exception, ActionMessage actionMessage)
+        {
+            logger.LogError("Failed to {action}: {message}.", string.Format(actionMessage.Message, actionMessage.Args), exception.Message);
+        }
     }
 }
