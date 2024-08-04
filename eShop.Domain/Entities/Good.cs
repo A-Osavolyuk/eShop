@@ -4,6 +4,7 @@ namespace eShop.Domain.Entities
 {
     public record class Good
     {
+        public Guid Id { get; set; }
         public Guid GoodId { get; set; }
         public string Name { get; set; } = string.Empty;
         public decimal Price { get; set; }

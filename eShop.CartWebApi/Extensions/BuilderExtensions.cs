@@ -1,10 +1,6 @@
-﻿using eShop.CartWebApi.Data;
-using MassTransit;
+﻿using eShop.Application;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using eShop.Application;
 using Microsoft.OpenApi.Models;
-using eShop.CartWebApi.Repositories;
-using eShop.Domain.DTOs.Requests.Cart;
 
 namespace eShop.CartWebApi.Extensions
 {

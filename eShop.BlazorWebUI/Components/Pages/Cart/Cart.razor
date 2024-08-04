@@ -50,17 +50,6 @@
         if (firstRender)
         {
             var userId = await LocalDataAccessor.GetUserIdAsync();
-            var response = await CartService.GetCartByUserIdAsync(Guid.Parse(userId));
-
-            if (response.IsSucceeded)
-            {
-                UserCart = JsonConvert.DeserializeObject<CartDTO>(response.Result!.ToString()!)!;
-            }
-            else
-            {
-                Snackbar.Add(response.ErrorMessage, MudBlazor.Severity.Error);
-                UserCart = new();
-            }
         }
 
         StateHasChanged();
