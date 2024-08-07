@@ -2,5 +2,5 @@
 
 namespace eShop.CartWebApi.Exceptions
 {
-    public class NotFoundCartException(Guid Id) : Exception($"Cannot find cart with id: {Id}"), INotFoundException;
+    public class NotFoundCartException(Guid Id) : Exception(string.Format("Cannot find cart with id: {0}", Id)), INotFoundException;
 }
