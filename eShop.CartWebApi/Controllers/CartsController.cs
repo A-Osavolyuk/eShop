@@ -1,4 +1,5 @@
 ﻿using eShop.CartWebApi.Commands.Carts;
+using eShop.CartWebApi.Queries.Carts;
 
 namespace eShop.CartWebApi.Controllers
 {
@@ -9,13 +10,23 @@ namespace eShop.CartWebApi.Controllers
     {
         private readonly ISender sender = sender;
 
-        [HttpPut("update-cart")]
-        public async ValueTask<ActionResult<ResponseDTO>> UpdateCartAsync([FromBody] UpdateCartRequest request)
+        [HttpGet("get-cart-by-user-id/{Id:guid}")]
+        public async ValueTask<ActionResult<ResponseDTO>> GetCartByUserIdAsync(Guid Id)
         {
-            var result = await sender.Send(new UpdateCartCommand(request));
+            var result = await sender.Send(new GetCartByUserIdQuery(Id));
+
             return result.Match(
-                s => new ResponseBuilder().Succeeded().WithResultMessage("Cart was successfully updated.").Build(),
-                f => ExceptionHandler.HandleException(f));
+            s => new ResponseBuilder().Succeeded().WithResult(s).Build(),
+            f => ExceptionHandler.HandleException(f));
         }
+
+    [HttpPut("update-cart")]
+    public async ValueTask<ActionResult<ResponseDTO>> UpdateCartAsync([FromBody] UpdateCartRequest request)
+    {
+        var result = await sender.Send(new UpdateCartCommand(request));
+        return result.Match(
+            s => new ResponseBuilder().Succeeded().WithResultMessage("Cart was successfully updated.").Build(),
+            f => ExceptionHandler.HandleException(f));
     }
+}
 }
