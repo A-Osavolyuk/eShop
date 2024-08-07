@@ -1,7 +1,30 @@
 {
   "Routes": [
     //CartWebApi
-
+    {
+      "UpstreamPathTemplate": "/api/v1/Carts/get-cart-by-user-id/{Id:guid}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8503
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Carts/get-cart-by-user-id/{Id:guid}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/Carts/update-cart",
+      "UpstreamHttpMethod": [ "Put" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8503
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/Carts/update-cart"
+    },
     //ReviewWebApi
     {
       "UpstreamPathTemplate": "/api/v1/Reviews/get-reviews-by-product-id/{Id:guid}",
