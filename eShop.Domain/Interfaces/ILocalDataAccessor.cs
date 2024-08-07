@@ -15,5 +15,7 @@ namespace eShop.Domain.Interfaces
         public ValueTask<string> GetUserNameAsync();
         public ValueTask SetUserIdAsync(string UserId);
         public ValueTask<string> GetUserIdAsync();
+        public ValueTask SetCartAsync(CartDTO Cart);
+        public ValueTask<CartDTO> GetCartAsync();
     }
 }

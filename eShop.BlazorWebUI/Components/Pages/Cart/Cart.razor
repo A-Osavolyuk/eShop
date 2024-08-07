@@ -50,8 +50,25 @@
         if (firstRender)
         {
             var userId = await LocalDataAccessor.GetUserIdAsync();
+            await GetCartAsync();
         }
 
         StateHasChanged();
+    }
+
+    private async Task GetCartAsync()
+    {
+        var userId = await LocalDataAccessor.GetUserIdAsync();
+        var response = await CartService.GetCartByUserIdAsync(Guid.Parse(userId));
+
+        if (response.IsSucceeded)
+        {
+            var data = JsonConvert.DeserializeObject<CartDTO>(response.Result.ToString()!);
+            UserCart = data;
+        }
+        else
+        {
+            Snackbar.Add(response.ErrorMessage, MudBlazor.Severity.Error);
+        }
     }
 }

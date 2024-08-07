@@ -2,7 +2,10 @@
 @inherits LayoutComponentBase
 
 @inject ITokenProvider TokenProvider
+@inject ILocalDataAccessor LocalDataAccessor
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ICartService CartService
+@inject ISnackbar Snackbar
 
 <MudThemeProvider IsDarkMode />
 <MudDialogProvider />
@@ -40,12 +43,35 @@
     {
         if (firstRender)
         {
-            var state = await AuthenticationStateTask;
+            var state = await AuthenticationStateTask!;
             if (state.User.Identity is null || !state.User.Identity!.IsAuthenticated)
             {
                 var token = await TokenProvider.GetTokenAsync();
                 await (AuthenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(token);
             }
+        }
+
+        var cart = await LocalDataAccessor.GetCartAsync();
+
+        if (cart is null)
+        {
+            await GetCartAsync();
+        }
+    }
+
+    private async Task GetCartAsync()
+    {
+        var userId = await LocalDataAccessor.GetUserIdAsync();
+        var response = await CartService.GetCartByUserIdAsync(Guid.Parse(userId));
+
+        if (response.IsSucceeded)
+        {
+            var data = JsonConvert.DeserializeObject<CartDTO>(response.Result.ToString()!);
+            await LocalDataAccessor.SetCartAsync(data!);
+        }
+        else
+        {
+            Snackbar.Add(response.ErrorMessage, MudBlazor.Severity.Error);
         }
     }
 
