@@ -1,8 +1,4 @@
-﻿
-using eShop.Domain.Common;
-using eShop.Domain.Entities;
-
-namespace eShop.AuthWebApi.Commands.Admin
+﻿namespace eShop.AuthWebApi.Commands.Admin
 {
     public record RemoveUserRolesCommand(RemoveUserRolesRequest Request) : IRequest<Result<RemoveUserRolesResponse>>;
 
@@ -18,39 +14,38 @@ namespace eShop.AuthWebApi.Commands.Admin
             var actionMessage = new ActionMessage("remove roles from user with ID {0}", request.Request.UserId);
             try
             {
-                logger.LogInformation("Attempting to remove roles from user with ID {userId}. Request ID {requestID}", 
+                logger.LogInformation("Attempting to remove roles from user with ID {userId}. Request ID {requestID}",
                     request.Request.UserId, request.Request.RequestId);
+
                 var user = await appManager.UserManager.FindByIdAsync(request.Request.UserId);
 
-                if (user is not null)
+                if (user is null)
                 {
-                    foreach(var role in request.Request.Roles)
-                    {
-                        var isInRole = await appManager.UserManager.IsInRoleAsync(user, role.Name);
-
-                        if (isInRole)
-                        {
-                            var result = await appManager.UserManager.RemoveFromRoleAsync(user, role.Name);
-
-                            if (!result.Succeeded)
-                            {
-                                return logger.LogErrorWithException<RemoveUserRolesResponse>(new NotRemovedRoleException(result.Errors.First().Description), 
-                                    actionMessage, request.Request.RequestId);
-                            }
-                        }
-                        else
-                        {
-                            return logger.LogErrorWithException<RemoveUserRolesResponse>(new UserNotInRoleException(role.Name), actionMessage, request.Request.RequestId);
-                        }
-                    }
-
-                    logger.LogInformation("Successfully removed roles from user with ID {userId}.Request ID {requestId}.", 
-                        request.Request.UserId, request.Request.RequestId);
-                    return new(new RemoveUserRolesResponse() { Succeeded = true, Message = "Roles were successfully removed from user" });
+                    return logger.LogErrorWithException<RemoveUserRolesResponse>(new NotFoundUserByIdException(request.Request.RequestId),
+                    actionMessage, request.Request.RequestId);
                 }
 
-                return logger.LogErrorWithException<RemoveUserRolesResponse>(new NotFoundUserByIdException(request.Request.RequestId), 
-                    actionMessage, request.Request.RequestId);
+                foreach (var role in request.Request.Roles)
+                {
+                    var isInRole = await appManager.UserManager.IsInRoleAsync(user, role.Name);
+
+                    if (!isInRole)
+                    {
+                        return logger.LogErrorWithException<RemoveUserRolesResponse>(new UserNotInRoleException(role.Name), actionMessage, request.Request.RequestId);
+                    }
+
+                    var result = await appManager.UserManager.RemoveFromRoleAsync(user, role.Name);
+
+                    if (!result.Succeeded)
+                    {
+                        return logger.LogErrorWithException<RemoveUserRolesResponse>(new NotRemovedRoleException(result.Errors.First().Description),
+                            actionMessage, request.Request.RequestId);
+                    }
+                }
+
+                logger.LogInformation("Successfully removed roles from user with ID {userId}.Request ID {requestId}.",
+                    request.Request.UserId, request.Request.RequestId);
+                return new(new RemoveUserRolesResponse() { Succeeded = true, Message = "Roles were successfully removed from user" });
             }
             catch (Exception ex)
             {

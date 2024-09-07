@@ -26,6 +26,15 @@
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [HttpPost("remove-user-role")]
+        public async ValueTask<ActionResult<ResponseDTO>> RemoveUserRoleAsync([FromBody] RemoveUserRoleRequest request)
+        {
+            var result = await sender.Send(new RemoveUserRoleCommand(request));
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
         [HttpGet("find-user-by-email/{Email}")]
         public async ValueTask<ActionResult<ResponseDTO>> FindUserByEmailAsync(string Email)
         {

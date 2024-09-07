@@ -33,6 +33,7 @@ global using System.IdentityModel.Tokens.Jwt;
 global using System.Security.Claims;
 global using System.Text;
 global using TokenHandler = eShop.AuthWebApi.Services.Implementation.TokenHandler;
+global using Unit = LanguageExt.Unit;
 global using eShop.AuthWebApi.Extensions;
 global using eShop.Application.Utilities;
 global using eShop.AuthWebApi.Commands.Admin;

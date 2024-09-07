@@ -50,7 +50,10 @@
         if (firstRender)
         {
             var userId = await LocalDataAccessor.GetUserIdAsync();
-            await GetCartAsync();
+            if(userId is not null)
+            {
+                await GetCartAsync();
+            }
         }
 
         StateHasChanged();

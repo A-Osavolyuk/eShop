@@ -62,16 +62,19 @@
     private async Task GetCartAsync()
     {
         var userId = await LocalDataAccessor.GetUserIdAsync();
-        var response = await CartService.GetCartByUserIdAsync(Guid.Parse(userId));
+        if(userId is not null)
+        {
+            var response = await CartService.GetCartByUserIdAsync(Guid.Parse(userId));
 
-        if (response.IsSucceeded)
-        {
-            var data = JsonConvert.DeserializeObject<CartDTO>(response.Result.ToString()!);
-            await LocalDataAccessor.SetCartAsync(data!);
-        }
-        else
-        {
-            Snackbar.Add(response.ErrorMessage, MudBlazor.Severity.Error);
+            if (response.IsSucceeded)
+            {
+                var data = JsonConvert.DeserializeObject<CartDTO>(response.Result.ToString()!);
+                await LocalDataAccessor.SetCartAsync(data!);
+            }
+            else
+            {
+                Snackbar.Add(response.ErrorMessage, MudBlazor.Severity.Error);
+            }
         }
     }
 
