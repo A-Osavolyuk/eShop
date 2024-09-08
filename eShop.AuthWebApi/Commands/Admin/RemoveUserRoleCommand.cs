@@ -28,7 +28,7 @@ namespace eShop.AuthWebApi.Commands.Admin
 
                 if(user is null)
                 {
-                    return logger.LogErrorWithException<RemoveUserRoleResponse>(new NotFoundUserByIdException(request.Request.UserId), actionMessage);
+                    return logger.LogErrorWithException<RemoveUserRoleResponse>(new NotFoundUserByIdException(request.Request.UserId), actionMessage, request.Request.RequestId);
                 }
 
                 var isInRole = await appManager.UserManager.IsInRoleAsync(user, request.Request.Role.Name);
@@ -52,7 +52,7 @@ namespace eShop.AuthWebApi.Commands.Admin
             }
             catch (Exception ex)
             {
-                return logger.LogErrorWithException<RemoveUserRoleResponse>(ex, actionMessage);
+                return logger.LogErrorWithException<RemoveUserRoleResponse>(ex, actionMessage, request.Request.RequestId);
             }
         }
     }

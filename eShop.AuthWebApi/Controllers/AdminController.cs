@@ -17,19 +17,10 @@
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpPost("remove-user-roles")]
-        public async ValueTask<ActionResult<ResponseDTO>> RemoveUserRolesAsync([FromBody] RemoveUserRolesRequest request)
+        [HttpPost("create-role")]
+        public async ValueTask<ActionResult<ResponseDTO>> CreateRoleAsync([FromBody] CreateRoleRequest request)
         {
-            var result = await sender.Send(new RemoveUserRolesCommand(request));
-            return result.Match(
-                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
-                f => ExceptionHandler.HandleException(f));
-        }
-
-        [HttpPost("remove-user-role")]
-        public async ValueTask<ActionResult<ResponseDTO>> RemoveUserRoleAsync([FromBody] RemoveUserRoleRequest request)
-        {
-            var result = await sender.Send(new RemoveUserRoleCommand(request));
+            var result = await sender.Send(new CreateRoleCommand(request));
             return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
                 f => ExceptionHandler.HandleException(f));
@@ -52,6 +43,24 @@
 
             return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
+        [HttpDelete("remove-user-roles")]
+        public async ValueTask<ActionResult<ResponseDTO>> RemoveUserRolesAsync([FromBody] RemoveUserRolesRequest request)
+        {
+            var result = await sender.Send(new RemoveUserRolesCommand(request));
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
+        [HttpDelete("remove-user-role")]
+        public async ValueTask<ActionResult<ResponseDTO>> RemoveUserRoleAsync([FromBody] RemoveUserRoleRequest request)
+        {
+            var result = await sender.Send(new RemoveUserRoleCommand(request));
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
     }
