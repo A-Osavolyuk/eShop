@@ -63,5 +63,14 @@
                 s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
+
+        [HttpDelete("delete-role")]
+        public async ValueTask<ActionResult<ResponseDTO>> DeleteRoleAsync([FromBody] DeleteRoleRequest request)
+        {
+            var result = await sender.Send(new DeleteRoleCommand(request));
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
     }
 }
