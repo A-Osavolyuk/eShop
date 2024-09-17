@@ -19,6 +19,7 @@ namespace eShop.AuthWebApi.Commands.Auth
         private readonly IEmailSender emailSender = emailSender;
         private readonly IConfiguration configuration = configuration;
         private readonly string frontendUri = configuration["GeneralSettings:FrontendBaseUri"]!;
+        private const string defaultRole = "User";
 
         public async Task<Result<RegistrationResponse>> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
@@ -28,50 +29,59 @@ namespace eShop.AuthWebApi.Commands.Auth
                 logger.LogInformation("Attempting to register account with email {email}. Request ID {requestId}", request.Request.Email, request.Request.RequestId);
                 var validationResult = await validator.ValidateAsync(request.Request, cancellationToken);
 
-                if (validationResult.IsValid)
+                if (!validationResult.IsValid)
                 {
-                    var exists = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
+                    return logger.LogErrorWithException<RegistrationResponse>(new FailedValidationException(validationResult.Errors), actionMessage, request.Request.RequestId);
+                }
 
-                    if (exists is null)
-                    {
-                        var user = mapper.Map<AppUser>(request.Request);
-                        var registrationResult = await appManager.UserManager.CreateAsync(user, request.Request.Password);
+                var user = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
 
-                        if (registrationResult.Succeeded)
-                        {
-                            logger.LogInformation("Successfully created account with email {email}, waiting for email confirmation. Request ID {requestId}", 
-                                request.Request.Email, request.Request.RequestId);
-
-                            var emailConfirmationToken = await appManager.UserManager.GenerateEmailConfirmationTokenAsync(user);
-                            var encodedToken = Uri.EscapeDataString(emailConfirmationToken);
-                            var link = UrlGenerator.ActionLink("/account/confirm-email", frontendUri,
-                                new { Email = request.Request.Email, Token = encodedToken });
-
-                            await emailSender.SendConfirmEmailMessage(new ConfirmEmailMessage()
-                            {
-                                To = request.Request.Email,
-                                Subject = "Email Confirmation",
-                                Link = link,
-                                UserName = user.UserName!
-                            });
-
-                            logger.LogInformation("Successfully sent an email with email address confirmation to email {email}. Request ID {requestId}", 
-                                request.Request.Email, request.Request.RequestId);
-
-                            return new(new RegistrationResponse()
-                            {
-                                Message = $"Your account have been successfully registered. " +
-                                $"Now you have to confirm you email address to log in. " +
-                                $"We have sent an email with instructions to your email address."
-                            });
-                        }
-
-                        return logger.LogErrorWithException<RegistrationResponse>(new InvalidRegisterAttemptException(), actionMessage, request.Request.RequestId);
-                    }
-
+                if (user is not null)
+                {
                     return logger.LogErrorWithException<RegistrationResponse>(new UserAlreadyExistsException(request.Request.Email), actionMessage, request.Request.RequestId);
                 }
-                return logger.LogErrorWithException<RegistrationResponse>(new FailedValidationException(validationResult.Errors), actionMessage, request.Request.RequestId);
+
+                var newUser = mapper.Map<AppUser>(request.Request);
+                var registrationResult = await appManager.UserManager.CreateAsync(newUser, request.Request.Password);
+
+                if (!registrationResult.Succeeded)
+                {
+                    return logger.LogErrorWithException<RegistrationResponse>(new InvalidRegisterAttemptException(), actionMessage, request.Request.RequestId);
+                }
+
+                logger.LogInformation("Successfully created account with email {email}, waiting for email confirmation. Request ID {requestId}",
+                        request.Request.Email, request.Request.RequestId);
+
+                var assignDefaultRoleResult = await appManager.UserManager.AddToRoleAsync(newUser, defaultRole);
+
+                if (!assignDefaultRoleResult.Succeeded)
+                {
+                    return logger.LogErrorWithException<RegistrationResponse>(new NotAssignRoleException(assignDefaultRoleResult.Errors.First().Description), 
+                        new("assign default role for user with email {0}", request.Request.Email));
+                }
+
+                var emailConfirmationToken = await appManager.UserManager.GenerateEmailConfirmationTokenAsync(newUser);
+                var encodedToken = Uri.EscapeDataString(emailConfirmationToken);
+                var link = UrlGenerator.ActionLink("/account/confirm-email", frontendUri,
+                    new { Email = request.Request.Email, Token = encodedToken });
+
+                await emailSender.SendConfirmEmailMessage(new ConfirmEmailMessage()
+                {
+                    To = request.Request.Email,
+                    Subject = "Email Confirmation",
+                    Link = link,
+                    UserName = newUser.UserName!
+                });
+
+                logger.LogInformation("Successfully sent an email with email address confirmation to email {email}. Request ID {requestId}",
+                    request.Request.Email, request.Request.RequestId);
+
+                return new(new RegistrationResponse()
+                {
+                    Message = $"Your account have been successfully registered. " +
+                    $"Now you have to confirm you email address to log in. " +
+                    $"We have sent an email with instructions to your email address."
+                });
             }
             catch (Exception ex)
             {

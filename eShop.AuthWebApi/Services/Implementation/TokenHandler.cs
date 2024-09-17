@@ -9,7 +9,7 @@
             jwtOptions = options.Value;
         }
 
-        public string GenerateToken(AppUser user)
+        public string GenerateToken(AppUser user, List<string> roles)
         {
             if (user is not null)
             {
@@ -22,7 +22,7 @@
                 var token = handler.WriteToken(new JwtSecurityToken(
                     audience: jwtOptions.Audience,
                     issuer: jwtOptions.Issuer,
-                    claims: SetClaims(user),
+                    claims: SetClaims(user, roles),
                     expires: DateTime.Now.AddSeconds(jwtOptions.ExpirationSeconds),
                     signingCredentials: signingCredentials));
 
@@ -55,7 +55,7 @@
             return string.Empty;
         }
 
-        private List<Claim> SetClaims(AppUser user)
+        private List<Claim> SetClaims(AppUser user, List<string> Roles)
         {
             if (user is not null)
             {
@@ -64,8 +64,13 @@
                     new (CustomClaimTypes.UserName, user.UserName ?? "None"),
                     new (JwtRegisteredClaimNames.Email, user.Email ?? "None"),
                     new (CustomClaimTypes.Id, user.Id),
-                    new (CustomClaimTypes.Roles, FormatRoles(user))
-                }; 
+                };
+
+                if (Roles.Any())
+                {
+                    claims.Add(new (CustomClaimTypes.Roles, FormatRoles(Roles)));
+                }
+
                 return claims;
             }
 
@@ -94,22 +99,22 @@
             return new List<Claim>();
         }
 
-        private string FormatRoles(AppUser user)
+        private string FormatRoles(List<string> Roles)
         {
             var builder = new StringBuilder();
 
-            if (!user.Roles.Any())
+            if (!Roles.Any())
             {
                 return builder.ToString();
             }
 
-            if (user.Roles.Count == 1) 
+            if (Roles.Count == 1)
             {
-                builder.Append(user.Roles[0]);
+                builder.Append(Roles[0]);
             }
             else
             {
-                foreach (var role in user.Roles)
+                foreach (var role in Roles)
                 {
                     if (!string.IsNullOrEmpty(role))
                     {

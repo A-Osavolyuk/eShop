@@ -2,7 +2,7 @@
 {
     public interface ITokenHandler
     {
-        public string GenerateToken(AppUser user);
+        public string GenerateToken(AppUser user, List<string> roles);
         public string RefreshToken(string token);
     }
 }
