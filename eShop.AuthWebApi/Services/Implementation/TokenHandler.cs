@@ -29,7 +29,7 @@
                 return token;
             }
 
-            return "";
+            return string.Empty;
         }
 
         public string RefreshToken(string token)
@@ -52,7 +52,7 @@
                 return newToken;
             }
 
-            return "";
+            return string.Empty;
         }
 
         private List<Claim> SetClaims(AppUser user)
@@ -64,6 +64,7 @@
                     new (CustomClaimTypes.UserName, user.UserName ?? "None"),
                     new (JwtRegisteredClaimNames.Email, user.Email ?? "None"),
                     new (CustomClaimTypes.Id, user.Id),
+                    new (CustomClaimTypes.Roles, FormatRoles(user))
                 }; 
                 return claims;
             }
@@ -84,12 +85,40 @@
                     new (CustomClaimTypes.UserName, rawToken.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.UserName)!.Value),
                     new (JwtRegisteredClaimNames.Email, rawToken.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email)!.Value),
                     new (CustomClaimTypes.Id, rawToken.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value),
+                    new (CustomClaimTypes.Roles, rawToken.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Roles)!.Value)
                 };
 
                 return claims;
             }
 
             return new List<Claim>();
+        }
+
+        private string FormatRoles(AppUser user)
+        {
+            var builder = new StringBuilder();
+
+            if (!user.Roles.Any())
+            {
+                return builder.ToString();
+            }
+
+            if (user.Roles.Count == 1) 
+            {
+                builder.Append(user.Roles[0]);
+            }
+            else
+            {
+                foreach (var role in user.Roles)
+                {
+                    if (!string.IsNullOrEmpty(role))
+                    {
+                        builder.Append(role).Append(';');
+                    }
+                }
+            }
+
+            return builder.ToString();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace eShop.AuthWebApi.Exceptions
+﻿namespace eShop.AuthWebApi.Exceptions.Admin
 {
     public class NotFoundRoleException : Exception, INotFoundException
     {

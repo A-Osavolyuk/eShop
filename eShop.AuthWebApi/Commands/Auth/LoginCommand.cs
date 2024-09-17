@@ -59,6 +59,8 @@
                                     });
                                 }
 
+                                var roles = await appManager.UserManager.GetRolesAsync(user);
+                                user.Roles = roles.ToList();
                                 var token = tokenHandler.GenerateToken(user);
 
                                 logger.LogInformation("Successfully logged in user with email {email}. Request ID {requestID}", 
