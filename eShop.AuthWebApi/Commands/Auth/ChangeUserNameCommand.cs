@@ -1,8 +1,4 @@
-﻿
-using eShop.Domain.DTOs.Requests.Auth;
-using Microsoft.AspNetCore.Identity;
-
-namespace eShop.AuthWebApi.Commands.Auth
+﻿namespace eShop.AuthWebApi.Commands.Auth
 {
     public record ChangeUserNameCommand(ChangeUserNameRequest Request) : IRequest<Result<ChangeUserNameResponse>>;
 
@@ -25,35 +21,46 @@ namespace eShop.AuthWebApi.Commands.Auth
                 logger.LogInformation("Attempting to change user name with email {email}. Request ID {requestId}", request.Request.Email, request.Request.RequestId);
                 var validationResult = await validator.ValidateAsync(request.Request, cancellationToken);
 
-                if (validationResult.IsValid)
+                if (!validationResult.IsValid)
                 {
-                    var user = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
-                    if (user is not null)
-                    {
-                        var result = await appManager.UserManager.SetUserNameAsync(user, request.Request.UserName);
+                    return logger.LogErrorWithException<ChangeUserNameResponse>(new FailedValidationException(validationResult.Errors),
+                            actionMessage, request.Request.RequestId);
+                }
 
-                        if (result.Succeeded)
-                        {
-                            user = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
-                            var token = tokenHandler.GenerateToken(user!);
-
-                            logger.LogInformation("Successfully change name of user with email {email}. Request ID {requestId}", 
-                                request.Request.Email, request.Request.RequestId);
-
-                            return new(new ChangeUserNameResponse()
-                            {
-                                Message = "Your user name was successfully changed.",
-                                Token = token
-                            });
-                        }
-                        return logger.LogErrorWithException<ChangeUserNameResponse>(new NotChangedUserNameException(), actionMessage, request.Request.RequestId);
-                    }
-
-                    return logger.LogErrorWithException<ChangeUserNameResponse>(new NotFoundUserByEmailException(request.Request.Email), 
+                var user = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
+                if (user is null)
+                {
+                    return logger.LogErrorWithException<ChangeUserNameResponse>(new NotFoundUserByEmailException(request.Request.Email),
                         actionMessage, request.Request.RequestId);
                 }
-                return logger.LogErrorWithException<ChangeUserNameResponse>(new FailedValidationException(validationResult.Errors),
+
+                var result = await appManager.UserManager.SetUserNameAsync(user, request.Request.UserName);
+
+                if (!result.Succeeded)
+                {
+                    return logger.LogErrorWithException<ChangeUserNameResponse>(new NotChangedUserNameException(), actionMessage, request.Request.RequestId);
+                }
+
+                user = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
+
+                if (user is null)
+                {
+                    return logger.LogErrorWithException<ChangeUserNameResponse>(new NotFoundUserByEmailException(request.Request.Email),
                         actionMessage, request.Request.RequestId);
+                }
+
+                var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
+                var token = tokenHandler.GenerateToken(user!, roles);
+
+                logger.LogInformation("Successfully change name of user with email {email}. Request ID {requestId}",
+                    request.Request.Email, request.Request.RequestId);
+
+                return new(new ChangeUserNameResponse()
+                {
+                    Message = "Your user name was successfully changed.",
+                    Token = token
+                });
+
             }
             catch (Exception ex)
             {
