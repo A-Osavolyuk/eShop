@@ -17,6 +17,7 @@ namespace eShop.AuthWebApi.Queries.Auth
         private readonly IConfiguration configuration = configuration;
         private readonly IEmailSender emailSender = emailSender;
         private readonly string frontendUri = configuration["GeneralSettings:FrontendBaseUri"]!;
+        private const string defaultRole = "User";
 
         public async Task<Result<string>> Handle(HandleExternalLoginResponseQuery request, CancellationToken cancellationToken)
         {
@@ -26,19 +27,23 @@ namespace eShop.AuthWebApi.Queries.Auth
                 logger.LogInformation("Attempting to handle external login response of provider {provider}", request.ExternalLoginInfo.LoginProvider);
                 var email = request.ExternalLoginInfo.Principal.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value;
 
-                if (email is not null)
+                if (email is null)
                 {
-                    var user = await appManager.UserManager.FindByEmailAsync(email);
-                    var token = string.Empty;
+                    return logger.LogErrorWithException<string>(new NullCredentialsException(), actionMessage);
+                }
 
-                    if (user is not null)
-                    {
-                        logger.LogInformation("Successfully logged in with external provider {provider}", request.ExternalLoginInfo.LoginProvider);
-                        token = tokenHandler.GenerateToken(user);
-                        var link = UrlGenerator.ActionLink("/account/confirm-external-login", frontendUri, new { Token = token, ReturnUri = request.ReturnUri });
-                        return new(link);
-                    }
+                var user = await appManager.UserManager.FindByEmailAsync(email);
 
+                if (user is not null)
+                {
+                    logger.LogInformation("Successfully logged in with external provider {provider}", request.ExternalLoginInfo.LoginProvider);
+                    var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
+                    var token = tokenHandler.GenerateToken(user, roles);
+                    var link = UrlGenerator.ActionLink("/account/confirm-external-login", frontendUri, new { Token = token, ReturnUri = request.ReturnUri });
+                    return new(link);
+                }
+                else
+                {
                     user = new AppUser()
                     {
                         Email = email,
@@ -49,28 +54,37 @@ namespace eShop.AuthWebApi.Queries.Auth
                     var tempPassword = appManager.UserManager.GenerateRandomPassword(18);
                     var result = await appManager.UserManager.CreateAsync(user, tempPassword);
 
-                    if (result.Succeeded)
+                    if (!result.Succeeded)
                     {
-                        logger.LogInformation("Successfully created account with email {email} based on external login data from provider {provider}",
+                        return logger.LogErrorWithException<string>(new InvalidRegisterAttemptException(), actionMessage);
+                    }
+
+                    var assignDefaultRoleResult = await appManager.UserManager.AddToRoleAsync(user, defaultRole);
+
+                    if (!assignDefaultRoleResult.Succeeded)
+                    {
+                        return logger.LogErrorWithException<string>(new NotAssignRoleException(assignDefaultRoleResult.Errors.First().Description),
+                            new("assign default role for user with email {0}", user.Email));
+                    }
+
+                    logger.LogInformation("Successfully created account with email {email} based on external login data from provider {provider}",
                             email, request.ExternalLoginInfo.LoginProvider);
 
-                        await emailSender.SendAccountRegisteredOnExternalLoginMessage(new AccountRegisteredOnExternalLoginMessage()
-                        {
-                            To = email,
-                            Subject = $"Account created with {request.ExternalLoginInfo!.ProviderDisplayName} sign in",
-                            TempPassword = tempPassword,
-                            UserName = email,
-                            ProviderName = request.ExternalLoginInfo!.ProviderDisplayName!
-                        });
+                    await emailSender.SendAccountRegisteredOnExternalLoginMessage(new AccountRegisteredOnExternalLoginMessage()
+                    {
+                        To = email,
+                        Subject = $"Account created with {request.ExternalLoginInfo!.ProviderDisplayName} sign in",
+                        TempPassword = tempPassword,
+                        UserName = email,
+                        ProviderName = request.ExternalLoginInfo!.ProviderDisplayName!
+                    });
 
-                        logger.LogInformation("Successfully logged in with external provider {provider}", request.ExternalLoginInfo.LoginProvider);
-                        token = tokenHandler.GenerateToken(user);
-                        var link = UrlGenerator.ActionLink("/account/confirm-external-login", frontendUri, new { Token = token, ReturnUri = request.ReturnUri });
-                        return new(link);
-                    }
+                    logger.LogInformation("Successfully logged in with external provider {provider}", request.ExternalLoginInfo.LoginProvider);
+                    var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
+                    var token = tokenHandler.GenerateToken(user, roles);
+                    var link = UrlGenerator.ActionLink("/account/confirm-external-login", frontendUri, new { Token = token, ReturnUri = request.ReturnUri });
+                    return new(link);
                 }
-
-                return logger.LogErrorWithException<string>(new NullCredentialsException(), actionMessage);
             }
             catch (Exception ex)
             {
