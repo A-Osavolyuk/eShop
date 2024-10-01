@@ -17,36 +17,36 @@ namespace eShop.AuthWebApi.Commands.Auth
             var actionMessage = new ActionMessage("change 2fa state of user with email {0}", request.Request.Email);
             try
             {
-                logger.LogInformation("Attempting to change 2fa state of user with email {email}.Request ID {requestId}", 
+                logger.LogInformation("Attempting to change 2fa state of user with email {email}.Request ID {requestId}",
                     request.Request.Email, request.Request.RequestId);
                 var user = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
 
-                if (user is not null)
+                if (user is null)
                 {
-                    IdentityResult result = null!;
+                    return logger.LogErrorWithException<ChangeTwoFactorAuthenticationResponse>(
+                        new NotFoundUserByEmailException(request.Request.Email), actionMessage, request.Request.RequestId);
+                }
 
-                    result = await appManager.UserManager.SetTwoFactorEnabledAsync(user, !user.TwoFactorEnabled);
+                IdentityResult result = null!;
 
-                    if (result.Succeeded)
-                    {
-                        var state = user.TwoFactorEnabled ? "disabled" : "enabled";
+                result = await appManager.UserManager.SetTwoFactorEnabledAsync(user, !user.TwoFactorEnabled);
 
-                        logger.LogInformation("Successfully changed 2fa state of user with email {email}. Request ID {requestId}", 
-                            request.Request.Email, request.Request.RequestId);
-
-                        return new(new ChangeTwoFactorAuthenticationResponse()
-                        {
-                            Message = $"Two factor authentication was successfully {state}.",
-                            TwoFactorAuthenticationState = !user.TwoFactorEnabled,
-                        });
-                    }
-
+                if (!result.Succeeded)
+                {
                     return logger.LogErrorWithException<ChangeTwoFactorAuthenticationResponse>(
                     new NotChangedTwoFactorAuthenticationException(), actionMessage, request.Request.RequestId);
                 }
 
-                return logger.LogErrorWithException<ChangeTwoFactorAuthenticationResponse>(
-                    new NotFoundUserByEmailException(request.Request.Email),actionMessage, request.Request.RequestId);
+                var state = user.TwoFactorEnabled ? "disabled" : "enabled";
+
+                logger.LogInformation("Successfully changed 2fa state of user with email {email}. Request ID {requestId}",
+                    request.Request.Email, request.Request.RequestId);
+
+                return new(new ChangeTwoFactorAuthenticationResponse()
+                {
+                    Message = $"Two factor authentication was successfully {state}.",
+                    TwoFactorAuthenticationState = !user.TwoFactorEnabled,
+                });
             }
             catch (Exception ex)
             {

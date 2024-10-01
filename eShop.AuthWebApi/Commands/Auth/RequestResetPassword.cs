@@ -22,40 +22,41 @@ namespace eShop.AuthWebApi.Commands.Auth
             var actionMessage = new ActionMessage("generate reset password token for user with email {0}", request.Request.Email);
             try
             {
-                logger.LogInformation("Attempting to generate reset password token for user with email {email}. Request ID {requestId}", 
+                logger.LogInformation("Attempting to generate reset password token for user with email {email}. Request ID {requestId}",
                     request.Request.Email, request.Request.RequestId);
 
                 var user = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
 
-                if (user is not null)
+                if (user is null)
                 {
-                    var token = await appManager.UserManager.GeneratePasswordResetTokenAsync(user);
-
-                    logger.LogInformation("Successfully generated reset password token for user with email {email}. Request ID {requestId}", 
-                        request.Request.Email, request.Request.RequestId);
-
-                    var encodedToken = Uri.EscapeDataString(token);
-                    var link = UrlGenerator.ActionLink("/account/confirm-password-reset", frontendUri, new { Email = request.Request.Email, Token = encodedToken });
-
-                    await emailSender.SendResetPasswordMessage(new ResetPasswordMessage()
-                    {
-                        To = request.Request.Email,
-                        Subject = "Reset Password Request",
-                        Link = link,
-                        UserName = user.UserName!
-                    });
-
-                    logger.LogInformation("Successfully sent an email with confirmation to reset password for user with email {email}. Request ID {requestId}",
-                        request.Request.Email, request.Request.RequestId);
-
-                    return new(new ResetPasswordResponse()
-                    {
-                        Message = $"You have to confirm password reset. " +
-                        $"We have sent an email with instructions to your email address."
-                    });
+                    return logger.LogErrorWithException<ResetPasswordResponse>(new NotFoundUserByEmailException(request.Request.Email), actionMessage, request.Request.RequestId);
                 }
 
-                return logger.LogErrorWithException<ResetPasswordResponse>(new NotFoundUserByEmailException(request.Request.Email), actionMessage, request.Request.RequestId);
+                var token = await appManager.UserManager.GeneratePasswordResetTokenAsync(user);
+
+                logger.LogInformation("Successfully generated reset password token for user with email {email}. Request ID {requestId}",
+                    request.Request.Email, request.Request.RequestId);
+
+                var encodedToken = Uri.EscapeDataString(token);
+                var link = UrlGenerator.ActionLink("/account/confirm-password-reset", frontendUri, new { Email = request.Request.Email, Token = encodedToken });
+
+                await emailSender.SendResetPasswordMessage(new ResetPasswordMessage()
+                {
+                    To = request.Request.Email,
+                    Subject = "Reset Password Request",
+                    Link = link,
+                    UserName = user.UserName!
+                });
+
+                logger.LogInformation("Successfully sent an email with confirmation to reset password for user with email {email}. Request ID {requestId}",
+                    request.Request.Email, request.Request.RequestId);
+
+                return new(new ResetPasswordResponse()
+                {
+                    Message = $"You have to confirm password reset. " +
+                    $"We have sent an email with instructions to your email address."
+                });
+
             }
             catch (Exception ex)
             {

@@ -23,44 +23,44 @@ namespace eShop.AuthWebApi.Commands.Auth
                 logger.LogInformation("Attempting to confirm email of user with email {email}. Request ID {requestId}", request.Request.Email, request.Request.RequestId);
                 var user = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
 
-                if (user is not null)
+                if (user is null)
                 {
-                    var token = Uri.UnescapeDataString(request.Request.Token);
-                    var confirmResult = await appManager.UserManager.ConfirmEmailAsync(user, token);
+                    return logger.LogErrorWithException<ConfirmEmailResponse>(new NotFoundUserByEmailException(request.Request.Email), actionMessage, request.Request.RequestId);
+                }
 
-                    if (confirmResult.Succeeded)
-                    {
-                        logger.LogInformation("Successfully confirmed email address of user with email {email}. Request ID {requestId}",
-                                request.Request.Email, request.Request.RequestId);
+                var token = Uri.UnescapeDataString(request.Request.Token);
+                var confirmResult = await appManager.UserManager.ConfirmEmailAsync(user, token);
 
-                        await emailSender.SendAccountRegisteredMessage(new AccountRegisteredMessage()
-                        {
-                            To = request.Request.Email,
-                            Subject = "Successful Account Registration",
-                            UserName = user.UserName!
-                        });
-
-                        logger.LogInformation("Attempting to create cart for user with email {email}. Request ID {requestId}",
-                            request.Request.Email, request.Request.RequestId);
-
-                        var handler = requestClient.Create(new CreateCartRequest() { UserId = Guid.Parse(user.Id) });
-                        var response = await handler.GetResponse<ResponseDTO>();
-
-                        if (response.Message.IsSucceeded)
-                        {
-                            logger.LogInformation("Successfully created cart for user with email {email}. Request ID {requestId}",
-                                request.Request.Email, request.Request.RequestId);
-                            return new(new ConfirmEmailResponse() { Message = "Your email address was successfully confirmed." });
-                        }
-
-                        return logger.LogErrorWithException<ConfirmEmailResponse>(new FailedRpcException(response.Message.ErrorMessage),
-                            actionMessage, request.Request.RequestId);
-                    }
-
+                if (!confirmResult.Succeeded)
+                {
                     return logger.LogErrorWithException<ConfirmEmailResponse>(new NotConfirmedEmailException(), actionMessage, request.Request.RequestId);
                 }
 
-                return logger.LogErrorWithException<ConfirmEmailResponse>(new NotFoundUserByEmailException(request.Request.Email), actionMessage, request.Request.RequestId);
+                logger.LogInformation("Successfully confirmed email address of user with email {email}. Request ID {requestId}",
+                            request.Request.Email, request.Request.RequestId);
+
+                await emailSender.SendAccountRegisteredMessage(new AccountRegisteredMessage()
+                {
+                    To = request.Request.Email,
+                    Subject = "Successful Account Registration",
+                    UserName = user.UserName!
+                });
+
+                logger.LogInformation("Attempting to create cart for user with email {email}. Request ID {requestId}",
+                    request.Request.Email, request.Request.RequestId);
+
+                var handler = requestClient.Create(new CreateCartRequest() { UserId = Guid.Parse(user.Id) });
+                var response = await handler.GetResponse<ResponseDTO>();
+
+                if (!response.Message.IsSucceeded)
+                {
+                    return logger.LogErrorWithException<ConfirmEmailResponse>(new FailedRpcException(response.Message.ErrorMessage),
+                        actionMessage, request.Request.RequestId);
+                }
+
+                logger.LogInformation("Successfully created cart for user with email {email}. Request ID {requestId}",
+                        request.Request.Email, request.Request.RequestId);
+                return new(new ConfirmEmailResponse() { Message = "Your email address was successfully confirmed." });
             }
             catch (Exception ex)
             {

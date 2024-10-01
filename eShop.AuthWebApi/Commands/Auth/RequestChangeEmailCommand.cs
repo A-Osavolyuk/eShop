@@ -22,52 +22,53 @@ namespace eShop.AuthWebApi.Commands.Auth
             var actionMessage = new ActionMessage("generate change email address token for user with email {0}", request.Request.CurrentEmail);
             try
             {
-                logger.LogInformation("Attempting to generate change email address token for user with email {email}. Request ID {requestId}", 
+                logger.LogInformation("Attempting to generate change email address token for user with email {email}. Request ID {requestId}",
                     request.Request.CurrentEmail, request.Request.RequestId);
 
                 var validationResult = await validator.ValidateAsync(request.Request, cancellationToken);
 
-                if (validationResult.IsValid)
+                if (!validationResult.IsValid)
                 {
-                    var user = await appManager.UserManager.FindByEmailAsync(request.Request.CurrentEmail);
+                    return logger.LogErrorWithException<ChangeEmailResponse>(new FailedValidationException(validationResult.Errors), actionMessage, request.Request.RequestId);
+                }
 
-                    if (user is not null)
-                    {
-                        var token = await appManager.UserManager.GenerateChangeEmailTokenAsync(user, request.Request.NewEmail);
+                var user = await appManager.UserManager.FindByEmailAsync(request.Request.CurrentEmail);
 
-                        logger.LogInformation("Successfully generated change email address token for user with email {email}. Request ID {requestId}",
-                            request.Request.CurrentEmail, request.Request.RequestId);
-
-                        var encodedToken = Uri.EscapeDataString(token);
-                        var link = UrlGenerator.ActionLink("/account/change-email", frontendUri, new
-                        {
-                            request.Request.CurrentEmail,
-                            request.Request.NewEmail,
-                            Token = encodedToken
-                        });
-
-                        await emailSender.SendChangeEmailMessage(new ChangeEmailMessage()
-                        {
-                            Link = link,
-                            To = request.Request.CurrentEmail,
-                            Subject = "Change email address request",
-                            UserName = request.Request.CurrentEmail,
-                            NewEmail = request.Request.NewEmail,
-                        });
-
-                        logger.LogInformation("Successfully sent an email with confirmation of changing email address of user with email {email}. Request ID {requestId}",
-                            request.Request.CurrentEmail, request.Request.RequestId);
-
-                        return new(new ChangeEmailResponse()
-                        {
-                            Message = "We have sent an email with instructions to your email."
-                        });
-
-                    }
-
+                if (user is null)
+                {
                     return logger.LogErrorWithException<ChangeEmailResponse>(new NotFoundUserByEmailException(request.Request.CurrentEmail), actionMessage, request.Request.RequestId);
                 }
-                return logger.LogErrorWithException<ChangeEmailResponse>(new FailedValidationException(validationResult.Errors), actionMessage, request.Request.RequestId);
+
+                var token = await appManager.UserManager.GenerateChangeEmailTokenAsync(user, request.Request.NewEmail);
+
+                logger.LogInformation("Successfully generated change email address token for user with email {email}. Request ID {requestId}",
+                    request.Request.CurrentEmail, request.Request.RequestId);
+
+                var encodedToken = Uri.EscapeDataString(token);
+                var link = UrlGenerator.ActionLink("/account/change-email", frontendUri, new
+                {
+                    request.Request.CurrentEmail,
+                    request.Request.NewEmail,
+                    Token = encodedToken
+                });
+
+                await emailSender.SendChangeEmailMessage(new ChangeEmailMessage()
+                {
+                    Link = link,
+                    To = request.Request.CurrentEmail,
+                    Subject = "Change email address request",
+                    UserName = request.Request.CurrentEmail,
+                    NewEmail = request.Request.NewEmail,
+                });
+
+                logger.LogInformation("Successfully sent an email with confirmation of changing email address of user with email {email}. Request ID {requestId}",
+                    request.Request.CurrentEmail, request.Request.RequestId);
+
+                return new(new ChangeEmailResponse()
+                {
+                    Message = "We have sent an email with instructions to your email."
+                });
+
             }
             catch (Exception ex)
             {

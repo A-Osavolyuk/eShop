@@ -19,34 +19,35 @@ namespace eShop.AuthWebApi.Commands.Auth
             var actionMessage = new ActionMessage("confirm reset password of user with email {0}", request.Request.Email);
             try
             {
-                logger.LogInformation("Attempting to confirm reset password of user with email {email}. Request ID {requestId}", 
+                logger.LogInformation("Attempting to confirm reset password of user with email {email}. Request ID {requestId}",
                     request.Request.Email, request.Request.RequestId);
                 var validationResult = await validator.ValidateAsync(request.Request);
 
-                if (validationResult.IsValid)
+                if (!validationResult.IsValid)
                 {
-                    var user = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
-
-                    if (user is not null)
-                    {
-                        var token = Uri.UnescapeDataString(request.Request.ResetToken);
-                        var resetResult = await appManager.UserManager.ResetPasswordAsync(user, token, request.Request.NewPassword);
-
-                        if (resetResult.Succeeded)
-                        {
-                            logger.LogInformation("Successfully reset password of user with email {email}. Request ID {requestId}",
-                                request.Request.Email, request.Request.RequestId);
-                            return new(new ConfirmResetPasswordResponse() { Message = "Your password has been successfully reset." });
-                        }
-                        return logger.LogErrorWithException<ConfirmResetPasswordResponse>(new NotResetPasswordException(), actionMessage, request.Request.RequestId);
-                    }
-
-                    return logger.LogErrorWithException<ConfirmResetPasswordResponse>(new NotFoundUserByEmailException(request.Request.Email), 
+                    return logger.LogErrorWithException<ConfirmResetPasswordResponse>(new FailedValidationException(validationResult.Errors),
                         actionMessage, request.Request.RequestId);
                 }
 
-                return logger.LogErrorWithException<ConfirmResetPasswordResponse>(new FailedValidationException(validationResult.Errors), 
-                    actionMessage, request.Request.RequestId);
+                var user = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
+
+                if (user is null)
+                {
+                    return logger.LogErrorWithException<ConfirmResetPasswordResponse>(new NotFoundUserByEmailException(request.Request.Email),
+                        actionMessage, request.Request.RequestId);
+                }
+
+                var token = Uri.UnescapeDataString(request.Request.ResetToken);
+                var resetResult = await appManager.UserManager.ResetPasswordAsync(user, token, request.Request.NewPassword);
+
+                if (!resetResult.Succeeded)
+                {
+                    return logger.LogErrorWithException<ConfirmResetPasswordResponse>(new NotResetPasswordException(), actionMessage, request.Request.RequestId);
+                }
+
+                logger.LogInformation("Successfully reset password of user with email {email}. Request ID {requestId}",
+                        request.Request.Email, request.Request.RequestId);
+                return new(new ConfirmResetPasswordResponse() { Message = "Your password has been successfully reset." });
             }
             catch (Exception ex)
             {

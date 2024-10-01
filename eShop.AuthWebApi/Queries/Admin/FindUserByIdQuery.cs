@@ -21,14 +21,14 @@ namespace eShop.AuthWebApi.Queries.Admin
 
                 var user = await appManager.UserManager.FindByIdAsync(request.UserId);
 
-                if(user is not null)
+                if (user is null)
                 {
-                    logger.LogInformation("Successfully found user with ID {id}", request.UserId);
-                    var response = mapper.Map<FindUserResponse>(user);
-                    return new(response);
+                    return logger.LogErrorWithException<FindUserResponse>(new NotFoundUserByIdException(request.UserId), actionMessage);
                 }
 
-                return logger.LogErrorWithException<FindUserResponse>(new NotFoundUserByIdException(request.UserId), actionMessage);
+                logger.LogInformation("Successfully found user with ID {id}", request.UserId);
+                var response = mapper.Map<FindUserResponse>(user);
+                return new(response);
             }
             catch (Exception ex)
             {

@@ -16,13 +16,14 @@
                 logger.LogInformation("Attempting get 2FA state of user with email {email}", request.Email);
                 var user = await appManager.UserManager.FindByEmailAsync(request.Email);
 
-                if (user is not null)
+                if (user is null)
                 {
-                    logger.LogInformation("Successfully got 2FA state of user with email {email}", request.Email);
-                    return new(new TwoFactorAuthenticationStateResponse() { TwoFactorAuthenticationState = user.TwoFactorEnabled });
+                    return logger.LogErrorWithException<TwoFactorAuthenticationStateResponse>(new NotFoundUserByEmailException(request.Email), actionMessage);
                 }
 
-                return logger.LogErrorWithException<TwoFactorAuthenticationStateResponse>(new NotFoundUserByEmailException(request.Email), actionMessage);
+                logger.LogInformation("Successfully got 2FA state of user with email {email}", request.Email);
+                return new(new TwoFactorAuthenticationStateResponse() { TwoFactorAuthenticationState = user.TwoFactorEnabled });
+
             }
             catch (Exception ex)
             {

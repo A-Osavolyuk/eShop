@@ -19,28 +19,27 @@
                 var role = await appManager.RoleManager.FindByNameAsync(request.Request.RoleName);
                 var user = await appManager.UserManager.FindByIdAsync(request.Request.UserId.ToString());
 
-                if (role is not null)
+                if (role is null)
                 {
-                    if (user is not null)
-                    {
-                        var result = await appManager.UserManager.AddToRoleAsync(user, role.Name!);
-
-                        if (result.Succeeded)
-                        {
-                            logger.LogInformation("Successfully assigned role {roleName} to user with ID {userId}. Request ID {requestID}",
-                                    request.Request.RoleName, request.Request.UserId, request.Request.RequestId);
-                            return new(new AssignRoleResponse() { Succeeded = true, Message = "Role was successfully assigned" });
-                        }
-                        return logger.LogErrorWithException<AssignRoleResponse>(new NotAssignRoleException(result.Errors.First().Description),
-                            actionMessage, request.Request.RequestId);
-                    }
-
-                    return logger.LogErrorWithException<AssignRoleResponse>(new NotFoundUserByIdException(request.Request.UserId),
-                            actionMessage, request.Request.RequestId);
+                    return logger.LogErrorWithException<AssignRoleResponse>(new NotFoundRoleException(request.Request.RoleName),actionMessage, request.Request.RequestId);
                 }
 
-                return logger.LogErrorWithException<AssignRoleResponse>(new NotFoundRoleException(request.Request.RoleName),
-                            actionMessage, request.Request.RequestId);
+                if (user is null)
+                {
+                    return logger.LogErrorWithException<AssignRoleResponse>(new NotFoundUserByIdException(request.Request.UserId), actionMessage, request.Request.RequestId);
+                }
+
+                var result = await appManager.UserManager.AddToRoleAsync(user, role.Name!);
+
+                if (!result.Succeeded)
+                {
+                    return logger.LogErrorWithException<AssignRoleResponse>(new NotAssignRoleException(result.Errors.First().Description), actionMessage, request.Request.RequestId);
+                }
+
+                logger.LogInformation("Successfully assigned role {roleName} to user with ID {userId}. Request ID {requestID}",
+                            request.Request.RoleName, request.Request.UserId, request.Request.RequestId);
+                return new(new AssignRoleResponse() { Succeeded = true, Message = "Role was successfully assigned" });
+
             }
             catch (Exception ex)
             {

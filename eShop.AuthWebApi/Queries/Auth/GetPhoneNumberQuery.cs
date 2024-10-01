@@ -17,16 +17,16 @@
                 logger.LogInformation("Attempting to find a phone number of user with email {email}", request.Email);
                 var user = await appManager.UserManager.FindByEmailAsync(request.Email);
 
-                if (user is not null)
+                if (user is null)
                 {
-                    logger.LogInformation("Successfully found a phone number of user with email {email}", request.Email);
-                    return new(new GetPhoneNumberResponse()
-                    {
-                        PhoneNumber = user.PhoneNumber!
-                    });
+                    return logger.LogErrorWithException<GetPhoneNumberResponse>(new NotFoundUserByEmailException(request.Email), actionMessage);
                 }
 
-                return logger.LogErrorWithException<GetPhoneNumberResponse>(new NotFoundUserByEmailException(request.Email), actionMessage);
+                logger.LogInformation("Successfully found a phone number of user with email {email}", request.Email);
+                return new(new GetPhoneNumberResponse()
+                {
+                    PhoneNumber = user.PhoneNumber!
+                });
             }
             catch (Exception ex)
             {

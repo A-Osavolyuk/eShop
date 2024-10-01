@@ -22,21 +22,21 @@ namespace eShop.AuthWebApi.Queries.Auth
 
                 var validProvider = providers.Any(x => x.DisplayName == request.Provider);
 
-                if (validProvider)
+                if (!validProvider)
                 {
-                    var handlerUri = UrlGenerator.Action("handle-external-login-response", "Auth", new { ReturnUri = request.ReturnUri ?? "/" });
-                    var properties = appManager.SignInManager.ConfigureExternalAuthenticationProperties(request.Provider, handlerUri);
-
-                    logger.LogInformation("Successfully logged in with external provider {provider}", request.Provider);
-                    return new(new ExternalLoginResponse()
-                    {
-                        Provider = request.Provider,
-                        AuthenticationProperties = properties
-                    });
+                    return logger.LogErrorWithException<ExternalLoginResponse>(new InvalidExternalProvider(request.Provider),
+                        actionMessage);
                 }
 
-                return logger.LogErrorWithException<ExternalLoginResponse>(new InvalidExternalProvider(request.Provider),
-                    actionMessage);
+                var handlerUri = UrlGenerator.Action("handle-external-login-response", "Auth", new { ReturnUri = request.ReturnUri ?? "/" });
+                var properties = appManager.SignInManager.ConfigureExternalAuthenticationProperties(request.Provider, handlerUri);
+
+                logger.LogInformation("Successfully logged in with external provider {provider}", request.Provider);
+                return new(new ExternalLoginResponse()
+                {
+                    Provider = request.Provider,
+                    AuthenticationProperties = properties
+                });
             }
             catch (Exception ex)
             {

@@ -20,31 +20,32 @@
                     request.Request.Email, request.Request.RequestId);
 
                 var user = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
-                if (user is not null)
+
+                if (user is null)
                 {
-                    var result = await appManager.UserManager.VerifyTwoFactorTokenAsync(user, "Email", request.Request.Code);
+                    return logger.LogErrorWithException<LoginResponse>(new NotFoundUserByEmailException(request.Request.Email), actionMessage, request.Request.RequestId);
+                }
 
-                    if (result)
-                    {
-                        var userDto = new UserDTO(user.Email!, user.UserName!, user.Id);
-                        var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
-                        var token = tokenHandler.GenerateToken(user, roles);
+                var result = await appManager.UserManager.VerifyTwoFactorTokenAsync(user, "Email", request.Request.Code);
 
-                        logger.LogInformation("Successfully logged in with 2FA code to account with email {email}. Request ID {requestId}",
-                            request.Request.Email, request.Request.RequestId);
-
-                        return new(new LoginResponse()
-                        {
-                            User = userDto,
-                            Token = token,
-                            Message = "Successfully logged in."
-                        });
-                    }
-
+                if (!result)
+                {
                     return logger.LogErrorWithException<LoginResponse>(new InvalidTwoFactorAuthenticationCodeException(), actionMessage, request.Request.RequestId);
                 }
 
-                return logger.LogErrorWithException<LoginResponse>(new NotFoundUserByEmailException(request.Request.Email), actionMessage, request.Request.RequestId);
+                var userDto = new UserDTO(user.Email!, user.UserName!, user.Id);
+                var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
+                var token = tokenHandler.GenerateToken(user, roles);
+
+                logger.LogInformation("Successfully logged in with 2FA code to account with email {email}. Request ID {requestId}",
+                    request.Request.Email, request.Request.RequestId);
+
+                return new(new LoginResponse()
+                {
+                    User = userDto,
+                    Token = token,
+                    Message = "Successfully logged in."
+                });
             }
             catch (Exception ex)
             {

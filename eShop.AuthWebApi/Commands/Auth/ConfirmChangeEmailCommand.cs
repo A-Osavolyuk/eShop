@@ -18,26 +18,27 @@
                     request.Request.CurrentEmail, request.Request.RequestId);
                 var user = await appManager.UserManager.FindByEmailAsync(request.Request.CurrentEmail);
 
-                if (user is not null)
+                if (user is null)
                 {
-                    var token = Uri.UnescapeDataString(request.Request.Token);
-                    var result = await appManager.UserManager.ChangeEmailAsync(user, request.Request.NewEmail, token);
+                    return logger.LogErrorWithException<ConfirmChangeEmailResponse>(new NotFoundUserByEmailException(request.Request.CurrentEmail),
+                        actionMessage, request.Request.RequestId);
+                }
 
-                    if (result.Succeeded)
-                    {
-                        logger.LogInformation("Successfully changed email address from {oldEmail} to {newEmail}. Request ID {requestId}",
-                            request.Request.CurrentEmail, request.Request.NewEmail, request.Request.RequestId);
+                var token = Uri.UnescapeDataString(request.Request.Token);
+                var result = await appManager.UserManager.ChangeEmailAsync(user, request.Request.NewEmail, token);
 
-                        return new(new ConfirmChangeEmailResponse()
-                        {
-                            Message = "Your email address was successfully changed."
-                        });
-                    }
+                if (!result.Succeeded)
+                {
                     return logger.LogErrorWithException<ConfirmChangeEmailResponse>(new NotChangedEmailException(), actionMessage, request.Request.RequestId);
                 }
 
-                return logger.LogErrorWithException<ConfirmChangeEmailResponse>(new NotFoundUserByEmailException(request.Request.CurrentEmail),
-                    actionMessage, request.Request.RequestId);
+                logger.LogInformation("Successfully changed email address from {oldEmail} to {newEmail}. Request ID {requestId}",
+                        request.Request.CurrentEmail, request.Request.NewEmail, request.Request.RequestId);
+
+                return new(new ConfirmChangeEmailResponse()
+                {
+                    Message = "Your email address was successfully changed."
+                });
             }
             catch (Exception ex)
             {

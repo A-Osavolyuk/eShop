@@ -19,38 +19,40 @@
                 logger.LogInformation("Attempting to change personal data of user with email {email}. Request ID {requestId}",
                     request.Request.Email, request.Request.RequestId);
                 var validationResult = await validator.ValidateAsync(request.Request, cancellationToken);
-                if (validationResult.IsValid)
+
+                if (!validationResult.IsValid)
                 {
-                    var user = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
+                    return logger.LogErrorWithException<ChangePersonalDataResponse>(new NotFoundUserByIdException(request.Request.Email),
+                    actionMessage, request.Request.RequestId);
+                }
 
-                    if (user is not null)
-                    {
-                        user.AddPersonalData(request.Request);
+                var user = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
 
-                        var result = await appManager.UserManager.UpdateAsync(user);
-
-                        if (result.Succeeded)
-                        {
-                            logger.LogInformation("Successfully change personal data of user with email {email}. Request ID {requestId}",
-                                request.Request.Email, request.Request.RequestId);
-
-                            return new(new ChangePersonalDataResponse()
-                            {
-                                FirstName = user.FirstName,
-                                LastName = user.LastName,
-                                Gender = user.Gender,
-                                DateOfBirth = user.DateOfBirth,
-                            });
-                        }
-                        return logger.LogErrorWithException<ChangePersonalDataResponse>(new NotChangedPersonalDataException(), actionMessage, request.Request.RequestId);
-                    }
-
-                    return logger.LogErrorWithException<ChangePersonalDataResponse>(new NotFoundUserByIdException(request.Request.Email), 
+                if (user is null)
+                {
+                    return logger.LogErrorWithException<ChangePersonalDataResponse>(new NotFoundUserByIdException(request.Request.Email),
                         actionMessage, request.Request.RequestId);
                 }
 
-                return logger.LogErrorWithException<ChangePersonalDataResponse>(new NotFoundUserByIdException(request.Request.Email), 
-                    actionMessage, request.Request.RequestId);
+                user.AddPersonalData(request.Request);
+
+                var result = await appManager.UserManager.UpdateAsync(user);
+
+                if (!result.Succeeded)
+                {
+                    return logger.LogErrorWithException<ChangePersonalDataResponse>(new NotChangedPersonalDataException(), actionMessage, request.Request.RequestId);
+                }
+
+                logger.LogInformation("Successfully change personal data of user with email {email}. Request ID {requestId}",
+                        request.Request.Email, request.Request.RequestId);
+
+                return new(new ChangePersonalDataResponse()
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Gender = user.Gender,
+                    DateOfBirth = user.DateOfBirth,
+                });
             }
             catch (Exception ex)
             {

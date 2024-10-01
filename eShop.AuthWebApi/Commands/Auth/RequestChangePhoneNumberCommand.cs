@@ -23,52 +23,54 @@ namespace eShop.AuthWebApi.Commands.Auth
             var actionMessage = new ActionMessage("generate change phone number token for user with email {0}", request.Request.Email);
             try
             {
-                logger.LogInformation("Attempting to generate change phone number token for user with email {email}. Request ID {requestId}", 
+                logger.LogInformation("Attempting to generate change phone number token for user with email {email}. Request ID {requestId}",
                     request.Request.Email, request.Request.RequestId);
 
                 var validationResult = await validator.ValidateAsync(request.Request, cancellationToken);
 
-                if (validationResult.IsValid)
+                if (!validationResult.IsValid)
                 {
-                    var user = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
+                    return logger.LogErrorWithException<ChangePhoneNumberResponse>(new FailedValidationException(validationResult.Errors),
+                            actionMessage, request.Request.RequestId);
+                }
 
-                    if (user is not null)
-                    {
-                        var token = await appManager.UserManager.GenerateChangePhoneNumberTokenAsync(user, request.Request.PhoneNumber);
+                var user = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
 
-                        logger.LogInformation("Successfully generated change phone number token for user with email {email}. Request ID {requestId}", 
-                            request.Request.Email, request.Request.RequestId);
-
-                        var link = UrlGenerator.ActionLink("/account/change-phone-number", frontendUri, new
-                        {
-                            Token = token,
-                            Email = request.Request.Email,
-                            PhoneNumber = request.Request.PhoneNumber
-                        });
-
-                        await emailSender.SendChangePhoneNumberMessage(new ChangePhoneNumberMessage()
-                        {
-                            Link = link,
-                            To = request.Request.Email,
-                            Subject = "Change phone number request",
-                            UserName = request.Request.Email,
-                            PhoneNumber = request.Request.PhoneNumber
-                        });
-
-                        logger.LogInformation("Successfully sent an email with confirmation to change phone number for user with email {email}. Request ID {requestId}", 
-                            request.Request.Email, request.Request.RequestId);
-
-                        return new(new ChangePhoneNumberResponse()
-                        {
-                            Message = "We have sent you an email with instructions."
-                        });
-                    }
-
-                    return logger.LogErrorWithException<ChangePhoneNumberResponse>(new NotFoundUserByEmailException(request.Request.Email), 
+                if (user is null)
+                {
+                    return logger.LogErrorWithException<ChangePhoneNumberResponse>(new NotFoundUserByEmailException(request.Request.Email),
                         actionMessage, request.Request.RequestId);
                 }
-                return logger.LogErrorWithException<ChangePhoneNumberResponse>(new FailedValidationException(validationResult.Errors),
-                        actionMessage, request.Request.RequestId);
+
+                var token = await appManager.UserManager.GenerateChangePhoneNumberTokenAsync(user, request.Request.PhoneNumber);
+
+                logger.LogInformation("Successfully generated change phone number token for user with email {email}. Request ID {requestId}",
+                    request.Request.Email, request.Request.RequestId);
+
+                var link = UrlGenerator.ActionLink("/account/change-phone-number", frontendUri, new
+                {
+                    Token = token,
+                    Email = request.Request.Email,
+                    PhoneNumber = request.Request.PhoneNumber
+                });
+
+                await emailSender.SendChangePhoneNumberMessage(new ChangePhoneNumberMessage()
+                {
+                    Link = link,
+                    To = request.Request.Email,
+                    Subject = "Change phone number request",
+                    UserName = request.Request.Email,
+                    PhoneNumber = request.Request.PhoneNumber
+                });
+
+                logger.LogInformation("Successfully sent an email with confirmation to change phone number for user with email {email}. Request ID {requestId}",
+                    request.Request.Email, request.Request.RequestId);
+
+                return new(new ChangePhoneNumberResponse()
+                {
+                    Message = "We have sent you an email with instructions."
+                });
+
             }
             catch (Exception ex)
             {

@@ -1,8 +1,4 @@
-﻿
-using LanguageExt.Pretty;
-using Microsoft.AspNetCore.Identity;
-
-namespace eShop.AuthWebApi.Queries.Auth
+﻿namespace eShop.AuthWebApi.Queries.Auth
 {
     public record GetPersonalDataQuery(string Email) : IRequest<Result<PersonalDataResponse>>;
 
@@ -23,12 +19,13 @@ namespace eShop.AuthWebApi.Queries.Auth
                 logger.LogInformation("Attempting to find personal data of user with email {email}", request.Email);
                 var user = await appManager.UserManager.FindByEmailAsync(request.Email);
 
-                if (user is not null)
+                if (user is null)
                 {
-                    logger.LogInformation("Successfully found personal data of user with email {email}", request.Email);
-                    return new(mapper.Map<PersonalDataResponse>(user));
+                    return logger.LogErrorWithException<PersonalDataResponse>(new NotFoundUserByEmailException(request.Email), actionMessage);
                 }
-                return logger.LogErrorWithException<PersonalDataResponse>(new NotFoundUserByEmailException(request.Email), actionMessage);
+
+                logger.LogInformation("Successfully found personal data of user with email {email}", request.Email);
+                return new(mapper.Map<PersonalDataResponse>(user));
             }
             catch (Exception ex)
             {
