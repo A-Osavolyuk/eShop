@@ -7,5 +7,13 @@
             var user = await userManager.FindByIdAsync(Id.ToString());
             return user;
         }
+
+        public static async Task<LockoutStatus> GetLockoutStatusAsync<TUser>(this UserManager<TUser> userManager, TUser user) where TUser : class
+        {
+            var lockoutEnabled = await userManager.GetLockoutEnabledAsync(user);
+            var lockoutEnd = await userManager.GetLockoutEndDateAsync(user);
+
+            return new LockoutStatus() { LockoutEnabled = lockoutEnabled, LockoutEnd = lockoutEnd };
+        }
     }
 }

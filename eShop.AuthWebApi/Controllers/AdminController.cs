@@ -38,6 +38,16 @@
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [HttpGet("get-lockout-status/{Email}")]
+        public async ValueTask<ActionResult<ResponseDTO>> GetRolesListAsync(string Email)
+        {
+            var result = await sender.Send(new GetUserLockoutStatusQuery(Email));
+
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
         [HttpPost("assign-role")]
         public async ValueTask<ActionResult<ResponseDTO>> AssignRoleAsync([FromBody] AssignRoleRequest request)
         {

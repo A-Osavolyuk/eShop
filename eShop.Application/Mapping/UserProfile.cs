@@ -17,6 +17,7 @@ namespace eShop.Application.MappingProfiles
                 .ForMember(x => x.NormalizedUserName, opt => opt.MapFrom(src => src.Email.ToUpper()));
 
             CreateMap<AppUser, AccountData>();
+            CreateMap<LockoutStatus, UserLockoutStatusResponse>();
         }
     }
 }
