@@ -66,6 +66,15 @@
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [HttpPost("lockout-user")]
+        public async ValueTask<ActionResult<ResponseDTO>> LockouutUserAsync([FromBody] LockoutUserRequest request)
+        {
+            var result = await sender.Send(new LockoutUserCommand(request));
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
         [HttpDelete("remove-user-roles")]
         public async ValueTask<ActionResult<ResponseDTO>> RemoveUserRolesAsync([FromBody] RemoveUserRolesRequest request)
         {
