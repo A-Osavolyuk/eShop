@@ -44,19 +44,19 @@ namespace eShop.ProductWebApi.Controllers
         }
 
         [HttpPost]
-        public async ValueTask<ActionResult<ResponseDTO>> CreateBrand([FromBody]CreateBrandRequest body)
+        public async ValueTask<ActionResult<ResponseDTO>> CreateBrand([FromBody]CreateBrandRequest request)
         {
-            var result = await sender.Send(new CreateBrandCommand(body));
+            var result = await sender.Send(new CreateBrandCommand(request));
 
             return result.Match(
-                s => CreatedAtAction(nameof(GetBrandById), new { s.Id } ,new ResponseBuilder().Succeeded().WithResultMessage("Successfully created.").WithResult(s).Build()),
+                s => StatusCode(201, new ResponseBuilder().Succeeded().WithResultMessage("Successfully created.").WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpDelete("{Id:guid}")]
-        public async ValueTask<ActionResult<ResponseDTO>> DeleteBrandById(Guid Id)
+        [HttpDelete]
+        public async ValueTask<ActionResult<ResponseDTO>> DeleteBrand([FromBody] DeleteBrandRequest request)
         {
-            var result = await sender.Send(new DeleteBrandCommand(Id));
+            var result = await sender.Send(new DeleteBrandCommand(request));
             return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResult(s).WithResultMessage("Successfully deleted.").Build()),
                 f => ExceptionHandler.HandleException(f));

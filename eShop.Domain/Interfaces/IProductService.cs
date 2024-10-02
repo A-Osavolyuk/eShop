@@ -12,7 +12,7 @@ namespace eShop.Domain.Interfaces
         public ValueTask<ResponseDTO> GetProductByNameAsync(string Name);
         public ValueTask<ResponseDTO> CreateProductAsync(IEnumerable<CreateProductRequest> request);
         public ValueTask<ResponseDTO> UpdateProductAsync(UpdateProductRequest request, Guid Id);
-        public ValueTask<ResponseDTO> DeleteProductAsync(Guid Id);
+        public ValueTask<ResponseDTO> DeleteProductAsync(DeleteProductRequest request);
         public ValueTask<ResponseDTO> SearchProductAsync(long Article);
         public ValueTask<ResponseDTO> SearchProductAsync(string Name);
     }

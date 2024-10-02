@@ -1,18 +1,41 @@
-﻿using eShop.ProductWebApi.Repositories;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using eShop.Application.Extensions;
+using eShop.Domain.Common;
 using MediatR;
 
 namespace eShop.ProductWebApi.Queries.Products
 {
     public record GetProductsByNameQuery(string Name) : IRequest<Result<IEnumerable<ProductDTO>>>;
 
-    public class GetProductsByNameQueryHandler(IProductRepository repository) : IRequestHandler<GetProductsByNameQuery, Result<IEnumerable<ProductDTO>>>
+    public class GetProductsByNameQueryHandler(
+        ProductDbContext context,
+        ILogger<GetProductsByNameQueryHandler> logger,
+        IMapper mapper) : IRequestHandler<GetProductsByNameQuery, Result<IEnumerable<ProductDTO>>>
     {
-        private readonly IProductRepository repository = repository;
+        private readonly ProductDbContext context = context;
+        private readonly ILogger<GetProductsByNameQueryHandler> logger = logger;
+        private readonly IMapper mapper = mapper;
 
         public async Task<Result<IEnumerable<ProductDTO>>> Handle(GetProductsByNameQuery request, CancellationToken cancellationToken)
         {
-            var result = await repository.GetProductsByNameAsync(request.Name);
-            return result;
+            try
+            {
+                logger.LogInformation("Attempting to find products with name containing '{name}'.", request.Name);
+
+                var list = await context.Products
+                    .AsNoTracking()
+                    .Where(x => x.Name.Contains(request.Name))
+                    .ProjectTo<ProductDTO>(mapper.ConfigurationProvider)
+                    .ToListAsync();
+
+                logger.LogInformation("Successfully got products with name containing '{name}'.", request.Name);
+                return new(list);
+            }
+            catch (Exception ex)
+            {
+                return logger.LogErrorWithException<IEnumerable<ProductDTO>>(ex, new ActionMessage("find product containing '{0}'", request.Name));
+            }
         }
     }
 }

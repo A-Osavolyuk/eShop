@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using eShop.Domain.DTOs.Responses;
+using eShop.Application.Extensions;
+using eShop.Domain.Common;
 using eShop.Domain.Enums;
 using eShop.Domain.Exceptions;
 using eShop.Domain.Requests.Product;
-using eShop.ProductWebApi.Repositories;
+using eShop.ProductWebApi.Exceptions;
 using FluentValidation;
 using LanguageExt;
 using MediatR;
@@ -12,40 +13,71 @@ using Unit = LanguageExt.Unit;
 
 namespace eShop.ProductWebApi.Commands.Products
 {
-    public record CreateProductCommand(IEnumerable<CreateProductRequest> CreateRequest) : IRequest<Result<Unit>>;
-    
+    public record CreateProductCommand(IEnumerable<CreateProductRequest> Requests) : IRequest<Result<Unit>>;
 
     public class CreateProductCommandHandler(
-        IProductRepository repository,
+        ProductDbContext context,
+        ILogger<CreateProductCommandHandler> logger,
         IValidator<CreateProductRequest> validator,
         IMapper mapper) : IRequestHandler<CreateProductCommand, Result<Unit>>
     {
-        private readonly IProductRepository repository = repository;
+        private readonly ProductDbContext context = context;
+        private readonly ILogger<CreateProductCommandHandler> logger = logger;
         private readonly IValidator<CreateProductRequest> validator = validator;
         private readonly IMapper mapper = mapper;
 
         public async Task<Result<Unit>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
-            foreach (var product in request.CreateRequest) 
+            var actionMessage = new ActionMessage("create product(s)");
+            try
             {
-                var validationResult = await validator.ValidateAsync(product);
+                logger.LogInformation($"Attempting to create product(s).");
 
-                if (!validationResult.IsValid)
+                foreach (var product in request.Requests)
                 {
-                    return new(new FailedValidationException(validationResult.Errors));
+                    var validationResult = await validator.ValidateAsync(product);
+
+                    if (!validationResult.IsValid)
+                    {
+                        return logger.LogErrorWithException<Unit>(new FailedValidationException(validationResult.Errors), actionMessage);
+                    }
                 }
+
+                var products = request.Requests.First().Category switch
+                {
+                    Category.Clothing => request.Requests.AsQueryable().ProjectTo<Clothing>(mapper.ConfigurationProvider),
+                    Category.Shoes => request.Requests.AsQueryable().ProjectTo<Shoes>(mapper.ConfigurationProvider),
+                    Category.None => Enumerable.Empty<Product>(),
+                    _ => throw new NotImplementedException("Not implemented creation of product type")
+                };
+
+                if (!products.Any())
+                {
+                    return logger.LogErrorWithException<Unit>(new EmptyRequestException(), actionMessage);
+                }
+
+                var brandExists = await context.Brands.AsNoTracking().AnyAsync(_ => _.Id == products.First().BrandId);
+
+                if (!brandExists)
+                {
+                    return logger.LogErrorWithException<Unit>(new NotFoundBrandException(products.First().BrandId), actionMessage);
+                }
+
+                await context.Products.AddRangeAsync(products);
+                await context.SaveChangesAsync();
+
+                logger.LogInformation($"Product(s) was(were) successfully created.");
+
+                return new(new Unit());
             }
-
-            var entities = request.CreateRequest.First().Category switch
+            catch (DbUpdateException dbUpdateException)
             {
-                Category.Clothing => request.CreateRequest.AsQueryable().ProjectTo<Clothing>(mapper.ConfigurationProvider),
-                Category.Shoes => request.CreateRequest.AsQueryable().ProjectTo<Shoes>(mapper.ConfigurationProvider),
-                Category.None => Enumerable.Empty<Product>(),
-                _ => throw new NotImplementedException()
-            };
-
-            var result = await repository.CreateProductAsync(entities);
-            return result;
+                return logger.LogErrorWithException<Unit>(dbUpdateException, actionMessage);
+            }
+            catch (Exception ex)
+            {
+                return logger.LogErrorWithException<Unit>(ex, actionMessage);
+            }
         }
     }
 }

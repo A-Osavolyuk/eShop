@@ -1,19 +1,44 @@
-﻿using eShop.Domain.Responses.Product;
-using eShop.ProductWebApi.Repositories;
+﻿using AutoMapper;
+using eShop.Application.Extensions;
+using eShop.Domain.Common;
+using eShop.Domain.Responses.Product;
+using eShop.ProductWebApi.Exceptions;
 using MediatR;
 
 namespace eShop.ProductWebApi.Queries.Products
 {
     public record SearchProductByArticleQuery(long Article) : IRequest<Result<SearchProductResponse>>;
 
-    public class SearchProductByArticleQueryHandler(IProductRepository repository) : IRequestHandler<SearchProductByArticleQuery, Result<SearchProductResponse>>
+    public class SearchProductByArticleQueryHandler(
+        IMapper mapper,
+        ILogger<SearchProductByArticleQueryHandler> logger,
+        ProductDbContext context) : IRequestHandler<SearchProductByArticleQuery, Result<SearchProductResponse>>
     {
-        private readonly IProductRepository repository = repository;
+        private readonly IMapper mapper = mapper;
+        private readonly ILogger<SearchProductByArticleQueryHandler> logger = logger;
+        private readonly ProductDbContext context = context;
 
         public async Task<Result<SearchProductResponse>> Handle(SearchProductByArticleQuery request, CancellationToken cancellationToken)
         {
-            var result = await repository.SearchAsync(request.Article);
-            return result;
+            var actionMessage = new ActionMessage("search product with article {0}", request.Article);
+            try
+            {
+                logger.LogInformation("Attempting to search product with article {Article}.", request.Article);
+
+                var product = await context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Article == request.Article);
+
+                if (product is null)
+                {
+                    return logger.LogErrorWithException<SearchProductResponse>(new NotFoundProductException(request.Article), actionMessage);
+                }
+
+                logger.LogInformation("Successfully found product with article {Article}.", request.Article);
+                return new(new SearchProductResponse() { Found = true, Count = 1 });
+            }
+            catch (Exception ex)
+            {
+                return logger.LogErrorWithException<SearchProductResponse>(ex, actionMessage);
+            }
         }
     }
 }

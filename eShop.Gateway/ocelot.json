@@ -101,7 +101,7 @@
     //ProductWebApi
     {
       "UpstreamPathTemplate": "/api/v1/Brands",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -113,7 +113,7 @@
     },
     {
       "UpstreamPathTemplate": "/api/v1/Brands/{Id:guid}",
-      "UpstreamHttpMethod": [ "Get", "Delete" ],
+      "UpstreamHttpMethod": [ "Get" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -137,7 +137,7 @@
     },
     {
       "UpstreamPathTemplate": "/api/v1/Products",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -173,7 +173,7 @@
     },
     {
       "UpstreamPathTemplate": "/api/v1/Products/{Id:guid}",
-      "UpstreamHttpMethod": [ "Get", "Delete" ],
+      "UpstreamHttpMethod": [ "Get" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {

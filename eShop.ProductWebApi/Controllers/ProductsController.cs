@@ -108,10 +108,10 @@ namespace eShop.ProductWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [HttpDelete("{Id:guid}")]
-        public async ValueTask<ActionResult<ResponseDTO>> DeleteProductById(Guid Id)
+        [HttpDelete]
+        public async ValueTask<ActionResult<ResponseDTO>> DeleteProduct([FromBody] DeleteProductRequest request)
         {
-            var result = await sender.Send(new DeleteProductByIdCommand(Id));
+            var result = await sender.Send(new DeleteProductByIdCommand(request));
             return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResult(s).WithResultMessage("Product was successfully deleted.").Build()),
                 f => ExceptionHandler.HandleException(f));

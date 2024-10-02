@@ -1,8 +1,9 @@
-﻿using eShop.Domain.Enums;
+﻿using eShop.Domain.DTOs.Requests;
+using eShop.Domain.Enums;
 
 namespace eShop.Domain.Requests.Product
 {
-    public class UpdateProductRequest
+    public record UpdateProductRequest : RequestBase
     {
         public Guid Id { get; set; }
         public Guid VariantId { get; set; }

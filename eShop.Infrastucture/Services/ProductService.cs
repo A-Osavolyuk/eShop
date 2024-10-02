@@ -17,8 +17,8 @@ namespace eShop.Infrastructure.Services
         public async ValueTask<ResponseDTO> CreateProductAsync(IEnumerable<CreateProductRequest> request) => await clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:Gateway"]}/api/v1/Products", Method: HttpMethods.POST, Data: request));
 
-        public async ValueTask<ResponseDTO> DeleteProductAsync(Guid Id) => await clientService.SendAsync(
-            new RequestDto(Url: $"{configuration["Services:Gateway"]}/api/v1/Products/{Id}", Method: HttpMethods.DELETE));
+        public async ValueTask<ResponseDTO> DeleteProductAsync(DeleteProductRequest request) => await clientService.SendAsync(
+            new RequestDto(Url: $"{configuration["Services:Gateway"]}/api/v1/Products", Data: request, Method: HttpMethods.DELETE));
 
         public async ValueTask<ResponseDTO> GetProductByIdAsync(Guid Id) => await clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:Gateway"]}/api/v1/Products/{Id}", Method: HttpMethods.GET));

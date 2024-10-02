@@ -1,6 +1,8 @@
-﻿namespace eShop.Domain.Requests.Brand
+﻿using eShop.Domain.DTOs.Requests;
+
+namespace eShop.Domain.Requests.Brand
 {
-    public class CreateBrandRequest
+    public record CreateBrandRequest : RequestBase
     {
         public string Name { get; set; } = string.Empty;
         public string Country { get; set; } = string.Empty;
