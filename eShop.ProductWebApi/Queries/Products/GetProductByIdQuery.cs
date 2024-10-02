@@ -4,7 +4,6 @@ using eShop.Application.Extensions;
 using eShop.Domain.Common;
 using eShop.Domain.Enums;
 using eShop.ProductWebApi.Exceptions;
-using eShop.ProductWebApi.Repositories;
 using MediatR;
 
 namespace eShop.ProductWebApi.Queries.Products
@@ -12,12 +11,10 @@ namespace eShop.ProductWebApi.Queries.Products
     public record GetProductByIdQuery(Guid Id) : IRequest<Result<ProductDTO>>;
 
     public class GetProductByIdQueryHandler(
-        IProductRepository repository,
         IMapper mapper,
         ProductDbContext context,
         ILogger<GetProductByIdQueryHandler> logger) : IRequestHandler<GetProductByIdQuery, Result<ProductDTO>>
     {
-        private readonly IProductRepository repository = repository;
         private readonly IMapper mapper = mapper;
         private readonly ProductDbContext context = context;
         private readonly ILogger<GetProductByIdQueryHandler> logger = logger;

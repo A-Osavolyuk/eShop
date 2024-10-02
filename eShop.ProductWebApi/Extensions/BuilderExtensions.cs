@@ -1,6 +1,5 @@
 ﻿using eShop.Domain.DTOs.Requests.Review;
 using eShop.ProductWebApi.Behaviors;
-using eShop.ProductWebApi.Repositories;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
@@ -17,7 +16,7 @@ namespace eShop.ProductWebApi.Extensions
             builder.AddMapping();
             builder.AddValidation();
             builder.AddSwaggerWithSecurity();
-            builder.AddMessageBus();    
+            builder.AddMessageBus();
 
             builder.AddSqlServerDbContext<ProductDbContext>("SqlServer");
 

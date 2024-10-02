@@ -4,7 +4,6 @@ using eShop.Domain.Common;
 using eShop.Domain.Exceptions;
 using eShop.Domain.Requests.Brand;
 using eShop.ProductWebApi.Exceptions;
-using eShop.ProductWebApi.Repositories;
 using FluentValidation;
 using MediatR;
 using Unit = LanguageExt.Unit;

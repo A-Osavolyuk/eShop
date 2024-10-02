@@ -3,9 +3,7 @@ using eShop.Application.Extensions;
 using eShop.Domain.Common;
 using eShop.Domain.Responses.Product;
 using eShop.ProductWebApi.Exceptions;
-using eShop.ProductWebApi.Repositories;
 using MediatR;
-using Microsoft.Extensions.Logging;
 
 namespace eShop.ProductWebApi.Queries.Products
 {

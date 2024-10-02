@@ -12,7 +12,8 @@ namespace eShop.Application.MappingProfiles
         {
             CreateMap<PersonalDataDTO, ChangePersonalDataRequest>();
             CreateMap<PersonalDataResponse, PersonalDataDTO>();
-            CreateMap<AppUser, PersonalDataResponse>();
+            CreateMap<PersonalData, PersonalDataResponse>();
+            CreateMap<PersonalData, ChangeEmailResponse>();
         }
     }
 }

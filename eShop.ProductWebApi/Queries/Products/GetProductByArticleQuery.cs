@@ -1,23 +1,20 @@
-﻿using AutoMapper.QueryableExtensions;
-using AutoMapper;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using eShop.Application.Extensions;
+using eShop.Domain.Common;
 using eShop.Domain.Enums;
 using eShop.ProductWebApi.Exceptions;
-using eShop.ProductWebApi.Repositories;
 using MediatR;
-using eShop.Domain.Common;
-using eShop.Application.Extensions;
 
 namespace eShop.ProductWebApi.Queries.Products
 {
-    public record GetProductByArticleQuery(long Article ) : IRequest<Result<ProductDTO>>;
+    public record GetProductByArticleQuery(long Article) : IRequest<Result<ProductDTO>>;
 
     public class GetProductByArticleQueryHandler(
-        IProductRepository repository,
         ProductDbContext context,
         ILogger<GetProductByArticleQueryHandler> logger,
         IMapper mapper) : IRequestHandler<GetProductByArticleQuery, Result<ProductDTO>>
     {
-        private readonly IProductRepository repository = repository;
         private readonly ProductDbContext context = context;
         private readonly ILogger<GetProductByArticleQueryHandler> logger = logger;
         private readonly IMapper mapper = mapper;

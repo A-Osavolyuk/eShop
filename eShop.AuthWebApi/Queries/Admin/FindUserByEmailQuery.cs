@@ -6,11 +6,13 @@ namespace eShop.AuthWebApi.Queries.Admin
     public class FindUserByEmailQueryHandler(
         AppManager appManager,
         ILogger<FindUserByEmailQueryHandler> logger,
-        IMapper mapper) : IRequestHandler<FindUserByEmailQuery, Result<FindUserResponse>>
+        IMapper mapper,
+        AuthDbContext context) : IRequestHandler<FindUserByEmailQuery, Result<FindUserResponse>>
     {
         private readonly AppManager appManager = appManager;
         private readonly ILogger<FindUserByEmailQueryHandler> logger = logger;
         private readonly IMapper mapper = mapper;
+        private readonly AuthDbContext context = context;
 
         public async Task<Result<FindUserResponse>> Handle(FindUserByEmailQuery request, CancellationToken cancellationToken)
         {
@@ -19,16 +21,27 @@ namespace eShop.AuthWebApi.Queries.Admin
             {
                 logger.LogInformation("Attempting to find user with email {email}", request.Email);
 
-                var user = await appManager.UserManager.FindByIdAsync(request.Email);
-
+                var user = await appManager.UserManager.FindByEmailAsync(request.Email);
+                
                 if (user is null)
                 {
                     return logger.LogErrorWithException<FindUserResponse>(new NotFoundUserByEmailException(request.Email), actionMessage);
                 }
 
-                logger.LogInformation("Successfully found user with email {email}", request.Email);
-                var response = mapper.Map<FindUserResponse>(user);
-                return new(response);
+                var personalData = await context.PersonalData.AsNoTracking().FirstOrDefaultAsync(x => x.UserId == user.Id);
+
+                if(personalData is null)
+                {
+                    var response = new FindUserResponse() with { AccountData = mapper.Map<AccountData>(user), PersonalData = new() };
+                    logger.LogInformation("Successfully found user with email {email}", request.Email);
+                    return new(response);
+                }
+                else
+                {
+                    var response = new FindUserResponse() with { AccountData = mapper.Map<AccountData>(user), PersonalData = personalData };
+                    logger.LogInformation("Successfully found user with email {email}", request.Email);
+                    return new(response);
+                }
             }
             catch (Exception ex)
             {

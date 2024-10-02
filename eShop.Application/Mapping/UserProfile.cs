@@ -16,7 +16,7 @@ namespace eShop.Application.MappingProfiles
                 .ForMember(x => x.NormalizedEmail, opt => opt.MapFrom(src => src.Email.ToUpper()))
                 .ForMember(x => x.NormalizedUserName, opt => opt.MapFrom(src => src.Email.ToUpper()));
 
-            CreateMap<AppUser, FindUserResponse>();
+            CreateMap<AppUser, AccountData>();
         }
     }
 }

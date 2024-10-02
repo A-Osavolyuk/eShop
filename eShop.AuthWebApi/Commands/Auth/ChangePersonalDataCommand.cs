@@ -5,11 +5,14 @@
     public class ChangePersonalDataCommandHandler(
         AppManager appManager,
         IValidator<ChangePersonalDataRequest> validator,
-        ILogger<ChangePasswordCommandHandler> logger) : IRequestHandler<ChangePersonalDataCommand, Result<ChangePersonalDataResponse>>
+        ILogger<ChangePasswordCommandHandler> logger,
+        AuthDbContext context,
+        IMapper mapper) : IRequestHandler<ChangePersonalDataCommand, Result<ChangePersonalDataResponse>>
     {
         private readonly AppManager appManager = appManager;
         private readonly IValidator<ChangePersonalDataRequest> validator = validator;
         private readonly ILogger<ChangePasswordCommandHandler> logger = logger;
+        private readonly AuthDbContext context = context;
 
         public async Task<Result<ChangePersonalDataResponse>> Handle(ChangePersonalDataCommand request, CancellationToken cancellationToken)
         {
@@ -34,25 +37,22 @@
                         actionMessage, request.Request.RequestId);
                 }
 
-                user.AddPersonalData(request.Request);
-
-                var result = await appManager.UserManager.UpdateAsync(user);
-
-                if (!result.Succeeded)
+                var personalData = new PersonalData()
                 {
-                    return logger.LogErrorWithException<ChangePersonalDataResponse>(new NotChangedPersonalDataException(), actionMessage, request.Request.RequestId);
-                }
+                    UserId = user.Id,
+                    FirstName = request.Request.FirstName,
+                    LastName = request.Request.LastName,
+                    Gender = request.Request.Gender,
+                    DateOfBirth = request.Request.DateOfBirth!.Value
+                };
+
+                await context.PersonalData.AddAsync(personalData);
+                await context.SaveChangesAsync();
 
                 logger.LogInformation("Successfully change personal data of user with email {email}. Request ID {requestId}",
                         request.Request.Email, request.Request.RequestId);
 
-                return new(new ChangePersonalDataResponse()
-                {
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Gender = user.Gender,
-                    DateOfBirth = user.DateOfBirth,
-                });
+                return new(mapper.Map<ChangePersonalDataResponse>(personalData));
             }
             catch (Exception ex)
             {

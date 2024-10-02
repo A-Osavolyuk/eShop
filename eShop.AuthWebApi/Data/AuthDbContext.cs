@@ -1,12 +1,20 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-namespace eShop.AuthWebApi.Data
+﻿namespace eShop.AuthWebApi.Data
 {
     public class AuthDbContext(DbContextOptions<AuthDbContext> options) : IdentityDbContext<AppUser>(options)
     {
+        public DbSet<PersonalData> PersonalData => Set<PersonalData>();
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<PersonalData>(x =>
+            {
+                x.HasKey(p => p.Id);
+                x.HasOne(x => x.User).WithOne(x => x.PersonalData).HasForeignKey<PersonalData>(x => x.UserId);
+            });
+
+
             builder.Entity<AppUser>().HasData(
                 new AppUser()
                 {
@@ -17,13 +25,9 @@ namespace eShop.AuthWebApi.Data
                     PasswordHash = "AQAAAAIAAYagAAAAEHeZ7iJce/rkJIBOAFdarWHCG1NUYQ1y67q5EyVGG9ttMlkXR2wxOMAQRsg+HtNtCg==",
                     Id = "abb9d2ed-c3d2-4df9-ba88-eab018b95bc3",
                     EmailConfirmed = true,
+                    PhoneNumberConfirmed = true,
                     TwoFactorEnabled = false,
-
-                    FirstName = "Alex",
-                    LastName = "Osavoliuk",
-                    DateOfBirth = new DateTime(2000, 01, 01),
-                    Gender = "Male",
-                    PhoneNumber = "380686100242"
+                    PhoneNumber = "380686100242",
                 });
 
             builder.Entity<IdentityRole>().HasData(
@@ -34,6 +38,16 @@ namespace eShop.AuthWebApi.Data
 
             builder.Entity<IdentityUserRole<string>>().HasData(
                 new IdentityUserRole<string>() { RoleId = "e6d15d97-b803-435a-9dc2-a7c45c08a1af", UserId = "abb9d2ed-c3d2-4df9-ba88-eab018b95bc3" });
+
+            builder.Entity<PersonalData>().HasData(new PersonalData()
+            {
+                Id = Guid.NewGuid(),
+                FirstName = "Alexander",
+                LastName = "Osavolyuk",
+                Gender = "Male",
+                DateOfBirth = new DateTime(2004, 2, 11),
+                UserId = "abb9d2ed-c3d2-4df9-ba88-eab018b95bc3"
+            });
         }
     }
 }
