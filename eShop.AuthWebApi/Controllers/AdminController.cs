@@ -38,6 +38,16 @@
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [HttpGet("get-user-roles/{Id:guid}")]
+        public async ValueTask<ActionResult<ResponseDTO>> GetUserRolesAsync(Guid Id)
+        {
+            var result = await sender.Send(new GetUserRolesQuery(Id));
+
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
         [HttpGet("get-lockout-status/{Email}")]
         public async ValueTask<ActionResult<ResponseDTO>> GetRolesListAsync(string Email)
         {
@@ -67,9 +77,18 @@
         }
 
         [HttpPost("lockout-user")]
-        public async ValueTask<ActionResult<ResponseDTO>> LockouutUserAsync([FromBody] LockoutUserRequest request)
+        public async ValueTask<ActionResult<ResponseDTO>> LockoutUserAsync([FromBody] LockoutUserRequest request)
         {
             var result = await sender.Send(new LockoutUserCommand(request));
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
+        [HttpPost("unlock-user")]
+        public async ValueTask<ActionResult<ResponseDTO>> UnlockUserAsync([FromBody] UnlockUserRequest request)
+        {
+            var result = await sender.Send(new UnlockUserCommand(request));
             return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
                 f => ExceptionHandler.HandleException(f));
