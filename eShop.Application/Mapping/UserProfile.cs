@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using eShop.Domain.DTOs.Requests.Auth;
 using eShop.Domain.Entities;
+using eShop.Domain.Entities.Admin;
 using eShop.Domain.Responses.Admin;
 
 namespace eShop.Application.MappingProfiles

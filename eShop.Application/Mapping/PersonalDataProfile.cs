@@ -2,7 +2,7 @@
 using eShop.Domain.DTOs;
 using eShop.Domain.DTOs.Requests.Auth;
 using eShop.Domain.DTOs.Responses.Auth;
-using eShop.Domain.Entities;
+using eShop.Domain.Entities.Admin;
 
 namespace eShop.Application.MappingProfiles
 {

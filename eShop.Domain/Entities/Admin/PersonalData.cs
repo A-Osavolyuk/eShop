@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace eShop.Domain.Entities
+namespace eShop.Domain.Entities.Admin
 {
     public class PersonalData
     {

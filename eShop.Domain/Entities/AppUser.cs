@@ -1,6 +1,5 @@
-﻿using eShop.Domain.DTOs.Requests.Auth;
+﻿using eShop.Domain.Entities.Admin;
 using Microsoft.AspNetCore.Identity;
-using System.Text.Json.Serialization;
 
 namespace eShop.Domain.Entities
 {

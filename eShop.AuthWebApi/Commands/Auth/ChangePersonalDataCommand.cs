@@ -1,4 +1,6 @@
-﻿namespace eShop.AuthWebApi.Commands.Auth
+﻿using eShop.Domain.Entities.Admin;
+
+namespace eShop.AuthWebApi.Commands.Auth
 {
     public record ChangePersonalDataCommand(ChangePersonalDataRequest Request) : IRequest<Result<ChangePersonalDataResponse>>;
 

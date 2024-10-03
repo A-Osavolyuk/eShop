@@ -1,4 +1,6 @@
-﻿namespace eShop.AuthWebApi.Extensions
+﻿using eShop.Domain.Entities.Admin;
+
+namespace eShop.AuthWebApi.Extensions
 {
     public static class UserManagerExtensions
     {

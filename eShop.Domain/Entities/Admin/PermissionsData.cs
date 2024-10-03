@@ -1,0 +1,12 @@
+﻿using System.Text.Json.Serialization;
+
+namespace eShop.Domain.Entities.Admin
+{
+    public class PermissionsData
+    {
+        [JsonIgnore]
+        public Guid Id { get; set; }
+        public List<RoleInfo> Roles { get; set; } = new List<RoleInfo>();
+        public List<string> Permissions { get; set; } = new List<string>();
+    }
+}

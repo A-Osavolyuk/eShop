@@ -1,4 +1,6 @@
-﻿namespace eShop.AuthWebApi.Data
+﻿using eShop.Domain.Entities.Admin;
+
+namespace eShop.AuthWebApi.Data
 {
     public class AuthDbContext(DbContextOptions<AuthDbContext> options) : IdentityDbContext<AppUser>(options)
     {

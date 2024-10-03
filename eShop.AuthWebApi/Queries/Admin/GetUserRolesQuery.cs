@@ -1,4 +1,6 @@
 ﻿
+using eShop.Domain.Entities.Admin;
+
 namespace eShop.AuthWebApi.Queries.Admin
 {
     public record GetUserRolesQuery(Guid Id) : IRequest<Result<UserRolesResponse>>;
