@@ -86,6 +86,15 @@
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [HttpPost("create-user-account")]
+        public async ValueTask<ActionResult<ResponseDTO>> CreateUserAccount([FromBody] CreateUserAccountRequest request)
+        {
+            var result = await sender.Send(new CreateUserAccountCommand(request));
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
         [HttpPost("lockout-user")]
         public async ValueTask<ActionResult<ResponseDTO>> LockoutUserAsync([FromBody] LockoutUserRequest request)
         {

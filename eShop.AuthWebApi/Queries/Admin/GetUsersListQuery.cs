@@ -63,6 +63,7 @@ namespace eShop.AuthWebApi.Queries.Admin
                     });
                 }
 
+                logger.LogInformation("Successfully got list of all users.");
                 return users;
             }
             catch (Exception ex)

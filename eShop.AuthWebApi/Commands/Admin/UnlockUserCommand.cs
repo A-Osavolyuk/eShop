@@ -46,6 +46,7 @@
                 }
                 else
                 {
+                    logger.LogInformation("Account of user with ID {id} was not locked out. Request ID {requestId}.", request.Request.UserId, request.Request.RequestId);
                     return new(new UnlockUserResponse() { Succeeded = true, Message = "User account was not locked out." });
                 }
             }

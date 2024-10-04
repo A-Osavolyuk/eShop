@@ -52,6 +52,7 @@ namespace eShop.AuthWebApi.Queries.Admin
                     });
                 }
 
+                logger.LogInformation("Successfully got roles of user with ID {id}.", request.Id);
                 return result;
             }
             catch (Exception ex)

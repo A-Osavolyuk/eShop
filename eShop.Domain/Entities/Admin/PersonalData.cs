@@ -2,7 +2,7 @@
 
 namespace eShop.Domain.Entities.Admin
 {
-    public class PersonalData
+    public record class PersonalData
     {
         public Guid Id { get; set; }
         public string FirstName { get; set; } = string.Empty;
