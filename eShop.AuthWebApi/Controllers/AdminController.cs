@@ -28,6 +28,16 @@
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [HttpGet("get-all-users")]
+        public async ValueTask<ActionResult<ResponseDTO>> GetAllUsersAsync()
+        {
+            var result = await sender.Send(new GetUsersListQuery());
+
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
         [HttpGet("get-roles")]
         public async ValueTask<ActionResult<ResponseDTO>> GetRolesListAsync()
         {
