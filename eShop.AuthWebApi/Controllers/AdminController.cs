@@ -1,4 +1,6 @@
-﻿namespace eShop.AuthWebApi.Controllers
+﻿using Microsoft.AspNetCore.Authorization;
+
+namespace eShop.AuthWebApi.Controllers
 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
@@ -86,6 +88,7 @@
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [Authorize(Policy = "CreateAccountPolicy")]
         [HttpPost("create-user-account")]
         public async ValueTask<ActionResult<ResponseDTO>> CreateUserAccount([FromBody] CreateUserAccountRequest request)
         {

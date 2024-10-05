@@ -1,7 +1,10 @@
 ﻿using eShop.Application;
 using eShop.AuthWebApi.Receivers;
+using eShop.AuthWebApi.Security.Authorization;
 using eShop.AuthWebApi.Services.Implementation;
 using eShop.Domain.DTOs.Requests.Cart;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace eShop.AuthWebApi.Extensions
 {
@@ -35,7 +38,7 @@ namespace eShop.AuthWebApi.Extensions
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            
+
 
             return builder;
         }
@@ -46,9 +49,7 @@ namespace eShop.AuthWebApi.Extensions
             {
                 options.User.RequireUniqueEmail = true;
                 options.SignIn.RequireConfirmedEmail = true;
-            })
-                .AddDefaultTokenProviders()
-                .AddEntityFrameworkStores<AuthDbContext>();
+            }).AddDefaultTokenProviders().AddEntityFrameworkStores<AuthDbContext>();
 
             builder.Services.AddAuthentication()
             .AddGoogle(options =>
@@ -62,6 +63,33 @@ namespace eShop.AuthWebApi.Extensions
                 options.ClientSecret = builder.Configuration["Authentication:Facebook:ClientSecret"] ?? "";
             });
 
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateAudience = true,
+                    ValidateIssuer = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidAudience = builder.Configuration["JwtOptions:Audience"],
+                    ValidIssuer = builder.Configuration["JwtOptions:Issuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtOptions:Key"]!))
+                };
+            });
+
+            builder.Services.AddAuthorization(cfg =>
+            {
+                cfg.AddPolicy("CreateAccountPolicy", policy =>
+                {
+                    policy.Requirements.Add(new PermissionRequirement("Permission.Account.Create"));
+                });
+            });
+
             return builder;
         }
 
@@ -69,6 +97,7 @@ namespace eShop.AuthWebApi.Extensions
         {
             builder.Services.AddScoped<ITokenHandler, TokenHandler>();
             builder.Services.AddScoped<IEmailSender, EmailSender>();
+            builder.Services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
 
             builder.Services.AddScoped<AppManager>();
 
