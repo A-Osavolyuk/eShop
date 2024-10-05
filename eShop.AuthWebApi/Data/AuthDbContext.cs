@@ -5,6 +5,7 @@ namespace eShop.AuthWebApi.Data
     public class AuthDbContext(DbContextOptions<AuthDbContext> options) : IdentityDbContext<AppUser>(options)
     {
         public DbSet<PersonalData> PersonalData => Set<PersonalData>();
+        public DbSet<Permission> Permissions => Set<Permission>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -16,6 +17,21 @@ namespace eShop.AuthWebApi.Data
                 x.HasOne(x => x.User).WithOne(x => x.PersonalData).HasForeignKey<PersonalData>(x => x.UserId);
             });
 
+            builder.Entity<Permission>(x =>
+            {
+                x.HasKey(p =>p.Id);
+            });
+
+            builder.Entity<Permission>().HasData(
+                new Permission() { Id = Guid.NewGuid(), Name = "Permission.Account.View" },
+                new Permission() { Id = Guid.NewGuid(), Name = "Permission.Account.Edit" },
+                new Permission() { Id = Guid.NewGuid(), Name = "Permission.Account.Delete" },
+                new Permission() { Id = Guid.NewGuid(), Name = "Permission.Account.Create" },
+
+                new Permission() { Id = Guid.NewGuid(), Name = "Permission.Product.View" },
+                new Permission() { Id = Guid.NewGuid(), Name = "Permission.Product.Edit" },
+                new Permission() { Id = Guid.NewGuid(), Name = "Permission.Product.Delete" },
+                new Permission() { Id = Guid.NewGuid(), Name = "Permission.Product.Create" });
 
             builder.Entity<AppUser>().HasData(
                 new AppUser()
