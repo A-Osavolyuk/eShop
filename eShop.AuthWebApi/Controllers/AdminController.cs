@@ -5,11 +5,12 @@ namespace eShop.AuthWebApi.Controllers
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     [ApiVersion("1.0")]
-
+    [Authorize]
     public class AdminController(ISender sender) : ControllerBase
     {
         private readonly ISender sender = sender;
 
+        [Authorize(Policy = "ManageUsersPolicy")]
         [HttpGet("find-user-by-email/{Email}")]
         public async ValueTask<ActionResult<ResponseDTO>> FindUserByEmailAsync(string Email)
         {
@@ -20,6 +21,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [Authorize(Policy = "ManageUsersPolicy")]
         [HttpGet("find-user-by-id/{Id:guid}")]
         public async ValueTask<ActionResult<ResponseDTO>> FindUserByIdAsync(Guid Id)
         {
@@ -30,6 +32,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [Authorize(Policy = "ManageUsersPolicy")]
         [HttpGet("get-all-users")]
         public async ValueTask<ActionResult<ResponseDTO>> GetAllUsersAsync()
         {
@@ -40,6 +43,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [Authorize(Policy = "ManageRolesPolicy")]
         [HttpGet("get-roles")]
         public async ValueTask<ActionResult<ResponseDTO>> GetRolesListAsync()
         {
@@ -50,6 +54,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [Authorize(Policy = "ManageRolesPolicy")]
         [HttpGet("get-user-roles/{Id:guid}")]
         public async ValueTask<ActionResult<ResponseDTO>> GetUserRolesAsync(Guid Id)
         {
@@ -60,6 +65,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [Authorize(Policy = "ManageLockoutPolicy")]
         [HttpGet("get-lockout-status/{Email}")]
         public async ValueTask<ActionResult<ResponseDTO>> GetRolesListAsync(string Email)
         {
@@ -70,6 +76,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [Authorize(Policy = "ManageRolesPolicy")]
         [HttpPost("assign-role")]
         public async ValueTask<ActionResult<ResponseDTO>> AssignRoleAsync([FromBody] AssignRoleRequest request)
         {
@@ -79,6 +86,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [Authorize(Policy = "ManageRolesPolicy")]
         [HttpPost("create-role")]
         public async ValueTask<ActionResult<ResponseDTO>> CreateRoleAsync([FromBody] CreateRoleRequest request)
         {
@@ -88,7 +96,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
-        [Authorize(Policy = "CreateAccountPolicy")]
+        [Authorize(Policy = "ManageUsersPolicy")]
         [HttpPost("create-user-account")]
         public async ValueTask<ActionResult<ResponseDTO>> CreateUserAccount([FromBody] CreateUserAccountRequest request)
         {
@@ -98,6 +106,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [Authorize(Policy = "ManageLockoutPolicy")]
         [HttpPost("lockout-user")]
         public async ValueTask<ActionResult<ResponseDTO>> LockoutUserAsync([FromBody] LockoutUserRequest request)
         {
@@ -107,6 +116,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [Authorize(Policy = "ManageLockoutPolicy")]
         [HttpPost("unlock-user")]
         public async ValueTask<ActionResult<ResponseDTO>> UnlockUserAsync([FromBody] UnlockUserRequest request)
         {
@@ -116,6 +126,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [Authorize(Policy = "ManageRolesPolicy")]
         [HttpDelete("remove-user-roles")]
         public async ValueTask<ActionResult<ResponseDTO>> RemoveUserRolesAsync([FromBody] RemoveUserRolesRequest request)
         {
@@ -125,6 +136,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [Authorize(Policy = "ManageRolesPolicy")]
         [HttpDelete("remove-user-role")]
         public async ValueTask<ActionResult<ResponseDTO>> RemoveUserRoleAsync([FromBody] RemoveUserRoleRequest request)
         {
@@ -134,6 +146,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [Authorize(Policy = "ManageRolesPolicy")]
         [HttpDelete("delete-role")]
         public async ValueTask<ActionResult<ResponseDTO>> DeleteRoleAsync([FromBody] DeleteRoleRequest request)
         {

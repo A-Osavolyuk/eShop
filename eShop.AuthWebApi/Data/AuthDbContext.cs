@@ -23,10 +23,12 @@ namespace eShop.AuthWebApi.Data
             });
 
             builder.Entity<Permission>().HasData(
-                new Permission() { Id = Guid.NewGuid(), Name = "Permission.Account.View" },
-                new Permission() { Id = Guid.NewGuid(), Name = "Permission.Account.Edit" },
-                new Permission() { Id = Guid.NewGuid(), Name = "Permission.Account.Delete" },
-                new Permission() { Id = Guid.NewGuid(), Name = "Permission.Account.Create" },
+                new Permission() { Id = Guid.NewGuid(), Name = "Permission.Account.ManageAccount" },
+
+                new Permission() { Id = Guid.NewGuid(), Name = "Permission.Admin.ManageUsers" },
+                new Permission() { Id = Guid.NewGuid(), Name = "Permission.Admin.ManageLockout" },
+                new Permission() { Id = Guid.NewGuid(), Name = "Permission.Admin.ManageRoles" },
+                new Permission() { Id = Guid.NewGuid(), Name = "Permission.Admin.ManagePermissions" },
 
                 new Permission() { Id = Guid.NewGuid(), Name = "Permission.Product.View" },
                 new Permission() { Id = Guid.NewGuid(), Name = "Permission.Product.Edit" },

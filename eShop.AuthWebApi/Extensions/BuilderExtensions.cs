@@ -5,6 +5,7 @@ using eShop.AuthWebApi.Services.Implementation;
 using eShop.Domain.DTOs.Requests.Cart;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.OpenApi.Models;
 
 namespace eShop.AuthWebApi.Extensions
 {
@@ -16,6 +17,7 @@ namespace eShop.AuthWebApi.Extensions
             builder.AddMapping();
             builder.AddValidation();
             builder.AddMessageBus();
+            builder.AddSwaggerWithSecurity();
             builder.Services.AddMediatR(x => x.RegisterServicesFromAssemblyContaining<IAssemblyMarker>());
             builder.Services.AddCors(o =>
             {
@@ -36,9 +38,6 @@ namespace eShop.AuthWebApi.Extensions
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
-
 
             return builder;
         }
@@ -84,10 +83,11 @@ namespace eShop.AuthWebApi.Extensions
 
             builder.Services.AddAuthorization(cfg =>
             {
-                cfg.AddPolicy("CreateAccountPolicy", policy =>
-                {
-                    policy.Requirements.Add(new PermissionRequirement("Permission.Account.Create"));
-                });
+                cfg.AddPolicy("ManageUsersPolicy", policy => policy.Requirements.Add(new PermissionRequirement("Permission.Admin.ManageUsers")));
+                cfg.AddPolicy("ManageLockoutPolicy", policy => policy.Requirements.Add(new PermissionRequirement("Permission.Admin.ManageLockout")));
+                cfg.AddPolicy("ManageRolesPolicy", policy => policy.Requirements.Add(new PermissionRequirement("Permission.Admin.ManageRoles")));
+                cfg.AddPolicy("ManagePermissionsPolicy", policy => policy.Requirements.Add(new PermissionRequirement("Permission.Admin.ManagePermissions")));
+                cfg.AddPolicy("ManageAccountPolicy", policy => policy.Requirements.Add(new PermissionRequirement("Permission.Account.ManageAccount")));
             });
 
             return builder;
@@ -127,6 +127,36 @@ namespace eShop.AuthWebApi.Extensions
                 x.AddConsumer<UserExistsReceiver>();
             });
 
+            return builder;
+        }
+
+        public static IHostApplicationBuilder AddSwaggerWithSecurity(this IHostApplicationBuilder builder)
+        {
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new()
+                {
+                    Name = "Authorization",
+                    Description = "Enter the Bearer Authorization string as following: 'Bearer Generated-JWT-Token'",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = JwtBearerDefaults.AuthenticationScheme
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme()
+                        {
+                            Reference = new OpenApiReference()
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = JwtBearerDefaults.AuthenticationScheme
+                            }
+                        }, new string[] { }
+                    }
+                });
+            });
             return builder;
         }
     }

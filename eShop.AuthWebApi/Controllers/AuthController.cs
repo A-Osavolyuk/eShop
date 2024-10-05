@@ -2,17 +2,20 @@
 using eShop.AuthWebApi.Commands.Auth;
 using eShop.AuthWebApi.Queries.Auth;
 using eShop.Domain.Requests.Auth;
+using Microsoft.AspNetCore.Authorization;
 
 namespace eShop.AuthWebApi.Controllers
 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     [ApiVersion("1.0")]
+    [Authorize]
     public class AuthController(SignInManager<AppUser> signInManager, ISender sender) : ControllerBase
     {
         private readonly SignInManager<AppUser> signInManager = signInManager;
         private readonly ISender sender = sender;
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public async ValueTask<ActionResult<ResponseDTO>> Register([FromBody] RegistrationRequest registrationRequest)
         {
@@ -23,6 +26,7 @@ namespace eShop.AuthWebApi.Controllers
                 fail => ExceptionHandler.HandleException(fail));
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async ValueTask<ActionResult<ResponseDTO>> Login([FromBody] LoginRequest loginRequest)
         {
@@ -33,6 +37,7 @@ namespace eShop.AuthWebApi.Controllers
                 fail => ExceptionHandler.HandleException(fail));
         }
 
+        [Authorize(Policy = "ManageAccountPolicy")]
         [HttpPost("change-personal-data")]
         public async ValueTask<ActionResult<ResponseDTO>> ChangePersonalData([FromBody] ChangePersonalDataRequest changePersonalDataRequest)
         {
@@ -43,6 +48,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [Authorize(Policy = "ManageAccountPolicy")]
         [HttpGet("get-personal-data/{Email}")]
         public async ValueTask<ActionResult<ResponseDTO>> GetPersonalData(string Email)
         {
@@ -53,6 +59,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [Authorize(Policy = "ManageAccountPolicy")]
         [HttpPost("change-password")]
         public async ValueTask<ActionResult<ResponseDTO>> ChangePassword([FromBody] ChangePasswordRequest changePasswordRequest)
         {
@@ -63,6 +70,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [AllowAnonymous]
         [HttpPost("request-reset-password")]
         public async ValueTask<ActionResult<ResponseDTO>> ResetPasswordRequest(ResetPasswordRequest request)
         {
@@ -73,6 +81,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [AllowAnonymous]
         [HttpPost("confirm-reset-password")]
         public async ValueTask<ActionResult<ResponseDTO>> ConfirmResetPassword([FromBody] ConfirmResetPasswordRequest confirmPasswordResetRequest)
         {
@@ -83,6 +92,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [AllowAnonymous]
         [HttpPost("confirm-email")]
         public async ValueTask<ActionResult<ResponseDTO>> ConfirmEmail([FromBody] ConfirmEmailRequest confirmEmailRequest)
         {
@@ -93,6 +103,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [Authorize(Policy = "ManageAccountPolicy")]
         [HttpPost("change-2fa-state")]
         public async ValueTask<ActionResult<ResponseDTO>> ChangeTwoFactorAuthentication([FromBody] ChangeTwoFactorAuthenticationRequest request)
         {
@@ -103,6 +114,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [Authorize(Policy = "ManageAccountPolicy")]
         [HttpGet("get-2fa-state/{Email}")]
         public async ValueTask<ActionResult<ResponseDTO>> GetTwoFactorAuthenticationState(string Email)
         {
@@ -119,6 +131,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [AllowAnonymous]
         [HttpPost("2fa-login")]
         public async ValueTask<ActionResult<ResponseDTO>> LoginWithTwoFactorAuthenticationCode([FromBody] TwoFactorAuthenticationLoginRequest twoFactorAuthenticationLoginRequest)
         {
@@ -129,6 +142,7 @@ namespace eShop.AuthWebApi.Controllers
                 fail => ExceptionHandler.HandleException(fail));
         }
 
+        [AllowAnonymous]
         [HttpGet("external-login/{provider}")]
         public async ValueTask<ActionResult<ResponseDTO>> ExternalLogin(string provider, string? returnUri = null)
         {
@@ -139,6 +153,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [AllowAnonymous]
         [HttpGet("handle-external-login-response")]
         public async ValueTask<ActionResult<ResponseDTO>> HandleExternalLoginResponse(string? remoteError = null, string? returnUri = null)
         {
@@ -151,6 +166,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [AllowAnonymous]
         [HttpGet("get-external-providers")]
         public async ValueTask<ActionResult<ResponseDTO>> GetExternalProvidersList()
         {
@@ -161,6 +177,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [Authorize(Policy = "ManageAccountPolicy")]
         [HttpPost("request-change-email")]
         public async ValueTask<ActionResult<ResponseDTO>> RequestChangeEmail([FromBody] ChangeEmailRequest changeEmailRequest)
         {
@@ -171,6 +188,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [Authorize(Policy = "ManageAccountPolicy")]
         [HttpPost("confirm-change-email")]
         public async ValueTask<ActionResult<ResponseDTO>> ConfirmChangeEmail([FromBody] ConfirmChangeEmailRequest confirmChangeEmailRequest)
         {
@@ -181,6 +199,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [Authorize(Policy = "ManageAccountPolicy")]
         [HttpPost("change-user-name")]
         public async ValueTask<ActionResult<ResponseDTO>> ChangeUserName([FromBody] ChangeUserNameRequest changeUserNameRequest)
         {
@@ -191,6 +210,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [Authorize(Policy = "ManageAccountPolicy")]
         [HttpPost("refresh-token")]
         public async ValueTask<ActionResult<ResponseDTO>> RefreshToken([FromBody] RefreshTokenRequest refreshTokenRequest)
         {
@@ -201,6 +221,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [Authorize(Policy = "ManageAccountPolicy")]
         [HttpPost("request-change-phone-number")]
         public async ValueTask<ActionResult<ResponseDTO>> RequestChangePhoneNumber([FromBody] ChangePhoneNumberRequest changePhoneNumberRequest)
         {
@@ -211,6 +232,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [Authorize(Policy = "ManageAccountPolicy")]
         [HttpPost("confirm-change-phone-number")]
         public async ValueTask<ActionResult<ResponseDTO>> ConfirmChangePhoneNumber([FromBody] ConfirmChangePhoneNumberRequest confirmChangePhoneNumberRequest)
         {
@@ -221,6 +243,7 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [Authorize(Policy = "ManageAccountPolicy")]
         [HttpGet("get-phone-number/{Email}")]
         public async ValueTask<ActionResult<ResponseDTO>> GetPhoneNumber(string Email)
         {
