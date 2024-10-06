@@ -1,3 +1,5 @@
+using eShop.Domain.Entities.Admin;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();

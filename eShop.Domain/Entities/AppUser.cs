@@ -6,5 +6,6 @@ namespace eShop.Domain.Entities
     public class AppUser : IdentityUser
     {
         public PersonalData? PersonalData { get; set; }
+        public ICollection<UserPermissions> Permissions { get; set; } = null!;
     }
 }

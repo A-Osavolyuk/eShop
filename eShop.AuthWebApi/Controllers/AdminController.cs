@@ -86,6 +86,16 @@ namespace eShop.AuthWebApi.Controllers
                 f => ExceptionHandler.HandleException(f));
         }
 
+        [Authorize(Policy = "ManagePermissionsPolicy")]
+        [HttpPost("issue-permissions")]
+        public async ValueTask<ActionResult<ResponseDTO>> IssuePermissionsAsync([FromBody] IssuePermissionRequest request)
+        {
+            var result = await sender.Send(new IssuePermissionCommand(request));
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
+
         [Authorize(Policy = "ManageRolesPolicy")]
         [HttpPost("create-role")]
         public async ValueTask<ActionResult<ResponseDTO>> CreateRoleAsync([FromBody] CreateRoleRequest request)
