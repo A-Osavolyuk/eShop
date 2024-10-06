@@ -35,7 +35,8 @@
 
                 var userDto = new UserDTO(user.Email!, user.UserName!, user.Id);
                 var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
-                var token = tokenHandler.GenerateToken(user, roles);
+                var permissions = (await appManager.PermissionManager.GetUserPermisisonsAsync(user)).ToList();
+                var token = tokenHandler.GenerateToken(user, roles, permissions);
 
                 logger.LogInformation("Successfully logged in with 2FA code to account with email {email}. Request ID {requestId}",
                     request.Request.Email, request.Request.RequestId);

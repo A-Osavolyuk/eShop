@@ -6,12 +6,14 @@
         ITokenHandler tokenHandler,
         AppManager appManager,
         IValidator<ChangeUserNameRequest> validator,
-        ILogger<ChangeUserNameCommandHandler> logger) : IRequestHandler<ChangeUserNameCommand, Result<ChangeUserNameResponse>>
+        ILogger<ChangeUserNameCommandHandler> logger,
+        AuthDbContext context) : IRequestHandler<ChangeUserNameCommand, Result<ChangeUserNameResponse>>
     {
         private readonly ITokenHandler tokenHandler = tokenHandler;
         private readonly AppManager appManager = appManager;
         private readonly IValidator<ChangeUserNameRequest> validator = validator;
         private readonly ILogger<ChangeUserNameCommandHandler> logger = logger;
+        private readonly AuthDbContext context = context;
 
         public async Task<Result<ChangeUserNameResponse>> Handle(ChangeUserNameCommand request, CancellationToken cancellationToken)
         {
@@ -50,7 +52,8 @@
                 }
 
                 var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
-                var token = tokenHandler.GenerateToken(user!, roles);
+                var permissions = (await appManager.PermissionManager.GetUserPermisisonsAsync(user)).ToList();
+                var token = tokenHandler.GenerateToken(user!, roles, permissions);
 
                 logger.LogInformation("Successfully change name of user with email {email}. Request ID {requestId}",
                     request.Request.Email, request.Request.RequestId);

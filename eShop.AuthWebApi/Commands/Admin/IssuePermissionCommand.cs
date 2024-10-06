@@ -44,7 +44,14 @@ namespace eShop.AuthWebApi.Commands.Admin
 
                 foreach(var permission in permissions)
                 {
-                    await context.UserPermissions.AddAsync(new UserPermissions() { PermissionId = permission.Id, UserId = user.Id });
+                    var alreadyHasPermission = await context.UserPermissions.AsNoTracking().AnyAsync(x => x.UserId == user.Id && x.PermissionId == permission.Id);
+
+                    if (!alreadyHasPermission)
+                    {
+                        await context.UserPermissions.AddAsync(new UserPermissions() { PermissionId = permission.Id, UserId = user.Id });
+                    }
+
+                    continue;
                 }
 
                 await context.SaveChangesAsync();

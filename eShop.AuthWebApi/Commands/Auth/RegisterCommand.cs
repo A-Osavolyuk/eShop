@@ -19,7 +19,8 @@ namespace eShop.AuthWebApi.Commands.Auth
         private readonly IEmailSender emailSender = emailSender;
         private readonly IConfiguration configuration = configuration;
         private readonly string frontendUri = configuration["GeneralSettings:FrontendBaseUri"]!;
-        private const string defaultRole = "User";
+        private readonly string defaultRole = configuration["DefaultValues:DeafultRole"]!;
+        private readonly List<string> defaultPermissions = configuration.GetValue<List<string>>("DefaultValues:DeafultPermissions")!;
 
         public async Task<Result<RegistrationResponse>> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
@@ -58,6 +59,14 @@ namespace eShop.AuthWebApi.Commands.Auth
                 {
                     return logger.LogErrorWithException<RegistrationResponse>(new NotAssignRoleException(assignDefaultRoleResult.Errors.First().Description), 
                         new("assign default role for user with email {0}", request.Request.Email));
+                }
+
+                var issuingPermissionsResult = await appManager.PermissionManager.IssuePermissionsToUserAsync(newUser, defaultPermissions);
+
+                if (!issuingPermissionsResult.Succeeded)
+                {
+                    return logger.LogErrorWithException<RegistrationResponse>(new NotIssuedPermissionsException(assignDefaultRoleResult.Errors),
+                        new("issie default permissions for user with email {0}", newUser.Email));
                 }
 
                 var emailConfirmationToken = await appManager.UserManager.GenerateEmailConfirmationTokenAsync(newUser);

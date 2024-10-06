@@ -1,5 +1,8 @@
 ﻿
+using eShop.Domain.Entities;
 using eShop.Domain.Entities.Admin;
+using Microsoft.OpenApi.Validations;
+using System.IO;
 
 namespace eShop.AuthWebApi.Queries.Admin
 {
@@ -33,6 +36,7 @@ namespace eShop.AuthWebApi.Queries.Admin
                 var accountData = mapper.Map<AccountData>(user);
                 var personalData = await context.PersonalData.AsNoTracking().FirstOrDefaultAsync(x => x.UserId == user.Id);
                 var rolesList = await appManager.UserManager.GetRolesAsync(user);
+                var permissions = await appManager.PermissionManager.GetUserPermisisonsAsync(user);
 
                 if (rolesList is null || !rolesList.Any())
                 {
@@ -54,6 +58,22 @@ namespace eShop.AuthWebApi.Queries.Admin
                         Id = Guid.Parse(roleInfo.Id),
                         Name = roleInfo.Name!,
                         NormalizedName = roleInfo.NormalizedName!
+                    });
+                }
+
+                foreach(var permission in permissions)
+                {
+                    var permissionInfo = await context.Permissions.AsNoTracking().SingleOrDefaultAsync(x => x.Name == permission);
+
+                    if (permissionInfo is null)
+                    {
+                        return logger.LogErrorWithException<FindUserResponse>(new NotFoundPermissison(permission), actionMessage);
+                    }
+
+                    permissionData.Permissions.Add(new Permission()
+                    {
+                        Id = permissionInfo.Id,
+                        Name = permissionInfo.Name,
                     });
                 }
 

@@ -17,7 +17,8 @@ namespace eShop.AuthWebApi.Queries.Auth
         private readonly IConfiguration configuration = configuration;
         private readonly IEmailSender emailSender = emailSender;
         private readonly string frontendUri = configuration["GeneralSettings:FrontendBaseUri"]!;
-        private const string defaultRole = "User";
+        private readonly string defaultRole = configuration["DefaultValues:DeafultRole"]!;
+        private readonly List<string> defaultPermissions = configuration.GetValue<List<string>>("DefaultValues:DeafultPermissions")!;
 
         public async Task<Result<string>> Handle(HandleExternalLoginResponseQuery request, CancellationToken cancellationToken)
         {
@@ -38,7 +39,8 @@ namespace eShop.AuthWebApi.Queries.Auth
                 {
                     logger.LogInformation("Successfully logged in with external provider {provider}", request.ExternalLoginInfo.LoginProvider);
                     var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
-                    var token = tokenHandler.GenerateToken(user, roles);
+                    var permissions = (await appManager.PermissionManager.GetUserPermisisonsAsync(user)).ToList();
+                    var token = tokenHandler.GenerateToken(user, roles, permissions);
                     var link = UrlGenerator.ActionLink("/account/confirm-external-login", frontendUri, new { Token = token, ReturnUri = request.ReturnUri });
                     return new(link);
                 }
@@ -67,6 +69,14 @@ namespace eShop.AuthWebApi.Queries.Auth
                             new("assign default role for user with email {0}", user.Email));
                     }
 
+                    var issuingPermissionsResult = await appManager.PermissionManager.IssuePermissionsToUserAsync(user, defaultPermissions);
+
+                    if (!issuingPermissionsResult.Succeeded)
+                    {
+                        return logger.LogErrorWithException<string>(new NotIssuedPermissionsException(assignDefaultRoleResult.Errors),
+                            new("issie default permissions for user with email {0}", user.Email));
+                    }
+
                     logger.LogInformation("Successfully created account with email {email} based on external login data from provider {provider}",
                             email, request.ExternalLoginInfo.LoginProvider);
 
@@ -81,7 +91,8 @@ namespace eShop.AuthWebApi.Queries.Auth
 
                     logger.LogInformation("Successfully logged in with external provider {provider}", request.ExternalLoginInfo.LoginProvider);
                     var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
-                    var token = tokenHandler.GenerateToken(user, roles);
+                    var permissions = (await appManager.PermissionManager.GetUserPermisisonsAsync(user)).ToList();
+                    var token = tokenHandler.GenerateToken(user, roles, permissions);
                     var link = UrlGenerator.ActionLink("/account/confirm-external-login", frontendUri, new { Token = token, ReturnUri = request.ReturnUri });
                     return new(link);
                 }

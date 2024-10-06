@@ -1,6 +1,9 @@
 ﻿
 using eShop.AuthWebApi.Utilities;
+using eShop.Domain.Entities;
 using eShop.Domain.Entities.Admin;
+using Microsoft.Extensions.Configuration;
+using System.Data;
 
 namespace eShop.AuthWebApi.Commands.Admin
 {
@@ -10,12 +13,16 @@ namespace eShop.AuthWebApi.Commands.Admin
         AppManager appManager,
         ILogger<CreateUserAccountCommandHandler> logger,
         AuthDbContext context,
-        IMapper mapper) : IRequestHandler<CreateUserAccountCommand, Result<CreateUserAccountResponse>>
+        IMapper mapper,
+        IConfiguration configuration) : IRequestHandler<CreateUserAccountCommand, Result<CreateUserAccountResponse>>
     {
         private readonly AppManager appManager = appManager;
         private readonly ILogger<CreateUserAccountCommandHandler> logger = logger;
         private readonly AuthDbContext context = context;
         private readonly IMapper mapper = mapper;
+        private readonly IConfiguration configuration = configuration;
+        private readonly string defaultRole = configuration["DefaultValues:DeafultRole"]!;
+        private readonly List<string> defaultPermissions = configuration.GetValue<List<string>>("DefaultValues:DeafultPermissions")!;
 
         public async Task<Result<CreateUserAccountResponse>> Handle(CreateUserAccountCommand request, CancellationToken cancellationToken)
         {
@@ -25,8 +32,8 @@ namespace eShop.AuthWebApi.Commands.Admin
                 logger.LogInformation("Attempting to create user account. Request ID {requestId}", request.Request.RequestId);
 
                 var userId = Guid.NewGuid();
-                var user = new AppUser() 
-                { 
+                var user = new AppUser()
+                {
                     Id = userId.ToString(),
                     Email = request.Request.Email,
                     UserName = request.Request.UserName,
@@ -46,8 +53,8 @@ namespace eShop.AuthWebApi.Commands.Admin
                 var password = appManager.UserManager.GenerateRandomPassword(18);
                 var passwordResult = await appManager.UserManager.AddPasswordAsync(user, password);
 
-                if (!passwordResult.Succeeded) 
-                { 
+                if (!passwordResult.Succeeded)
+                {
                     return logger.LogErrorWithException<CreateUserAccountResponse>(new NotAddedPasswordException(), actionMessage, request.Request.RequestId);
                 }
 
@@ -62,16 +69,29 @@ namespace eShop.AuthWebApi.Commands.Admin
 
                 await context.SaveChangesAsync();
 
-                foreach (var role in request.Request.Roles)
+                if (request.Request.Roles.Any())
                 {
-                    var roleExists = await appManager.RoleManager.RoleExistsAsync(role);
-
-                    if (!roleExists)
+                    foreach (var role in request.Request.Roles)
                     {
-                        return logger.LogErrorWithException<CreateUserAccountResponse>(new NotFoundRoleException(role), actionMessage, request.Request.RequestId);
-                    }
+                        var roleExists = await appManager.RoleManager.RoleExistsAsync(role);
 
-                    var roleResult = await appManager.UserManager.AddToRoleAsync(user, role);
+                        if (!roleExists)
+                        {
+                            return logger.LogErrorWithException<CreateUserAccountResponse>(new NotFoundRoleException(role), actionMessage, request.Request.RequestId);
+                        }
+
+                        var roleResult = await appManager.UserManager.AddToRoleAsync(user, role);
+
+                        if (!roleResult.Succeeded)
+                        {
+                            var errorDescription = roleResult.Errors.First().Description;
+                            return logger.LogErrorWithException<CreateUserAccountResponse>(new NotAssignRoleException(errorDescription), actionMessage, request.Request.RequestId);
+                        }
+                    }
+                }
+                else
+                {
+                    var roleResult = await appManager.UserManager.AddToRoleAsync(user, defaultRole);
 
                     if (!roleResult.Succeeded)
                     {
@@ -80,7 +100,39 @@ namespace eShop.AuthWebApi.Commands.Admin
                     }
                 }
 
-                // TODO: Permissions logic
+                if (request.Request.Permissions.Any())
+                {
+                    foreach (var permission in request.Request.Permissions)
+                    {
+                        var permissionExists = await context.Permissions.AsNoTracking().AnyAsync(x => x.Name == permission);
+
+                        if (!permissionExists)
+                        {
+                            return logger.LogErrorWithException<CreateUserAccountResponse>(new NotFoundPermissison(permission), actionMessage, request.Request.RequestId);
+                        }
+
+                        var permissionResult = await appManager.PermissionManager.IssuePermissionToUserAsync(user, permission);
+
+                        if (!permissionResult.Succeeded)
+                        {
+                            return logger.LogErrorWithException<CreateUserAccountResponse>(new NotIssuedPermissionsException(permissionResult.Errors),
+                                actionMessage, request.Request.RequestId);
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var permission in defaultPermissions)
+                    {
+                        var permissionResult = await appManager.PermissionManager.IssuePermissionToUserAsync(user, permission);
+
+                        if (!permissionResult.Succeeded)
+                        {
+                            return logger.LogErrorWithException<CreateUserAccountResponse>(new NotIssuedPermissionsException(permissionResult.Errors),
+                                actionMessage, request.Request.RequestId);
+                        }
+                    }
+                }
 
                 logger.LogInformation("User account was successfully created with temporary password {password}. Request ID {requestID}", password, request.Request.RequestId);
 
@@ -94,6 +146,6 @@ namespace eShop.AuthWebApi.Commands.Admin
             {
                 return logger.LogErrorWithException<CreateUserAccountResponse>(ex, actionMessage, request.Request.RequestId);
             }
-        }
+}
     }
 }

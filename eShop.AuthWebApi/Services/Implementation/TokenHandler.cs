@@ -9,7 +9,7 @@
             jwtOptions = options.Value;
         }
 
-        public string GenerateToken(AppUser user, List<string> roles)
+        public string GenerateToken(AppUser user, List<string> roles, List<string> permissions)
         {
             if (user is not null)
             {
@@ -22,7 +22,7 @@
                 var token = handler.WriteToken(new JwtSecurityToken(
                     audience: jwtOptions.Audience,
                     issuer: jwtOptions.Issuer,
-                    claims: SetClaims(user, roles),
+                    claims: SetClaims(user, roles, permissions),
                     expires: DateTime.Now.AddSeconds(jwtOptions.ExpirationSeconds),
                     signingCredentials: signingCredentials));
 
@@ -55,7 +55,7 @@
             return string.Empty;
         }
 
-        private List<Claim> SetClaims(AppUser user, List<string> Roles)
+        private List<Claim> SetClaims(AppUser user, List<string> roles, List<string> permissions)
         {
             if (user is not null)
             {
@@ -66,9 +66,20 @@
                     new (CustomClaimTypes.Id, user.Id),
                 };
 
-                if (Roles.Any())
+                if (roles.Any())
                 {
-                    claims.Add(new (CustomClaimTypes.Roles, FormatRoles(Roles)));
+                    foreach (var role in roles)
+                    {
+                        claims.Add(new Claim(ClaimTypes.Role, role));
+                    }
+                }
+
+                if (permissions.Any())
+                {
+                    foreach (var permission in permissions)
+                    {
+                        claims.Add(new Claim(CustomClaimTypes.Permission, permission));
+                    }
                 }
 
                 return claims;
@@ -90,40 +101,31 @@
                     new (CustomClaimTypes.UserName, rawToken.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.UserName)!.Value),
                     new (JwtRegisteredClaimNames.Email, rawToken.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email)!.Value),
                     new (CustomClaimTypes.Id, rawToken.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value),
-                    new (CustomClaimTypes.Roles, rawToken.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Roles)!.Value)
                 };
+
+                var roles = rawToken.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value);
+                var permissions = rawToken.Claims.Where(x => x.Type == CustomClaimTypes.Permission).Select(x => x.Value);
+
+                if (roles.Any())
+                {
+                    foreach (var role in roles)
+                    {
+                        claims.Add(new Claim(ClaimTypes.Role, role));
+                    }
+                }
+
+                if (permissions.Any())
+                {
+                    foreach (var permission in permissions)
+                    {
+                        claims.Add(new Claim(CustomClaimTypes.Permission, permission));
+                    }
+                }
 
                 return claims;
             }
 
             return new List<Claim>();
-        }
-
-        private string FormatRoles(List<string> Roles)
-        {
-            var builder = new StringBuilder();
-
-            if (!Roles.Any())
-            {
-                return builder.ToString();
-            }
-
-            if (Roles.Count == 1)
-            {
-                builder.Append(Roles[0]);
-            }
-            else
-            {
-                foreach (var role in Roles)
-                {
-                    if (!string.IsNullOrEmpty(role))
-                    {
-                        builder.Append(role).Append(';');
-                    }
-                }
-            }
-
-            return builder.ToString();
         }
     }
 }

@@ -39,7 +39,6 @@ namespace eShop.AuthWebApi.Extensions
             }
 
             return sb.ToString();
-
         }
     }
 }

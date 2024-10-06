@@ -11,7 +11,7 @@ namespace eShop.AuthWebApi.Security.Authorization
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)
         {
-            if (context.User.HasClaim(c => c.Type == "Permissison" && c.Value == requirement.PermissionName)) 
+            if (context.User.HasClaim(c => c.Type == CustomClaimTypes.Permission && c.Value == requirement.PermissionName)) 
             { 
                 context.Succeed(requirement);
             }

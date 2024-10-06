@@ -43,16 +43,35 @@ namespace eShop.AuthWebApi.Queries.Admin
                     }
 
                     var rolesData = await appManager.RoleManager.GetRolesInfoAsync(rolesList);
+                    var permissions = await appManager.PermissionManager.GetUserPermisisonsAsync(user);
 
                     if (rolesData is null || !rolesData.Any())
                     {
                         return logger.LogErrorWithException<IEnumerable<UserData>>(new NoRoleInfoException(), actionMessage);
                     }
 
+                    var permissionsList = new List<Permission>();
+
+                    foreach (var permission in permissions)
+                    {
+                        var permissionInfo = await context.Permissions.AsNoTracking().SingleOrDefaultAsync(x => x.Name == permission);
+
+                        if (permissionInfo is null)
+                        {
+                            return logger.LogErrorWithException<IEnumerable<UserData>>(new NotFoundPermissison(permission), actionMessage);
+                        }
+
+                        permissionsList.Add(new Permission()
+                        {
+                            Id = permissionInfo.Id,
+                            Name = permissionInfo.Name,
+                        });
+                    }
+
                     var permissionData = new PermissionsData()
                     {
                         Roles = rolesData.ToList(),
-                        Permissions = new()
+                        Permissions = permissionsList
                     };
 
                     users.Add(new UserData()

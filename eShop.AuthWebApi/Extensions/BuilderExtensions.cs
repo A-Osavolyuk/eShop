@@ -97,6 +97,7 @@ namespace eShop.AuthWebApi.Extensions
         {
             builder.Services.AddScoped<ITokenHandler, TokenHandler>();
             builder.Services.AddScoped<IEmailSender, EmailSender>();
+            builder.Services.AddScoped<IPermissionManager, PermissionManager>();
             builder.Services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
 
             builder.Services.AddScoped<AppManager>();
