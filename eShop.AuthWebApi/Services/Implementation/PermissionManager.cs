@@ -1,5 +1,6 @@
 ﻿
 
+using eShop.Domain.Entities.Admin;
 using LanguageExt.Pipes;
 
 namespace eShop.AuthWebApi.Services.Implementation
@@ -7,6 +8,12 @@ namespace eShop.AuthWebApi.Services.Implementation
     public class PermissionManager(AuthDbContext context) : IPermissionManager
     {
         private readonly AuthDbContext context = context;
+
+        public async ValueTask<IList<Permission>> GetPermissionsAsync()
+        {
+            var permissions = await context.Permissions.AsNoTracking().ToListAsync();
+            return permissions;
+        }
 
         public async ValueTask<IList<string>> GetUserPermisisonsAsync(AppUser user)
         {
