@@ -176,5 +176,15 @@ namespace eShop.AuthWebApi.Controllers
                 s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
+
+        [Authorize(Policy = "ManagePermissionsPolicy")]
+        [HttpDelete("delete-user-from-permission")]
+        public async ValueTask<ActionResult<ResponseDTO>> DeleteUserFromPermissionAsync([FromBody] RemoveUserFromPermissionRequest request)
+        {
+            var result = await sender.Send(new RemoveUserFromPermissionCommand(request));
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
     }
 }
