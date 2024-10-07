@@ -2,8 +2,10 @@
 using eShop.Domain.DTOs.Requests.Auth;
 using eShop.Domain.DTOs.Responses.Auth;
 using eShop.Domain.Interfaces;
+using eShop.Domain.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -11,7 +13,7 @@ using System.Security.Claims;
 namespace eShop.Infrastructure.Account
 {
     public class ApplicationAuthenticationStateProvider(
-        ITokenProvider tokenProvider, 
+        ITokenProvider tokenProvider,
         IAuthenticationService authenticationService,
         ILocalDataAccessor localDataAccessor) : AuthenticationStateProvider
     {
@@ -24,35 +26,35 @@ namespace eShop.Infrastructure.Account
         {
             try
             {
-                if (!string.IsNullOrEmpty(AuthenticationHandler.Token))
+                if (string.IsNullOrEmpty(AuthenticationHandler.Token))
                 {
-                    var token = DecryptToken(AuthenticationHandler.Token);
-
-                    if (token is not null || token!.Claims.Any())
-                    {
-                        var valid = IsValid(token!);
-
-                        if (valid)
-                        {
-                            var claims = SetClaims(token);
-
-                            if (claims.Any())
-                            {
-                                return await Task.FromResult(
-                                    new AuthenticationState(new ClaimsPrincipal(
-                                        new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme))));
-                            }
-
-                            return await Task.FromResult(anonymous);
-                        }
-
-                        return await RefreshTokenAsync(AuthenticationHandler.Token);
-                    }
-
                     return await Task.FromResult(anonymous);
                 }
 
-                return await Task.FromResult(anonymous);
+                var token = DecryptToken(AuthenticationHandler.Token);
+
+                if (token is null || !token!.Claims.Any())
+                {
+                    return await Task.FromResult(anonymous);
+                }
+
+                var valid = IsValid(token!);
+
+                if (!valid)
+                {
+                    return await RefreshTokenAsync(AuthenticationHandler.Token);
+                }
+
+                var claims = SetClaims(token);
+
+                if (!claims.Any())
+                {
+                    return await Task.FromResult(anonymous);
+                }
+
+                return await Task.FromResult(
+                        new AuthenticationState(new ClaimsPrincipal(
+                            new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme))));
             }
             catch (Exception)
             {
@@ -63,7 +65,12 @@ namespace eShop.Infrastructure.Account
         public async Task UpdateAuthenticationState(string token)
         {
             var claimsPrincipal = new ClaimsPrincipal();
-            if (!string.IsNullOrEmpty(token))
+
+            if (string.IsNullOrEmpty(token))
+            {
+                AuthenticationHandler.Token = "";
+            }
+            else
             {
                 AuthenticationHandler.Token = token;
                 await tokenProvider.SetTokenAsync(token);
@@ -73,8 +80,6 @@ namespace eShop.Infrastructure.Account
                 await WriteToLocalStorageAsync(claims);
                 claimsPrincipal = new(new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme));
             }
-            else
-                AuthenticationHandler.Token = "";
 
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(claimsPrincipal)));
         }
@@ -105,17 +110,48 @@ namespace eShop.Infrastructure.Account
                     new(ClaimTypes.Email, claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email)!.Value),
                 };
 
+                var roles = claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value);
+                var permissions = claims.Where(x => x.Type == CustomClaimTypes.Permission).Select(x => x.Value);
+
+                if (roles.Any())
+                {
+                    foreach (var role in roles)
+                    {
+                        output.Add(new Claim(ClaimTypes.Role, role));
+                    }
+                }
+
+                if (permissions.Any())
+                {
+                    foreach (var permission in permissions)
+                    {
+                        output.Add(new Claim(CustomClaimTypes.Permission, permission));
+                    }
+                }
+
                 return output;
             }
 
-            return [];
+            return new List<Claim>();
         }
 
         private async Task WriteToLocalStorageAsync(List<Claim> Claims)
         {
-            await localDataAccessor.SetEmailAsync(Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value);
-            await localDataAccessor.SetUserNameAsync(Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)!.Value);
-            await localDataAccessor.SetUserIdAsync(Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value);
+
+            var email = Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value;
+            var username = Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)!.Value;
+            var id = Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value;
+            var roles = Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToList();
+            var permissions = Claims.Where(x => x.Type == CustomClaimTypes.Permission).Select(x => x.Value).ToList();
+
+            await localDataAccessor.WriteUserDataAsync(new UserModel()
+            {
+                Email = email,
+                UserName = username,
+                UserId = id,
+                Roles = roles,
+                Permissions = permissions
+            });
         }
 
         private bool IsValid(JwtSecurityToken token)

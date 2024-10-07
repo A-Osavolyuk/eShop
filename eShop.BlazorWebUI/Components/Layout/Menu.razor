@@ -57,7 +57,7 @@
     {
         if (firstRender)
         {
-            UserId = await LocalDataAccessor.GetUserIdAsync();
+            UserId = (await LocalDataAccessor.ReadUserDataAsync()).UserId;
         }
     }
 }

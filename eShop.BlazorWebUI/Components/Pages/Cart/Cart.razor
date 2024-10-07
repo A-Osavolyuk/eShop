@@ -49,8 +49,8 @@
     {
         if (firstRender)
         {
-            var userId = await LocalDataAccessor.GetUserIdAsync();
-            if(userId is not null)
+            var user = await LocalDataAccessor.ReadUserDataAsync();
+            if(user is not null && !string.IsNullOrEmpty(user.UserId))
             {
                 await GetCartAsync();
             }
@@ -61,12 +61,12 @@
 
     private async Task GetCartAsync()
     {
-        var userId = await LocalDataAccessor.GetUserIdAsync();
-        var response = await CartService.GetCartByUserIdAsync(Guid.Parse(userId));
+        var user = await LocalDataAccessor.ReadUserDataAsync();
+        var response = await CartService.GetCartByUserIdAsync(Guid.Parse(user.UserId));
 
         if (response.IsSucceeded)
         {
-            var data = JsonConvert.DeserializeObject<CartDTO>(response.Result.ToString()!);
+            var data = JsonConvert.DeserializeObject<CartDTO>(response.Result!.ToString()!);
             UserCart = data;
         }
         else
