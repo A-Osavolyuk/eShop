@@ -51,12 +51,12 @@
             }
         }
 
-        var cart = await LocalDataAccessor.GetCartAsync();
+        // var cart = await LocalDataAccessor.GetCartAsync();
 
-        if (cart is null)
-        {
-            await GetCartAsync();
-        }
+        // if (cart is null)
+        // {
+        //     await GetCartAsync();
+        // }
     }
 
     private async Task GetCartAsync()

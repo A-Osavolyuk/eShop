@@ -144,7 +144,7 @@ namespace eShop.Infrastructure.Account
             var roles = Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToList();
             var permissions = Claims.Where(x => x.Type == CustomClaimTypes.Permission).Select(x => x.Value).ToList();
 
-            await localDataAccessor.WriteUserDataAsync(new UserModel()
+            await localDataAccessor.WriteUserDataAsync(new UserDataModel()
             {
                 Email = email,
                 UserName = username,

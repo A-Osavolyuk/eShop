@@ -2,6 +2,7 @@
 using eShop.Domain.DTOs;
 using eShop.Domain.Interfaces;
 using eShop.Domain.Models;
+using LanguageExt.Pipes;
 
 namespace eShop.Infrastructure.Services
 {
@@ -15,7 +16,7 @@ namespace eShop.Infrastructure.Services
 
         public async ValueTask<CartDTO> GetCartAsync() => (await localStorageService.GetItemAsync<CartDTO>("cart"))!;
 
-        public async ValueTask WriteUserDataAsync(UserModel user)
+        public async ValueTask WriteUserDataAsync(UserDataModel user)
         {
             if (user is null)
             {
@@ -25,16 +26,60 @@ namespace eShop.Infrastructure.Services
             await localStorageService.SetItemAsync("user", user);
         }
 
-        public async ValueTask<UserModel> ReadUserDataAsync()
+        public async ValueTask<UserDataModel> ReadUserDataAsync()
         {
-            var user = await localStorageService.GetItemAsync<UserModel>("user");
+            var user = await localStorageService.GetItemAsync<UserDataModel>("user");
 
             if (user is null)
             {
-                throw new ArgumentNullException(nameof(user));
+                return new();
             }
 
             return user;
+        }
+
+        public async ValueTask WritePersonalDataAsync(PersonalDataModel personalData)
+        {
+            if (personalData is null)
+            {
+                throw new ArgumentNullException(nameof(personalData));
+            }
+
+            await localStorageService.SetItemAsync("personal-data", personalData);
+        }
+
+        public async ValueTask<PersonalDataModel> ReadPersonalDataAsync()
+        {
+            var personalData = await localStorageService.GetItemAsync<PersonalDataModel>("personal-data");
+
+            if (personalData is null)
+            {
+                return new();
+            }
+
+            return personalData;
+        }
+
+        public async ValueTask WriteSecurityDataAsync(SecurityDataModel securityData)
+        {
+            if (securityData is null)
+            {
+                throw new ArgumentNullException(nameof(securityData));
+            }
+
+            await localStorageService.SetItemAsync("security-data", securityData);
+        }
+
+        public async ValueTask<SecurityDataModel> ReadSecurityDataAsync()
+        {
+            var securityData = await localStorageService.GetItemAsync<SecurityDataModel>("security-data");
+
+            if (securityData is null)
+            {
+                return new();
+            }
+
+            return securityData;
         }
     }
 }

@@ -110,7 +110,7 @@ namespace eShop.AuthWebApi.Controllers
             var result = await sender.Send(new ChangeTwoFactorAuthenticationStateCommand(request));
 
             return result.Match(
-                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
+                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).WithResultMessage(s.Message).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 

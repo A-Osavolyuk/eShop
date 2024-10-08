@@ -45,7 +45,7 @@ namespace eShop.AuthWebApi.Commands.Auth
                 return new(new ChangeTwoFactorAuthenticationResponse()
                 {
                     Message = $"Two factor authentication was successfully {state}.",
-                    TwoFactorAuthenticationState = !user.TwoFactorEnabled,
+                    TwoFactorAuthenticationState = user.TwoFactorEnabled,
                 });
             }
             catch (Exception ex)

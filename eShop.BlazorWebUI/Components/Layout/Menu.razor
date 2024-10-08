@@ -52,12 +52,4 @@
         Snackbar.Add("Successfully logged out.", MudBlazor.Severity.Success);
         navigationManger.NavigateTo("/account/login");
     }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            UserId = (await LocalDataAccessor.ReadUserDataAsync()).UserId;
-        }
-    }
 }
