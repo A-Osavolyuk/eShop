@@ -39,16 +39,15 @@ namespace eShop.AuthWebApi.Commands.Auth
                         actionMessage, request.Request.RequestId);
                 }
 
-                var personalData = new PersonalData()
-                {
-                    UserId = user.Id,
-                    FirstName = request.Request.FirstName,
-                    LastName = request.Request.LastName,
-                    Gender = request.Request.Gender,
-                    DateOfBirth = request.Request.DateOfBirth!.Value
-                };
+                var personalData = await context.PersonalData.AsNoTracking().SingleOrDefaultAsync(x => x.UserId == user.Id);
 
-                await context.PersonalData.AddAsync(personalData);
+                if (personalData is null)
+                {
+                    return logger.LogErrorWithException<ChangePersonalDataResponse>(new NotFoundPersonalDataException(user.Id), actionMessage, request.Request.RequestId);
+                }
+
+                personalData = mapper.Map<PersonalData>(request.Request) with { Id = personalData.Id, UserId = user.Id };
+                context.PersonalData.Update(personalData);
                 await context.SaveChangesAsync();
 
                 logger.LogInformation("Successfully change personal data of user with email {email}. Request ID {requestId}",

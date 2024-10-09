@@ -1,0 +1,78 @@
+﻿@page "/account/profile/change-personal-data"
+@using eShop.Application.Validation.Auth
+
+@inject NavigationManager NavigationManager
+@inject ILocalDataAccessor LocalDataAccessor
+@inject IAuthenticationService AuthService
+@inject PersonalDataValidator Validator
+@inject ISnackbar Snackbar
+@inject IMapper Mapper
+
+<PageTitle>Change personal data</PageTitle>
+
+<MudGrid Justify="Justify.Center">
+    <MudItem xs="4">
+        <MudPaper Outlined Class="pa-5">
+            <MudGrid>
+                <MudItem xs="1">
+                    <MudIconButton @onclick="@(() => NavigationManager.NavigateTo("/account/profile"))" Icon="@Icons.Material.Filled.ArrowBack" />
+                </MudItem>
+                <MudItem xs="11" Class="m-auto">
+                    <MudText Typo="Typo.h6"> Change personal data </MudText>
+                </MudItem>
+            </MudGrid>
+            <MudDivider />
+            <MudGrid Class="mt-3" Justify="Justify.Center">
+                <MudItem xs="12">
+                    <EditForm Model="Request" FormName="change-personal-data-form" OnValidSubmit="OnValidSubmit">
+                        <FluentValidationValidator Validator="Validator" />
+                        <MudTextField Immediate Clearable Counter="32" MaxLength="32" For="@(() => Request.FirstName)" Label="First name" @bind-Value="Request.FirstName" Variant="Variant.Outlined" />
+                        <MudTextField Immediate Clearable Counter="32" MaxLength="32" For="@(() => Request.LastName)" Label="Last name" @bind-Value="Request.LastName" Variant="Variant.Outlined" />
+                        <MudTextField Immediate Clearable Counter="32" MaxLength="32" For="@(() => Request.Gender)" Label="Gender" @bind-Value="Request.Gender" Variant="Variant.Outlined" />
+                        <MudDatePicker @ref="DatePicker" For="@(() => Request.DateOfBirth)" Label="Date of birth" @bind-Date="Request.DateOfBirth" Variant="Variant.Outlined" />
+                        <MudButton Class="mt-3" Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Success" EndIcon="@Icons.Material.Filled.Save">Save changes</MudButton>
+                    </EditForm>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private ChangePersonalDataRequest Request = new();
+    private UserDataModel User = new();
+    private MudDatePicker DatePicker = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var personalDataModel = await LocalDataAccessor.ReadPersonalDataAsync();
+            User = await LocalDataAccessor.ReadUserDataAsync();
+
+            if(personalDataModel is not null)
+            {
+                Request = Mapper.Map<ChangePersonalDataRequest>(personalDataModel) with { Email = User.Email };
+            }
+
+            StateHasChanged();
+        }
+    }
+
+    private async Task OnValidSubmit()
+    {
+        var response = await AuthService.ChangePersonalDataAsync(Request);
+
+        if (response.IsSucceeded)
+        {
+            var data = JsonConvert.DeserializeObject<ChangePersonalDataResponse>(response.Result!.ToString()!);
+            await LocalDataAccessor.WritePersonalDataAsync(Mapper.Map<PersonalDataModel>(data));
+            NavigationManager.NavigateTo("/account/profile", true);
+            Snackbar.Add(response.ResultMessage, MudBlazor.Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add(response.ErrorMessage, MudBlazor.Severity.Error);
+        }
+    }
+}

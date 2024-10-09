@@ -45,7 +45,7 @@
                                 </MudItem>
                             </MudGrid>
                             <MudGrid Class="mt-3">
-                                <ProfileField Divided Label="Full Name" Text="@PersonalData.FullName" />
+                                <ProfileField Divided Label="Full Name" Text="@($"{PersonalData.FirstName} {PersonalData.LastName}")" />
                                 <ProfileField Divided Label="Date of birth" Text="@(PersonalData.DateOfBirth.ToLongDateString())" />
                                 <ProfileField Divided Label="Gender" Text="@PersonalData.Gender" />
                             </MudGrid>
@@ -104,7 +104,7 @@
     {
         PersonalData = await LocalDataAccessor.ReadPersonalDataAsync();
 
-        if (string.IsNullOrEmpty(PersonalData.FullName) || string.IsNullOrEmpty(PersonalData.Gender))
+        if (string.IsNullOrEmpty(PersonalData.FirstName) || string.IsNullOrEmpty(PersonalData.LastName) || string.IsNullOrEmpty(PersonalData.Gender))
         {
             var response = await AuthService.GetPersonalDataAsync(UserData!.Email);
 
@@ -114,7 +114,8 @@
 
                 PersonalData = new()
                     {
-                        FullName = $"{data!.FirstName} {data.LastName}",
+                        FirstName = data.FirstName,
+                        LastName = data.LastName,
                         Gender = data.Gender,
                         DateOfBirth = data.DateOfBirth
                     };
