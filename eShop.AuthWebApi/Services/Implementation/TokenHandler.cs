@@ -64,6 +64,7 @@
                     new (CustomClaimTypes.UserName, user.UserName ?? "None"),
                     new (JwtRegisteredClaimNames.Email, user.Email ?? "None"),
                     new (CustomClaimTypes.Id, user.Id),
+                    new (ClaimTypes.MobilePhone, user.PhoneNumber ?? "")
                 };
 
                 if (roles.Any())
@@ -101,6 +102,7 @@
                     new (CustomClaimTypes.UserName, rawToken.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.UserName)!.Value),
                     new (JwtRegisteredClaimNames.Email, rawToken.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email)!.Value),
                     new (CustomClaimTypes.Id, rawToken.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value),
+                    new (ClaimTypes.MobilePhone, rawToken.Claims.FirstOrDefault(x => x.Type == ClaimTypes.MobilePhone)!.Value),
                 };
 
                 var roles = rawToken.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value);

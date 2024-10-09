@@ -2,7 +2,7 @@
 
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
-@inject AuthenticationStateProvider authenticationState
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ITokenProvider tokenProvider
 @inject ISnackbar Snackbar
 
@@ -33,6 +33,9 @@
 
         if (result.IsSucceeded)
         {
+            var data = JsonConvert.DeserializeObject<ChangeUserNameResponse>(result.Result!.ToString()!);
+            await (AuthenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(data!.Token);
+            await tokenProvider.SetTokenAsync(data.Token);
             Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
             NavigationManager.NavigateTo("/account/profile");
         }

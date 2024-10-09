@@ -1,0 +1,67 @@
+﻿@page "/account/profile/change-phone-number"
+@using eShop.Application.Validation.Auth
+
+@inject NavigationManager NavigationManager
+@inject ILocalDataAccessor LocalDataAccessor
+@inject IAuthenticationService AuthService
+@inject ChangePhoneNumberValidator Validator
+@inject ISnackbar Snackbar
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ITokenProvider TokenProvider
+
+<PageTitle>Change username</PageTitle>
+
+<MudGrid Justify="Justify.Center">
+    <MudItem xs="4">
+        <MudPaper Outlined Class="pa-5">
+            <MudGrid>
+                <MudItem xs="1">
+                    <MudIconButton @onclick="@(() => NavigationManager.NavigateTo("/account/profile"))" Icon="@Icons.Material.Filled.ArrowBack" />
+                </MudItem>
+                <MudItem xs="11" Class="m-auto">
+                    <MudText Typo="Typo.h6"> Change phone number</MudText>
+                </MudItem>
+            </MudGrid>
+            <MudDivider />
+            <MudGrid Class="mt-3" Justify="Justify.Center">
+                <MudItem xs="12">
+                    <EditForm Model="Request" FormName="change-phone-number-form" OnValidSubmit="OnValidSubmit">
+                        <FluentValidationValidator Validator="Validator" />
+                        <MudTextField Immediate Clearable For="@(() => Request.PhoneNumber)" Label="Phone number" @bind-Value="Request.PhoneNumber" Variant="Variant.Outlined" />
+                        <MudButton Class="mt-3" Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Success" EndIcon="@Icons.Material.Filled.Save">Save changes</MudButton>
+                    </EditForm>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private ChangePhoneNumberRequest Request = new();
+    private UserDataModel User = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            User = await LocalDataAccessor.ReadUserDataAsync();
+            Request = new() { Email = User.Email, PhoneNumber = "380686100242" };
+            StateHasChanged();
+        }
+    }
+
+    private async Task OnValidSubmit()
+    {
+        var response = await AuthService.RequestChangePhoneNumberAsync(Request);
+
+        if (response.IsSucceeded)
+        {
+            var data = JsonConvert.DeserializeObject<ChangeUserNameResponse>(response.Result!.ToString()!);
+            Snackbar.Add(data!.Message, MudBlazor.Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add(response.ErrorMessage, MudBlazor.Severity.Error);
+        }
+    }
+}

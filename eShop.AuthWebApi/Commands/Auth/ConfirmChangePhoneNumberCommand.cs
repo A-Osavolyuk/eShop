@@ -1,17 +1,15 @@
-﻿
-using eShop.Domain.DTOs.Requests.Auth;
-using Microsoft.AspNetCore.Identity;
-
-namespace eShop.AuthWebApi.Commands.Auth
+﻿namespace eShop.AuthWebApi.Commands.Auth
 {
     public record ConfirmChangePhoneNumberCommand(ConfirmChangePhoneNumberRequest Request) : IRequest<Result<ConfirmChangePhoneNumberResponse>>;
 
     public class ConfirmChangePhoneNumberCommandHandler(
         AppManager appManager,
-        ILogger<ConfirmChangePhoneNumberCommandHandler> logger) : IRequestHandler<ConfirmChangePhoneNumberCommand, Result<ConfirmChangePhoneNumberResponse>>
+        ILogger<ConfirmChangePhoneNumberCommandHandler> logger,
+        ITokenHandler tokenHandler) : IRequestHandler<ConfirmChangePhoneNumberCommand, Result<ConfirmChangePhoneNumberResponse>>
     {
         private readonly AppManager appManager = appManager;
         private readonly ILogger<ConfirmChangePhoneNumberCommandHandler> logger = logger;
+        private readonly ITokenHandler tokenHandler = tokenHandler;
 
         public async Task<Result<ConfirmChangePhoneNumberResponse>> Handle(ConfirmChangePhoneNumberCommand request, CancellationToken cancellationToken)
         {
@@ -36,9 +34,21 @@ namespace eShop.AuthWebApi.Commands.Auth
                     return logger.LogErrorWithException<ConfirmChangePhoneNumberResponse>(new NotChangedPhoneNumberException(), actionMessage, request.Request.RequestId);
                 }
 
+                user = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
+
+                if (user is null)
+                {
+                    return logger.LogErrorWithException<ConfirmChangePhoneNumberResponse>(new NotFoundUserByEmailException(request.Request.Email),
+                        actionMessage, request.Request.RequestId);
+                }
+
+                var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
+                var permissions = (await appManager.PermissionManager.GetUserPermisisonsAsync(user)).ToList();
+                var securityToken = tokenHandler.GenerateToken(user!, roles, permissions);
+
                 logger.LogInformation("Successfully changed phone number of user with email {email}. Request ID {requestId}",
                         request.Request.Email, request.Request.RequestId);
-                return new(new ConfirmChangePhoneNumberResponse() { Message = "Your phone number was successfully changed." });
+                return new(new ConfirmChangePhoneNumberResponse() { Message = "Your phone number was successfully changed.", Token = securityToken });
             }
             catch (Exception ex)
             {

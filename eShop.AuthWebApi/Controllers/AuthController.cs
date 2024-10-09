@@ -228,7 +228,7 @@ namespace eShop.AuthWebApi.Controllers
             var result = await sender.Send(new ChangePhoneNumberCommand(changePhoneNumberRequest));
 
             return result.Match(
-                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 
@@ -239,7 +239,7 @@ namespace eShop.AuthWebApi.Controllers
             var result = await sender.Send(new ConfirmChangePhoneNumberCommand(confirmChangePhoneNumberRequest));
 
             return result.Match(
-                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 

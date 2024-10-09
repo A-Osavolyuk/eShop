@@ -108,6 +108,7 @@ namespace eShop.Infrastructure.Account
                     new(CustomClaimTypes.Id, claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value),
                     new(ClaimTypes.Name, claims.FirstOrDefault(x => x.Type == CustomClaimTypes.UserName)!.Value),
                     new(ClaimTypes.Email, claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email)!.Value),
+                    new(ClaimTypes.MobilePhone, claims.FirstOrDefault(x => x.Type == ClaimTypes.MobilePhone)!.Value),
                 };
 
                 var roles = claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value);
@@ -140,12 +141,14 @@ namespace eShop.Infrastructure.Account
 
             var email = Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value;
             var username = Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)!.Value;
+            var phoneNumber = Claims.FirstOrDefault(x => x.Type == ClaimTypes.MobilePhone)!.Value;
             var id = Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value;
             var roles = Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToList();
             var permissions = Claims.Where(x => x.Type == CustomClaimTypes.Permission).Select(x => x.Value).ToList();
 
             await localDataAccessor.WriteUserDataAsync(new UserDataModel()
             {
+                PhoneNumber = phoneNumber,
                 Email = email,
                 UserName = username,
                 UserId = id,
