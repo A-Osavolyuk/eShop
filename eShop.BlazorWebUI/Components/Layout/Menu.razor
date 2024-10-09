@@ -4,6 +4,7 @@
 @inject ITokenProvider tokenProvider
 @inject ISnackbar Snackbar
 @inject ILocalDataAccessor LocalDataAccessor
+@inject IConfiguration Configuration
 
 <AuthorizeView>
     <NotAuthorized>
@@ -15,11 +16,13 @@
     <Authorized>
         <MudMenu AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.BottomLeft" ActivationEvent="MouseEvent.LeftClick">
             <ActivatorContent>
-                <MudAvatar>@(context.User.Identity.Name[0].ToString().ToUpper())</MudAvatar>
+                <MudAvatar>
+                    <MudImage Alt="avatar" Src="@AvatarUri" />
+                </MudAvatar>
             </ActivatorContent>
             <ChildContent>
                 <MudMenuItem>
-                    <MudButton StartIcon="@Icons.Material.Filled.ShoppingCart" Color="Color.Primary" Href="@($"shop/user-cart/{UserId}")">
+                    <MudButton StartIcon="@Icons.Material.Filled.ShoppingCart" Color="Color.Primary" Href="@($"shop/user-cart")">
                         Your Cart
                     </MudButton>
                 </MudMenuItem>
@@ -45,7 +48,13 @@
 </AuthorizeView>
 
 @code {
-    private string UserId { get; set; } = string.Empty;
+    private string AvatarUri = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        AvatarUri = Configuration["DefaultAvatar"]!;
+    }
+
     private async Task LogoutClick()
     {
         await (authenticationState as ApplicationAuthenticationStateProvider)!.LogOutAsync();
