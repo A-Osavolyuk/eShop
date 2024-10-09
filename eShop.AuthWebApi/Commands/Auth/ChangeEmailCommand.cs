@@ -2,14 +2,14 @@
 
 namespace eShop.AuthWebApi.Commands.Auth
 {
-    public record RequestChangeEmailCommand(ChangeEmailRequest Request) : IRequest<Result<ChangeEmailResponse>>;
+    public record ChangeEmailCommand(ChangeEmailRequest Request) : IRequest<Result<ChangeEmailResponse>>;
 
     public class RequestChangeEmailCommandHandler(
         IValidator<ChangeEmailRequest> validator,
         AppManager appManager,
         ILogger<RequestChangeEmailCommandHandler> logger,
         IEmailSender emailSender,
-        IConfiguration configuration) : IRequestHandler<RequestChangeEmailCommand, Result<ChangeEmailResponse>>
+        IConfiguration configuration) : IRequestHandler<ChangeEmailCommand, Result<ChangeEmailResponse>>
     {
         private readonly IValidator<ChangeEmailRequest> validator = validator;
         private readonly AppManager appManager = appManager;
@@ -17,7 +17,7 @@ namespace eShop.AuthWebApi.Commands.Auth
         private readonly IEmailSender emailSender = emailSender;
         private readonly IConfiguration configuration = configuration;
         private readonly string frontendUri = configuration["GeneralSettings:FrontendBaseUri"]!;
-        public async Task<Result<ChangeEmailResponse>> Handle(RequestChangeEmailCommand request, CancellationToken cancellationToken)
+        public async Task<Result<ChangeEmailResponse>> Handle(ChangeEmailCommand request, CancellationToken cancellationToken)
         {
             var actionMessage = new ActionMessage("generate change email address token for user with email {0}", request.Request.CurrentEmail);
             try

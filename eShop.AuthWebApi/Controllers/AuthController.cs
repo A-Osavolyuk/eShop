@@ -181,10 +181,10 @@ namespace eShop.AuthWebApi.Controllers
         [HttpPost("request-change-email")]
         public async ValueTask<ActionResult<ResponseDTO>> RequestChangeEmail([FromBody] ChangeEmailRequest changeEmailRequest)
         {
-            var result = await sender.Send(new RequestChangeEmailCommand(changeEmailRequest));
+            var result = await sender.Send(new ChangeEmailCommand(changeEmailRequest));
 
             return result.Match(
-                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).WithResult(s).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
 
@@ -225,7 +225,7 @@ namespace eShop.AuthWebApi.Controllers
         [HttpPost("request-change-phone-number")]
         public async ValueTask<ActionResult<ResponseDTO>> RequestChangePhoneNumber([FromBody] ChangePhoneNumberRequest changePhoneNumberRequest)
         {
-            var result = await sender.Send(new RequestChangePhoneNumberCommand(changePhoneNumberRequest));
+            var result = await sender.Send(new ChangePhoneNumberCommand(changePhoneNumberRequest));
 
             return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),

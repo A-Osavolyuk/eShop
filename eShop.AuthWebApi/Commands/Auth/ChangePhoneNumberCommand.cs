@@ -2,14 +2,14 @@
 
 namespace eShop.AuthWebApi.Commands.Auth
 {
-    public record RequestChangePhoneNumberCommand(ChangePhoneNumberRequest Request) : IRequest<Result<ChangePhoneNumberResponse>>;
+    public record ChangePhoneNumberCommand(ChangePhoneNumberRequest Request) : IRequest<Result<ChangePhoneNumberResponse>>;
 
     public class RequestChangePhoneNumberCommandHandler(
         IValidator<ChangePhoneNumberRequest> validator,
         AppManager appManager,
         ILogger<RequestChangePhoneNumberCommandHandler> logger,
         IEmailSender emailSender,
-        IConfiguration configuration) : IRequestHandler<RequestChangePhoneNumberCommand, Result<ChangePhoneNumberResponse>>
+        IConfiguration configuration) : IRequestHandler<ChangePhoneNumberCommand, Result<ChangePhoneNumberResponse>>
     {
         private readonly IValidator<ChangePhoneNumberRequest> validator = validator;
         private readonly AppManager appManager = appManager;
@@ -18,7 +18,7 @@ namespace eShop.AuthWebApi.Commands.Auth
         private readonly IConfiguration configuration = configuration;
         private readonly string frontendUri = configuration["GeneralSettings:FrontendBaseUri"]!;
 
-        public async Task<Result<ChangePhoneNumberResponse>> Handle(RequestChangePhoneNumberCommand request, CancellationToken cancellationToken)
+        public async Task<Result<ChangePhoneNumberResponse>> Handle(ChangePhoneNumberCommand request, CancellationToken cancellationToken)
         {
             var actionMessage = new ActionMessage("generate change phone number token for user with email {0}", request.Request.Email);
             try

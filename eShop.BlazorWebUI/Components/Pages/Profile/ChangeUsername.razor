@@ -1,0 +1,70 @@
+﻿@page "/account/profile/change-username"
+@using eShop.Application.Validation.Auth
+
+@inject NavigationManager NavigationManager
+@inject ILocalDataAccessor LocalDataAccessor
+@inject IAuthenticationService AuthService
+@inject UserNameValidator Validator
+@inject ISnackbar Snackbar
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ITokenProvider TokenProvider
+
+<PageTitle>Change username</PageTitle>
+
+<MudGrid Justify="Justify.Center">
+    <MudItem xs="4">
+        <MudPaper Outlined Class="pa-5">
+            <MudGrid>
+                <MudItem xs="1">
+                    <MudIconButton @onclick="@(() => NavigationManager.NavigateTo("/account/profile"))" Icon="@Icons.Material.Filled.ArrowBack" />
+                </MudItem>
+                <MudItem xs="11" Class="m-auto">
+                    <MudText Typo="Typo.h6"> Change username </MudText>
+                </MudItem>
+            </MudGrid>
+            <MudDivider />
+            <MudGrid Class="mt-3" Justify="Justify.Center">
+                <MudItem xs="12">
+                    <EditForm Model="Request" FormName="change-username-form" OnValidSubmit="OnValidSubmit">
+                        <FluentValidationValidator Validator="Validator"/>
+                        <MudTextField Immediate Clearable Counter="18" MaxLength="18" For="@(() => Request.UserName)" Label="Username" @bind-Value="Request.UserName" Variant="Variant.Outlined" />
+                        <MudButton Class="mt-3" Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Success" EndIcon="@Icons.Material.Filled.Save">Save changes</MudButton>
+                    </EditForm>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private ChangeUserNameRequest Request = new();
+    private UserDataModel User = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            User = await LocalDataAccessor.ReadUserDataAsync();
+            Request = new() { Email = User.Email, UserName = User.UserName };
+            StateHasChanged();
+        }
+    }
+
+    private async Task OnValidSubmit()
+    {
+        var response = await AuthService.ChangeUserNameAsync(Request);
+
+        if (response.IsSucceeded)
+        {
+            var data = JsonConvert.DeserializeObject<ChangeUserNameResponse>(response.Result!.ToString()!);
+            await (AuthenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(data!.Token);
+            await TokenProvider.SetTokenAsync(data.Token);
+            NavigationManager.NavigateTo("/account/profile", true);
+            Snackbar.Add(data!.Message, MudBlazor.Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add(response.ErrorMessage, MudBlazor.Severity.Error);
+        }
+    }
+}

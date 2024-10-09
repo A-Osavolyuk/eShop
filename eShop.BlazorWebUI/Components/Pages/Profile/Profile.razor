@@ -26,9 +26,9 @@
                         <MudPaper Outlined Class="pa-3 mb-3">
                             <MudText Typo="Typo.h6">Account Information</MudText>
                             <MudGrid Class="mt-3">
-                                <ProfileField Divided Label="User name" Text="@UserData.UserName" HasButton Tooltip="Change user name" OnEditClick="ChangeAccountData" />
-                                <ProfileField Divided Label="Email address" Text="@UserData.Email" HasButton Tooltip="Change email address" OnEditClick="ChangeAccountData" />
-                                <ProfileField Divided Label="Phone number" Text="" HasButton Tooltip="Change phone number" OnEditClick="ChangeAccountData" />
+                                <ProfileField Divided Label="User name" Text="@UserData.UserName" HasButton Tooltip="Change user name" OnEditClick="ChangeUserName" />
+                                <ProfileField Divided Label="Email address" Text="@UserData.Email" HasButton Tooltip="Change email address" OnEditClick="ChangeEmail" />
+                                <ProfileField Divided Label="Phone number" Text="" HasButton Tooltip="Change phone number" OnEditClick="ChangePhoneNumber" />
                             </MudGrid>
                         </MudPaper>
 
@@ -39,7 +39,8 @@
                                 </MudItem>
                                 <MudItem>
                                     <MudTooltip Text="Change perosnal data">
-                                        <MudIconButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Primary" Icon="@Icons.Material.Filled.EditNote" OnClick="ChangePersonalData" />
+                                        <MudIconButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Primary" Icon="@Icons.Material.Filled.EditNote"
+                                                       OnClick="ChangePersonalData" />
                                     </MudTooltip>
                                 </MudItem>
                             </MudGrid>
@@ -67,7 +68,8 @@
                                 </MudItem>
                                 <MudItem xs="1">
                                     <MudTooltip Text="Change two factor authentication state">
-                                        <MudIconButton ButtonType="ButtonType.Button" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" OnClick="ChangeTwoFactorAuthenticationState" />
+                                        <MudIconButton ButtonType="ButtonType.Button" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled"
+                                                       OnClick="ChangeTwoFactorAuthenticationState" />
                                     </MudTooltip>
                                 </MudItem>
                                 <ProfileField Divided Label="Password" Text="@($"Last updated at {SecurityData.PasswordUpdatedDate.ToLongDateString()}")"
@@ -130,7 +132,7 @@
     {
         SecurityData = await LocalDataAccessor.ReadSecurityDataAsync();
 
-        if(SecurityData.PasswordUpdatedDate == new DateTime(1, 1, 1))
+        if (SecurityData.PasswordUpdatedDate == new DateTime(1, 1, 1))
         {
             var response = await AuthService.GetTwoFactorStateAsync(UserData.Email);
 
@@ -153,7 +155,9 @@
         }
     }
 
-    private void ChangeAccountData() => NavigationManager.NavigateTo("account/profile/change-account-data", true);
+    private void ChangeUserName() => NavigationManager.NavigateTo("account/profile/change-username", true);
+    private void ChangeEmail() => NavigationManager.NavigateTo("account/profile/change-email", true);
+    private void ChangePhoneNumber() => NavigationManager.NavigateTo("account/profile/change-phone-number", true);
     private void ChangePersonalData() => NavigationManager.NavigateTo("account/profile/change-personal-data", true);
     private void ChangePassword() => NavigationManager.NavigateTo("account/profile/change-password", true);
 
