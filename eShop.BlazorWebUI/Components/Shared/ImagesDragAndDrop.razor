@@ -15,8 +15,7 @@
                            @ondragleave="@ClearDragClass"
                            @ondragend="@ClearDragClass"
                            For="@(() => Model.Files)"
-                           SuppressOnChangeWhenInvalid>
-                <ButtonTemplate>
+                           SuppressOnChangeWhenInvalid >
                     <MudPaper Height="300px"
                               Outlined="true"
                               Class="@(_dragClass + (Model.Images.Any() ? "" : " border-2 border-dashed"))">
@@ -31,24 +30,22 @@
                         {
                             <MudText Typo="Typo.h6" Class="ml-4 mt-4"> Drag and drop files here or click </MudText>
                         }
-                    </MudPaper>
-                    <MudToolBar DisableGutters="true"
-                                Class="relative d-flex gap-1 z-30">
-                        <MudButton FullWidth HtmlTag="label"
-                                   Color="Color.Primary"
-                                   for="@context.Id"
-                                   Variant="Variant.Filled">
-                            Choose files
-                        </MudButton>
-                        <MudButton FullWidth OnClick="@(async () => await Clear())"
-                                   Color="Color.Error"
-                                   Disabled="@(!Model.Images.Any())"
-                                   Variant="Variant.Filled">
-                            Clear
-                        </MudButton>
-                    </MudToolBar>
-                </ButtonTemplate>
+                    </MudPaper>   
             </MudFileUpload>
+            <MudToolBar DisableGutters="true"
+                        Class="relative d-flex gap-1 z-30">
+                <MudButton FullWidth HtmlTag="label"
+                           Color="Color.Primary"
+                           Variant="Variant.Filled">
+                    Choose files
+                </MudButton>
+                <MudButton FullWidth OnClick="@(async () => await Clear())"
+                           Color="Color.Error"
+                           Disabled="@(!Model.Images.Any())"
+                           Variant="Variant.Filled">
+                    Clear
+                </MudButton>
+            </MudToolBar>
         </MudItem>
         <MudItem xs=12>
             <MudGrid Spacing="1">
