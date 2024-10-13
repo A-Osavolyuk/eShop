@@ -1,11 +1,9 @@
 ﻿@page "/account/register"
 
-@inject ISnackbar Snackbar
-@inject NavigationManager navigationManager
+@inherits PageBase
+
 @inject IAuthenticationService authenticationService
 @inject IValidator<RegistrationRequest> validator
-
-<PageTitle>Register</PageTitle>
 
 <MudGrid Justify="Justify.Center">
     <MudItem xs="4">
@@ -49,7 +47,7 @@
         if (result.IsSucceeded)
         {
             Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
-            navigationManager.NavigateTo("/account/login");
+            NavigationManager.NavigateTo("/account/login");
         }
         else
             Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);

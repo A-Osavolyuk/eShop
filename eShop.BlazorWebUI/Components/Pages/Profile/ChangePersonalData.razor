@@ -1,28 +1,23 @@
-﻿@page "/account/profile/change-personal-data"
-@using eShop.Application.Validation.Auth
+﻿@page "/profile/change-personal-data"
 
-@inject NavigationManager NavigationManager
-@inject ILocalDataAccessor LocalDataAccessor
+@inherits PageBase
+
 @inject IAuthenticationService AuthService
 @inject PersonalDataValidator Validator
-@inject ISnackbar Snackbar
 @inject IMapper Mapper
-
-<PageTitle>Change personal data</PageTitle>
 
 <MudGrid Justify="Justify.Center">
     <MudItem xs="4">
         <MudPaper Outlined Class="pa-5">
             <MudGrid>
                 <MudItem xs="1">
-                    <MudIconButton @onclick="@(() => NavigationManager.NavigateTo("/account/profile"))" Icon="@Icons.Material.Filled.ArrowBack" />
+                    <MudIconButton @onclick="@(() => NavigationManager.NavigateTo("/profile"))" Icon="@Icons.Material.Filled.ArrowBack" />
                 </MudItem>
                 <MudItem xs="11" Class="m-auto">
                     <MudText Typo="Typo.h6"> Change personal data </MudText>
                 </MudItem>
             </MudGrid>
-            <MudDivider />
-            <MudGrid Class="mt-3" Justify="Justify.Center">
+            <MudGrid Justify="Justify.Center">
                 <MudItem xs="12">
                     <EditForm Model="Request" FormName="change-personal-data-form" OnValidSubmit="OnValidSubmit">
                         <FluentValidationValidator Validator="Validator" />

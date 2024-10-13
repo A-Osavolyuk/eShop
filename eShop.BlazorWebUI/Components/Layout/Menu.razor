@@ -22,17 +22,17 @@
             </ActivatorContent>
             <ChildContent>
                 <MudMenuItem>
-                    <MudButton StartIcon="@Icons.Material.Filled.ShoppingCart" Color="Color.Primary" Href="@($"shop/user-cart")">
+                    <MudButton StartIcon="@Icons.Material.Filled.ShoppingCart" Color="Color.Primary" OnClick="@(() => RedirectTo("/cart"))">
                         Your Cart
                     </MudButton>
                 </MudMenuItem>
                 <MudMenuItem>
-                    <MudButton StartIcon="@Icons.Material.Filled.ManageAccounts" Color="Color.Primary" Href="account/profile">
+                    <MudButton StartIcon="@Icons.Material.Filled.ManageAccounts" Color="Color.Primary" OnClick="@(() => RedirectTo("/profile"))">
                         Profile
                     </MudButton>
                 </MudMenuItem>
                 <MudMenuItem>
-                    <MudButton StartIcon="@Icons.Material.Filled.Settings" Color="Color.Primary" Href="profile/settings">
+                    <MudButton StartIcon="@Icons.Material.Filled.Settings" Color="Color.Primary" OnClick="@(() => RedirectTo("/setting"))">
                         Settings
                     </MudButton>
                 </MudMenuItem>
@@ -50,9 +50,18 @@
 @code {
     private string AvatarUri = string.Empty;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        AvatarUri = Configuration["DefaultAvatar"]!;
+        var link = await LocalDataAccessor.ReadAvatarLinkAsync();
+
+        if (string.IsNullOrEmpty(link))
+        {
+            AvatarUri = Configuration["DefaultAvatar"]!;
+        }
+        else
+        {
+            AvatarUri = link;
+        }
     }
 
     private async Task LogoutClick()
@@ -60,5 +69,11 @@
         await (authenticationState as ApplicationAuthenticationStateProvider)!.LogOutAsync();
         Snackbar.Add("Successfully logged out.", MudBlazor.Severity.Success);
         navigationManger.NavigateTo("/account/login");
+    }
+
+    private void RedirectTo(string link)
+    {
+        navigationManger.NavigateTo(link);
+        StateHasChanged();
     }
 }

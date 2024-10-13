@@ -81,5 +81,25 @@ namespace eShop.Infrastructure.Services
 
             return securityData;
         }
+
+        public async ValueTask WriteAvatarLinkAsync(string link)
+        {
+            if (string.IsNullOrEmpty(link))
+            {
+                throw new ArgumentNullException(nameof(link));
+            }
+
+            await localStorageService.SetItemAsStringAsync("avatar-link", link);
+        }
+
+        public async ValueTask<string> ReadAvatarLinkAsync()
+        {
+            return await localStorageService.GetItemAsStringAsync("avatar-link") ?? string.Empty;
+        }
+
+        public async ValueTask RemoveAvatarLinkAsync()
+        {
+            await localStorageService.RemoveItemAsync("avatar-link");
+        }
     }
 }

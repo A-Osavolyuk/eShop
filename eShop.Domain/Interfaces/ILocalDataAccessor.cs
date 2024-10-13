@@ -5,6 +5,9 @@ namespace eShop.Domain.Interfaces
 {
     public interface ILocalDataAccessor
     {
+        public ValueTask RemoveAvatarLinkAsync();
+        public ValueTask WriteAvatarLinkAsync(string link);
+        public ValueTask<string> ReadAvatarLinkAsync();
         public ValueTask WriteUserDataAsync(UserDataModel user);
         public ValueTask<UserDataModel> ReadUserDataAsync();
         public ValueTask WritePersonalDataAsync(PersonalDataModel personalData);

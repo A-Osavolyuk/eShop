@@ -1,13 +1,11 @@
 ﻿@page "/account/login"
 
-@inject ISnackbar Snackbar
-@inject NavigationManager navigationManager
+@inherits PageBase
+
 @inject IAuthenticationService authenticationService
 @inject AuthenticationStateProvider authenticationStateProvider
 @inject IValidator<LoginRequest> validator
 @inject IConfiguration Configuration
-
-<PageTitle>Login</PageTitle>
 
 <MudGrid Justify="Justify.Center">
     <MudItem xs="4">
@@ -95,12 +93,12 @@
             if (data!.HasTwoFactorAuthentication)
             {
                 Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
-                navigationManager.NavigateTo($"/account/login-2fa/{loginRequest.Email}");
+                NavigationManager.NavigateTo($"/account/login-2fa/{loginRequest.Email}");
             }
             else
             {
                 await (authenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(data!.Token);
-                navigationManager.NavigateTo("/products");
+                NavigationManager.NavigateTo("/products");
                 Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
                 loginRequest = new();
             }
@@ -112,6 +110,6 @@
     private void ExternalLogin(string ProviderName)
     {
         var authUrl = $"{Configuration["Services:Gateway"]!}/api/v1/Auth/external-login/{ProviderName}";
-        navigationManager.NavigateTo(authUrl);
+        NavigationManager.NavigateTo(authUrl);
     }
 }

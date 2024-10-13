@@ -1,12 +1,10 @@
-﻿@page "/account/profile"
+﻿@page "/profile"
 
-@inject ILocalDataAccessor LocalDataAccessor
-@inject NavigationManager NavigationManager
+@inherits PageBase
+
 @inject IAuthenticationService AuthService
-@inject ISnackbar Snackbar
 @inject IConfiguration Configuration
-
-<PageTitle>Profile</PageTitle>
+@inject IStoreService StoreService
 
 <MudGrid Justify="Justify.Center">
     <MudItem xs="8">
@@ -22,11 +20,21 @@
                         <MudPaper Class="pa-1" Outlined>
                             <MudImage ObjectFit="ObjectFit.Fill" Class="w-100 h-100" Alt="user-avatar" Src="@AvatarUri" />
                         </MudPaper>
+                        <MudGrid Justify="Justify.Center">
+                            <MudItem Class="mt-1" xs="12">
+                                <MudStack Spacing="1">
+                                    <MudButton Disabled="@(AvatarUri == Configuration["DefaultAvatar"] ? true : false)" OnClick="RemoveAvatar"
+                                               Variant="Variant.Filled" FullWidth Color="Color.Error" ButtonType="ButtonType.Button" EndIcon="@Icons.Material.Filled.Delete">Remove avatar</MudButton>
+                                    <MudButton Variant="Variant.Filled" FullWidth Color="Color.Primary" OnClick="ChangeAvatar"
+                                               ButtonType="ButtonType.Button" EndIcon="@Icons.Material.Filled.AddAPhoto">Change avatar</MudButton>
+                                </MudStack>
+                            </MudItem>
+                        </MudGrid>
                     </MudItem>
                     <MudItem xs="9">
                         <MudPaper Outlined Class="pa-3 mb-3">
                             <MudText Typo="Typo.h6">Account Information</MudText>
-                            <MudGrid Class="mt-3">
+                            <MudGrid Spacing="3" Class="mt-3">
                                 <ProfileField Divided Label="User name" Text="@UserData.UserName" HasButton Tooltip="Change user name" OnEditClick="ChangeUserName" />
                                 <ProfileField Divided Label="Email address" Text="@UserData.Email" HasButton Tooltip="Change email address" OnEditClick="ChangeEmail" />
                                 <ProfileField Divided Label="Phone number" Text="@UserData.PhoneNumber" HasButton Tooltip="Change phone number" OnEditClick="ChangePhoneNumber" />
@@ -34,31 +42,30 @@
                         </MudPaper>
 
                         <MudPaper Outlined Class="pa-3 mb-3">
-                            <MudGrid>
+                            <MudGrid Spacing="3">
                                 <MudItem xs="11">
                                     <MudText Typo="Typo.h6">Personal Information</MudText>
                                 </MudItem>
-                                <MudItem>
-                                    <MudTooltip Text="Change perosnal data">
+                                <MudItem xs="1">
+                                    <MudTooltip Text="Change perosnal data" Color="Color.Primary">
                                         <MudIconButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Primary" Icon="@Icons.Material.Filled.EditNote"
                                                        OnClick="ChangePersonalData" />
                                     </MudTooltip>
                                 </MudItem>
                             </MudGrid>
-                            <MudGrid Class="mt-3">
+                            <MudGrid Spacing="3" Class="mt-3">
                                 <ProfileField Divided Label="Full Name" Text="@($"{PersonalData.FirstName} {PersonalData.LastName}")" />
                                 <ProfileField Divided Label="Date of birth" Text="@(PersonalData.DateOfBirth.ToLongDateString())" />
                                 <ProfileField Divided Label="Gender" Text="@PersonalData.Gender" />
                             </MudGrid>
                         </MudPaper>
-
                         <MudPaper Outlined Class="pa-3">
                             <MudGrid>
                                 <MudItem xs="12">
                                     <MudText Typo="Typo.h6">Security Information</MudText>
                                 </MudItem>
                             </MudGrid>
-                            <MudGrid Class="mt-3">
+                            <MudGrid Spacing="3" Class="mt-3">
                                 <MudDivider />
                                 <MudItem xs="3" Class="m-auto">
                                     <MudText Typo="Typo.body2">Two factor authentication</MudText>
@@ -68,7 +75,7 @@
                                              Typo="Typo.body2">@(SecurityData.TwoFactorAuthenticationState ? "Enabled" : "Disabled")</MudText>
                                 </MudItem>
                                 <MudItem xs="1">
-                                    <MudTooltip Text="Change two factor authentication state">
+                                    <MudTooltip Text="Change two factor authentication state" Color="Color.Primary">
                                         <MudIconButton ButtonType="ButtonType.Button" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled"
                                                        OnClick="ChangeTwoFactorAuthenticationState" />
                                     </MudTooltip>
@@ -90,18 +97,16 @@
     private SecurityDataModel SecurityData = null!;
     private string AvatarUri = string.Empty;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected async override Task OnInitializedAsync()
     {
-        AvatarUri = Configuration["DefaultAvatar"]!;
+        UserData = await LocalDataAccessor.ReadUserDataAsync();
+        await GetPersonalData();
+        await GetSecurityData();
+        await GetAvatar();
 
-        if (firstRender)
-        {
-            UserData = await LocalDataAccessor.ReadUserDataAsync();
-            await GetPersonalData();
-            await GetSecurityData();
+        StateHasChanged();
 
-            StateHasChanged();
-        }
+        await base.OnInitializedAsync();
     }
 
     private async Task GetPersonalData()
@@ -160,11 +165,26 @@
         }
     }
 
-    private void ChangeUserName() => NavigationManager.NavigateTo("account/profile/change-username", true);
-    private void ChangeEmail() => NavigationManager.NavigateTo("account/profile/change-email", true);
-    private void ChangePhoneNumber() => NavigationManager.NavigateTo("account/profile/change-phone-number", true);
-    private void ChangePersonalData() => NavigationManager.NavigateTo("account/profile/change-personal-data", true);
-    private void ChangePassword() => NavigationManager.NavigateTo("account/profile/change-password", true);
+    private async Task GetAvatar()
+    {
+        var link = await LocalDataAccessor.ReadAvatarLinkAsync();
+
+        if (string.IsNullOrEmpty(link))
+        {
+            AvatarUri = Configuration["DefaultAvatar"]!;
+        }
+        else
+        {
+            AvatarUri = link;
+        }
+    }
+
+    private void ChangeUserName() => NavigationManager.NavigateTo("/profile/change-username");
+    private void ChangeEmail() => NavigationManager.NavigateTo("/profile/change-email");
+    private void ChangePhoneNumber() => NavigationManager.NavigateTo("/profile/change-phone-number");
+    private void ChangePersonalData() => NavigationManager.NavigateTo("/profile/change-personal-data");
+    private void ChangePassword() => NavigationManager.NavigateTo("/profile/change-password");
+    private void ChangeAvatar() => NavigationManager.NavigateTo("/profile/change-avatar");
 
     private async Task ChangeTwoFactorAuthenticationState()
     {
@@ -181,5 +201,12 @@
         {
             Snackbar.Add(response.ErrorMessage, MudBlazor.Severity.Error);
         }
+    }
+
+    private async Task RemoveAvatar()
+    {
+        AvatarUri = Configuration["DefaultAvatar"]!;
+        await StoreService.RemoveUserAvatarAsync(UserData.UserId);
+        await LocalDataAccessor.RemoveAvatarLinkAsync();
     }
 }

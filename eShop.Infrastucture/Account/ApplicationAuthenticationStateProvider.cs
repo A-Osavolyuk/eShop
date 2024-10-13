@@ -5,6 +5,7 @@ using eShop.Domain.Interfaces;
 using eShop.Domain.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,12 +16,14 @@ namespace eShop.Infrastructure.Account
     public class ApplicationAuthenticationStateProvider(
         ITokenProvider tokenProvider,
         IAuthenticationService authenticationService,
-        ILocalDataAccessor localDataAccessor) : AuthenticationStateProvider
+        ILocalDataAccessor localDataAccessor,
+        ICookieManager cookieManager) : AuthenticationStateProvider
     {
         private readonly AuthenticationState anonymous = new(new ClaimsPrincipal());
         private readonly ITokenProvider tokenProvider = tokenProvider;
         private readonly IAuthenticationService authenticationService = authenticationService;
         private readonly ILocalDataAccessor localDataAccessor = localDataAccessor;
+        private readonly ICookieManager cookieManager = cookieManager;
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
@@ -200,8 +203,9 @@ namespace eShop.Infrastructure.Account
         public async Task LogOutAsync()
         {
             await tokenProvider.RemoveTokenAsync();
+            await cookieManager.DeleteCookie("jwt-token");
             await localDataAccessor.RemoveDataAsync();
-            await UpdateAuthenticationState("");
+            await UpdateAuthenticationState(string.Empty);
         }
     }
 }

@@ -1,12 +1,10 @@
 ﻿@page "/account/login-2fa/{Email}"
 
-@inject NavigationManager NavigationManager
+@inherits PageBase
+
 @inject IAuthenticationService AuthenticationService
-@inject ISnackbar Snackbar
 @inject IValidator<TwoFactorAuthenticationLoginRequest> Validator
 @inject AuthenticationStateProvider authenticationStateProvider
-
-<PageTitle>Login with 2FA</PageTitle>
 
 <MudGrid Justify="Justify.Center">
     <MudItem xs="4">

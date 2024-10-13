@@ -1,0 +1,10 @@
+﻿@inherits ComponentBase
+
+@code {
+    private string PageTitle = string.Empty;
+
+    [Inject] public ILocalDataAccessor LocalDataAccessor { get; private set; } = null!;
+    [Inject] public NavigationManager NavigationManager { get; private set; } = null!;
+    [Inject] public ISnackbar Snackbar { get; private set; } = null!;
+    [Inject] public IJSRuntime JS { get; private set; } = null!;
+}

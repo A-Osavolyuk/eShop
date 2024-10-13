@@ -26,6 +26,7 @@
     <ProjectReference Include="..\..\eShop.Gateway\eShop.Gateway.csproj" />
     <ProjectReference Include="..\..\eShop.ProductWebApi\eShop.ProductWebApi.csproj" />
     <ProjectReference Include="..\..\eShop.ReviewsWebApi\eShop.ReviewsWebApi.csproj" />
+    <ProjectReference Include="..\..\TEST\TEST\TEST.csproj" />
   </ItemGroup>
 
 </Project>

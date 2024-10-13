@@ -1,11 +1,12 @@
-﻿@using eShop.Infrastructure.Account
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
 
 @inject ITokenProvider TokenProvider
 @inject ILocalDataAccessor LocalDataAccessor
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ICartService CartService
 @inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JS
 
 <MudThemeProvider IsDarkMode />
 <MudDialogProvider />
@@ -32,8 +33,10 @@
 </MudLayout>
 
 @code {
-    bool _drawerOpen = false;
     [CascadingParameter] Task<AuthenticationState>? AuthenticationStateTask { get; set; }
+
+    private bool _drawerOpen = false;
+    private string pageTitle = string.Empty;
 
     void DrawerToggle()
     {
@@ -42,6 +45,7 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        await JS.InvokeVoidAsync("setTitle", GetPageTitle());
         if (firstRender)
         {
             var state = await AuthenticationStateTask!;
@@ -51,32 +55,16 @@
                 await (AuthenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(token);
             }
         }
-
-        // var cart = await LocalDataAccessor.GetCartAsync();
-
-        // if (cart is null)
-        // {
-        //     await GetCartAsync();
-        // }
     }
 
-    private async Task GetCartAsync()
+    private string GetPageTitle()
     {
-        var user = await LocalDataAccessor.ReadUserDataAsync();
-        if(user is not null)
-        {
-            var response = await CartService.GetCartByUserIdAsync(Guid.Parse(user.UserId));
-
-            if (response.IsSucceeded)
-            {
-                var data = JsonConvert.DeserializeObject<CartDTO>(response.Result!.ToString()!);
-                await LocalDataAccessor.SetCartAsync(data!);
-            }
-            else
-            {
-                Snackbar.Add(response.ErrorMessage, MudBlazor.Severity.Error);
-            }
-        }
+        var builder = new StringBuilder(NavigationManager.Uri);
+        builder.Replace(NavigationManager.BaseUri, string.Empty);
+        var title = builder.ToString().Split('/').Last();
+        var formatedTitle = new StringBuilder(title);
+        formatedTitle.Replace(title[0], char.ToUpper(title[0]), 0, 1);
+        formatedTitle.Replace("-", " ");
+        return formatedTitle.ToString();
     }
-
 }

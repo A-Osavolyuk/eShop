@@ -1,0 +1,27 @@
+﻿@page "/counter"
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender:false))
+@inject IJSRuntime Js
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+    private int currentCount = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Js.InvokeVoidAsync("console.log", currentCount);
+        base.OnInitialized();
+    }
+
+    private async Task IncrementCount()
+    {
+        currentCount++;
+        await Js.InvokeVoidAsync("console.log", currentCount);
+    }
+}

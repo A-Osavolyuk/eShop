@@ -19,6 +19,7 @@ namespace eShop.Infrastructure
             builder.AddJwtAuthentication();
 
             builder.Services.AddBlazoredLocalStorage();
+            builder.Services.AddHttpContextAccessor();
             return builder;
         }
 
@@ -70,6 +71,7 @@ namespace eShop.Infrastructure
             builder.Services.AddScoped<IStoreService, StoreService>();
             builder.Services.AddScoped<IReviewService, ReviewService>();
             builder.Services.AddScoped<ICartService, CartService>();
+            builder.Services.AddScoped<ICookieManager, CookieManager>();
 
             return builder;
         }
