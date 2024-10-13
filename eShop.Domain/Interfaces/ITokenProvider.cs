@@ -3,7 +3,7 @@
     public interface ITokenProvider
     {
         public ValueTask<string> GetTokenAsync();
-        public ValueTask SetTokenAsync(string token);
+        public ValueTask SetTokenAsync(string refreshToken);
         public ValueTask RemoveTokenAsync();
     }
 }

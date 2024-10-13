@@ -74,14 +74,15 @@
 
                 var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
                 var permissions = (await appManager.PermissionManager.GetUserPermisisonsAsync(user)).ToList();
-                var token = tokenHandler.GenerateToken(user, roles, permissions);
+                var tokens = tokenHandler.GenerateToken(user, roles, permissions);
 
                 logger.LogInformation("Successfully logged in user with email {email}. Request ID {requestID}",
                     request.Request.Email, request.Request.RequestId);
                 return new(new LoginResponse()
                 {
                     User = userDto,
-                    Token = token,
+                    AccessToken = tokens.AccessToken,
+                    RefreshToken = tokens.RefreshToken,
                     Message = "Successfully logged in.",
                     HasTwoFactorAuthentication = false
                 });

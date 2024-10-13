@@ -44,11 +44,16 @@
 
                 var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
                 var permissions = (await appManager.PermissionManager.GetUserPermisisonsAsync(user)).ToList();
-                var securityToken = tokenHandler.GenerateToken(user!, roles, permissions);
+                var tokens = tokenHandler.GenerateToken(user!, roles, permissions);
 
                 logger.LogInformation("Successfully changed phone number of user with email {email}. Request ID {requestId}",
                         request.Request.Email, request.Request.RequestId);
-                return new(new ConfirmChangePhoneNumberResponse() { Message = "Your phone number was successfully changed.", Token = securityToken });
+                return new(new ConfirmChangePhoneNumberResponse()
+                {
+                    Message = "Your phone number was successfully changed.",
+                    AccessToken = tokens.AccessToken,
+                    RefreshToken = tokens.RefreshToken,
+                });
             }
             catch (Exception ex)
             {

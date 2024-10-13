@@ -5,6 +5,7 @@
 @inject ISnackbar Snackbar
 @inject ILocalDataAccessor LocalDataAccessor
 @inject IConfiguration Configuration
+@inject IStoreService StoreService
 
 <AuthorizeView>
     <NotAuthorized>
@@ -49,14 +50,23 @@
 
 @code {
     private string AvatarUri = string.Empty;
+    private UserDataModel User = new();
 
     protected override async Task OnInitializedAsync()
     {
+        User = await LocalDataAccessor.ReadUserDataAsync();
         var link = await LocalDataAccessor.ReadAvatarLinkAsync();
 
         if (string.IsNullOrEmpty(link))
         {
-            AvatarUri = Configuration["DefaultAvatar"]!;
+            link = await StoreService.GetUserAvatarAsync(User.UserId);
+
+            if (string.IsNullOrEmpty(link))
+            {
+                AvatarUri = Configuration["DefaultAvatar"]!;
+            }
+
+            AvatarUri = link;
         }
         else
         {

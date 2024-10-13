@@ -27,6 +27,13 @@ namespace eShop.Infrastructure.Services
             return uriList;
         }
 
+        public async ValueTask<string> GetUserAvatarAsync(string userId)
+        {
+            var blobContainerClient = GetContainerClient(configuration["AvatarContainer"]!);
+            var blobClient = blobContainerClient.GetBlobClient($"avatar_{userId}");
+            return blobClient.Uri.ToString();
+        }
+
         public async ValueTask RemoveUserAvatarAsync(string userId)
         {
             var blobContainerClinet = GetContainerClient(configuration["AvatarContainer"]!);

@@ -53,7 +53,7 @@
 
                 var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
                 var permissions = (await appManager.PermissionManager.GetUserPermisisonsAsync(user)).ToList();
-                var token = tokenHandler.GenerateToken(user!, roles, permissions);
+                var tokens = tokenHandler.GenerateToken(user!, roles, permissions);
 
                 logger.LogInformation("Successfully change name of user with email {email}. Request ID {requestId}",
                     request.Request.Email, request.Request.RequestId);
@@ -61,7 +61,8 @@
                 return new(new ChangeUserNameResponse()
                 {
                     Message = "Your user name was successfully changed.",
-                    Token = token
+                    AccessToken = tokens.AccessToken,
+                    RefreshToken = tokens.RefreshToken,
                 });
 
             }

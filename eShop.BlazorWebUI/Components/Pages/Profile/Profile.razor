@@ -171,7 +171,14 @@
 
         if (string.IsNullOrEmpty(link))
         {
-            AvatarUri = Configuration["DefaultAvatar"]!;
+            link = await StoreService.GetUserAvatarAsync(UserData.UserId);
+
+            if (string.IsNullOrEmpty(link))
+            {
+                AvatarUri = Configuration["DefaultAvatar"]!;
+            }
+
+            AvatarUri = link;
         }
         else
         {

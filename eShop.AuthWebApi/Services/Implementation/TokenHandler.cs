@@ -1,4 +1,6 @@
-﻿namespace eShop.AuthWebApi.Services.Implementation
+﻿using eShop.Domain.Responses.Auth;
+
+namespace eShop.AuthWebApi.Services.Implementation
 {
     public class TokenHandler : ITokenHandler
     {
@@ -9,7 +11,7 @@
             jwtOptions = options.Value;
         }
 
-        public string GenerateToken(AppUser user, List<string> roles, List<string> permissions)
+        public TokenResponse GenerateToken(AppUser user, List<string> roles, List<string> permissions)
         {
             if (user is not null)
             {
@@ -19,17 +21,28 @@
                     new SymmetricSecurityKey(key: Encoding.UTF8.GetBytes(jwtOptions.Key)),
                     algorithm: SecurityAlgorithms.HmacSha256Signature);
 
-                var token = handler.WriteToken(new JwtSecurityToken(
+                var accessToken = handler.WriteToken(new JwtSecurityToken(
+                    audience: jwtOptions.Audience,
+                    issuer: jwtOptions.Issuer,
+                    claims: SetClaims(user, roles, permissions),
+                    expires: DateTime.Now.AddMinutes(30),
+                    signingCredentials: signingCredentials));
+
+                var refreshToken = handler.WriteToken(new JwtSecurityToken(
                     audience: jwtOptions.Audience,
                     issuer: jwtOptions.Issuer,
                     claims: SetClaims(user, roles, permissions),
                     expires: DateTime.Now.AddSeconds(jwtOptions.ExpirationSeconds),
                     signingCredentials: signingCredentials));
 
-                return token;
+                return new()
+                {
+                    AccessToken = accessToken,
+                    RefreshToken = refreshToken
+                };
             }
 
-            return string.Empty;
+            return new();
         }
 
         public string RefreshToken(string token)

@@ -42,7 +42,7 @@
         if (result.IsSucceeded)
         {
             var data = JsonConvert.DeserializeObject<LoginResponse>(result.Result!.ToString()!);
-            await (authenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(data!.Token);
+            await (authenticationStateProvider as ApplicationAuthenticationStateProvider)!.LoginAsync(data!.AccessToken, data.RefreshToken);
             NavigationManager.NavigateTo("/products");
             Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
         }

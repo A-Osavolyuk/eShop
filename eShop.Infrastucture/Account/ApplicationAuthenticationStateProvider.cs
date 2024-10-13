@@ -45,7 +45,8 @@ namespace eShop.Infrastructure.Account
 
                 if (!valid)
                 {
-                    return await RefreshTokenAsync(AuthenticationHandler.Token);
+                    await LogOutAsync();
+                    return await Task.FromResult(anonymous);
                 }
 
                 var claims = SetClaims(token);
@@ -79,6 +80,28 @@ namespace eShop.Infrastructure.Account
                 await tokenProvider.SetTokenAsync(token);
 
                 var rawToken = DecryptToken(token)!;
+                var claims = SetClaims(rawToken)!;
+                await WriteToLocalStorageAsync(claims);
+                claimsPrincipal = new(new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme));
+            }
+
+            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(claimsPrincipal)));
+        }
+
+        public async Task LoginAsync(string accessToken, string refreshToken)
+        {
+            var claimsPrincipal = new ClaimsPrincipal();
+
+            if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(refreshToken))
+            {
+                AuthenticationHandler.Token = "";
+            }
+            else
+            {
+                AuthenticationHandler.Token = refreshToken;
+                await tokenProvider.SetTokenAsync(refreshToken);
+
+                var rawToken = DecryptToken(accessToken)!;
                 var claims = SetClaims(rawToken)!;
                 await WriteToLocalStorageAsync(claims);
                 claimsPrincipal = new(new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme));
