@@ -45,29 +45,6 @@ namespace eShop.AuthWebApi.Services.Implementation
             return new();
         }
 
-        public string RefreshToken(string token)
-        {
-            if (!string.IsNullOrEmpty(token))
-            {
-                var handler = new JwtSecurityTokenHandler();
-
-                var signingCredentials = new SigningCredentials(
-                    new SymmetricSecurityKey(key: Encoding.UTF8.GetBytes(jwtOptions.Key)),
-                    algorithm: SecurityAlgorithms.HmacSha256Signature);
-
-                var newToken = handler.WriteToken(new JwtSecurityToken(
-                    audience: jwtOptions.Audience,
-                    issuer: jwtOptions.Issuer,
-                    claims: DecryptToken(token),
-                    expires: DateTime.Now.AddSeconds(jwtOptions.ExpirationSeconds),
-                    signingCredentials: signingCredentials));
-
-                return newToken;
-            }
-
-            return string.Empty;
-        }
-
         private List<Claim> SetClaims(AppUser user, List<string> roles, List<string> permissions)
         {
             if (user is not null)

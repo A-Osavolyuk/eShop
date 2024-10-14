@@ -211,17 +211,6 @@ namespace eShop.AuthWebApi.Controllers
         }
 
         [Authorize(Policy = "ManageAccountPolicy")]
-        [HttpPost("refresh-token")]
-        public async ValueTask<ActionResult<ResponseDTO>> RefreshToken([FromBody] RefreshTokenRequest refreshTokenRequest)
-        {
-            var result = await sender.Send(new RefreshTokenCommand(refreshTokenRequest));
-
-            return result.Match(
-                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
-                f => ExceptionHandler.HandleException(f));
-        }
-
-        [Authorize(Policy = "ManageAccountPolicy")]
         [HttpPost("request-change-phone-number")]
         public async ValueTask<ActionResult<ResponseDTO>> RequestChangePhoneNumber([FromBody] ChangePhoneNumberRequest changePhoneNumberRequest)
         {

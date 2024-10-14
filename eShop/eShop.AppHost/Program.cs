@@ -10,7 +10,8 @@ var redisCache = builder.AddRedis("eShopRedis", 25101);
 var emailService = builder.AddProject<Projects.eShop_EmailSenderWebApi>("eshop-emailsenderwebapi")
     .WithReference(rabbitMQ);
 
-var db = builder.AddSqlServer("eShopSqlServer", port: 25201).WithEnvironment("MSSQL_SA_PASSWORD", "Password_1234");
+var db = builder.AddSqlServer("eShopSqlServer", port: 25201).WithEnvironment("MSSQL_SA_PASSWORD", "Password_1234")
+    .WithDataVolume();
 
 var authApi = builder.AddProject<Projects.eShop_AuthWebApi>("eshop-authwebapi")
     .WithReference(db)
