@@ -53,7 +53,7 @@
 
                 var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
                 var permissions = (await appManager.PermissionManager.GetUserPermisisonsAsync(user)).ToList();
-                var tokens = tokenHandler.GenerateToken(user!, roles, permissions);
+                var tokens =    await tokenHandler.GenerateTokenAsync(user!, roles, permissions);
 
                 logger.LogInformation("Successfully change name of user with email {email}. Request ID {requestId}",
                     request.Request.Email, request.Request.RequestId);

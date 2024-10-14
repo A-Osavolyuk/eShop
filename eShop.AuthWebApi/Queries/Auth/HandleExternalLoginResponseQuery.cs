@@ -40,7 +40,7 @@ namespace eShop.AuthWebApi.Queries.Auth
                     logger.LogInformation("Successfully logged in with external provider {provider}", request.ExternalLoginInfo.LoginProvider);
                     var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
                     var permissions = (await appManager.PermissionManager.GetUserPermisisonsAsync(user)).ToList();
-                    var token = tokenHandler.GenerateToken(user, roles, permissions);
+                    var token = await tokenHandler.GenerateTokenAsync(user, roles, permissions);
                     var link = UrlGenerator.ActionLink("/account/confirm-external-login", frontendUri, new { Token = token, ReturnUri = request.ReturnUri });
                     return new(link);
                 }
@@ -92,7 +92,7 @@ namespace eShop.AuthWebApi.Queries.Auth
                     logger.LogInformation("Successfully logged in with external provider {provider}", request.ExternalLoginInfo.LoginProvider);
                     var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
                     var permissions = (await appManager.PermissionManager.GetUserPermisisonsAsync(user)).ToList();
-                    var token = tokenHandler.GenerateToken(user, roles, permissions);
+                    var token = await tokenHandler.GenerateTokenAsync(user, roles, permissions);
                     var link = UrlGenerator.ActionLink("/account/confirm-external-login", frontendUri, new { Token = token, ReturnUri = request.ReturnUri });
                     return new(link);
                 }

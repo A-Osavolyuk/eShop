@@ -11,13 +11,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-
-    using (var scope = app.Services.CreateScope())
-    {
-        var context = scope.ServiceProvider.GetRequiredService<CartDbContext>();
-        context.Database.EnsureDeleted();
-        context.Database.EnsureCreated();
-    }
+    await app.ConfigureDatabaseAsync<CartDbContext>();
 }
 
 app.UseHttpsRedirection();

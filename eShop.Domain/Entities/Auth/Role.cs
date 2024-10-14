@@ -1,4 +1,4 @@
-﻿namespace eShop.Domain.Entities
+﻿namespace eShop.Domain.Entities.Auth
 {
     public class Role
     {

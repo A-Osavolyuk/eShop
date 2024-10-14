@@ -1,5 +1,6 @@
 ﻿using eShop.Domain.DTOs.Requests.Cart;
 using eShop.Domain.DTOs.Responses.Cart;
+using eShop.Domain.Entities.Auth;
 using LanguageExt;
 
 namespace eShop.AuthWebApi.Receivers

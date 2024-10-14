@@ -1,8 +1,10 @@
 ﻿using eShop.Application;
+using eShop.AuthWebApi.BackgroundServices;
 using eShop.AuthWebApi.Receivers;
 using eShop.AuthWebApi.Security.Authorization;
 using eShop.AuthWebApi.Services.Implementation;
 using eShop.Domain.DTOs.Requests.Cart;
+using eShop.Domain.Entities.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
@@ -99,6 +101,7 @@ namespace eShop.AuthWebApi.Extensions
             builder.Services.AddScoped<IEmailSender, EmailSender>();
             builder.Services.AddScoped<IPermissionManager, PermissionManager>();
             builder.Services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
+            builder.Services.AddHostedService<BackgroundTokenValidator>();
 
             builder.Services.AddScoped<AppManager>();
 

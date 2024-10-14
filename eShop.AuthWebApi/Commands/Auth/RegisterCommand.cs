@@ -1,4 +1,5 @@
 ﻿using eShop.AuthWebApi.Utilities;
+using eShop.Domain.Entities.Auth;
 
 namespace eShop.AuthWebApi.Commands.Auth
 {

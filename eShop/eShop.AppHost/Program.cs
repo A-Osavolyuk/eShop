@@ -10,22 +10,27 @@ var redisCache = builder.AddRedis("eShopRedis", 25101);
 var emailService = builder.AddProject<Projects.eShop_EmailSenderWebApi>("eshop-emailsenderwebapi")
     .WithReference(rabbitMQ);
 
-var db = builder.AddSqlServer("eShopSqlServer", port: 25201).WithEnvironment("MSSQL_SA_PASSWORD", "Password_1234")
+var sqlServer = builder.AddSqlServer("eShopSqlServer", port: 25201).WithEnvironment("MSSQL_SA_PASSWORD", "Password_1234")
     .WithDataVolume();
 
 var authApi = builder.AddProject<Projects.eShop_AuthWebApi>("eshop-authwebapi")
-    .WithReference(db)
+    .WithReference(sqlServer)
     .WithReference(emailService);
 
 builder.AddProject<Projects.eShop_ProductWebApi>("eshop-productwebapi")
-    .WithReference(authApi);
+    .WithReference(authApi)
+    .WithReference(sqlServer);
 
 builder.AddProject<Projects.eShop_BlazorWebUI>("eshop-blazorwebui")
     .WithReference(authApi);
 
-builder.AddProject<Projects.eShop_ReviewsWebApi>("eshop-reviewswebapi");
+builder.AddProject<Projects.eShop_ReviewsWebApi>("eshop-reviewswebapi")
+    .WithReference(authApi)
+    .WithReference(sqlServer);
 
-builder.AddProject<Projects.eShop_CartWebApi>("eshop-cartwebapi");
+builder.AddProject<Projects.eShop_CartWebApi>("eshop-cartwebapi")
+    .WithReference(authApi)
+    .WithReference(sqlServer);
 
 builder.AddProject<Projects.eShop_Gateway>("eshop-gateway");
 

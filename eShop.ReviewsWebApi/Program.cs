@@ -1,4 +1,5 @@
-using eShop.ReviewsWebApi;
+using eShop.ReviewsWebApi.Extensions;
+using eShop.ReviewsWebApi.Extensions.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,13 +14,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-
-    using (var scope = app.Services.CreateScope())
-    {
-        var context = scope.ServiceProvider.GetRequiredService<ReviewDbContext>();
-        context.Database.EnsureDeleted();
-        context.Database.EnsureCreated();
-    }
+    await app.ConfigureDatabaseAsync<ReviewDbContext>();
 }
 
 app.MapDefaultEndpoints();

@@ -2,9 +2,9 @@
 using eShop.ReviewsWebApi.Repositories;
 using MassTransit;
 
-namespace eShop.ReviewsWebApi
+namespace eShop.ReviewsWebApi.Extensions
 {
-    public static class Extensions
+    public static class BuilderExtensions
     {
         public static IHostApplicationBuilder AddApiServices(this IHostApplicationBuilder builder)
         {

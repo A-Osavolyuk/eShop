@@ -1,17 +1,20 @@
-﻿using eShop.Domain.Responses.Auth;
+﻿using eShop.Domain.Entities.Auth;
+using eShop.Domain.Responses.Auth;
 
 namespace eShop.AuthWebApi.Services.Implementation
 {
     public class TokenHandler : ITokenHandler
     {
         private readonly JwtOptions jwtOptions;
+        private readonly AuthDbContext context;
 
-        public TokenHandler(IOptions<JwtOptions> options)
+        public TokenHandler(IOptions<JwtOptions> options, AuthDbContext context)
         {
             jwtOptions = options.Value;
+            this.context = context;
         }
 
-        public TokenResponse GenerateToken(AppUser user, List<string> roles, List<string> permissions)
+        public async Task<TokenResponse> GenerateTokenAsync(AppUser user, List<string> roles, List<string> permissions)
         {
             if (user is not null)
             {
@@ -35,14 +38,17 @@ namespace eShop.AuthWebApi.Services.Implementation
                     expires: DateTime.Now.AddSeconds(jwtOptions.ExpirationSeconds),
                     signingCredentials: signingCredentials));
 
-                return new()
+                await context.UserAuthenticationTokens.AddAsync(new() { UserId = user.Id, Token = refreshToken });
+                await context.SaveChangesAsync();
+
+                return new TokenResponse()
                 {
                     AccessToken = accessToken,
                     RefreshToken = refreshToken
                 };
             }
 
-            return new();
+            return new TokenResponse();
         }
 
         private List<Claim> SetClaims(AppUser user, List<string> roles, List<string> permissions)

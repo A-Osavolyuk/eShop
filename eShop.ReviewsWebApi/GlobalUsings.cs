@@ -17,3 +17,4 @@ global using eShop.Domain.DTOs.Requests.Review;
 global using eShop.ReviewsWebApi.Commands.Reviews;
 global using Microsoft.AspNetCore.Authorization;
 global using eShop.Application.Extensions;
+global using eShop.ReviewsWebApi.Extensions.Extensions;

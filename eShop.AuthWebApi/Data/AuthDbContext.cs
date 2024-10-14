@@ -1,4 +1,5 @@
 ﻿using eShop.Domain.Entities.Admin;
+using eShop.Domain.Entities.Auth;
 
 namespace eShop.AuthWebApi.Data
 {
@@ -7,6 +8,7 @@ namespace eShop.AuthWebApi.Data
         public DbSet<PersonalData> PersonalData => Set<PersonalData>();
         public DbSet<Permission> Permissions => Set<Permission>();
         public DbSet<UserPermissions> UserPermissions => Set<UserPermissions>();
+        public DbSet<UserAuthenticationToken> UserAuthenticationTokens => Set<UserAuthenticationToken>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -88,6 +90,13 @@ namespace eShop.AuthWebApi.Data
                     new UserPermissions() { UserId = "abb9d2ed-c3d2-4df9-ba88-eab018b95bc3", PermissionId = Guid.Parse("e14d7bcf-0ab4-4168-b2b5-ff0894782097") },
                     new UserPermissions() { UserId = "abb9d2ed-c3d2-4df9-ba88-eab018b95bc3", PermissionId = Guid.Parse("df258394-6290-43b8-abc9-d52aba8ff6e6") },
                     new UserPermissions() { UserId = "abb9d2ed-c3d2-4df9-ba88-eab018b95bc3", PermissionId = Guid.Parse("dba6e723-ac0f-42a3-91fd-e40bdb08e26b") });
+            });
+
+            builder.Entity<UserAuthenticationToken>(x =>
+            {
+                x.HasKey(k => k.Id);
+                x.Property(x => x.Token).HasColumnType("VARCHAR(MAX)");
+                x.HasOne(x => x.User).WithOne(x => x.AuthenticationToken).HasForeignKey<UserAuthenticationToken>(x => x.UserId);
             });
         }
     }

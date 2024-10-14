@@ -1,5 +1,5 @@
 ﻿using eShop.Domain.DTOs.Requests;
-using eShop.Domain.Entities;
+using eShop.Domain.Entities.Auth;
 
 namespace eShop.Domain.Requests.Admin
 {
