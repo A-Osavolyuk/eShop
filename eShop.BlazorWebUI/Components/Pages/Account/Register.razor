@@ -4,6 +4,7 @@
 
 @inject IAuthenticationService authenticationService
 @inject IValidator<RegistrationRequest> validator
+@inject ILocalDataAccessor LocalDataAccessor
 
 <MudGrid Justify="Justify.Center">
     <MudItem xs="4">
@@ -39,6 +40,16 @@
 
 @code {
     [SupplyParameterFromForm] private RegistrationRequest registrationRequest { get; set; } = new();
+
+    protected async override Task OnInitializedAsync()
+    {
+        var user = await LocalDataAccessor.ReadUserDataAsync();
+
+        if (user is not null)
+        {
+            NavigationManager.NavigateTo("products");
+        }
+    }
 
     private async Task RegisterUser()
     {

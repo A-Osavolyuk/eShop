@@ -5,11 +5,13 @@
     public class TwoFactorAuthenticationLoginCommandHandler(
         ILogger<TwoFactorAuthenticationLoginCommandHandler> logger,
         AppManager appManager,
-        ITokenHandler tokenHandler) : IRequestHandler<TwoFactorAuthenticationLoginCommand, Result<LoginResponse>>
+        ITokenHandler tokenHandler,
+        AuthDbContext context) : IRequestHandler<TwoFactorAuthenticationLoginCommand, Result<LoginResponse>>
     {
         private readonly ILogger<TwoFactorAuthenticationLoginCommandHandler> logger = logger;
         private readonly AppManager appManager = appManager;
         private readonly ITokenHandler tokenHandler = tokenHandler;
+        private readonly AuthDbContext context = context;
 
         public async Task<Result<LoginResponse>> Handle(TwoFactorAuthenticationLoginCommand request, CancellationToken cancellationToken)
         {
@@ -34,20 +36,41 @@
                 }
 
                 var userDto = new UserDTO(user.Email!, user.UserName!, user.Id);
-                var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
-                var permissions = (await appManager.PermissionManager.GetUserPermisisonsAsync(user)).ToList();
-                var tokens = await tokenHandler.GenerateTokenAsync(user, roles, permissions);
+                var securityToken = await context.UserAuthenticationTokens.AsNoTracking().SingleOrDefaultAsync(x => x.UserId == user.Id);
 
-                logger.LogInformation("Successfully logged in with 2FA code to account with email {email}. Request ID {requestId}",
-                    request.Request.Email, request.Request.RequestId);
-
-                return new(new LoginResponse()
+                if (securityToken is not null)
                 {
-                    User = userDto,
-                    AccessToken = tokens.AccessToken,
-                    RefreshToken = tokens.RefreshToken,
-                    Message = "Successfully logged in."
-                });
+                    var tokens = tokenHandler.ReuseToken(securityToken.Token);
+
+                    logger.LogInformation("Successfully logged in user with email {email}. Request ID {requestID}",
+                        request.Request.Email, request.Request.RequestId);
+
+                    return new(new LoginResponse()
+                    {
+                        User = userDto,
+                        AccessToken = tokens!.AccessToken,
+                        RefreshToken = tokens.RefreshToken,
+                        Message = "Successfully logged in.",
+                        HasTwoFactorAuthentication = false
+                    });
+                }
+                else
+                {
+                    var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
+                    var permissions = (await appManager.PermissionManager.GetUserPermisisonsAsync(user)).ToList();
+                    var tokens = await tokenHandler.GenerateTokenAsync(user, roles, permissions);
+
+                    logger.LogInformation("Successfully logged in with 2FA code to account with email {email}. Request ID {requestId}",
+                        request.Request.Email, request.Request.RequestId);
+
+                    return new(new LoginResponse()
+                    {
+                        User = userDto,
+                        AccessToken = tokens.AccessToken,
+                        RefreshToken = tokens.RefreshToken,
+                        Message = "Successfully logged in."
+                    });
+                }
             }
             catch (Exception ex)
             {

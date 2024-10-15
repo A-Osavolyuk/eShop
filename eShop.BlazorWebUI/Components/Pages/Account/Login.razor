@@ -6,6 +6,7 @@
 @inject AuthenticationStateProvider authenticationStateProvider
 @inject IValidator<LoginRequest> validator
 @inject IConfiguration Configuration
+@inject ILocalDataAccessor LocalDataAccessor
 
 <MudGrid Justify="Justify.Center">
     <MudItem xs="4">
@@ -78,6 +79,13 @@
 
     protected override async Task OnInitializedAsync()
     {
+        var user = await LocalDataAccessor.ReadUserDataAsync();
+
+        if(user is not null)
+        {
+            NavigationManager.NavigateTo("products");
+        }
+
         var result = await authenticationService.GetExternalProvidersAsync();
         Providers = JsonConvert.DeserializeObject<List<ExternalProviderDto>>(result.Result!.ToString()!)!;
     }

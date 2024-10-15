@@ -1,5 +1,6 @@
 ﻿using eShop.Domain.Entities.Auth;
 using eShop.Domain.Responses.Auth;
+using LanguageExt.Pipes;
 
 namespace eShop.AuthWebApi.Services.Implementation
 {
@@ -85,7 +86,7 @@ namespace eShop.AuthWebApi.Services.Implementation
             return new List<Claim>();
         }
 
-        private List<Claim> DecryptToken(string token)
+        private JwtSecurityToken? DecryptToken(string token)
         {
             var handler = new JwtSecurityTokenHandler();
 
@@ -93,37 +94,105 @@ namespace eShop.AuthWebApi.Services.Implementation
             {
                 var rawToken = handler.ReadJwtToken(token);
 
-                var claims = new List<Claim>()
-                {
-                    new (CustomClaimTypes.UserName, rawToken.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.UserName)!.Value),
-                    new (JwtRegisteredClaimNames.Email, rawToken.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email)!.Value),
-                    new (CustomClaimTypes.Id, rawToken.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value),
-                    new (ClaimTypes.MobilePhone, rawToken.Claims.FirstOrDefault(x => x.Type == ClaimTypes.MobilePhone)!.Value),
-                };
+                return rawToken;
+            }
+            else
+            {
+                return null;
+            }
+        }
 
-                var roles = rawToken.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value);
-                var permissions = rawToken.Claims.Where(x => x.Type == CustomClaimTypes.Permission).Select(x => x.Value);
+        private DateTime? GetTokenExpirationDate(JwtSecurityToken token)
+        {
+            if (token is null)
+            {
+                return null;
+            }
+            else
+            {
+                return token.ValidTo;
+            }
+        }
 
-                if (roles.Any())
-                {
-                    foreach (var role in roles)
-                    {
-                        claims.Add(new Claim(ClaimTypes.Role, role));
-                    }
-                }
-
-                if (permissions.Any())
-                {
-                    foreach (var permission in permissions)
-                    {
-                        claims.Add(new Claim(CustomClaimTypes.Permission, permission));
-                    }
-                }
-
-                return claims;
+        private List<Claim> GetClaimsFromToken(JwtSecurityToken? token)
+        {
+            if (token is null)
+            {
+                return new List<Claim>();
             }
 
-            return new List<Claim>();
+            var claims = new List<Claim>()
+                {
+                    new (CustomClaimTypes.UserName, token.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.UserName)!.Value),
+                    new (JwtRegisteredClaimNames.Email, token.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email)!.Value),
+                    new (CustomClaimTypes.Id, token.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value),
+                    new (ClaimTypes.MobilePhone, token.Claims.FirstOrDefault(x => x.Type == ClaimTypes.MobilePhone)!.Value),
+                };
+
+            var roles = token.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value);
+            var permissions = token.Claims.Where(x => x.Type == CustomClaimTypes.Permission).Select(x => x.Value);
+
+            if (roles.Any())
+            {
+                foreach (var role in roles)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, role));
+                }
+            }
+
+            if (permissions.Any())
+            {
+                foreach (var permission in permissions)
+                {
+                    claims.Add(new Claim(CustomClaimTypes.Permission, permission));
+                }
+            }
+
+            return claims;
+        }
+
+        public TokenResponse? ReuseToken(string token)
+        {
+            if (string.IsNullOrEmpty(token))
+            {
+                return null;
+            }
+
+            var rawToken = DecryptToken(token);
+
+            if (rawToken is null)
+            {
+                return null;
+            }
+
+            var claims = GetClaimsFromToken(rawToken);
+            var validateTo = GetTokenExpirationDate(rawToken);
+
+            var handler = new JwtSecurityTokenHandler();
+
+            var signingCredentials = new SigningCredentials(
+                new SymmetricSecurityKey(key: Encoding.UTF8.GetBytes(jwtOptions.Key)),
+                algorithm: SecurityAlgorithms.HmacSha256Signature);
+
+            var accessToken = handler.WriteToken(new JwtSecurityToken(
+                audience: jwtOptions.Audience,
+                issuer: jwtOptions.Issuer,
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(30),
+                signingCredentials: signingCredentials));
+
+            var refreshToken = handler.WriteToken(new JwtSecurityToken(
+                audience: jwtOptions.Audience,
+                issuer: jwtOptions.Issuer,
+                claims: claims,
+                expires: validateTo,
+                signingCredentials: signingCredentials));
+
+            return new TokenResponse
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken
+            };
         }
     }
 }

@@ -18,7 +18,7 @@
         <MudMenu AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.BottomLeft" ActivationEvent="MouseEvent.LeftClick">
             <ActivatorContent>
                 <MudAvatar>
-                    <MudImage Alt="avatar" Src="@AvatarUri" />
+                    <MudImage Alt="avatar" Src="@(string.IsNullOrEmpty(AvatarUri) ? Configuration["DefaultAvatar"]! : AvatarUri)" />
                 </MudAvatar>
             </ActivatorContent>
             <ChildContent>
@@ -55,22 +55,25 @@
     protected override async Task OnInitializedAsync()
     {
         User = await LocalDataAccessor.ReadUserDataAsync();
-        var link = await LocalDataAccessor.ReadAvatarLinkAsync();
-
-        if (string.IsNullOrEmpty(link))
+        if (User is not null)
         {
-            link = await StoreService.GetUserAvatarAsync(User.UserId);
+            var link = await LocalDataAccessor.ReadAvatarLinkAsync();
 
             if (string.IsNullOrEmpty(link))
             {
-                AvatarUri = Configuration["DefaultAvatar"]!;
-            }
+                link = await StoreService.GetUserAvatarAsync(User!.UserId);
 
-            AvatarUri = link;
-        }
-        else
-        {
-            AvatarUri = link;
+                if (string.IsNullOrEmpty(link))
+                {
+                    AvatarUri = Configuration["DefaultAvatar"]!;
+                }
+
+                AvatarUri = link;
+            }
+            else
+            {
+                AvatarUri = link;
+            }
         }
     }
 

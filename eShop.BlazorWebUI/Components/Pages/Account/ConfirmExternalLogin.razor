@@ -14,10 +14,11 @@
 
         var query = QueryHelpers.ParseQuery(uri);
 
-        query.TryGetValue("Token", out var token);
+        query.TryGetValue("AccessToken", out var accessToken);
+        query.TryGetValue("RefreshToken", out var refreshToken);
         query.TryGetValue("ReturnUri", out var returnUri);
 
-        await (authenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(token!);
+        await (authenticationStateProvider as ApplicationAuthenticationStateProvider)!.LoginAsync(accessToken!, refreshToken!);
         NavigationManager.NavigateTo("/products");
 
         Snackbar.Add("Successfully logged in.", MudBlazor.Severity.Success);

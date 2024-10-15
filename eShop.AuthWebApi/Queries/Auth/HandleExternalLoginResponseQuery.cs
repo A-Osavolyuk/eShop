@@ -1,4 +1,5 @@
 ﻿using eShop.AuthWebApi.Utilities;
+using Newtonsoft.Json.Linq;
 
 namespace eShop.AuthWebApi.Queries.Auth
 {
@@ -9,13 +10,15 @@ namespace eShop.AuthWebApi.Queries.Auth
         ILogger<HandleExternalLoginResponseQuery> logger,
         ITokenHandler tokenHandler,
         IConfiguration configuration,
-        IEmailSender emailSender) : IRequestHandler<HandleExternalLoginResponseQuery, Result<string>>
+        IEmailSender emailSender,
+        AuthDbContext context) : IRequestHandler<HandleExternalLoginResponseQuery, Result<string>>
     {
         private readonly AppManager appManager = appManager;
         private readonly ILogger<HandleExternalLoginResponseQuery> logger = logger;
         private readonly ITokenHandler tokenHandler = tokenHandler;
         private readonly IConfiguration configuration = configuration;
         private readonly IEmailSender emailSender = emailSender;
+        private readonly AuthDbContext context = context;
         private readonly string frontendUri = configuration["GeneralSettings:FrontendBaseUri"]!;
         private readonly string defaultRole = configuration["DefaultValues:DeafultRole"]!;
         private readonly List<string> defaultPermissions = configuration.GetValue<List<string>>("DefaultValues:DeafultPermissions")!;
@@ -37,12 +40,27 @@ namespace eShop.AuthWebApi.Queries.Auth
 
                 if (user is not null)
                 {
-                    logger.LogInformation("Successfully logged in with external provider {provider}", request.ExternalLoginInfo.LoginProvider);
-                    var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
-                    var permissions = (await appManager.PermissionManager.GetUserPermisisonsAsync(user)).ToList();
-                    var token = await tokenHandler.GenerateTokenAsync(user, roles, permissions);
-                    var link = UrlGenerator.ActionLink("/account/confirm-external-login", frontendUri, new { Token = token, ReturnUri = request.ReturnUri });
-                    return new(link);
+                    var userDto = new UserDTO(user.Email!, user.UserName!, user.Id);
+                    var securityToken = await context.UserAuthenticationTokens.AsNoTracking().SingleOrDefaultAsync(x => x.UserId == user.Id);
+
+                    if (securityToken is not null)
+                    {
+                        var tokens = tokenHandler.ReuseToken(securityToken.Token);
+
+                        logger.LogInformation("Successfully logged in with external provider {provider}", request.ExternalLoginInfo.LoginProvider);
+                        var link = UrlGenerator.ActionLink("/account/confirm-external-login", frontendUri, new { tokens!.AccessToken, tokens.RefreshToken, request.ReturnUri });
+                        return new(link);
+                    }
+                    else
+                    {
+
+                        logger.LogInformation("Successfully logged in with external provider {provider}", request.ExternalLoginInfo.LoginProvider);
+                        var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
+                        var permissions = (await appManager.PermissionManager.GetUserPermisisonsAsync(user)).ToList();
+                        var tokens = await tokenHandler.GenerateTokenAsync(user, roles, permissions);
+                        var link = UrlGenerator.ActionLink("/account/confirm-external-login", frontendUri, new { tokens!.AccessToken, tokens.RefreshToken, request.ReturnUri });
+                        return new(link);
+                    }
                 }
                 else
                 {
