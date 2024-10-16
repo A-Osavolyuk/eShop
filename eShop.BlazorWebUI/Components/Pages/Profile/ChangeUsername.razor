@@ -7,7 +7,9 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ITokenProvider TokenProvider
 
-<MudGrid Justify="Justify.Center">
+<AuthorizeView Roles="User">
+    <Authorized>
+        <MudGrid Justify="Justify.Center">
     <MudItem xs="4">
         <MudPaper Outlined Class="pa-5">
             <MudGrid>
@@ -20,7 +22,7 @@
             </MudGrid>
             <MudGrid Justify="Justify.Center">
                 <MudItem xs="12">
-                    <EditForm Model="Request" FormName="change-username-form" OnValidSubmit="OnValidSubmit">
+                    <EditForm Context="formcontext" Model="Request" FormName="change-username-form" OnValidSubmit="OnValidSubmit">
                         <FluentValidationValidator Validator="Validator"/>
                         <MudTextField Immediate Clearable Counter="18" MaxLength="18" For="@(() => Request.UserName)" Label="Username" @bind-Value="Request.UserName" Variant="Variant.Outlined" />
                         <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Success" EndIcon="@Icons.Material.Filled.Save">Save changes</MudButton>
@@ -30,6 +32,11 @@
         </MudPaper>
     </MudItem>
 </MudGrid>
+    </Authorized>
+    <NotAuthorized>
+        <AuthenticationManager/>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     private ChangeUserNameRequest Request = new();

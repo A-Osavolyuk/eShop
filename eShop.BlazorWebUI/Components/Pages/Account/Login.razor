@@ -74,6 +74,7 @@
 
 @code {
     [SupplyParameterFromForm] private LoginRequest loginRequest { get; set; } = new();
+    [SupplyParameterFromQuery(Name = "returnUri")] public string ReturnUri { get; set; } = string.Empty;
 
     private List<ExternalProviderDto> Providers { get; set; } = new();
 
@@ -106,7 +107,7 @@
             else
             {
                 await (authenticationStateProvider as ApplicationAuthenticationStateProvider)!.LoginAsync(data!.AccessToken, data.RefreshToken);
-                NavigationManager.NavigateTo("/products");
+                NavigationManager.NavigateTo((string.IsNullOrEmpty(ReturnUri) ? "products" : ReturnUri));
                 Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
                 loginRequest = new();
             }

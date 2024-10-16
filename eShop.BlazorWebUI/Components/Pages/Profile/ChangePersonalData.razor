@@ -6,32 +6,39 @@
 @inject PersonalDataValidator Validator
 @inject IMapper Mapper
 
-<MudGrid Justify="Justify.Center">
-    <MudItem xs="4">
-        <MudPaper Outlined Class="pa-5">
-            <MudGrid>
-                <MudItem xs="1">
-                    <MudIconButton @onclick="@(() => NavigationManager.NavigateTo("/profile"))" Icon="@Icons.Material.Filled.ArrowBack" />
-                </MudItem>
-                <MudItem xs="11" Class="m-auto">
-                    <MudText Typo="Typo.h6"> Change personal data </MudText>
-                </MudItem>
-            </MudGrid>
-            <MudGrid Justify="Justify.Center">
-                <MudItem xs="12">
-                    <EditForm Model="Request" FormName="change-personal-data-form" OnValidSubmit="OnValidSubmit">
-                        <FluentValidationValidator Validator="Validator" />
-                        <MudTextField Immediate Clearable Counter="32" MaxLength="32" For="@(() => Request.FirstName)" Label="First name" @bind-Value="Request.FirstName" Variant="Variant.Outlined" />
-                        <MudTextField Immediate Clearable Counter="32" MaxLength="32" For="@(() => Request.LastName)" Label="Last name" @bind-Value="Request.LastName" Variant="Variant.Outlined" />
-                        <MudTextField Immediate Clearable Counter="32" MaxLength="32" For="@(() => Request.Gender)" Label="Gender" @bind-Value="Request.Gender" Variant="Variant.Outlined" />
-                        <MudDatePicker @ref="DatePicker" For="@(() => Request.DateOfBirth)" Label="Date of birth" @bind-Date="Request.DateOfBirth" Variant="Variant.Outlined" />
-                        <MudButton Class="mt-3" Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Success" EndIcon="@Icons.Material.Filled.Save">Save changes</MudButton>
-                    </EditForm>
-                </MudItem>
-            </MudGrid>
-        </MudPaper>
-    </MudItem>
-</MudGrid>
+<AuthorizeView Roles="User">
+    <Authorized>
+        <MudGrid Justify="Justify.Center">
+            <MudItem xs="4">
+                <MudPaper Outlined Class="pa-5">
+                    <MudGrid>
+                        <MudItem xs="1">
+                            <MudIconButton @onclick="@(() => NavigationManager.NavigateTo("/profile"))" Icon="@Icons.Material.Filled.ArrowBack" />
+                        </MudItem>
+                        <MudItem xs="11" Class="m-auto">
+                            <MudText Typo="Typo.h6"> Change personal data </MudText>
+                        </MudItem>
+                    </MudGrid>
+                    <MudGrid Justify="Justify.Center">
+                        <MudItem xs="12">
+                            <EditForm Context="formcontext" Model="Request" FormName="change-personal-data-form" OnValidSubmit="OnValidSubmit">
+                                <FluentValidationValidator Validator="Validator" />
+                                <MudTextField Immediate Clearable Counter="32" MaxLength="32" For="@(() => Request.FirstName)" Label="First name" @bind-Value="Request.FirstName" Variant="Variant.Outlined" />
+                                <MudTextField Immediate Clearable Counter="32" MaxLength="32" For="@(() => Request.LastName)" Label="Last name" @bind-Value="Request.LastName" Variant="Variant.Outlined" />
+                                <MudTextField Immediate Clearable Counter="32" MaxLength="32" For="@(() => Request.Gender)" Label="Gender" @bind-Value="Request.Gender" Variant="Variant.Outlined" />
+                                <MudDatePicker @ref="DatePicker" For="@(() => Request.DateOfBirth)" Label="Date of birth" @bind-Date="Request.DateOfBirth" Variant="Variant.Outlined" />
+                                <MudButton Class="mt-3" Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Success" EndIcon="@Icons.Material.Filled.Save">Save changes</MudButton>
+                            </EditForm>
+                        </MudItem>
+                    </MudGrid>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </Authorized>
+    <NotAuthorized>
+        <AuthenticationManager/>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     private ChangePersonalDataRequest Request = new();

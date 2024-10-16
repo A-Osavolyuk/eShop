@@ -21,7 +21,9 @@ namespace eShop.AuthWebApi.Data
                 );
 
             builder.Entity<IdentityUserRole<string>>().HasData(
-                new IdentityUserRole<string>() { RoleId = "e6d15d97-b803-435a-9dc2-a7c45c08a1af", UserId = "abb9d2ed-c3d2-4df9-ba88-eab018b95bc3" });
+                new IdentityUserRole<string>() { RoleId = "e6d15d97-b803-435a-9dc2-a7c45c08a1af", UserId = "abb9d2ed-c3d2-4df9-ba88-eab018b95bc3" },
+                new IdentityUserRole<string>() { RoleId = "270910a1-d582-4ce0-8b23-c8141d720064", UserId = "abb9d2ed-c3d2-4df9-ba88-eab018b95bc3" },
+                new IdentityUserRole<string>() { RoleId = "26bb7907-e254-41d4-96f0-8afb7deccae4", UserId = "abb9d2ed-c3d2-4df9-ba88-eab018b95bc3" });
 
             builder.Entity<PersonalData>(x =>
             {

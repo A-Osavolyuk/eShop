@@ -7,29 +7,22 @@
 @inject ISnackbar Snackbar
 
 @code {
-    private ConfirmChangeEmailRequest ConfirmChangeEmailRequest { get; set; } = new();
+    private ConfirmChangeEmailRequest Request { get; set; } = new();
+
+    [SupplyParameterFromQuery(Name = "currentEmail")] public string CurrentEmail { get; set; } = string.Empty;
+    [SupplyParameterFromQuery(Name = "newEmail")] public string NewEmail { get; set; } = string.Empty;
+    [SupplyParameterFromQuery(Name = "token")] public string Token { get; set; } = string.Empty;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var uri = new StringBuilder(NavigationManager.Uri)
-            .Replace(NavigationManager.BaseUri, "")
-            .Replace("account/change-email?", "")
-            .ToString();
+        Request = new()
+        {
+            CurrentEmail = CurrentEmail,
+            NewEmail = NewEmail,
+            Token = Token
+        };
 
-        var query = QueryHelpers.ParseQuery(uri);
-
-        query.TryGetValue("CurrentEmail", out var currentEmail);
-        query.TryGetValue("NewEmail", out var newEmail);
-        query.TryGetValue("Token", out var token);
-
-        ConfirmChangeEmailRequest = new()
-            {
-                CurrentEmail = currentEmail!,
-                NewEmail = newEmail!,
-                Token = token!
-            };
-
-        var result = await AuthenticationService.ConfirmChangeEmailAsync(ConfirmChangeEmailRequest);
+        var result = await AuthenticationService.ConfirmChangeEmailAsync(Request);
 
         if (result.IsSucceeded)
         {

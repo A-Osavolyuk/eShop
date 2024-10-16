@@ -6,90 +6,97 @@
 @inject IConfiguration Configuration
 @inject IStoreService StoreService
 
-<MudGrid Justify="Justify.Center">
-    <MudItem xs="8">
-        <MudPaper Class="pa-3" Outlined>
-            @if (UserData is null)
-            {
-                <MudText Typo="Typo.h3">Loading...</MudText>
-            }
-            else
-            {
-                <MudGrid Justify="Justify.Center">
-                    <MudItem xs="3">
-                        <MudPaper Class="pa-1" Outlined>
-                            <MudImage ObjectFit="ObjectFit.Fill" Class="w-100 h-100" Alt="user-avatar" Src="@AvatarUri" />
-                        </MudPaper>
+<AuthorizeView Roles="User">
+    <Authorized>
+        <MudGrid Justify="Justify.Center">
+            <MudItem xs="8">
+                <MudPaper Class="pa-3" Outlined>
+                    @if (UserData is null)
+                    {
+                        <MudText Typo="Typo.h3">Loading...</MudText>
+                    }
+                    else
+                    {
                         <MudGrid Justify="Justify.Center">
-                            <MudItem Class="mt-1" xs="12">
-                                <MudStack Spacing="1">
-                                    <MudButton Disabled="@(AvatarUri == Configuration["DefaultAvatar"] ? true : false)" OnClick="RemoveAvatar"
-                                               Variant="Variant.Filled" FullWidth Color="Color.Error" ButtonType="ButtonType.Button" EndIcon="@Icons.Material.Filled.Delete">Remove avatar</MudButton>
-                                    <MudButton Variant="Variant.Filled" FullWidth Color="Color.Primary" OnClick="ChangeAvatar"
-                                               ButtonType="ButtonType.Button" EndIcon="@Icons.Material.Filled.AddAPhoto">Change avatar</MudButton>
-                                </MudStack>
+                            <MudItem xs="3">
+                                <MudPaper Class="pa-1" Outlined>
+                                    <MudImage ObjectFit="ObjectFit.Fill" Class="w-100 h-100" Alt="user-avatar" Src="@AvatarUri" />
+                                </MudPaper>
+                                <MudGrid Justify="Justify.Center">
+                                    <MudItem Class="mt-1" xs="12">
+                                        <MudStack Spacing="1">
+                                            <MudButton Disabled="@(AvatarUri == Configuration["DefaultAvatar"] ? true : false)" OnClick="RemoveAvatar"
+                                                       Variant="Variant.Filled" FullWidth Color="Color.Error" ButtonType="ButtonType.Button" EndIcon="@Icons.Material.Filled.Delete">Remove avatar</MudButton>
+                                            <MudButton Variant="Variant.Filled" FullWidth Color="Color.Primary" OnClick="ChangeAvatar"
+                                                       ButtonType="ButtonType.Button" EndIcon="@Icons.Material.Filled.AddAPhoto">Change avatar</MudButton>
+                                        </MudStack>
+                                    </MudItem>
+                                </MudGrid>
+                            </MudItem>
+                            <MudItem xs="9">
+                                <MudPaper Outlined Class="pa-3 mb-3">
+                                    <MudText Typo="Typo.h6">Account Information</MudText>
+                                    <MudGrid Spacing="3" Class="mt-3">
+                                        <ProfileField Divided Label="User name" Text="@UserData.UserName" HasButton Tooltip="Change user name" OnEditClick="ChangeUserName" />
+                                        <ProfileField Divided Label="Email address" Text="@UserData.Email" HasButton Tooltip="Change email address" OnEditClick="ChangeEmail" />
+                                        <ProfileField Divided Label="Phone number" Text="@UserData.PhoneNumber" HasButton Tooltip="Change phone number" OnEditClick="ChangePhoneNumber" />
+                                    </MudGrid>
+                                </MudPaper>
+
+                                <MudPaper Outlined Class="pa-3 mb-3">
+                                    <MudGrid Spacing="3">
+                                        <MudItem xs="11">
+                                            <MudText Typo="Typo.h6">Personal Information</MudText>
+                                        </MudItem>
+                                        <MudItem xs="1">
+                                            <MudTooltip Text="Change perosnal data" Color="Color.Primary">
+                                                <MudIconButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Primary" Icon="@Icons.Material.Filled.EditNote"
+                                                               OnClick="ChangePersonalData" />
+                                            </MudTooltip>
+                                        </MudItem>
+                                    </MudGrid>
+                                    <MudGrid Spacing="3" Class="mt-3">
+                                        <ProfileField Divided Label="Full Name" Text="@($"{PersonalData.FirstName} {PersonalData.LastName}")" />
+                                        <ProfileField Divided Label="Date of birth" Text="@(PersonalData.DateOfBirth.ToLongDateString())" />
+                                        <ProfileField Divided Label="Gender" Text="@PersonalData.Gender" />
+                                    </MudGrid>
+                                </MudPaper>
+                                <MudPaper Outlined Class="pa-3">
+                                    <MudGrid>
+                                        <MudItem xs="12">
+                                            <MudText Typo="Typo.h6">Security Information</MudText>
+                                        </MudItem>
+                                    </MudGrid>
+                                    <MudGrid Spacing="3" Class="mt-3">
+                                        <MudDivider />
+                                        <MudItem xs="3" Class="m-auto">
+                                            <MudText Typo="Typo.body2">Two factor authentication</MudText>
+                                        </MudItem>
+                                        <MudItem xs="8" Class="m-auto">
+                                            <MudText Color="@(SecurityData.TwoFactorAuthenticationState ? Color.Success : Color.Error)"
+                                                     Typo="Typo.body2">@(SecurityData.TwoFactorAuthenticationState ? "Enabled" : "Disabled")</MudText>
+                                        </MudItem>
+                                        <MudItem xs="1">
+                                            <MudTooltip Text="Change two factor authentication state" Color="Color.Primary">
+                                                <MudIconButton ButtonType="ButtonType.Button" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled"
+                                                               OnClick="ChangeTwoFactorAuthenticationState" />
+                                            </MudTooltip>
+                                        </MudItem>
+                                        <ProfileField Divided Label="Password" Text="@($"Last updated at {SecurityData.PasswordUpdatedDate.ToLongDateString()}")"
+                                                      HasButton Tooltip="Change password" OnEditClick="ChangePassword" />
+                                    </MudGrid>
+                                </MudPaper>
                             </MudItem>
                         </MudGrid>
-                    </MudItem>
-                    <MudItem xs="9">
-                        <MudPaper Outlined Class="pa-3 mb-3">
-                            <MudText Typo="Typo.h6">Account Information</MudText>
-                            <MudGrid Spacing="3" Class="mt-3">
-                                <ProfileField Divided Label="User name" Text="@UserData.UserName" HasButton Tooltip="Change user name" OnEditClick="ChangeUserName" />
-                                <ProfileField Divided Label="Email address" Text="@UserData.Email" HasButton Tooltip="Change email address" OnEditClick="ChangeEmail" />
-                                <ProfileField Divided Label="Phone number" Text="@UserData.PhoneNumber" HasButton Tooltip="Change phone number" OnEditClick="ChangePhoneNumber" />
-                            </MudGrid>
-                        </MudPaper>
-
-                        <MudPaper Outlined Class="pa-3 mb-3">
-                            <MudGrid Spacing="3">
-                                <MudItem xs="11">
-                                    <MudText Typo="Typo.h6">Personal Information</MudText>
-                                </MudItem>
-                                <MudItem xs="1">
-                                    <MudTooltip Text="Change perosnal data" Color="Color.Primary">
-                                        <MudIconButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Primary" Icon="@Icons.Material.Filled.EditNote"
-                                                       OnClick="ChangePersonalData" />
-                                    </MudTooltip>
-                                </MudItem>
-                            </MudGrid>
-                            <MudGrid Spacing="3" Class="mt-3">
-                                <ProfileField Divided Label="Full Name" Text="@($"{PersonalData.FirstName} {PersonalData.LastName}")" />
-                                <ProfileField Divided Label="Date of birth" Text="@(PersonalData.DateOfBirth.ToLongDateString())" />
-                                <ProfileField Divided Label="Gender" Text="@PersonalData.Gender" />
-                            </MudGrid>
-                        </MudPaper>
-                        <MudPaper Outlined Class="pa-3">
-                            <MudGrid>
-                                <MudItem xs="12">
-                                    <MudText Typo="Typo.h6">Security Information</MudText>
-                                </MudItem>
-                            </MudGrid>
-                            <MudGrid Spacing="3" Class="mt-3">
-                                <MudDivider />
-                                <MudItem xs="3" Class="m-auto">
-                                    <MudText Typo="Typo.body2">Two factor authentication</MudText>
-                                </MudItem>
-                                <MudItem xs="8" Class="m-auto">
-                                    <MudText Color="@(SecurityData.TwoFactorAuthenticationState ? Color.Success : Color.Error)"
-                                             Typo="Typo.body2">@(SecurityData.TwoFactorAuthenticationState ? "Enabled" : "Disabled")</MudText>
-                                </MudItem>
-                                <MudItem xs="1">
-                                    <MudTooltip Text="Change two factor authentication state" Color="Color.Primary">
-                                        <MudIconButton ButtonType="ButtonType.Button" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled"
-                                                       OnClick="ChangeTwoFactorAuthenticationState" />
-                                    </MudTooltip>
-                                </MudItem>
-                                <ProfileField Divided Label="Password" Text="@($"Last updated at {SecurityData.PasswordUpdatedDate.ToLongDateString()}")"
-                                              HasButton Tooltip="Change password" OnEditClick="ChangePassword" />
-                            </MudGrid>
-                        </MudPaper>
-                    </MudItem>
-                </MudGrid>
-            }
-        </MudPaper>
-    </MudItem>
-</MudGrid>
+                    }
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </Authorized>
+    <NotAuthorized>
+        <AuthenticationManager />
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     private UserDataModel UserData = null!;

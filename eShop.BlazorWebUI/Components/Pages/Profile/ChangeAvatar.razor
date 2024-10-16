@@ -4,7 +4,9 @@
 
 @inject IStoreService StoreService
 
-<MudGrid Justify="Justify.Center">
+<AuthorizeView Roles="User">
+    <Authorized>
+        <MudGrid Justify="Justify.Center">
     <MudItem xs="4">
         <MudPaper Outlined Class="pa-3">
             <MudGrid Spacing="1">
@@ -58,6 +60,11 @@
         </MudPaper>
     </MudItem>
 </MudGrid>
+    </Authorized>
+    <NotAuthorized>
+        <AuthenticationManager/>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     private IBrowserFile? File;

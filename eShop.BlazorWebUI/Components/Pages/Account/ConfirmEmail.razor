@@ -7,19 +7,12 @@
 @code {
     private ResponseDTO Result { get; set; } = new();
 
+    [SupplyParameterFromQuery(Name = "token")] public string Token { get; set; } = string.Empty;
+    [SupplyParameterFromQuery(Name = "email")] public string Email { get; set; } = string.Empty;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var uri = new StringBuilder(NavigationManager.Uri)
-            .Replace(NavigationManager.BaseUri, "")
-            .Replace("account/confirm-email?", "")
-            .ToString();
-
-        var query = QueryHelpers.ParseQuery(uri);
-
-        query.TryGetValue("Email", out var email);
-        query.TryGetValue("Token", out var token);
-
-        Result = await AuthenticationService.ConfirmEmailAsync(new ConfirmEmailRequest() { Token = token!, Email = email! });
+        Result = await AuthenticationService.ConfirmEmailAsync(new ConfirmEmailRequest() { Token = Token, Email = Email });
 
         if (Result.IsSucceeded)
         {

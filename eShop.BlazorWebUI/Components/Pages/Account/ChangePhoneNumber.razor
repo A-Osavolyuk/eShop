@@ -9,25 +9,18 @@
 @code {
     private ConfirmChangePhoneNumberRequest ConfirmChangePhoneNumberRequest { get; set; } = new();
 
+    [SupplyParameterFromQuery(Name = "token")] public string Token { get; set; } = string.Empty;
+    [SupplyParameterFromQuery(Name = "email")] public string Email { get; set; } = string.Empty;
+    [SupplyParameterFromQuery(Name = "phonenumber")] public string PhoneNumber { get; set; } = string.Empty;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var uri = new StringBuilder(NavigationManager.Uri)
-            .Replace(NavigationManager.BaseUri, "")
-            .Replace("account/change-phone-number?", "")
-            .ToString();
-
-        var query = QueryHelpers.ParseQuery(uri);
-
-        query.TryGetValue("Email", out var email);
-        query.TryGetValue("PhoneNumber", out var phoneNumber);
-        query.TryGetValue("Token", out var token);
-
         ConfirmChangePhoneNumberRequest = new()
-            {
-                Email = email!,
-                PhoneNumber = phoneNumber!,
-                Token = token!
-            };
+        {
+            Email = Email,
+            PhoneNumber = PhoneNumber,
+            Token = Token
+        };
 
         var result = await AuthenticationService.ConfirmChangePhoneNumberAsync(ConfirmChangePhoneNumberRequest);
 

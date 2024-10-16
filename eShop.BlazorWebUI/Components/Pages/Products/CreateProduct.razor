@@ -399,6 +399,7 @@
         IsReadMode = false;
         SelectedProductIndex = -1;
         CurrentProduct = Products.Count() > 0 ? new CreateProductModel() with { Category = ProductCategory } : new();
+        StateHasChanged();
     }
 
     private string SetCardClasses(CreateProductModel model)

@@ -9,7 +9,9 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ITokenProvider TokenProvider
 
-<MudGrid Justify="Justify.Center">
+<AuthorizeView Roles="User">
+    <Authorized>
+        <MudGrid Justify="Justify.Center">
     <MudItem xs="4">
         <MudPaper Outlined Class="pa-5">
             <MudGrid>
@@ -22,7 +24,7 @@
             </MudGrid>
             <MudGrid Justify="Justify.Center">
                 <MudItem xs="12">
-                    <EditForm Model="Request" FormName="change-email-form" OnValidSubmit="OnValidSubmit">
+                    <EditForm Context="formcontext" Model="Request" FormName="change-email-form" OnValidSubmit="OnValidSubmit">
                         <FluentValidationValidator Validator="Validator" />
                         <MudTextField ReadOnly Label="Current email" @bind-Value="Request.CurrentEmail" Variant="Variant.Outlined" />
                         <MudTextField Immediate Clearable For="@(() => Request.NewEmail)" Label="New email" @bind-Value="Request.NewEmail" Variant="Variant.Outlined" />
@@ -33,6 +35,11 @@
         </MudPaper>
     </MudItem>
 </MudGrid>
+    </Authorized>
+    <NotAuthorized>
+        <AuthenticationManager />
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     private ChangeEmailRequest Request = new();

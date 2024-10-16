@@ -5,21 +5,14 @@
 @inject ISnackbar Snackbar
 
 @code {
+    [SupplyParameterFromQuery(Name = "accessToken")] public string AccessToken { get; set; } = string.Empty;
+    [SupplyParameterFromQuery(Name = "refreshToken")] public string RefreshToken { get; set; } = string.Empty;
+    [SupplyParameterFromQuery(Name = "returnUri")] public string ReturnUri { get; set; } = string.Empty;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var uri = new StringBuilder(NavigationManager.Uri)
-            .Replace(NavigationManager.BaseUri, "")
-            .Replace("account/confirm-external-login?", "")
-            .ToString();
-
-        var query = QueryHelpers.ParseQuery(uri);
-
-        query.TryGetValue("AccessToken", out var accessToken);
-        query.TryGetValue("RefreshToken", out var refreshToken);
-        query.TryGetValue("ReturnUri", out var returnUri);
-
-        await (authenticationStateProvider as ApplicationAuthenticationStateProvider)!.LoginAsync(accessToken!, refreshToken!);
-        NavigationManager.NavigateTo("/products");
+        await (authenticationStateProvider as ApplicationAuthenticationStateProvider)!.LoginAsync(AccessToken, RefreshToken);
+        NavigationManager.NavigateTo((string.IsNullOrEmpty(ReturnUri) ? "/products" : ReturnUri));
 
         Snackbar.Add("Successfully logged in.", MudBlazor.Severity.Success);
     }
