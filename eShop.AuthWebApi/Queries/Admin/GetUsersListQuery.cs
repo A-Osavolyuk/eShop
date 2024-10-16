@@ -24,9 +24,15 @@ namespace eShop.AuthWebApi.Queries.Admin
 
                 var usersList = await appManager.UserManager.Users.AsNoTracking().ToListAsync();
 
-                if (usersList is null || !usersList.Any())
+                if (usersList is null)
                 {
                     return logger.LogErrorWithException<IEnumerable<UserData>>(new NoUsersException(), actionMessage);
+                }
+
+                if (!usersList.Any())
+                {
+                    logger.LogInformation("Successfully got list of all users.");
+                    return new(new List<UserData>());
                 }
 
                 var users = new List<UserData>();

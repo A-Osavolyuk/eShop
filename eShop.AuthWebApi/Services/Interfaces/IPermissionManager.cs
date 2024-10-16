@@ -1,5 +1,4 @@
 ﻿using eShop.Domain.Entities.Admin;
-using eShop.Domain.Entities.Auth;
 
 namespace eShop.AuthWebApi.Services.Interfaces
 {
@@ -12,5 +11,6 @@ namespace eShop.AuthWebApi.Services.Interfaces
         public ValueTask<IdentityResult> IssuePermissionsToUserAsync(AppUser user, IList<string> permissions);
         public ValueTask<IdentityResult> IssuePermissionToUserAsync(AppUser user, string permission);
         public ValueTask<IdentityResult> RemoveUserFromPermissionAsync(AppUser user, Permission permission);
+        public ValueTask<IdentityResult> RemoveUserFromPermissionsAsync(AppUser user);
     }
 }

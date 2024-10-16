@@ -186,5 +186,15 @@ namespace eShop.AuthWebApi.Controllers
                 s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
                 f => ExceptionHandler.HandleException(f));
         }
+
+        [Authorize(Policy = "ManageUsersPolicy")]
+        [HttpDelete("delete-user-account")]
+        public async ValueTask<ActionResult<ResponseDTO>> DeleteUserAccountAsync([FromBody] DeleteUserAccountRequest request)
+        {
+            var result = await sender.Send(new DeleteUserAccountCommand(request));
+            return result.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
+                f => ExceptionHandler.HandleException(f));
+        }
     }
 }

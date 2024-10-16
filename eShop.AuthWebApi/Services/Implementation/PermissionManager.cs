@@ -75,7 +75,7 @@ namespace eShop.AuthWebApi.Services.Implementation
         {
             var userPermission = await context.UserPermissions.AsNoTracking().SingleOrDefaultAsync(x => x.UserId == user.Id && x.PermissionId == permission.Id);
 
-            if(userPermission is null)
+            if (userPermission is null)
             {
                 return IdentityResult.Failed(
                     new IdentityError() { Code = "404", Description = string.Format("Cannot find permission {0} for user with ID {1}", permission.Name, user.Id) });
@@ -87,6 +87,24 @@ namespace eShop.AuthWebApi.Services.Implementation
             return IdentityResult.Success;
         }
 
+        public async ValueTask<IdentityResult> RemoveUserFromPermissionsAsync(AppUser user)
+        {
+            if (user is null)
+            {
+                return IdentityResult.Failed(new IdentityError() { Code = "400", Description = "User is null." });
+            }
+
+            var userPermissions = await context.UserPermissions.AsNoTracking().Where(x => x.UserId == user.Id).ToListAsync();
+
+            if (userPermissions.Any())
+            {
+                context.UserPermissions.RemoveRange(userPermissions);
+                await context.SaveChangesAsync();
+            }
+            
+            return IdentityResult.Success;
+        }
+
         public async ValueTask<bool> UserHasPermissionAsync(AppUser user, string name)
         {
             var permission = await context.Permissions.AsNoTracking().SingleOrDefaultAsync(x => x.Name == name);
@@ -95,11 +113,11 @@ namespace eShop.AuthWebApi.Services.Implementation
             {
                 return false;
             }
-            
+
             var hasUserPermission = await context.UserPermissions.AsNoTracking().AnyAsync(x => x.UserId == user.Id && x.PermissionId == permission.Id);
 
-            if (hasUserPermission) 
-            { 
+            if (hasUserPermission)
+            {
                 return true;
             }
             return false;
