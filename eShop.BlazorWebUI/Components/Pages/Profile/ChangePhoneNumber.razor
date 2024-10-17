@@ -10,31 +10,29 @@
 <AuthorizeView Roles="User">
     <Authorized>
         <MudGrid Justify="Justify.Center">
-    <MudItem xs="4">
-        <MudPaper Outlined Class="pa-5">
-            <MudGrid>
-                <MudItem xs="1">
-                    <MudIconButton @onclick="@(() => NavigationManager.NavigateTo("/profile"))" Icon="@Icons.Material.Filled.ArrowBack" />
-                </MudItem>
-                <MudItem xs="11" Class="m-auto">
-                    <MudText Typo="Typo.h6"> Change phone number</MudText>
-                </MudItem>
-            </MudGrid>
-            <MudGrid Justify="Justify.Center">
-                <MudItem xs="12">
-                    <EditForm Context="formcontext" Model="Request" FormName="change-phone-number-form" OnValidSubmit="OnValidSubmit">
-                        <FluentValidationValidator Validator="Validator" />
-                        <MudTextField Immediate Clearable For="@(() => Request.PhoneNumber)" Label="Phone number" @bind-Value="Request.PhoneNumber" Variant="Variant.Outlined" />
-                        <MudButton Class="mt-3" Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Success" EndIcon="@Icons.Material.Filled.Save">Save changes</MudButton>
-                    </EditForm>
-                </MudItem>
-            </MudGrid>
-        </MudPaper>
-    </MudItem>
-</MudGrid>
+            <MudItem xs="4">
+                <MudPaper Outlined Class="pa-5 position-relative">
+                    <MudGrid>
+                        <MudIconButton Class="position-absolute" Style="top:15px; left:5%" @onclick="@(() => NavigationManager.NavigateTo("/profile"))" Icon="@Icons.Material.Filled.ArrowBack" />
+                        <MudItem xs="12" Class="m-auto">
+                            <MudText Align="Align.Center" Typo="Typo.h6"> Change phone number</MudText>
+                        </MudItem>
+                    </MudGrid>
+                    <MudGrid Justify="Justify.Center">
+                        <MudItem xs="12">
+                            <EditForm Context="formcontext" Model="Request" FormName="change-phone-number-form" OnValidSubmit="OnValidSubmit">
+                                <FluentValidationValidator Validator="Validator" />
+                                <MudTextField Immediate Clearable For="@(() => Request.PhoneNumber)" Label="Phone number" @bind-Value="Request.PhoneNumber" Variant="Variant.Outlined" />
+                                <MudButton Class="mt-3" Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Success" EndIcon="@Icons.Material.Filled.Save">Save changes</MudButton>
+                            </EditForm>
+                        </MudItem>
+                    </MudGrid>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
     </Authorized>
     <NotAuthorized>
-        <AuthenticationManager/>
+        <AuthenticationManager />
     </NotAuthorized>
 </AuthorizeView>
 

@@ -1,10 +1,8 @@
 ﻿@page "/products"
 
-@inject NavigationManager NavigationManager
-@inject IProductService ProductService
-@inject ISnackbar Snackbar
+@inherits PageBase
 
-<PageTitle>Products</PageTitle>
+@inject IProductService ProductService
 
 <MudGrid>
     @if (ProductsList.Any())
@@ -21,6 +19,12 @@
         </MudItem>
     }
 </MudGrid>
+
+<div Class="position-absolute" style="right:50px; bottom: 50px">
+    <MudTooltip Text="Create product" Color="Color.Success" Arrow>
+        <MudFab ButtonType="ButtonType.Button" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" OnClick="@(() => NavigationManager.NavigateTo("/products/create-product"))" />
+    </MudTooltip>
+</div>
 
 @code {
     private List<ProductDTO> ProductsList { get; set; } = new();

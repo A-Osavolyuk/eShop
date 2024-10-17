@@ -222,5 +222,6 @@
         AvatarUri = Configuration["DefaultAvatar"]!;
         await StoreService.RemoveUserAvatarAsync(UserData.UserId);
         await LocalDataAccessor.RemoveAvatarLinkAsync();
+        StateHasChanged();
     }
 }

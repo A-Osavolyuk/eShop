@@ -20,6 +20,9 @@ namespace eShop.Application.Extensions
         {
             var dbCreator = context.GetService<IRelationalDatabaseCreator>();
             var strategy = context.Database.CreateExecutionStrategy();
+
+            await Task.Delay(1000);
+
             await strategy.ExecuteAsync(async () =>
             {
                 if (!await dbCreator.ExistsAsync())

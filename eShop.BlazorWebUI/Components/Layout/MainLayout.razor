@@ -25,8 +25,8 @@
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
         <NavMenu />
     </MudDrawer>
-    <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="py-5">
+    <MudMainContent Style="height:100vh">
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="py-5" >
             @Body
         </MudContainer>
     </MudMainContent>

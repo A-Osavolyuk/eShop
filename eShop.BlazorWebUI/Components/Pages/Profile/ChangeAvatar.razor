@@ -7,62 +7,60 @@
 <AuthorizeView Roles="User">
     <Authorized>
         <MudGrid Justify="Justify.Center">
-    <MudItem xs="4">
-        <MudPaper Outlined Class="pa-3">
-            <MudGrid Spacing="1">
-                <MudItem xs="1">
-                    <MudIconButton @onclick="@(() => NavigationManager.NavigateTo("/profile"))" Icon="@Icons.Material.Filled.ArrowBack" />
-                </MudItem>
-                <MudItem xs="11" Class="m-auto">
-                    <MudText Typo="Typo.h6"> Change avatar </MudText>
-                </MudItem>
-                <MudItem xs=12>
-                    <MudPaper Class="pa-1 d-flex justify-content-center" Outlined Style="height:300px">
-                        @if (string.IsNullOrEmpty(CurrentImage))
-                        {
-                            <MudText Class="m-auto" Typo="Typo.body1"> Your avatar preview </MudText>
-                        }
-                        else
-                        {
-                            <MudImage ObjectFit="ObjectFit.Fill" Class="h-100" Src="@CurrentImage" Alt="avatar preview"/>
-                        }
-                    </MudPaper>
-                </MudItem>
-                <MudItem xs="4">
-                    <MudFileUpload T="IBrowserFile"
-                                   Accept="@(".jpeg, .png, .jpg")"
-                                   AppendMultipleFiles="false"
-                                   OnFilesChanged="OnInputFileChanged"
-                                   Hidden="@false"
-                                   InputClass="absolute m-auto cursor-pointer mud-width-full mud-height-full z-20"
-                                   InputStyle="opacity:0"
-                                   @bind-Files="@File"
-                                   For="@(() => File)"
-                                   SuppressOnChangeWhenInvalid>
-                        <ActivatorContent>
-                            <MudButton Class="cursor-pointer" FullWidth HtmlTag="button" Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.FileOpen">
-                                Choose files
+            <MudItem xs="4">
+                <MudPaper Outlined Class="pa-3 position-relative">
+                    <MudGrid Spacing="1">
+                        <MudIconButton Class="position-absolute" Style="top:15px; left:5%" @onclick="@(() => NavigationManager.NavigateTo("/profile"))" Icon="@Icons.Material.Filled.ArrowBack" />
+                        <MudItem xs="12" Class="m-auto">
+                            <MudText Align="Align.Center" Typo="Typo.h6"> Change avatar </MudText>
+                        </MudItem>
+                        <MudItem xs=12>
+                            <MudPaper Class="pa-1 d-flex justify-content-center" Outlined Style="height:300px">
+                                @if (string.IsNullOrEmpty(CurrentImage))
+                                {
+                                    <MudText Class="m-auto" Typo="Typo.body1"> Your avatar preview </MudText>
+                                }
+                                else
+                                {
+                                    <MudImage ObjectFit="ObjectFit.Fill" Class="h-100" Src="@CurrentImage" Alt="avatar preview" />
+                                }
+                            </MudPaper>
+                        </MudItem>
+                        <MudItem xs="4">
+                            <MudFileUpload T="IBrowserFile"
+                                           Accept="@(".jpeg, .png, .jpg")"
+                                           AppendMultipleFiles="false"
+                                           OnFilesChanged="OnInputFileChanged"
+                                           Hidden="@false"
+                                           InputClass="absolute m-auto cursor-pointer mud-width-full mud-height-full z-20"
+                                           InputStyle="opacity:0"
+                                           @bind-Files="@File"
+                                           For="@(() => File)"
+                                           SuppressOnChangeWhenInvalid>
+                                <ActivatorContent>
+                                    <MudButton Class="cursor-pointer" FullWidth HtmlTag="button" Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.FileOpen">
+                                        Choose files
+                                    </MudButton>
+                                </ActivatorContent>
+                            </MudFileUpload>
+                        </MudItem>
+                        <MudItem xs="4" Style="margin-top:6px">
+                            <MudButton FullWidth ButtonType="ButtonType.Button" Disabled="@(File is null ? true : false)" Color="Color.Success" Variant="Variant.Filled" OnClick="UploadClick" StartIcon="@Icons.Material.Filled.Upload">
+                                Upload file
                             </MudButton>
-                        </ActivatorContent>
-                    </MudFileUpload>
-                </MudItem>
-                <MudItem xs="4" Style="margin-top:6px">
-                    <MudButton FullWidth ButtonType="ButtonType.Button" Disabled="@(File is null ? true : false)" Color="Color.Success" Variant="Variant.Filled" OnClick="UploadClick" StartIcon="@Icons.Material.Filled.Upload">
-                        Upload file
-                    </MudButton>
-                </MudItem>
-                <MudItem xs="4" Style="margin-top:6px">
-                    <MudButton FullWidth ButtonType="ButtonType.Button" Disabled="@(File is null ? true : false)" Color="Color.Error" Variant="Variant.Filled" OnClick="ClearClick" StartIcon="@Icons.Material.Filled.Clear">
-                        Clear
-                    </MudButton>
-                </MudItem>
-            </MudGrid>
-        </MudPaper>
-    </MudItem>
-</MudGrid>
+                        </MudItem>
+                        <MudItem xs="4" Style="margin-top:6px">
+                            <MudButton FullWidth ButtonType="ButtonType.Button" Disabled="@(File is null ? true : false)" Color="Color.Error" Variant="Variant.Filled" OnClick="ClearClick" StartIcon="@Icons.Material.Filled.Clear">
+                                Clear
+                            </MudButton>
+                        </MudItem>
+                    </MudGrid>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
     </Authorized>
     <NotAuthorized>
-        <AuthenticationManager/>
+        <AuthenticationManager />
     </NotAuthorized>
 </AuthorizeView>
 

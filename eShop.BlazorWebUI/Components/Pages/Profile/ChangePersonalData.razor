@@ -10,13 +10,11 @@
     <Authorized>
         <MudGrid Justify="Justify.Center">
             <MudItem xs="4">
-                <MudPaper Outlined Class="pa-5">
+                <MudPaper Outlined Class="pa-5 position-relative">
                     <MudGrid>
-                        <MudItem xs="1">
-                            <MudIconButton @onclick="@(() => NavigationManager.NavigateTo("/profile"))" Icon="@Icons.Material.Filled.ArrowBack" />
-                        </MudItem>
-                        <MudItem xs="11" Class="m-auto">
-                            <MudText Typo="Typo.h6"> Change personal data </MudText>
+                        <MudIconButton Class="position-absolute" Style="top:15px; left:5%" @onclick="@(() => NavigationManager.NavigateTo("/profile"))" Icon="@Icons.Material.Filled.ArrowBack" />
+                        <MudItem xs="12" Class="m-auto">
+                            <MudText Align="Align.Center" Typo="Typo.h6"> Change personal data </MudText>
                         </MudItem>
                     </MudGrid>
                     <MudGrid Justify="Justify.Center">
@@ -36,7 +34,7 @@
         </MudGrid>
     </Authorized>
     <NotAuthorized>
-        <AuthenticationManager/>
+        <AuthenticationManager />
     </NotAuthorized>
 </AuthorizeView>
 
@@ -52,7 +50,7 @@
             var personalDataModel = await LocalDataAccessor.ReadPersonalDataAsync();
             User = await LocalDataAccessor.ReadUserDataAsync();
 
-            if(personalDataModel is not null)
+            if (personalDataModel is not null)
             {
                 Request = Mapper.Map<ChangePersonalDataRequest>(personalDataModel) with { Email = User.Email };
             }

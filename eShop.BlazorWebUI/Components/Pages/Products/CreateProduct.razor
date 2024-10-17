@@ -4,14 +4,12 @@
 @using Product = Domain.Entities.Product
 @using eShop.Domain.Requests.Product
 
-@inject NavigationManager NavigationManager
+@inherits PageBase
+
 @inject IProductService ProductService
 @inject IBrandService BrandService
-@inject ISnackbar Snackbar
 @inject IMapper Mapper
 @inject IStoreService StoreService
-
-<PageTitle>Create product</PageTitle>
 
 <AuthorizeView>
     <NotAuthorized>
