@@ -1,6 +1,3 @@
-using eShop.ReviewsWebApi.Extensions;
-using eShop.ReviewsWebApi.Extensions.Extensions;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();

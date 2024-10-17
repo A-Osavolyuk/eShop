@@ -1,7 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Infrastructure;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace eShop.AuthWebApi.Extensions
+namespace eShop.Application.Extensions
 {
     public static class WebApplicationExtensions
     {
@@ -21,7 +24,7 @@ namespace eShop.AuthWebApi.Extensions
             {
                 if (!await dbCreator.ExistsAsync())
                 {
-                    await context.Database.EnsureCreatedAsync();
+                    await dbCreator.CreateAsync();
                 }
             });
 
