@@ -13,7 +13,7 @@
 <MudSnackbarProvider />
 <MudPopoverProvider />
 
-<MudLayout>
+<MudLayout Style="height:100vh">
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         <MudText Align="Align.Center" Typo="Typo.h5" Class="ml-3">eShop</MudText>
@@ -25,8 +25,8 @@
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
         <NavMenu />
     </MudDrawer>
-    <MudMainContent Style="height:100vh">
-        <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="py-5" >
+    <MudMainContent Style="height:100%">
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="py-5 position-relative" Style="height:100%">
             @Body
         </MudContainer>
     </MudMainContent>

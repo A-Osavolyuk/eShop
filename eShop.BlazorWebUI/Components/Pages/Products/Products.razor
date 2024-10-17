@@ -20,11 +20,15 @@
     }
 </MudGrid>
 
-<div Class="position-absolute" style="right:50px; bottom: 50px">
-    <MudTooltip Text="Create product" Color="Color.Success" Arrow>
-        <MudFab ButtonType="ButtonType.Button" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" OnClick="@(() => NavigationManager.NavigateTo("/products/create-product"))" />
-    </MudTooltip>
-</div>
+<AuthorizeView Roles="Seller,Admin">
+    <Authorized>
+        <div class="position-absolute" style="right:50px; bottom: 50px">
+            <MudTooltip Text="Create product" Color="Color.Success" Arrow>
+                <MudFab ButtonType="ButtonType.Button" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" OnClick="@(() => NavigationManager.NavigateTo("/products/create-product"))" />
+            </MudTooltip>
+        </div>
+    </Authorized>
+</AuthorizeView>
 
 @code {
     private List<ProductDTO> ProductsList { get; set; } = new();

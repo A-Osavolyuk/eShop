@@ -102,7 +102,61 @@
                              ReadOnly="@IsReadMode">
                         <MudGrid>
                             <MudItem xs="4">
-                                <ImagesDragAndDrop Model="CurrentProduct" />
+                                <MudStack Style="width: 100%">
+                                    <MudGrid Spacing="1">
+                                        <MudItem xs="12">
+                                            <MudPaper Style="height:300px;" Class="border-dashed border-2 pa-1 d-flex justify-content-center" Outlined>
+                                                @if (string.IsNullOrEmpty(CurrentImage))
+                                                {
+                                                    <MudText Class="m-auto" Typo="Typo.body1">Image preview</MudText>
+                                                }
+                                                else
+                                                {
+                                                    <MudImage ObjectFit="ObjectFit.Fill" Style="max-width:100%" Class="h-100" Src="@CurrentImage" Alt="product-image" />
+                                                }
+                                            </MudPaper>
+                                            <MudFileUpload T="IReadOnlyList<IBrowserFile>"
+                                                           Accept="@(".jpeg, .png, .jpg")"
+                                                           AppendMultipleFiles
+                                                           OnFilesChanged="OnInputFileChanged"
+                                                           Hidden="@false"
+                                                           InputClass="absolute cursor-pointer mud-width-full mud-height-full overflow-hidden z-20"
+                                                           InputStyle="opacity:0"
+                                                           Disabled="IsReadMode"
+                                                           @bind-Files="@CurrentProduct.Files"
+                                                           For="@(() => CurrentProduct.Files)"
+                                                           SuppressOnChangeWhenInvalid>
+                                                <ActivatorContent>
+                                                    <MudButton FullWidth HtmlTag="label"
+                                                               Color="Color.Primary"
+                                                               Variant="Variant.Filled">
+                                                        Choose files
+                                                    </MudButton>
+                                                </ActivatorContent>
+                                            </MudFileUpload>
+                                            <MudButton FullWidth Class="mt-1" OnClick="@(async () => await ClearImages_OnClick())"
+                                                       Color="Color.Error"
+                                                       Disabled="@(!CurrentProduct.Images.Any() || IsReadMode)"
+                                                       Variant="Variant.Filled">
+                                                Clear
+                                            </MudButton>
+                                        </MudItem>
+                                        <MudItem xs=12>
+                                            <MudGrid Spacing="1">
+                                                @foreach (var image in CurrentProduct.Images)
+                                                {
+                                                    <MudItem xs="3" Class="position-relative">
+                                                        <MudImage @onclick=@(() => SetCurrentImage(image))
+                                                                  Style="height:100%;width:100%; min-height:90px; min-width:90px"
+                                                                  Class="@SetActiveImageClass(image)"
+                                                                  Src="@image">
+                                                        </MudImage>
+                                                    </MudItem>
+                                                }
+                                            </MudGrid>
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudStack>
                             </MudItem>
                             <MudItem xs="8">
                                 <MudGrid Spacing="1">
@@ -268,6 +322,7 @@
     private List<CreateProductModel> Products { get; set; } = new();
     private MudForm Form = new();
     private CreateProductModelValidator ProductValidation = new();
+    private string CurrentImage = "";
 
     private IList<Currency> Currencies = Enum.GetValues<Currency>().ToList();
     private IList<ProductColor> Colors = Enum.GetValues<ProductColor>().ToList();
@@ -325,6 +380,7 @@
             CurrentProduct = new CreateProductModel() with { Category = ProductCategory };
             IsEditMode = false;
             EditingProductIndex = -1;
+            CurrentImage = string.Empty;
         }
     }
 
@@ -436,5 +492,58 @@
         EditingProductIndex = Products.IndexOf(model);
     }
 
-    private void ClearForm_OnClick() => CurrentProduct = Products.Any() ? new CreateProductModel() with { Category = ProductCategory } : new();
+    private void ClearForm_OnClick()
+    {
+        CurrentProduct = Products.Any() ? new CreateProductModel() with { Category = ProductCategory } : new();
+        CurrentImage = string.Empty;
+    }
+
+    private async void OnInputFileChanged(InputFileChangeEventArgs e)
+    {
+        var files = e.GetMultipleFiles();
+        foreach (var file in files)
+        {
+            CurrentProduct.Images.Add(await CreateImageUrl(file));
+        }
+        if (string.IsNullOrEmpty(CurrentImage))
+        {
+            CurrentImage = CurrentProduct.Images.First();
+        }
+        StateHasChanged();
+    }
+
+    private async Task<string> CreateImageUrl(IBrowserFile file)
+    {
+        var buffer = new byte[file.Size];
+        await using var stream = file.OpenReadStream();
+        await stream.ReadAsync(buffer);
+        var base64 = Convert.ToBase64String(buffer);
+        var imageUrl = $"data:{file.ContentType};base64,{base64}";
+        return imageUrl;
+    }
+
+    private async Task ClearImages_OnClick()
+    {
+        CurrentProduct.Images.Clear();
+        CurrentProduct.Files = [];
+        CurrentImage = string.Empty;
+        await Task.Delay(100);
+    }
+
+    private void SetCurrentImage(string uri)
+    {
+        CurrentImage = uri;
+    }
+
+    private string SetActiveImageClass(string img)
+    {
+        var classes = "border-2 rounded-lg cursor-pointer";
+
+        if (img == CurrentImage)
+        {
+            return new StringBuilder(classes).Append(" mud-border-primary").ToString();
+        }
+
+        return new StringBuilder(classes).Append(" mud-border-inherit").ToString();
+    }
 }

@@ -14,7 +14,7 @@ namespace eShop.Infrastructure.Services
         private readonly IHttpClientService clientService = clientService;
         private readonly IConfiguration configuration = configuration;
 
-        public async ValueTask<ResponseDTO> CreateProductAsync(IEnumerable<CreateProductRequest> request) => await clientService.SendAsync(
+        public async ValueTask<ResponseDTO> CreateProductAsync(List<CreateProductRequest> request) => await clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:Gateway"]}/api/v1/Products", Method: HttpMethods.POST, Data: request));
 
         public async ValueTask<ResponseDTO> DeleteProductAsync(DeleteProductRequest request) => await clientService.SendAsync(
