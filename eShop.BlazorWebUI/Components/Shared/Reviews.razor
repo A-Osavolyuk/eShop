@@ -53,7 +53,7 @@ else
     [Parameter, NotNull] public ProductDTO Model { get; set; } = new();
     private List<ReviewDTO> ReviewList { get; set; } = new();
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnInitializedAsync()
     {
         var response = await ReviewService.GetReviewListByProductIdAsync(Model.Id);
 
@@ -65,7 +65,5 @@ else
         {
             Snackbar.Add(response.ErrorMessage, MudBlazor.Severity.Error);
         }
-
-        StateHasChanged();
     }
 }

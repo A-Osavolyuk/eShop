@@ -1,13 +1,13 @@
 ﻿@page "/profile/change-email"
 
-
-
 @inherits PageBase
 
 @inject IAuthenticationService AuthService
 @inject ChangeEmailValidator Validator
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ITokenProvider TokenProvider
+
+<Title Text="Change email" />
 
 <AuthorizeView Roles="User">
     <Authorized>

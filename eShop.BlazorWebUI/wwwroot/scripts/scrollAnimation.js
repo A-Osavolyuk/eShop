@@ -45,3 +45,9 @@ function isOnTop() {
     const overflowedHeight = slider.scrollHeight - slider.clientHeight
     return slider.scrollTop - overflowedHeight === 0;
 }
+
+function some() {
+    let element = document.getElementById("slider");
+    let height = element.role;
+    console.log(element.role)
+}

@@ -1,4 +1,12 @@
-﻿<MudNavMenu>
-    
+﻿@inject NavigationManager NavigationManager
+
+<MudNavMenu>
+    <MudNavLink Icon="@Icons.Material.Filled.Store" Href="products"> Products </MudNavLink>
+    <MudNavGroup Title="Categories" Icon="@Icons.Material.Filled.Category">
+        <MudNavLink Href="products/clothing" Icon="@Icons.Material.Filled.ArrowRight"> Clothing </MudNavLink>
+        <MudNavLink Href="products/shoes" Icon="@Icons.Material.Filled.ArrowRight"> Shoes </MudNavLink>
+    </MudNavGroup>
 </MudNavMenu>
 
+@code {
+}

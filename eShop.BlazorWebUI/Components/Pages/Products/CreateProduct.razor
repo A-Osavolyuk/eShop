@@ -11,6 +11,8 @@
 @inject IMapper Mapper
 @inject IStoreService StoreService
 
+<Title Text="Create product" />
+
 <AuthorizeView>
     <NotAuthorized>
         <AuthenticationManager />
@@ -147,7 +149,7 @@
                                                 {
                                                     <MudItem xs="3" Class="position-relative">
                                                         <MudImage @onclick=@(() => SetCurrentImage(image))
-                                                                  Style="height:100%;width:100%; min-height:90px; min-width:90px"
+                                                                  Style="height:100%; max-width:100%"
                                                                   Class="@SetActiveImageClass(image)"
                                                                   Src="@image">
                                                         </MudImage>
@@ -362,6 +364,7 @@
 
             Products.Add(CurrentProduct);
             CurrentProduct = new CreateProductModel() with { Category = ProductCategory };
+            CurrentImage = string.Empty;
         }
     }
 

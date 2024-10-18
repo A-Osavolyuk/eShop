@@ -16,7 +16,7 @@
 <MudLayout Style="height:100vh">
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        <MudText Align="Align.Center" Typo="Typo.h5" Class="ml-3">eShop</MudText>
+        <MudText Align="Align.Center" Typo="Typo.h5" Class="ml-3 cursor-pointer" @onclick="@(() => NavigationManager.NavigateTo("/products"))">eShop</MudText>
         <MudSpacer />
         <SearchField />
         <MudSpacer />
@@ -35,7 +35,7 @@
 @code {
     [CascadingParameter] Task<AuthenticationState>? AuthenticationStateTask { get; set; }
 
-    private bool _drawerOpen = false;
+    private bool _drawerOpen = true;
     private string pageTitle = string.Empty;
 
     void DrawerToggle()
@@ -45,7 +45,6 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await JS.InvokeVoidAsync("setTitle", GetPageTitle());
         if (firstRender)
         {
             var state = await AuthenticationStateTask!;

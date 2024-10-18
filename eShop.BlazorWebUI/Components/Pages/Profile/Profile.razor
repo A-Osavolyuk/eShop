@@ -6,6 +6,8 @@
 @inject IConfiguration Configuration
 @inject IStoreService StoreService
 
+<Title Text="Profile" />
+
 <AuthorizeView Roles="User">
     <Authorized>
         <MudGrid Justify="Justify.Center">
@@ -27,7 +29,7 @@
                                         <MudStack Spacing="1">
                                             <MudButton Disabled="@(AvatarUri == Configuration["DefaultAvatar"] ? true : false)" OnClick="RemoveAvatar"
                                                        Variant="Variant.Filled" FullWidth Color="Color.Error" ButtonType="ButtonType.Button" EndIcon="@Icons.Material.Filled.Delete">Remove avatar</MudButton>
-                                            <MudButton Variant="Variant.Filled" FullWidth Color="Color.Primary" OnClick="ChangeAvatar"
+                                            <MudButton Variant="Variant.Filled" FullWidth Color="Color.Primary" OnClick="@(() => NavigationManager.NavigateTo("/profile/change-avatar"))"
                                                        ButtonType="ButtonType.Button" EndIcon="@Icons.Material.Filled.AddAPhoto">Change avatar</MudButton>
                                         </MudStack>
                                     </MudItem>
@@ -37,9 +39,12 @@
                                 <MudPaper Outlined Class="pa-3 mb-3">
                                     <MudText Typo="Typo.h6">Account Information</MudText>
                                     <MudGrid Spacing="3" Class="mt-3">
-                                        <ProfileField Divided Label="User name" Text="@UserData.UserName" HasButton Tooltip="Change user name" OnEditClick="ChangeUserName" />
-                                        <ProfileField Divided Label="Email address" Text="@UserData.Email" HasButton Tooltip="Change email address" OnEditClick="ChangeEmail" />
-                                        <ProfileField Divided Label="Phone number" Text="@UserData.PhoneNumber" HasButton Tooltip="Change phone number" OnEditClick="ChangePhoneNumber" />
+                                        <ProfileField Divided Label="User name" Text="@UserData.UserName" HasButton
+                                                      Tooltip="Change user name" OnEditClick="@(() => NavigationManager.NavigateTo("/profile/change-username"))" />
+                                        <ProfileField Divided Label="Email address" Text="@UserData.Email" HasButton
+                                                      Tooltip="Change email address" OnEditClick="@(() => NavigationManager.NavigateTo("/profile/change-email"))" />
+                                        <ProfileField Divided Label="Phone number" Text="@UserData.PhoneNumber" HasButton
+                                                      Tooltip="Change phone number" OnEditClick="@(() => NavigationManager.NavigateTo("/profile/change-phone-number"))" />
                                     </MudGrid>
                                 </MudPaper>
 
@@ -51,7 +56,7 @@
                                         <MudItem xs="1">
                                             <MudTooltip Text="Change perosnal data" Color="Color.Primary">
                                                 <MudIconButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Primary" Icon="@Icons.Material.Filled.EditNote"
-                                                               OnClick="ChangePersonalData" />
+                                                               OnClick="@(() => NavigationManager.NavigateTo("/profile/change-personal-data"))" />
                                             </MudTooltip>
                                         </MudItem>
                                     </MudGrid>
@@ -83,7 +88,7 @@
                                             </MudTooltip>
                                         </MudItem>
                                         <ProfileField Divided Label="Password" Text="@($"Last updated at {SecurityData.PasswordUpdatedDate.ToLongDateString()}")"
-                                                      HasButton Tooltip="Change password" OnEditClick="ChangePassword" />
+                                                      HasButton Tooltip="Change password" OnEditClick="@(() => NavigationManager.NavigateTo("/profile/change-password"))" />
                                     </MudGrid>
                                 </MudPaper>
                             </MudItem>
@@ -192,13 +197,6 @@
             AvatarUri = link;
         }
     }
-
-    private void ChangeUserName() => NavigationManager.NavigateTo("/profile/change-username");
-    private void ChangeEmail() => NavigationManager.NavigateTo("/profile/change-email");
-    private void ChangePhoneNumber() => NavigationManager.NavigateTo("/profile/change-phone-number");
-    private void ChangePersonalData() => NavigationManager.NavigateTo("/profile/change-personal-data");
-    private void ChangePassword() => NavigationManager.NavigateTo("/profile/change-password");
-    private void ChangeAvatar() => NavigationManager.NavigateTo("/profile/change-avatar");
 
     private async Task ChangeTwoFactorAuthenticationState()
     {

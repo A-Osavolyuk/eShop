@@ -1,0 +1,11 @@
+﻿@inject NavigationManager NavigationManager
+
+@code {
+    [Parameter] public string Uri { get; set; } = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        NavigationManager.NavigateTo(Uri);
+        base.OnInitialized();
+    }
+}
