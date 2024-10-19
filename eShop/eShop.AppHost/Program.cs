@@ -35,7 +35,7 @@ builder.AddProject<Projects.eShop_Gateway>("eshop-gateway");
 
 builder.AddNpmApp("eshop-angularwebui", "C:/Users/sasha/source/repos/A-Osavolyuk/eShop/eShop.AngularWebUI")
     .WithReference(authApi)
-    .WithHttpEndpoint(port: 4201, targetPort:4200, env: "PORT")
+    .WithHttpEndpoint(port: 5103, targetPort:4200, env: "PORT")
     .WithExternalHttpEndpoints()
     .PublishAsDockerFile();
 
