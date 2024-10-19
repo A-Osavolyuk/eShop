@@ -26,7 +26,7 @@ namespace eShop.Infrastructure.Services
             await localStorageService.SetItemAsync("user", user);
         }
 
-        public async ValueTask<UserDataModel?> ReadUserDataAsync()
+        public async ValueTask<UserDataModel> ReadUserDataAsync()
         {
             var user = await localStorageService.GetItemAsync<UserDataModel>("user");
 

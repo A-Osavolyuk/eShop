@@ -9,7 +9,7 @@ namespace eShop.Domain.Interfaces
         public ValueTask WriteAvatarLinkAsync(string link);
         public ValueTask<string> ReadAvatarLinkAsync();
         public ValueTask WriteUserDataAsync(UserDataModel user);
-        public ValueTask<UserDataModel?> ReadUserDataAsync();
+        public ValueTask<UserDataModel> ReadUserDataAsync();
         public ValueTask WritePersonalDataAsync(PersonalDataModel personalData);
         public ValueTask<PersonalDataModel> ReadPersonalDataAsync();
         public ValueTask WriteSecurityDataAsync(SecurityDataModel securityData);
