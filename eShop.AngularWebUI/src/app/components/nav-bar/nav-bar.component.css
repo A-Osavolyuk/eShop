@@ -5,11 +5,11 @@
     flex-direction: row;
     position: absolute;
     z-index: 10;
-    background-color: rgb(44, 41, 41);
+    background-color: rgba(39, 39, 47, 1);
     height: 65px;
-    margin-bottom: 100px;
     width: 100vw;
     max-width: 100vw;
+    box-shadow: 0 0 5px black;
 }
 
 .header-center {
@@ -55,6 +55,8 @@
 }
 
 .toogle-button-container {
+    background-color: transparent;
+    border: 0;
     width: 50px;
     height: 50px;
     display: flex;

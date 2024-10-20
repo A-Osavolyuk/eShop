@@ -5,7 +5,7 @@
     width: 100vw;
 }
 
-.body {
+.body-container {
     margin-left: 20px;
     margin-top: 90px;
     display: flex;
