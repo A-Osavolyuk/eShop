@@ -101,5 +101,67 @@ namespace eShop.Infrastructure.Services
         {
             await localStorageService.RemoveItemAsync("avatar-link");
         }
+
+        public ValueTask<IEnumerable<FavoriteGoodModel>> ReadFavoriteGoodsAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async ValueTask WriteFavoriteGoodAsync(FavoriteGoodModel model)
+        {
+            var key = "favorite-goods";
+            if (await localStorageService.ContainKeyAsync(key))
+            {
+                var list = await localStorageService.GetItemAsync<List<FavoriteGoodModel>>(key);
+
+                if (list is not null)
+                {
+                    list.Add(model);
+                    await localStorageService.SetItemAsync(key, list);
+                }
+            }
+            else
+            {
+                var list = new List<FavoriteGoodModel>() { model };
+                await localStorageService.SetItemAsync(key, list);
+            }
+        }
+
+        public async ValueTask RemoveFavoriteGoodAsync(string id)
+        {
+            var key = "favorite-goods";
+            if (await localStorageService.ContainKeyAsync(key))
+            {
+                var list = await localStorageService.GetItemAsync<List<FavoriteGoodModel>>(key);
+
+                if (list is not null && list.Any())
+                {
+                    var model = list.FirstOrDefault(x => x.ProductId == id);
+
+                    if (model is not null)
+                    {
+                        list.Remove(model);
+                        await localStorageService.SetItemAsync(key, list);
+                    }
+                }
+            }
+        }
+
+        public async ValueTask<bool> IsInFavoriteGoodsAsync(string id)
+        {
+            var key = "favorite-goods";
+            if (await localStorageService.ContainKeyAsync(key))
+            {
+                var list = await localStorageService.GetItemAsync<List<FavoriteGoodModel>>(key);
+
+                if (list is not null && list.Any())
+                {
+                    return list.Any(x => x.ProductId == id);
+
+                }
+            }
+
+            return false;
+        }
     }
 }

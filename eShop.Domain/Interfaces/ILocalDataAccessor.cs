@@ -5,6 +5,10 @@ namespace eShop.Domain.Interfaces
 {
     public interface ILocalDataAccessor
     {
+        public ValueTask<bool> IsInFavoriteGoodsAsync(string id);
+        public ValueTask RemoveFavoriteGoodAsync(string id);
+        public ValueTask<IEnumerable<FavoriteGoodModel>> ReadFavoriteGoodsAsync();
+        public ValueTask WriteFavoriteGoodAsync(FavoriteGoodModel model);
         public ValueTask RemoveAvatarLinkAsync();
         public ValueTask WriteAvatarLinkAsync(string link);
         public ValueTask<string> ReadAvatarLinkAsync();

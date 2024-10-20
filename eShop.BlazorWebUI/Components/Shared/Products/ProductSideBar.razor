@@ -1,4 +1,7 @@
-﻿<MudGrid Spacing="1">
+﻿@inject NavigationManager NavigationManager
+@inject ILocalDataAccessor LocalDataAccessor
+
+<MudGrid Spacing="1">
     <MudItem xs="12">
         <MudPaper Outlined Class="pa-5">
             <MudGrid Spacing="1" Justify="Justify.Center">
@@ -6,7 +9,9 @@
                     <MudText Typo="Typo.h6">@Model.Name</MudText>
                 </MudItem>
                 <MudItem xs="1">
-                    <MudIcon Color="Color.Error" Icon="@Icons.Material.Outlined.FavoriteBorder" />
+                    <MudIconButton Style="padding:0"
+                                   OnClick="async () => await AddToFavorite_OnClick()"
+                                   Color="Color.Error" Icon="@(IsFavorite ? Icons.Material.Outlined.Favorite : Icons.Material.Outlined.FavoriteBorder)" />
                 </MudItem>
                 <MudItem Class="pt-0 pb-0" xs="12">
                     <MudText Style="opacity:0.5" Typo="Typo.subtitle2">Article: @Model.Article</MudText>
@@ -25,6 +30,7 @@
                                Variant="Variant.Filled"
                                ButtonType="ButtonType.Button"
                                StartIcon="@Icons.Material.Filled.Sell"
+                               OnClick="@(() => NavigationManager.NavigateTo($"/products/quick-buy/{Model.Article}"))"
                                FullWidth>
                         Buy now
                     </MudButton>
@@ -34,6 +40,7 @@
                                Variant="Variant.Filled"
                                ButtonType="ButtonType.Button"
                                StartIcon="@Icons.Material.Filled.ShoppingCart"
+                               OnClick="@(async () => await AddToCart_OnClick())"
                                FullWidth>
                         Add to card
                     </MudButton>
@@ -173,4 +180,34 @@
 
 @code {
     [Parameter, NotNull] public ProductDTO Model { get; set; } = new();
+
+    private bool IsFavorite = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsFavorite = await LocalDataAccessor.IsInFavoriteGoodsAsync(Model.Id.ToString());
+    }
+
+    private async Task AddToCart_OnClick()
+    {
+
+    }
+
+    private async Task AddToFavorite_OnClick()
+    {
+        if (IsFavorite)
+        {
+            await LocalDataAccessor.RemoveFavoriteGoodAsync(Model.Id.ToString());
+        }
+        else
+        {
+            await LocalDataAccessor.WriteFavoriteGoodAsync(new()
+            {
+                AddedAt = DateTime.UtcNow,
+                ProductId = Model.Id.ToString(),
+                ProductArticle = Model.Article,
+            });
+        }
+        IsFavorite = !IsFavorite;
+    }
 }
