@@ -1,28 +1,85 @@
-﻿@inherits LayoutComponentBase
+﻿@using eShop.Infrastructure.Services
+@inherits LayoutComponentBase
 
 @inject ITokenProvider TokenProvider
 @inject ILocalDataAccessor LocalDataAccessor
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ICartService CartService
 @inject ISnackbar Snackbar
-@inject NavigationManager NavigationManager
 @inject IJSRuntime JS
+@inject NotificationService NotificationService
+@inject IStoreService StoreService
+@inject IAuthenticationService authenticationService
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider authenticationState
+@inject IConfiguration Configuration
 
 <MudThemeProvider IsDarkMode />
 <MudDialogProvider />
 <MudSnackbarProvider />
 <MudPopoverProvider />
 
-<MudLayout Style="height:100vh">
-    <MudAppBar Elevation="1">
+<CascadingValue Value="this">
+    <MudLayout Style="height:100vh">
+    <MudAppBar Style="height:70px;" Class="align-content-center" Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        <MudText Align="Align.Center" Typo="Typo.h5" Class="ml-3 cursor-pointer" @onclick="@(() => NavigationManager.NavigateTo("/products"))">eShop</MudText>
+            <MudText Align="Align.Center" Typo="Typo.h5" Class="ml-3 cursor-pointer" @onclick="@(() => NavigationManager.NavigateTo("/products"))">eShop</MudText>
         <MudSpacer />
         <SearchField />
         <MudSpacer />
-        <Menu />
+            <AuthorizeView>
+                <NotAuthorized>
+                    <MudButton StartIcon="@Icons.Material.Filled.Login"
+                               Color="Color.Primary" Href="/account/login">Log In</MudButton>
+                    <MudButton StartIcon="@Icons.Material.Filled.AppRegistration"
+                               Color="Color.Primary" Href="/account/register" Class="ml-3">Register</MudButton>
+                </NotAuthorized>
+                <Authorized>
+                    <MudMenu Style="margin-top:6px" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.BottomLeft" ActivationEvent="MouseEvent.LeftClick">
+                        <ActivatorContent>
+                            @if (Cart.ItemsCount == 0)
+                            {
+                                <MudAvatar>
+                                    <MudImage Alt="avatar" Src="@(string.IsNullOrEmpty(AvatarUri) ? Configuration["DefaultAvatar"]! : AvatarUri)" />
+                                </MudAvatar>
+                            }
+                            else
+                            {
+                                <MudBadge Max="99" @bind-content="NotificationService.NotificationsCount" Overlap Color="Color.Secondary">
+                                    <MudAvatar>
+                                        <MudImage Alt="avatar" Src="@(string.IsNullOrEmpty(AvatarUri) ? Configuration["DefaultAvatar"]! : AvatarUri)" />
+                                    </MudAvatar>
+                                </MudBadge>
+                            }
+                        </ActivatorContent>
+                        <ChildContent>
+                            <MudMenuItem>
+                                <MudButton StartIcon="@Icons.Material.Filled.ShoppingCart" Color="Color.Primary" OnClick="@(() => RedirectTo("/cart"))">
+                                    Your Cart
+                                </MudButton>
+                            </MudMenuItem>
+                            <MudMenuItem>
+                                <MudButton StartIcon="@Icons.Material.Filled.ManageAccounts" Color="Color.Primary" OnClick="@(() => RedirectTo("/profile"))">
+                                    Profile
+                                </MudButton>
+                            </MudMenuItem>
+                            <MudMenuItem>
+                                <MudButton StartIcon="@Icons.Material.Filled.Settings" Color="Color.Primary" OnClick="@(() => RedirectTo("/setting"))">
+                                    Settings
+                                </MudButton>
+                            </MudMenuItem>
+                            <MudDivider />
+                            <MudMenuItem>
+                                <MudButton StartIcon="@Icons.Material.Filled.Logout" Color="Color.Primary" OnClick="LogoutClick">
+                                    Log Out
+                                </MudButton>
+                            </MudMenuItem>
+                        </ChildContent>
+                    </MudMenu>
+                </Authorized>
+            </AuthorizeView>
     </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+    <MudDrawer Style="top:70px" @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
         <NavMenu />
     </MudDrawer>
     <MudMainContent Style="height:100%">
@@ -31,16 +88,27 @@
         </MudContainer>
     </MudMainContent>
 </MudLayout>
+</CascadingValue>
 
 @code {
     [CascadingParameter] Task<AuthenticationState>? AuthenticationStateTask { get; set; }
 
     private bool _drawerOpen = true;
     private string pageTitle = string.Empty;
+    private string AvatarUri = string.Empty;
+    private UserDataModel User = new();
+    private Domain.Models.Cart Cart = new();
 
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
+    }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await GetAvatarAsync();
+        Cart = await LocalDataAccessor.ReadCartAsync();
+        NotificationService.NotificationsCount = Cart.ItemsCount;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -53,7 +121,15 @@
                 var token = await TokenProvider.GetTokenAsync();
                 await (AuthenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(token);
             }
+
+            await GetCartAsync();
+            NotificationService.NotificationsCount = Cart.ItemsCount;
         }
+    }
+
+    public void RerenderComponent()
+    {
+        StateHasChanged();
     }
 
     private string GetPageTitle()
@@ -65,5 +141,66 @@
         formatedTitle.Replace(title[0], char.ToUpper(title[0]), 0, 1);
         formatedTitle.Replace("-", " ");
         return formatedTitle.ToString();
+    }
+
+    private async Task GetCartAsync()
+    {
+        if (!await LocalDataAccessor.IsCartExistsAsync())
+        {
+            var user = await LocalDataAccessor.ReadUserDataAsync();
+
+            if (user is not null && !string.IsNullOrEmpty(user.UserId))
+            {
+                var response = await CartService.GetCartByUserIdAsync(Guid.Parse(user.UserId));
+
+                if (response.IsSucceeded)
+                {
+                    var data = JsonConvert.DeserializeObject<CartDTO>(response.Result!.ToString()!);
+                    await LocalDataAccessor.CreateCartAsync(new eShop.Domain.Models.Cart() { CartId = data!.CartId.ToString() });
+                }
+                else
+                {
+                    Snackbar.Add(response.ErrorMessage, MudBlazor.Severity.Error);
+                }
+            }
+        }
+    }
+
+    private async Task GetAvatarAsync()
+    {
+        User = await LocalDataAccessor.ReadUserDataAsync();
+        if (User is not null)
+        {
+            var link = await LocalDataAccessor.ReadAvatarLinkAsync();
+
+            if (string.IsNullOrEmpty(link))
+            {
+                link = await StoreService.GetUserAvatarAsync(User!.UserId);
+
+                if (string.IsNullOrEmpty(link))
+                {
+                    AvatarUri = Configuration["DefaultAvatar"]!;
+                }
+
+                AvatarUri = link;
+            }
+            else
+            {
+                AvatarUri = link;
+            }
+        }
+    }
+
+    private async Task LogoutClick()
+    {
+        await (authenticationState as ApplicationAuthenticationStateProvider)!.LogOutAsync();
+        Snackbar.Add("Successfully logged out.", MudBlazor.Severity.Success);
+        NavigationManager.NavigateTo("/account/login");
+    }
+
+    private void RedirectTo(string link)
+    {
+        NavigationManager.NavigateTo(link);
+        StateHasChanged();
     }
 }

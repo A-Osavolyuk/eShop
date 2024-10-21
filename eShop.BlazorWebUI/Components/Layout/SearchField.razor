@@ -1,18 +1,15 @@
 ﻿@inject NavigationManager NavigationManager
 @inject IProductService ProductService
 
-<MudTextField Placeholder="Search..." Class="rounded-0 search-field-text-input" Variant="Variant.Outlined" @bind-Value=SearchRequest></MudTextField>
+<MudTextField Placeholder="Search..." Class="rounded-0" Variant="Variant.Outlined" @bind-Value=SearchRequest></MudTextField>
 <MudIconButton Color="Color.Primary" Class="rounded-0 rounded-r search-field-button" ButtonType="ButtonType.Button" OnClick="OnSearchClick" Variant="Variant.Filled" Icon="@Icons.Material.Filled.Search" />
 
 <style>
     .search-field-button {
+        margin-top:  6px;
         height: 56px;
         width: 80px;
         transform: translateX(-4px);
-    }
-
-    .search-field-text-input {
-        margin-bottom: 6px;
     }
 </style>
 
@@ -21,12 +18,12 @@
 
     private void OnSearchClick()
     {
-        if(long.TryParse(SearchRequest, out var Article))
+        if (long.TryParse(SearchRequest, out var Article))
         {
             NavigationManager.NavigateTo($"/products/search?article={Article}", true);
             StateHasChanged();
         }
-        else if(!string.IsNullOrEmpty(SearchRequest))
+        else if (!string.IsNullOrEmpty(SearchRequest))
         {
             NavigationManager.NavigateTo($"/products/search?name={SearchRequest}", true);
             StateHasChanged();

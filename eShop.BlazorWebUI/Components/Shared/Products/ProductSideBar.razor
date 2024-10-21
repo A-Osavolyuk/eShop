@@ -1,5 +1,8 @@
-﻿@inject NavigationManager NavigationManager
+﻿@using eShop.Infrastructure.Services
+@inject NavigationManager NavigationManager
 @inject ILocalDataAccessor LocalDataAccessor
+@inject ISnackbar Snackbar
+@inject NotificationService NotificationService
 
 <MudGrid Spacing="1">
     <MudItem xs="12">
@@ -180,6 +183,7 @@
 
 @code {
     [Parameter, NotNull] public ProductDTO Model { get; set; } = new();
+    [CascadingParameter] MainLayout Layout { get; set; } = new();
 
     private bool IsFavorite = false;
 
@@ -190,24 +194,42 @@
 
     private async Task AddToCart_OnClick()
     {
+        NotificationService.NotificationsCount += 1;
+        await LocalDataAccessor.AddToCartAsync(new CartItem()
+            {
+                ProductId = Model.Id.ToString(),
+                Amount = 1,
+                ProductArticle = Model.Article,
+                AddedAt = DateTime.UtcNow
+            });
 
+        Snackbar.Add("Product was added to your cart", MudBlazor.Severity.Success);
+        StateHasChanged();
+        Layout.RerenderComponent();
     }
 
     private async Task AddToFavorite_OnClick()
     {
         if (IsFavorite)
         {
+            NotificationService.NotificationsCount -= 1;
             await LocalDataAccessor.RemoveFavoriteGoodAsync(Model.Id.ToString());
+            Snackbar.Add("Product was removed from favorite list", MudBlazor.Severity.Success);
         }
         else
         {
-            await LocalDataAccessor.WriteFavoriteGoodAsync(new()
-            {
-                AddedAt = DateTime.UtcNow,
-                ProductId = Model.Id.ToString(),
-                ProductArticle = Model.Article,
-            });
+            NotificationService.NotificationsCount += 1;
+            await LocalDataAccessor.AddFavoriteGoodAsync(new()
+                {
+                    AddedAt = DateTime.UtcNow,
+                    ProductId = Model.Id.ToString(),
+                    ProductArticle = Model.Article,
+
+                });
+            Snackbar.Add("Product was added to favorite list", MudBlazor.Severity.Success);
         }
         IsFavorite = !IsFavorite;
+        StateHasChanged();
+        Layout.RerenderComponent();
     }
 }

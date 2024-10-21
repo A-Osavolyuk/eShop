@@ -102,12 +102,23 @@ namespace eShop.Infrastructure.Services
             await localStorageService.RemoveItemAsync("avatar-link");
         }
 
-        public ValueTask<IEnumerable<FavoriteGoodModel>> ReadFavoriteGoodsAsync()
+        public async ValueTask<IEnumerable<FavoriteGoodModel>> ReadFavoriteGoodsAsync()
         {
-            throw new NotImplementedException();
+            var key = "favorite-goods";
+            if (await localStorageService.ContainKeyAsync(key))
+            {
+                var list = await localStorageService.GetItemAsync<List<FavoriteGoodModel>>(key);
+
+                if (list is not null && list.Any())
+                {
+                    return list;
+                }
+            }
+
+            return Enumerable.Empty<FavoriteGoodModel>();
         }
 
-        public async ValueTask WriteFavoriteGoodAsync(FavoriteGoodModel model)
+        public async ValueTask AddFavoriteGoodAsync(FavoriteGoodModel model)
         {
             var key = "favorite-goods";
             if (await localStorageService.ContainKeyAsync(key))
@@ -162,6 +173,73 @@ namespace eShop.Infrastructure.Services
             }
 
             return false;
+        }
+
+        public async ValueTask AddToCartAsync(CartItem item)
+        {
+            var key = "cart";
+            var cart = new Cart();
+
+            if (await localStorageService.ContainKeyAsync(key))
+            {
+                cart = await localStorageService.GetItemAsync<Cart>(key);
+
+                if(cart is not null)
+                {
+                    if (cart.Products.Any(x => x.ProductId == item.ProductId))
+                    {
+                        var oldItem = cart.Products.FirstOrDefault(x => x.ProductId == item.ProductId);
+
+                        if (oldItem is not null)
+                        {
+                            var newItem = new CartItem()
+                            {
+                                AddedAt = DateTime.UtcNow,
+                                Amount = oldItem.Amount + item.Amount,
+                                ProductArticle = oldItem.ProductArticle,
+                                ProductId = oldItem.ProductId
+                            };
+                            cart.Products.Remove(oldItem);
+                            cart.Products.Add(newItem);
+                            cart.Count();
+
+                            await localStorageService.SetItemAsync(key, cart);
+                        }
+                    }
+                    else
+                    {
+                        cart.Products.Add(item);
+                        cart.Count();
+
+                        await localStorageService.SetItemAsync(key, cart);
+                    }
+                }
+            }
+            else
+            {
+                cart!.Products.Add(item);
+                cart.Count();
+
+                await localStorageService.SetItemAsync(key, cart);
+            }
+        }
+
+        public async ValueTask<bool> IsCartExistsAsync()
+        {
+            var key = "cart";
+            return await localStorageService.ContainKeyAsync(key);
+        }
+
+        public async ValueTask CreateCartAsync(Cart cart)
+        {
+            var key = "cart";
+            await localStorageService.SetItemAsync(key, cart);
+        }
+
+        public async ValueTask<Cart> ReadCartAsync()
+        {
+            var key = "cart";
+            return (await localStorageService.GetItemAsync<Cart>(key))!;
         }
     }
 }

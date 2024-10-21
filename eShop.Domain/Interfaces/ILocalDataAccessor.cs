@@ -1,14 +1,17 @@
-﻿using eShop.Domain.DTOs;
-using eShop.Domain.Models;
+﻿using eShop.Domain.Models;
 
 namespace eShop.Domain.Interfaces
 {
     public interface ILocalDataAccessor
     {
+        public ValueTask<Cart> ReadCartAsync();
+        public ValueTask CreateCartAsync(Cart cart);
+        public ValueTask<bool> IsCartExistsAsync();
+        public ValueTask AddToCartAsync(CartItem item);
         public ValueTask<bool> IsInFavoriteGoodsAsync(string id);
         public ValueTask RemoveFavoriteGoodAsync(string id);
         public ValueTask<IEnumerable<FavoriteGoodModel>> ReadFavoriteGoodsAsync();
-        public ValueTask WriteFavoriteGoodAsync(FavoriteGoodModel model);
+        public ValueTask AddFavoriteGoodAsync(FavoriteGoodModel model);
         public ValueTask RemoveAvatarLinkAsync();
         public ValueTask WriteAvatarLinkAsync(string link);
         public ValueTask<string> ReadAvatarLinkAsync();
@@ -19,7 +22,5 @@ namespace eShop.Domain.Interfaces
         public ValueTask WriteSecurityDataAsync(SecurityDataModel securityData);
         public ValueTask<SecurityDataModel> ReadSecurityDataAsync();
         public ValueTask RemoveDataAsync();
-        public ValueTask SetCartAsync(CartDTO Cart);
-        public ValueTask<CartDTO> GetCartAsync();
     }
 }

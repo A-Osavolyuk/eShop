@@ -73,6 +73,8 @@ namespace eShop.Infrastructure
             builder.Services.AddScoped<ICartService, CartService>();
             builder.Services.AddScoped<ICookieManager, CookieManager>();
 
+            builder.Services.AddSingleton<NotificationService>();
+
             return builder;
         }
 
