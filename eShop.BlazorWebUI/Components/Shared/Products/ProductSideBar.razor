@@ -195,12 +195,13 @@
     private async Task AddToCart_OnClick()
     {
         NotificationService.NotificationsCount += 1;
-        await LocalDataAccessor.AddToCartAsync(new CartItem()
+        await LocalDataAccessor.AddToCartAsync(new StoreItem()
             {
                 ProductId = Model.Id.ToString(),
-                Amount = 1,
                 ProductArticle = Model.Article,
-                AddedAt = DateTime.UtcNow
+                AddedAt = DateTime.UtcNow,
+                ProductCategory = Model.Category,
+                Amount = 1,
             });
 
         Snackbar.Add("Product was added to your cart", MudBlazor.Severity.Success);
@@ -213,17 +214,19 @@
         if (IsFavorite)
         {
             NotificationService.NotificationsCount -= 1;
-            await LocalDataAccessor.RemoveFavoriteGoodAsync(Model.Id.ToString());
+            await LocalDataAccessor.RemoveFromFavoritesAsync(Model.Id.ToString());
             Snackbar.Add("Product was removed from favorite list", MudBlazor.Severity.Success);
         }
         else
         {
             NotificationService.NotificationsCount += 1;
-            await LocalDataAccessor.AddFavoriteGoodAsync(new()
+            await LocalDataAccessor.AddoFavoritesAsync(new()
                 {
                     AddedAt = DateTime.UtcNow,
                     ProductId = Model.Id.ToString(),
                     ProductArticle = Model.Article,
+                    ProductCategory = Model.Category,
+                    Amount = 1
 
                 });
             Snackbar.Add("Product was added to favorite list", MudBlazor.Severity.Success);

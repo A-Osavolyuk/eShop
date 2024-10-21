@@ -4,14 +4,17 @@ namespace eShop.Domain.Interfaces
 {
     public interface ILocalDataAccessor
     {
+        public ValueTask<bool> IsFavoritesExistsAsync();
+        public ValueTask CreateFavoritesAsync(Favorites favorites);
+        public ValueTask<int> GetStoreItemsCountAsync();
         public ValueTask<Cart> ReadCartAsync();
         public ValueTask CreateCartAsync(Cart cart);
         public ValueTask<bool> IsCartExistsAsync();
-        public ValueTask AddToCartAsync(CartItem item);
+        public ValueTask AddToCartAsync(StoreItem item);
         public ValueTask<bool> IsInFavoriteGoodsAsync(string id);
-        public ValueTask RemoveFavoriteGoodAsync(string id);
-        public ValueTask<IEnumerable<FavoriteGoodModel>> ReadFavoriteGoodsAsync();
-        public ValueTask AddFavoriteGoodAsync(FavoriteGoodModel model);
+        public ValueTask RemoveFromFavoritesAsync(string id);
+        public ValueTask<Favorites> ReadFavoriteGoodsAsync();
+        public ValueTask AddoFavoritesAsync(StoreItem item);
         public ValueTask RemoveAvatarLinkAsync();
         public ValueTask WriteAvatarLinkAsync(string link);
         public ValueTask<string> ReadAvatarLinkAsync();

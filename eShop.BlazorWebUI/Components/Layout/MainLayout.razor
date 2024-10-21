@@ -14,6 +14,8 @@
 @inject AuthenticationStateProvider authenticationState
 @inject IConfiguration Configuration
 
+@using Cart = Domain.Models.Cart
+
 <MudThemeProvider IsDarkMode />
 <MudDialogProvider />
 <MudSnackbarProvider />
@@ -21,12 +23,12 @@
 
 <CascadingValue Value="this">
     <MudLayout Style="height:100vh">
-    <MudAppBar Style="height:70px;" Class="align-content-center" Elevation="1">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <MudAppBar Style="height:70px;" Class="align-content-center" Elevation="1">
+            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
             <MudText Align="Align.Center" Typo="Typo.h5" Class="ml-3 cursor-pointer" @onclick="@(() => NavigationManager.NavigateTo("/products"))">eShop</MudText>
-        <MudSpacer />
-        <SearchField />
-        <MudSpacer />
+            <MudSpacer />
+            <SearchField />
+            <MudSpacer />
             <AuthorizeView>
                 <NotAuthorized>
                     <MudButton StartIcon="@Icons.Material.Filled.Login"
@@ -37,7 +39,7 @@
                 <Authorized>
                     <MudMenu Style="margin-top:6px" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.BottomLeft" ActivationEvent="MouseEvent.LeftClick">
                         <ActivatorContent>
-                            @if (Cart.ItemsCount == 0)
+                            @if (NotificationService.NotificationsCount == 0)
                             {
                                 <MudAvatar>
                                     <MudImage Alt="avatar" Src="@(string.IsNullOrEmpty(AvatarUri) ? Configuration["DefaultAvatar"]! : AvatarUri)" />
@@ -45,7 +47,7 @@
                             }
                             else
                             {
-                                <MudBadge Max="99" @bind-content="NotificationService.NotificationsCount" Overlap Color="Color.Secondary">
+                                <MudBadge Style="margin-top:6px" Max="99" @bind-content="NotificationService.NotificationsCount" Overlap Color="Color.Secondary">
                                     <MudAvatar>
                                         <MudImage Alt="avatar" Src="@(string.IsNullOrEmpty(AvatarUri) ? Configuration["DefaultAvatar"]! : AvatarUri)" />
                                     </MudAvatar>
@@ -78,16 +80,16 @@
                     </MudMenu>
                 </Authorized>
             </AuthorizeView>
-    </MudAppBar>
-    <MudDrawer Style="top:70px" @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
-        <NavMenu />
-    </MudDrawer>
-    <MudMainContent Style="height:100%">
-        <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="py-5 position-relative" Style="height:100%">
-            @Body
-        </MudContainer>
-    </MudMainContent>
-</MudLayout>
+        </MudAppBar>
+        <MudDrawer Style="top:70px" @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+            <NavMenu />
+        </MudDrawer>
+        <MudMainContent Style="height:100%">
+            <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="py-5 position-relative" Style="height:100%">
+                @Body
+            </MudContainer>
+        </MudMainContent>
+    </MudLayout>
 </CascadingValue>
 
 @code {
@@ -97,7 +99,6 @@
     private string pageTitle = string.Empty;
     private string AvatarUri = string.Empty;
     private UserDataModel User = new();
-    private Domain.Models.Cart Cart = new();
 
     void DrawerToggle()
     {
@@ -107,8 +108,8 @@
     protected async override Task OnInitializedAsync()
     {
         await GetAvatarAsync();
-        Cart = await LocalDataAccessor.ReadCartAsync();
-        NotificationService.NotificationsCount = Cart.ItemsCount;
+        await EnsureCartAsync();
+        await EnsureFavoritesAsync();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -120,11 +121,12 @@
             {
                 var token = await TokenProvider.GetTokenAsync();
                 await (AuthenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(token);
-            }
-
-            await GetCartAsync();
-            NotificationService.NotificationsCount = Cart.ItemsCount;
+            }  
         }
+
+        await EnsureCartAsync();
+        await EnsureFavoritesAsync();
+        NotificationService.NotificationsCount = await LocalDataAccessor.GetStoreItemsCountAsync();
     }
 
     public void RerenderComponent()
@@ -143,7 +145,7 @@
         return formatedTitle.ToString();
     }
 
-    private async Task GetCartAsync()
+    private async Task EnsureCartAsync()
     {
         if (!await LocalDataAccessor.IsCartExistsAsync())
         {
@@ -156,13 +158,21 @@
                 if (response.IsSucceeded)
                 {
                     var data = JsonConvert.DeserializeObject<CartDTO>(response.Result!.ToString()!);
-                    await LocalDataAccessor.CreateCartAsync(new eShop.Domain.Models.Cart() { CartId = data!.CartId.ToString() });
+                    await LocalDataAccessor.CreateCartAsync(new Cart() { CartId = data!.CartId.ToString() });
                 }
                 else
                 {
                     Snackbar.Add(response.ErrorMessage, MudBlazor.Severity.Error);
                 }
             }
+        }
+    }
+
+    private async Task EnsureFavoritesAsync()
+    {
+        if (!await LocalDataAccessor.IsFavoritesExistsAsync())
+        {
+            await LocalDataAccessor.CreateFavoritesAsync(new() { ItemsCount = 0, Products = new() });
         }
     }
 

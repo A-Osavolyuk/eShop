@@ -1,8 +1,9 @@
 ﻿using Blazored.LocalStorage;
 using eShop.Domain.DTOs;
+using eShop.Domain.Entities;
 using eShop.Domain.Interfaces;
 using eShop.Domain.Models;
-using LanguageExt.Pipes;
+using Cart = eShop.Domain.Models.Cart;
 
 namespace eShop.Infrastructure.Services
 {
@@ -102,57 +103,60 @@ namespace eShop.Infrastructure.Services
             await localStorageService.RemoveItemAsync("avatar-link");
         }
 
-        public async ValueTask<IEnumerable<FavoriteGoodModel>> ReadFavoriteGoodsAsync()
+        public async ValueTask<Favorites> ReadFavoriteGoodsAsync()
         {
-            var key = "favorite-goods";
+            var key = "favorites";
             if (await localStorageService.ContainKeyAsync(key))
             {
-                var list = await localStorageService.GetItemAsync<List<FavoriteGoodModel>>(key);
+                var favorites = await localStorageService.GetItemAsync<Favorites>(key);
 
-                if (list is not null && list.Any())
+                if (favorites is not null)
                 {
-                    return list;
+                    return favorites;
                 }
             }
 
-            return Enumerable.Empty<FavoriteGoodModel>();
+            return new();
         }
 
-        public async ValueTask AddFavoriteGoodAsync(FavoriteGoodModel model)
+        public async ValueTask AddoFavoritesAsync(StoreItem item)
         {
-            var key = "favorite-goods";
+            var key = "favorites";
             if (await localStorageService.ContainKeyAsync(key))
             {
-                var list = await localStorageService.GetItemAsync<List<FavoriteGoodModel>>(key);
+                var favorites = await localStorageService.GetItemAsync<Favorites>(key);
 
-                if (list is not null)
+                if (favorites is not null)
                 {
-                    list.Add(model);
-                    await localStorageService.SetItemAsync(key, list);
+                    favorites.Products.Add(item);
+                    favorites.Count();
+                    await localStorageService.SetItemAsync(key, favorites);
                 }
             }
             else
             {
-                var list = new List<FavoriteGoodModel>() { model };
-                await localStorageService.SetItemAsync(key, list);
+                var favorites = new Favorites() { Products = new List<StoreItem> { item } };
+                favorites.Count();
+                await localStorageService.SetItemAsync(key, favorites);
             }
         }
 
-        public async ValueTask RemoveFavoriteGoodAsync(string id)
+        public async ValueTask RemoveFromFavoritesAsync(string id)
         {
-            var key = "favorite-goods";
+            var key = "favorites";
             if (await localStorageService.ContainKeyAsync(key))
             {
-                var list = await localStorageService.GetItemAsync<List<FavoriteGoodModel>>(key);
+                var favorites = await localStorageService.GetItemAsync<Favorites>(key);
 
-                if (list is not null && list.Any())
+                if (favorites is not null)
                 {
-                    var model = list.FirstOrDefault(x => x.ProductId == id);
+                    var model = favorites.Products.FirstOrDefault(x => x.ProductId == id);
 
                     if (model is not null)
                     {
-                        list.Remove(model);
-                        await localStorageService.SetItemAsync(key, list);
+                        favorites.Products.Remove(model);
+                        favorites.Count();
+                        await localStorageService.SetItemAsync(key, favorites);
                     }
                 }
             }
@@ -160,22 +164,21 @@ namespace eShop.Infrastructure.Services
 
         public async ValueTask<bool> IsInFavoriteGoodsAsync(string id)
         {
-            var key = "favorite-goods";
+            var key = "favorites";
             if (await localStorageService.ContainKeyAsync(key))
             {
-                var list = await localStorageService.GetItemAsync<List<FavoriteGoodModel>>(key);
+                var favorites = await localStorageService.GetItemAsync<Favorites>(key);
 
-                if (list is not null && list.Any())
+                if (favorites is not null)
                 {
-                    return list.Any(x => x.ProductId == id);
-
+                    return favorites.Products.Any(x => x.ProductId == id);
                 }
             }
 
             return false;
         }
 
-        public async ValueTask AddToCartAsync(CartItem item)
+        public async ValueTask AddToCartAsync(StoreItem item)
         {
             var key = "cart";
             var cart = new Cart();
@@ -184,7 +187,7 @@ namespace eShop.Infrastructure.Services
             {
                 cart = await localStorageService.GetItemAsync<Cart>(key);
 
-                if(cart is not null)
+                if (cart is not null)
                 {
                     if (cart.Products.Any(x => x.ProductId == item.ProductId))
                     {
@@ -192,7 +195,7 @@ namespace eShop.Infrastructure.Services
 
                         if (oldItem is not null)
                         {
-                            var newItem = new CartItem()
+                            var newItem = new StoreItem()
                             {
                                 AddedAt = DateTime.UtcNow,
                                 Amount = oldItem.Amount + item.Amount,
@@ -240,6 +243,40 @@ namespace eShop.Infrastructure.Services
         {
             var key = "cart";
             return (await localStorageService.GetItemAsync<Cart>(key))!;
+        }
+
+        public async ValueTask<int> GetStoreItemsCountAsync()
+        {
+            var cartKey = "cart";
+            var favoritesKey = "favorites";
+            var cartCount = 0;
+            var favoritesCount = 0;
+
+            if (await localStorageService.ContainKeyAsync(cartKey))
+            {
+                var cart = await localStorageService.GetItemAsync<Cart>(cartKey);
+                cartCount = cart!.ItemsCount;
+            }
+
+            if (await localStorageService.ContainKeyAsync(favoritesKey))
+            {
+                var favorites = await localStorageService.GetItemAsync<Favorites>(favoritesKey);
+                favoritesCount = favorites!.ItemsCount;
+            }
+
+            return cartCount + favoritesCount;
+        }
+
+        public async ValueTask CreateFavoritesAsync(Favorites favorites)
+        {
+            var key = "favorites";
+            await localStorageService.SetItemAsync(key, favorites);
+        }
+
+        public async ValueTask<bool> IsFavoritesExistsAsync()
+        {
+            var key = "favorites";
+            return await localStorageService.ContainKeyAsync(key);
         }
     }
 }

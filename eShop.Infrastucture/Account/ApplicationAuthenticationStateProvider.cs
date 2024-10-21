@@ -3,10 +3,9 @@ using eShop.Domain.DTOs.Requests.Auth;
 using eShop.Domain.DTOs.Responses.Auth;
 using eShop.Domain.Interfaces;
 using eShop.Domain.Models;
+using eShop.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -17,13 +16,15 @@ namespace eShop.Infrastructure.Account
         ITokenProvider tokenProvider,
         IAuthenticationService authenticationService,
         ILocalDataAccessor localDataAccessor,
-        ICookieManager cookieManager) : AuthenticationStateProvider
+        ICookieManager cookieManager,
+        NotificationService notificationService) : AuthenticationStateProvider
     {
         private readonly AuthenticationState anonymous = new(new ClaimsPrincipal());
         private readonly ITokenProvider tokenProvider = tokenProvider;
         private readonly IAuthenticationService authenticationService = authenticationService;
         private readonly ILocalDataAccessor localDataAccessor = localDataAccessor;
         private readonly ICookieManager cookieManager = cookieManager;
+        private readonly NotificationService notificationService = notificationService;
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
@@ -225,6 +226,7 @@ namespace eShop.Infrastructure.Account
 
         public async Task LogOutAsync()
         {
+            notificationService.NotificationsCount = 0;
             await tokenProvider.RemoveTokenAsync();
             await cookieManager.DeleteCookie("jwt-token");
             await localDataAccessor.RemoveDataAsync();

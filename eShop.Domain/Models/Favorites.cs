@@ -1,8 +1,7 @@
 ﻿namespace eShop.Domain.Models
 {
-    public class Cart
+    public class Favorites
     {
-        public string CartId { get; set; } = string.Empty;
         public int ItemsCount { get; set; }
         public List<StoreItem> Products { get; set; } = new List<StoreItem>();
 
