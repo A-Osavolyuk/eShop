@@ -1,4 +1,5 @@
 ﻿using eShop.Domain.Common;
+using eShop.Domain.Entities.Cart;
 
 namespace eShop.CartWebApi.Receivers
 {
@@ -14,8 +15,8 @@ namespace eShop.CartWebApi.Receivers
             try
             {
                 logger.LogInformation("Received command to create cart for user with ID {userId}. Request ID {requestId}", context.Message.UserId, context.Message.RequestId);
-
-                await dbContext.Carts.AddAsync(new Cart() { UserId = context.Message.UserId });
+                
+                await dbContext.Carts.AddAsync(new Cart(){ UserId = context.Message.UserId, ProductCount = 0 });
                 await dbContext.SaveChangesAsync();
 
                 logger.LogInformation("Command was successfully executed. Cart for user with ID {userId} was successfully created. Request ID {requestId}",

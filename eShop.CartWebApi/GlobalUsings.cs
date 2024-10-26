@@ -14,4 +14,3 @@ global using MassTransit;
 global using MediatR;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;
-global using Cart = eShop.Domain.Entities.Cart;

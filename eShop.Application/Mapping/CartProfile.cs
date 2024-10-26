@@ -9,9 +9,7 @@ namespace eShop.Application.Mapping
     {
         public CartProfile()
         {
-            CreateMap<Cart, CartDTO>();
-            CreateMap<CartItem, GoodDTO>();
-            CreateMap<UpdateCartRequest, Cart>();
+
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using eShop.Domain.DTOs.Requests.Cart;
+using eShop.Domain.Requests.Cart;
 using FluentValidation;
 
 namespace eShop.Application.Validation.Cart
@@ -10,10 +11,10 @@ namespace eShop.Application.Validation.Cart
             RuleFor(x => x.CartId)
                 .IsValidGuid().WithMessage("Invalid card id");
 
-            RuleForEach(x => x.Goods)
-                .SetValidator(new GoodValidator()).When(x => x.Goods.Any());
+            RuleForEach(x => x.Products)
+                .SetValidator(new ProductValidator()).When(x => x.Products.Any());
 
-            RuleFor(x => x.GoodsCount)
+            RuleFor(x => x.ProductCount)
                 .GreaterThan(-1).WithMessage("Goods count must be greater then 0");
         }
     }
