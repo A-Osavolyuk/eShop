@@ -5,7 +5,6 @@ namespace eShop.Domain.Interfaces
 {
     public interface ICartService
     {
-        public ValueTask<ResponseDTO> GetCartByUserIdAsync(Guid Id);
-        public ValueTask<ResponseDTO> UpdateCartAsync(UpdateCartRequest updateCartRequest);
+        
     }
 }

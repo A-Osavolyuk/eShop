@@ -4,11 +4,11 @@ using FluentValidation;
 
 namespace eShop.Application.Validation.Products
 {
-    public class CreateProductModelValidator : AbstractValidator<CreateProductModel>
+    public class CreateProductModelValidator : AbstractValidator<CreateProduct>
     {
         public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
         {
-            var result = await ValidateAsync(ValidationContext<CreateProductModel>.CreateWithOptions((CreateProductModel)model, x => x.IncludeProperties(propertyName)));
+            var result = await ValidateAsync(ValidationContext<CreateProduct>.CreateWithOptions((CreateProduct)model, x => x.IncludeProperties(propertyName)));
             if (result.IsValid)
                 return Array.Empty<string>();
             return result.Errors.Select(e => e.ErrorMessage);

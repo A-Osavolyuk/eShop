@@ -42,14 +42,14 @@
                             @if (NotificationService.NotificationsCount == 0)
                             {
                                 <MudAvatar>
-                                    <MudImage Alt="avatar" Src="@(string.IsNullOrEmpty(AvatarUri) ? Configuration["DefaultAvatar"]! : AvatarUri)" />
+                                    <MudImage Alt="avatar" Src="@(string.IsNullOrEmpty(avatarUri) ? Configuration["DefaultAvatar"]! : avatarUri)" />
                                 </MudAvatar>
                             }
                             else
                             {
                                 <MudBadge Style="margin-top:6px" Max="99" @bind-content="NotificationService.NotificationsCount" Overlap Color="Color.Secondary">
                                     <MudAvatar>
-                                        <MudImage Alt="avatar" Src="@(string.IsNullOrEmpty(AvatarUri) ? Configuration["DefaultAvatar"]! : AvatarUri)" />
+                                        <MudImage Alt="avatar" Src="@(string.IsNullOrEmpty(avatarUri) ? Configuration["DefaultAvatar"]! : avatarUri)" />
                                     </MudAvatar>
                                 </MudBadge>
                             }
@@ -81,7 +81,7 @@
                 </Authorized>
             </AuthorizeView>
         </MudAppBar>
-        <MudDrawer Style="top:70px" @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+        <MudDrawer Style="top:70px" @bind-Open="drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
             <NavMenu />
         </MudDrawer>
         <MudMainContent Style="height:100%">
@@ -95,17 +95,17 @@
 @code {
     [CascadingParameter] Task<AuthenticationState>? AuthenticationStateTask { get; set; }
 
-    private bool _drawerOpen = true;
+    private bool drawerOpen = true;
     private string pageTitle = string.Empty;
-    private string AvatarUri = string.Empty;
-    private UserDataModel User = new();
+    private string avatarUri = string.Empty;
+    private UserData user = new();
 
     void DrawerToggle()
     {
-        _drawerOpen = !_drawerOpen;
+        drawerOpen = !drawerOpen;
     }
 
-    protected async override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         await GetAvatarAsync();
         await EnsureCartAsync();
@@ -149,22 +149,7 @@
     {
         if (!await LocalDataAccessor.IsCartExistsAsync())
         {
-            var user = await LocalDataAccessor.ReadUserDataAsync();
-
-            if (user is not null && !string.IsNullOrEmpty(user.UserId))
-            {
-                var response = await CartService.GetCartByUserIdAsync(Guid.Parse(user.UserId));
-
-                if (response.IsSucceeded)
-                {
-                    var data = JsonConvert.DeserializeObject<CartDTO>(response.Result!.ToString()!);
-                    await LocalDataAccessor.CreateCartAsync(new Cart() { CartId = data!.CartId.ToString() });
-                }
-                else
-                {
-                    Snackbar.Add(response.ErrorMessage, MudBlazor.Severity.Error);
-                }
-            }
+            await LocalDataAccessor.CreateCartAsync(new() { CartId = Guid.NewGuid().ToString(), ItemsCount = 0, Products = new() });
         }
     }
 
@@ -172,31 +157,31 @@
     {
         if (!await LocalDataAccessor.IsFavoritesExistsAsync())
         {
-            await LocalDataAccessor.CreateFavoritesAsync(new() { ItemsCount = 0, Products = new() });
+            await LocalDataAccessor.CreateFavoritesAsync(new() {ItemsCount = 0, Products = new() });
         }
     }
 
     private async Task GetAvatarAsync()
     {
-        User = await LocalDataAccessor.ReadUserDataAsync();
-        if (User is not null)
+        user = await LocalDataAccessor.ReadUserDataAsync();
+        if (user is not null)
         {
             var link = await LocalDataAccessor.ReadAvatarLinkAsync();
 
             if (string.IsNullOrEmpty(link))
             {
-                link = await StoreService.GetUserAvatarAsync(User!.UserId);
+                link = await StoreService.GetUserAvatarAsync(user!.UserId);
 
                 if (string.IsNullOrEmpty(link))
                 {
-                    AvatarUri = Configuration["DefaultAvatar"]!;
+                    avatarUri = Configuration["DefaultAvatar"]!;
                 }
 
-                AvatarUri = link;
+                avatarUri = link;
             }
             else
             {
-                AvatarUri = link;
+                avatarUri = link;
             }
         }
     }

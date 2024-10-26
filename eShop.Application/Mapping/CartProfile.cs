@@ -10,7 +10,7 @@ namespace eShop.Application.Mapping
         public CartProfile()
         {
             CreateMap<Cart, CartDTO>();
-            CreateMap<Good, GoodDTO>();
+            CreateMap<CartItem, GoodDTO>();
             CreateMap<UpdateCartRequest, Cart>();
         }
     }

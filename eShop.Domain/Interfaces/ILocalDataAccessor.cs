@@ -18,12 +18,12 @@ namespace eShop.Domain.Interfaces
         public ValueTask RemoveAvatarLinkAsync();
         public ValueTask WriteAvatarLinkAsync(string link);
         public ValueTask<string> ReadAvatarLinkAsync();
-        public ValueTask WriteUserDataAsync(UserDataModel user);
-        public ValueTask<UserDataModel> ReadUserDataAsync();
-        public ValueTask WritePersonalDataAsync(PersonalDataModel personalData);
-        public ValueTask<PersonalDataModel> ReadPersonalDataAsync();
-        public ValueTask WriteSecurityDataAsync(SecurityDataModel securityData);
-        public ValueTask<SecurityDataModel> ReadSecurityDataAsync();
+        public ValueTask WriteUserDataAsync(UserData user);
+        public ValueTask<UserData> ReadUserDataAsync();
+        public ValueTask WritePersonalDataAsync(PersonalData personalData);
+        public ValueTask<PersonalData> ReadPersonalDataAsync();
+        public ValueTask WriteSecurityDataAsync(SecurityData securityData);
+        public ValueTask<SecurityData> ReadSecurityDataAsync();
         public ValueTask RemoveDataAsync();
     }
 }

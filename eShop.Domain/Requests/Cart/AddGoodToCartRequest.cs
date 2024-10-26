@@ -5,6 +5,6 @@ namespace eShop.Domain.DTOs.Requests.Cart
     public record class AddGoodToCartRequest : RequestBase
     {
         public Guid CartId { get; set; }
-        public Good Good { get; set; } = new();
+        public CartItem CartItem { get; set; } = new();
     }
 }

@@ -320,8 +320,8 @@
 </AuthorizeView>
 
 @code {
-    private CreateProductModel CurrentProduct { get; set; } = new();
-    private List<CreateProductModel> Products { get; set; } = new();
+    private Domain.Models.CreateProduct CurrentProduct { get; set; } = new();
+    private List<Domain.Models.CreateProduct> Products { get; set; } = new();
     private MudForm Form = new();
     private CreateProductModelValidator ProductValidation = new();
     private string CurrentImage = "";
@@ -363,7 +363,7 @@
             }
 
             Products.Add(CurrentProduct);
-            CurrentProduct = new CreateProductModel() with { Category = ProductCategory };
+            CurrentProduct = new Domain.Models.CreateProduct() with { Category = ProductCategory };
             CurrentImage = string.Empty;
         }
     }
@@ -380,7 +380,7 @@
             }
 
             Products[EditingProductIndex] = CurrentProduct;
-            CurrentProduct = new CreateProductModel() with { Category = ProductCategory };
+            CurrentProduct = new Domain.Models.CreateProduct() with { Category = ProductCategory };
             IsEditMode = false;
             EditingProductIndex = -1;
             CurrentImage = string.Empty;
@@ -439,7 +439,7 @@
         return new StringBuilder(DefaultStyles).Append($"background-color:{color.ToString().ToLowerInvariant()};").ToString();
     }
 
-    private void SetCurrentProduct_OnClick(CreateProductModel model)
+    private void SetCurrentProduct_OnClick(Domain.Models.CreateProduct model)
     {
         if (IsEditMode)
         {
@@ -455,11 +455,11 @@
     {
         IsReadMode = false;
         SelectedProductIndex = -1;
-        CurrentProduct = Products.Count() > 0 ? new CreateProductModel() with { Category = ProductCategory } : new();
+        CurrentProduct = Products.Count() > 0 ? new Domain.Models.CreateProduct() with { Category = ProductCategory } : new();
         StateHasChanged();
     }
 
-    private string SetCardClasses(CreateProductModel model)
+    private string SetCardClasses(Domain.Models.CreateProduct model)
     {
         const string DefaultClasses = "pa-3 mb-3 cursor-pointer ";
         return new StringBuilder(DefaultClasses).Append(Products.IndexOf(model) == SelectedProductIndex ? "mud-border-primary" : "").ToString();
@@ -473,21 +473,21 @@
     }
 
 
-    private void DeleteProduct_OnClick(CreateProductModel model)
+    private void DeleteProduct_OnClick(Domain.Models.CreateProduct model)
     {
 
         if (SelectedProductIndex == Products.IndexOf(model))
         {
             if (Products.Count == 1)
             {
-                CurrentProduct = new CreateProductModel() with { Category = ProductCategory };
+                CurrentProduct = new Domain.Models.CreateProduct() with { Category = ProductCategory };
                 SelectedProductIndex = -1;
             }
         }
         Products.Remove(model);
     }
 
-    private void EditProduct_OnClick(CreateProductModel model)
+    private void EditProduct_OnClick(Domain.Models.CreateProduct model)
     {
         IsReadMode = false;
         IsEditMode = true;
@@ -497,7 +497,7 @@
 
     private void ClearForm_OnClick()
     {
-        CurrentProduct = Products.Any() ? new CreateProductModel() with { Category = ProductCategory } : new();
+        CurrentProduct = Products.Any() ? new Domain.Models.CreateProduct() with { Category = ProductCategory } : new();
         CurrentImage = string.Empty;
     }
 

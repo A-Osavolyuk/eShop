@@ -42,7 +42,7 @@
 
 @code {
     private ChangePersonalDataRequest Request = new();
-    private UserDataModel User = new();
+    private UserData User = new();
     private MudDatePicker DatePicker = new();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -68,7 +68,7 @@
         if (response.IsSucceeded)
         {
             var data = JsonConvert.DeserializeObject<ChangePersonalDataResponse>(response.Result!.ToString()!);
-            await LocalDataAccessor.WritePersonalDataAsync(Mapper.Map<PersonalDataModel>(data));
+            await LocalDataAccessor.WritePersonalDataAsync(Mapper.Map<PersonalData>(data));
             NavigationManager.NavigateTo("/account/profile", true);
             Snackbar.Add(response.ResultMessage, MudBlazor.Severity.Success);
         }

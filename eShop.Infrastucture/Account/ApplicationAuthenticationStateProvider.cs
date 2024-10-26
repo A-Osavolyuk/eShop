@@ -173,7 +173,7 @@ namespace eShop.Infrastructure.Account
             var roles = Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToList();
             var permissions = Claims.Where(x => x.Type == CustomClaimTypes.Permission).Select(x => x.Value).ToList();
 
-            await localDataAccessor.WriteUserDataAsync(new UserDataModel()
+            await localDataAccessor.WriteUserDataAsync(new UserData()
             {
                 PhoneNumber = phoneNumber,
                 Email = email,

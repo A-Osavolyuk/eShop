@@ -35,7 +35,7 @@ namespace eShop.ProductWebApi.Commands.Products
 
                 foreach (var product in request.Requests)
                 {
-                    var validationResult = await validator.ValidateAsync(product);
+                    var validationResult = await validator.ValidateAsync(product, cancellationToken);
 
                     if (!validationResult.IsValid)
                     {
@@ -50,21 +50,23 @@ namespace eShop.ProductWebApi.Commands.Products
                     Category.None => Enumerable.Empty<Product>(),
                     _ => throw new NotImplementedException("Not implemented creation of product type")
                 };
-
-                if (!products.Any())
+                
+                var productsList = products.ToList();
+                
+                if (!productsList.Any())
                 {
                     return logger.LogErrorWithException<Unit>(new EmptyRequestException(), actionMessage);
                 }
 
-                var brandExists = await context.Brands.AsNoTracking().AnyAsync(_ => _.Id == products.First().BrandId);
+                var brandExists = await context.Brands.AsNoTracking().AnyAsync(_ => _.Id == productsList.First().BrandId, cancellationToken);
 
                 if (!brandExists)
                 {
-                    return logger.LogErrorWithException<Unit>(new NotFoundBrandException(products.First().BrandId), actionMessage);
+                    return logger.LogErrorWithException<Unit>(new NotFoundBrandException(productsList.First().BrandId), actionMessage);
                 }
 
-                await context.Products.AddRangeAsync(products);
-                await context.SaveChangesAsync();
+                await context.Products.AddRangeAsync(productsList, cancellationToken);
+                await context.SaveChangesAsync(cancellationToken);
 
                 logger.LogInformation($"Product(s) was(were) successfully created.");
 

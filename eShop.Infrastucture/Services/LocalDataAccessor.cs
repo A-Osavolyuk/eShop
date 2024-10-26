@@ -17,7 +17,7 @@ namespace eShop.Infrastructure.Services
 
         public async ValueTask<CartDTO> GetCartAsync() => (await localStorageService.GetItemAsync<CartDTO>("cart"))!;
 
-        public async ValueTask WriteUserDataAsync(UserDataModel user)
+        public async ValueTask WriteUserDataAsync(UserData user)
         {
             if (user is null)
             {
@@ -27,9 +27,9 @@ namespace eShop.Infrastructure.Services
             await localStorageService.SetItemAsync("user", user);
         }
 
-        public async ValueTask<UserDataModel> ReadUserDataAsync()
+        public async ValueTask<UserData> ReadUserDataAsync()
         {
-            var user = await localStorageService.GetItemAsync<UserDataModel>("user");
+            var user = await localStorageService.GetItemAsync<UserData>("user");
 
             if (user is null)
             {
@@ -39,7 +39,7 @@ namespace eShop.Infrastructure.Services
             return user;
         }
 
-        public async ValueTask WritePersonalDataAsync(PersonalDataModel personalData)
+        public async ValueTask WritePersonalDataAsync(PersonalData personalData)
         {
             if (personalData is null)
             {
@@ -49,9 +49,9 @@ namespace eShop.Infrastructure.Services
             await localStorageService.SetItemAsync("personal-data", personalData);
         }
 
-        public async ValueTask<PersonalDataModel> ReadPersonalDataAsync()
+        public async ValueTask<PersonalData> ReadPersonalDataAsync()
         {
-            var personalData = await localStorageService.GetItemAsync<PersonalDataModel>("personal-data");
+            var personalData = await localStorageService.GetItemAsync<PersonalData>("personal-data");
 
             if (personalData is null)
             {
@@ -61,7 +61,7 @@ namespace eShop.Infrastructure.Services
             return personalData;
         }
 
-        public async ValueTask WriteSecurityDataAsync(SecurityDataModel securityData)
+        public async ValueTask WriteSecurityDataAsync(SecurityData securityData)
         {
             if (securityData is null)
             {
@@ -71,9 +71,9 @@ namespace eShop.Infrastructure.Services
             await localStorageService.SetItemAsync("security-data", securityData);
         }
 
-        public async ValueTask<SecurityDataModel> ReadSecurityDataAsync()
+        public async ValueTask<SecurityData> ReadSecurityDataAsync()
         {
-            var securityData = await localStorageService.GetItemAsync<SecurityDataModel>("security-data");
+            var securityData = await localStorageService.GetItemAsync<SecurityData>("security-data");
 
             if (securityData is null)
             {
