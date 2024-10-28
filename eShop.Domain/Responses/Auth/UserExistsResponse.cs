@@ -1,6 +1,6 @@
-﻿namespace eShop.Domain.Responses.Product;
+﻿namespace eShop.Domain.Responses.Auth;
 
-public class ProductExistsResponse
+public class UserExistsResponse
 {
     public bool Succeeded { get; set; }
     public string Message { get; set; } = string.Empty;

@@ -1,7 +1,6 @@
-﻿namespace eShop.Domain.DTOs.Requests.Cart
+﻿namespace eShop.Domain.Requests.Cart;
+
+public class CreateCartRequest
 {
-    public record class CreateCartRequest : RequestBase
-    {
-        public Guid UserId { get; set; }
-    }
+    public Guid UserId { get; set; }
 }

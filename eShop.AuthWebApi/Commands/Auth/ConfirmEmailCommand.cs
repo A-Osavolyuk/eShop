@@ -1,4 +1,4 @@
-﻿using eShop.Domain.DTOs.Requests.Cart;
+﻿using eShop.Domain.Requests.Cart;
 
 namespace eShop.AuthWebApi.Commands.Auth
 {

@@ -10,7 +10,12 @@ var redisCache = builder.AddRedis("eShopRedis", 25101);
 var emailService = builder.AddProject<Projects.eShop_EmailSenderWebApi>("eshop-emailsenderwebapi")
     .WithReference(rabbitMQ);
 
-var sqlServer = builder.AddSqlServer("eShopSqlServer", port: 25201).WithEnvironment("MSSQL_SA_PASSWORD", "Password_1234");
+var sqlServer = builder.AddSqlServer("eShopSqlServer", port: 25201)
+    .WithEnvironment("MSSQL_SA_PASSWORD", "Password_1234");
+
+var cardDb = builder.AddMongoDB("eShopMongo", 25202)
+    .WithMongoExpress()
+    .AddDatabase("CartDB");
 
 var authApi = builder.AddProject<Projects.eShop_AuthWebApi>("eshop-authwebapi")
     .WithReference(sqlServer)
@@ -28,8 +33,8 @@ builder.AddProject<Projects.eShop_ReviewsWebApi>("eshop-reviewswebapi")
     .WithReference(sqlServer);
 
 builder.AddProject<Projects.eShop_CartWebApi>("eshop-cartwebapi")
-    .WithReference(authApi)
-    .WithReference(sqlServer);
+    .WithReference(cardDb)
+    .WithReference(authApi);
 
 builder.AddProject<Projects.eShop_Gateway>("eshop-gateway");
 

@@ -16,7 +16,7 @@ namespace eShop.CartWebApi.Extensions
             builder.AddDependencyInjection();
             builder.AddMessageBus();
 
-            builder.AddSqlServerDbContext<CartDbContext>("SqlServer");
+            builder.AddMongoDBClient("MongoDB");
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
@@ -25,7 +25,7 @@ namespace eShop.CartWebApi.Extensions
             return builder;
         }
 
-        public static IHostApplicationBuilder AddSwaggerWithSecurity(this IHostApplicationBuilder builder)
+        private static IHostApplicationBuilder AddSwaggerWithSecurity(this IHostApplicationBuilder builder)
         {
             builder.Services.AddSwaggerGen(options =>
             {
@@ -55,16 +55,15 @@ namespace eShop.CartWebApi.Extensions
             return builder;
         }
 
-        public static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
+        private static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
         {
             return builder;
         }
 
-        public static IHostApplicationBuilder AddMessageBus(this IHostApplicationBuilder builder)
+        private static IHostApplicationBuilder AddMessageBus(this IHostApplicationBuilder builder)
         {
             builder.Services.AddMassTransit(x =>
             {
-                x.AddRequestClient<UserExistsRequest>();
                 x.UsingRabbitMq((context, cfg) =>
                 {
                     var uri = builder.Configuration["RabbitMQConfigurations:HostUri"]!;

@@ -4,7 +4,7 @@ using eShop.Domain.Entities;
 using eShop.Domain.Models;
 using eShop.Domain.Requests.Product;
 
-namespace eShop.Application.MappingProfiles
+namespace eShop.Application.Mapping
 {
     public class ProductProfile : Profile
     {

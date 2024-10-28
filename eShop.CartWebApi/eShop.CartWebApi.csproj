@@ -9,6 +9,7 @@
 
   <ItemGroup>
 	  <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="8.2.1" />
+	  <PackageReference Include="Aspire.MongoDB.Driver" Version="8.2.2" />
 	  <PackageReference Include="LanguageExt.Core" Version="4.4.9" />
 	  <PackageReference Include="MailChimp.Net.V3" Version="5.5.0" />
 	  <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
@@ -29,7 +30,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Commands\Carts\" />
     <Folder Include="Queries\Carts\" />
+    <Folder Include="Receivers\" />
   </ItemGroup>
 
 </Project>

@@ -13,10 +13,6 @@ namespace eShop.Infrastructure.Services
 
         public async ValueTask RemoveDataAsync() => await localStorageService.ClearAsync();
 
-        public async ValueTask SetCartAsync(CartDTO Cart) => await localStorageService.SetItemAsync("cart", Cart);
-
-        public async ValueTask<CartDTO> GetCartAsync() => (await localStorageService.GetItemAsync<CartDTO>("cart"))!;
-
         public async ValueTask WriteUserDataAsync(UserData user)
         {
             if (user is null)
@@ -119,7 +115,7 @@ namespace eShop.Infrastructure.Services
             return new();
         }
 
-        public async ValueTask AddoFavoritesAsync(StoreItem item)
+        public async ValueTask AddToFavoritesAsync(StoreItem item)
         {
             var key = "favorites";
             if (await localStorageService.ContainKeyAsync(key))
@@ -150,7 +146,7 @@ namespace eShop.Infrastructure.Services
 
                 if (favorites is not null)
                 {
-                    var model = favorites.Products.FirstOrDefault(x => x.ProductId == id);
+                    var model = favorites.Products.FirstOrDefault(x => x.ProductId == Guid.Parse(id));
 
                     if (model is not null)
                     {
@@ -171,7 +167,7 @@ namespace eShop.Infrastructure.Services
 
                 if (favorites is not null)
                 {
-                    return favorites.Products.Any(x => x.ProductId == id);
+                    return favorites.Products.Any(x => x.ProductId == Guid.Parse(id));
                 }
             }
 
@@ -199,7 +195,7 @@ namespace eShop.Infrastructure.Services
                             {
                                 AddedAt = DateTime.UtcNow,
                                 Amount = oldItem.Amount + item.Amount,
-                                ProductArticle = oldItem.ProductArticle,
+                                Article = oldItem.Article,
                                 ProductId = oldItem.ProductId
                             };
                             cart.Products.Remove(oldItem);

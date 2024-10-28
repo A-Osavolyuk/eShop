@@ -10,12 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting" Version="8.2.1" />
-    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.2.1" />
-    <PackageReference Include="Aspire.Hosting.NodeJs" Version="8.2.1" />
-    <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="8.2.1" />
-    <PackageReference Include="Aspire.Hosting.Redis" Version="8.2.1" />
-    <PackageReference Include="Aspire.Hosting.SqlServer" Version="8.2.1" />
+    <PackageReference Include="Aspire.Hosting" Version="8.2.2" />
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.2.2" />
+    <PackageReference Include="Aspire.Hosting.MongoDB" Version="8.2.2" />
+    <PackageReference Include="Aspire.Hosting.NodeJs" Version="8.2.2" />
+    <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="8.2.2" />
+    <PackageReference Include="Aspire.Hosting.Redis" Version="8.2.2" />
+    <PackageReference Include="Aspire.Hosting.SqlServer" Version="8.2.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

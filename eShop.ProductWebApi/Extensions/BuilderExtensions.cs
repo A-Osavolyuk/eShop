@@ -1,5 +1,6 @@
 ﻿using eShop.Domain.DTOs.Requests.Review;
 using eShop.ProductWebApi.Behaviors;
+using eShop.ProductWebApi.Receivers;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
@@ -86,7 +87,11 @@ namespace eShop.ProductWebApi.Extensions
                         h.Username(username);
                         h.Password(password);
                     });
+                    
+                    cfg.ReceiveEndpoint("product-exists", e => e.ConfigureConsumer<ProductExistsReceiver>(context));
                 });
+
+                x.AddConsumer<ProductExistsReceiver>();
             });
 
             return builder;

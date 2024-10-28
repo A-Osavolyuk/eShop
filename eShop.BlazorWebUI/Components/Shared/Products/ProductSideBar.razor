@@ -14,7 +14,7 @@
                 <MudItem xs="1">
                     <MudIconButton Style="padding:0"
                                    OnClick="async () => await AddToFavorite_OnClick()"
-                                   Color="Color.Error" Icon="@(IsFavorite ? Icons.Material.Outlined.Favorite : Icons.Material.Outlined.FavoriteBorder)" />
+                                   Color="Color.Error" Icon="@(isFavorite ? Icons.Material.Outlined.Favorite : Icons.Material.Outlined.FavoriteBorder)" />
                 </MudItem>
                 <MudItem Class="pt-0 pb-0" xs="12">
                     <MudText Style="opacity:0.5" Typo="Typo.subtitle2">Article: @Model.Article</MudText>
@@ -185,11 +185,11 @@
     [Parameter, NotNull] public ProductDTO Model { get; set; } = new();
     [CascadingParameter] MainLayout Layout { get; set; } = new();
 
-    private bool IsFavorite = false;
+    private bool isFavorite = false;
 
     protected override async Task OnInitializedAsync()
     {
-        IsFavorite = await LocalDataAccessor.IsInFavoriteGoodsAsync(Model.Id.ToString());
+        isFavorite = await LocalDataAccessor.IsInFavoriteGoodsAsync(Model.Id.ToString());
     }
 
     private async Task AddToCart_OnClick()
@@ -197,10 +197,10 @@
         NotificationService.NotificationsCount += 1;
         await LocalDataAccessor.AddToCartAsync(new StoreItem()
             {
-                ProductId = Model.Id.ToString(),
-                ProductArticle = Model.Article,
+                ProductId = Model.Id,
+                Article = Model.Article,
                 AddedAt = DateTime.UtcNow,
-                ProductCategory = Model.Category,
+                Category = Model.Category,
                 Amount = 1,
             });
 
@@ -211,7 +211,7 @@
 
     private async Task AddToFavorite_OnClick()
     {
-        if (IsFavorite)
+        if (isFavorite)
         {
             NotificationService.NotificationsCount -= 1;
             await LocalDataAccessor.RemoveFromFavoritesAsync(Model.Id.ToString());
@@ -220,18 +220,18 @@
         else
         {
             NotificationService.NotificationsCount += 1;
-            await LocalDataAccessor.AddoFavoritesAsync(new()
+            await LocalDataAccessor.AddToFavoritesAsync(new()
                 {
                     AddedAt = DateTime.UtcNow,
-                    ProductId = Model.Id.ToString(),
-                    ProductArticle = Model.Article,
-                    ProductCategory = Model.Category,
+                    ProductId = Model.Id,
+                    Article = Model.Article,
+                    Category = Model.Category,
                     Amount = 1
 
                 });
             Snackbar.Add("Product was added to favorite list", MudBlazor.Severity.Success);
         }
-        IsFavorite = !IsFavorite;
+        isFavorite = !isFavorite;
         StateHasChanged();
         Layout.RerenderComponent();
     }
