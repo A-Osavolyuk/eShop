@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.Entities
 {
-    public record class Review
+    public record class ReviewEntity
     {
         public Guid ReviewId { get; set; }
         public Guid ProductId { get; set; }
@@ -10,7 +10,7 @@
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public int Rating { get; set; }
-        public IEnumerable<Comment> Comments { get; set; } = Enumerable.Empty<Comment>();
+        public IEnumerable<CommentEntity> Comments { get; set; } = Enumerable.Empty<CommentEntity>();
     }
 }
     

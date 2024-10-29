@@ -35,9 +35,9 @@ namespace eShop.ProductWebApi.Queries.Products
 
                 var output = product.Category switch
                 {
-                    Category.Clothing => await MapProducts<Clothing, ClothingDTO>(request.VariantId),
-                    Category.Shoes => await MapProducts<Shoes, ShoesDTO>(request.VariantId),
-                    Category.None or _ => await MapProducts<Product, ProductDTO>(request.VariantId),
+                    Category.Clothing => await MapProducts<ClothingEntity, ClothingDTO>(request.VariantId),
+                    Category.Shoes => await MapProducts<ShoesEntity, ShoesDTO>(request.VariantId),
+                    Category.None or _ => await MapProducts<ProductEntity, ProductDTO>(request.VariantId),
                 };
 
                 logger.LogInformation("Successfully found products with variant ID {id}.", request.VariantId);
@@ -49,7 +49,7 @@ namespace eShop.ProductWebApi.Queries.Products
             }
         }
 
-        private async ValueTask<IEnumerable<ProductDTO>> MapProducts<TEntity, TOutput>(Guid VariantId) where TEntity : Product where TOutput : ProductDTO
+        private async ValueTask<IEnumerable<ProductDTO>> MapProducts<TEntity, TOutput>(Guid VariantId) where TEntity : ProductEntity where TOutput : ProductDTO
         {
             var output = context.Products
                 .AsNoTracking()

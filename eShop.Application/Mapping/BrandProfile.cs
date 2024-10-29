@@ -9,9 +9,9 @@ namespace eShop.Application.MappingProfiles
     {
         public BrandProfile()
         {
-            CreateMap<Brand, BrandDTO>();
-            CreateMap<CreateBrandRequest, Brand>();
-            CreateMap<UpdateBrandRequest, Brand>();
+            CreateMap<BrandEntity, BrandDTO>();
+            CreateMap<CreateBrandRequest, BrandEntity>();
+            CreateMap<UpdateBrandRequest, BrandEntity>();
         }
     }
 }

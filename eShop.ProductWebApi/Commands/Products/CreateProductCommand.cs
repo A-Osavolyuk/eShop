@@ -45,9 +45,9 @@ namespace eShop.ProductWebApi.Commands.Products
 
                 var products = request.Requests.First().Category switch
                 {
-                    Category.Clothing => request.Requests.AsQueryable().ProjectTo<Clothing>(mapper.ConfigurationProvider),
-                    Category.Shoes => request.Requests.AsQueryable().ProjectTo<Shoes>(mapper.ConfigurationProvider),
-                    Category.None => Enumerable.Empty<Product>(),
+                    Category.Clothing => request.Requests.AsQueryable().ProjectTo<ClothingEntity>(mapper.ConfigurationProvider),
+                    Category.Shoes => request.Requests.AsQueryable().ProjectTo<ShoesEntity>(mapper.ConfigurationProvider),
+                    Category.None => Enumerable.Empty<ProductEntity>(),
                     _ => throw new NotImplementedException("Not implemented creation of product type")
                 };
                 

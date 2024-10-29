@@ -5,7 +5,7 @@ using FluentValidation;
 
 namespace eShop.Application.Validation.Products
 {
-    public class CreateClothingRequestValidator : AbstractValidator<Clothing>
+    public class CreateClothingRequestValidator : AbstractValidator<ClothingEntity>
     {
         public CreateClothingRequestValidator()
         {

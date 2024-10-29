@@ -41,9 +41,9 @@ namespace eShop.ProductWebApi.Commands.Products
 
                 var product = request.Request.Category switch
                 {
-                    Category.Clothing => mapper.Map<Clothing>(request.Request),
-                    Category.Shoes => mapper.Map<Shoes>(request.Request),
-                    Category.None => new Product(),
+                    Category.Clothing => mapper.Map<ClothingEntity>(request.Request),
+                    Category.Shoes => mapper.Map<ShoesEntity>(request.Request),
+                    Category.None => new ProductEntity(),
                     _ => throw new Exception("Not specified category")
                 };
 

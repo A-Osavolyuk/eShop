@@ -35,9 +35,9 @@ namespace eShop.ProductWebApi.Queries.Products
 
                 var output = product.Category switch
                 {
-                    Category.Clothing => await MapCategory<Clothing, ClothingDTO>(product),
-                    Category.Shoes => await MapCategory<Shoes, ShoesDTO>(product),
-                    _ or Category.None => await MapCategory<Product, ProductDTO>(product),
+                    Category.Clothing => await MapCategory<ClothingEntity, ClothingDTO>(product),
+                    Category.Shoes => await MapCategory<ShoesEntity, ShoesDTO>(product),
+                    _ or Category.None => await MapCategory<ProductEntity, ProductDTO>(product),
                 };
 
                 logger.LogInformation("Successfylly found product with ID {id}", request.Id);
@@ -49,13 +49,13 @@ namespace eShop.ProductWebApi.Queries.Products
             }
         }
 
-        private async ValueTask<ProductDTO> MapCategory<TEntity, TOutput>(Product product) where TEntity : Product where TOutput : ProductDTO
+        private async ValueTask<ProductDTO> MapCategory<TEntity, TOutput>(ProductEntity productEntity) where TEntity : ProductEntity where TOutput : ProductDTO
         {
             var output = await context.Products
                 .AsNoTracking()
                 .OfType<TEntity>()
                 .ProjectTo<TOutput>(mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync(x => x.Id == product.Id);
+                .FirstOrDefaultAsync(x => x.Id == productEntity.Id);
 
             return output!;
         }

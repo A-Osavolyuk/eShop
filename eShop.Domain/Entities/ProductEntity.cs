@@ -2,9 +2,9 @@
 
 namespace eShop.Domain.Entities
 {
-    public class Product
+    public class ProductEntity
     {
-        public Product() => Article = GenerateArticle();
+        public ProductEntity() => Article = GenerateArticle();
 
         public Guid Id { get; set; } = Guid.Empty;
         public Guid VariantId { get; set; } = Guid.Empty;
@@ -17,7 +17,7 @@ namespace eShop.Domain.Entities
         public Currency Currency { get; set; }
         public List<string> Images { get; set; } = new List<string>();
         public Guid BrandId { get; set; } = Guid.Empty;
-        public Brand Brand { get; set; } = null!;
+        public BrandEntity BrandEntity { get; set; } = null!;
 
         private long GenerateArticle()
         {

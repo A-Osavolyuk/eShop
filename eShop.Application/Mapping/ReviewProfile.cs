@@ -9,9 +9,9 @@ namespace eShop.Application.Mapping
     {
         public ReviewProfile()
         {
-            CreateMap<CreateReviewRequest, Review>();
-            CreateMap<UpdateReviewRequest, Review>();
-            CreateMap<Review, ReviewDTO>();
+            CreateMap<CreateReviewRequest, ReviewEntity>();
+            CreateMap<UpdateReviewRequest, ReviewEntity>();
+            CreateMap<ReviewEntity, ReviewDTO>();
         }
     }
 }

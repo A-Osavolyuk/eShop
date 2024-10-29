@@ -36,7 +36,7 @@ namespace eShop.ProductWebApi.Commands.Brands
                     return logger.LogErrorWithException<Unit>(new FailedValidationException(validationResult.Errors), actionMessage, request.Request.RequestId);
                 }
 
-                var brand = mapper.Map<Brand>(request.Request);
+                var brand = mapper.Map<BrandEntity>(request.Request);
                 await context.Brands.AddAsync(brand);
                 await context.SaveChangesAsync();
 

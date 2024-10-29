@@ -11,19 +11,19 @@ namespace eShop.Application.Mapping
         public ProductProfile()
         {
             CreateMap<CreateProduct, CreateProductRequest>();
-            CreateMap<CreateProductRequest, Product>();
-            CreateMap<CreateProductRequest, Clothing>();
-            CreateMap<CreateProductRequest, Shoes>();
-            CreateMap<Product, ProductDTO>();
-            CreateMap<Product, ShoesDTO>();
-            CreateMap<Product, ClothingDTO>();
-            CreateMap<Product, Shoes>();
-            CreateMap<Product, Clothing>();
-            CreateMap<Clothing, ClothingDTO>();
-            CreateMap<Shoes, ShoesDTO>();
-            CreateMap<Shoes, ProductDTO>();
-            CreateMap<Clothing, ProductDTO>();
-            CreateMap<Product, ProductDTO>();
+            CreateMap<CreateProductRequest, ProductEntity>();
+            CreateMap<CreateProductRequest, ClothingEntity>();
+            CreateMap<CreateProductRequest, ShoesEntity>();
+            CreateMap<ProductEntity, ProductDTO>();
+            CreateMap<ProductEntity, ShoesDTO>();
+            CreateMap<ProductEntity, ClothingDTO>();
+            CreateMap<ProductEntity, ShoesEntity>();
+            CreateMap<ProductEntity, ClothingEntity>();
+            CreateMap<ClothingEntity, ClothingDTO>();
+            CreateMap<ShoesEntity, ShoesDTO>();
+            CreateMap<ShoesEntity, ProductDTO>();
+            CreateMap<ClothingEntity, ProductDTO>();
+            CreateMap<ProductEntity, ProductDTO>();
         }
     }
 }

@@ -17,7 +17,7 @@ namespace eShop.ReviewsWebApi.Repositories
             {
                 logger.LogInformation("Trying to create review");
 
-                var entity = mapper.Map<Review>(request);
+                var entity = mapper.Map<ReviewEntity>(request);
                 await context.Reviews.AddAsync(entity);
                 await context.SaveChangesAsync();
 
@@ -113,7 +113,7 @@ namespace eShop.ReviewsWebApi.Repositories
                 {
                     if (review.UserId == request.UserId)
                     {
-                        var newReview = mapper.Map<Review>(request) with { UpdatedAt = DateTime.UtcNow };
+                        var newReview = mapper.Map<ReviewEntity>(request) with { UpdatedAt = DateTime.UtcNow };
 
                         context.Reviews.Update(newReview);
                         await context.SaveChangesAsync();

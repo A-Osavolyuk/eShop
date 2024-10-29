@@ -4,23 +4,23 @@ namespace eShop.ProductWebApi.Data
 {
     public class ProductDbContext(DbContextOptions<ProductDbContext> options) : DbContext(options)
     {
-        public DbSet<Product> Products => Set<Product>();
-        public DbSet<Clothing> Clothing => Set<Clothing>();
-        public DbSet<Brand> Brands => Set<Brand>();
-        public DbSet<Shoes> Shoes => Set<Shoes>();
+        public DbSet<ProductEntity> Products => Set<ProductEntity>();
+        public DbSet<ClothingEntity> Clothing => Set<ClothingEntity>();
+        public DbSet<BrandEntity> Brands => Set<BrandEntity>();
+        public DbSet<ShoesEntity> Shoes => Set<ShoesEntity>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Brand>(x =>
+            modelBuilder.Entity<BrandEntity>(x =>
             {
                 x.HasKey(x => x.Id);
             });
 
-            modelBuilder.Entity<Product>(x =>
+            modelBuilder.Entity<ProductEntity>(x =>
             {
                 x.UseTptMappingStrategy();
                 x.HasKey(x => x.Id);
-                x.HasOne(x => x.Brand).WithMany().HasForeignKey(x => x.BrandId);
+                x.HasOne(x => x.BrandEntity).WithMany().HasForeignKey(x => x.BrandId);
             });
 
 

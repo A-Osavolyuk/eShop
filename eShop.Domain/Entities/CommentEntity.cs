@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.Entities
 {
-    public class Comment
+    public class CommentEntity
     {
         public Guid CommentId { get; set; }
         public Guid ReviewId { get; set; }
@@ -9,6 +9,6 @@
         public string Text { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public Review? Review { get; set; }
+        public ReviewEntity? Review { get; set; }
     }
 }

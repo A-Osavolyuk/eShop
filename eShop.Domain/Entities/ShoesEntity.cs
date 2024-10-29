@@ -2,11 +2,11 @@
 
 namespace eShop.Domain.Entities
 {
-    public class Clothing : Product
+    public class ShoesEntity : ProductEntity
     {
-        public Clothing() : base() => Category = Category.Clothing;
+        public ShoesEntity() : base() => Category = Category.Shoes;
         public List<ProductSize> Sizes { get; set; } = new();
-        public ProductColor Color { get; set; } = new();
+        public ProductColor Color { get; set; }
         public Audience Audience { get; set; }
     }
 }

@@ -43,7 +43,7 @@ namespace eShop.ProductWebApi.Commands.Brands
                     return logger.LogErrorWithException<Unit>(new NotFoundBrandException(request.Request.Id), actionMessage, request.Request.RequestId);
                 }
 
-                var brand = mapper.Map<Brand>(request.Request);
+                var brand = mapper.Map<BrandEntity>(request.Request);
                 context.Brands.Update(brand);
                 await context.SaveChangesAsync();
 
