@@ -1,4 +1,5 @@
 ﻿using eShop.CartWebApi.Commands.Favorites;
+using eShop.CartWebApi.Queries.Favorites;
 using eShop.Domain.Requests.Cart;
 
 namespace eShop.CartWebApi.Controllers;
@@ -14,6 +15,16 @@ public class FavoritesController(ISender sender) : ControllerBase
     public async ValueTask<ActionResult<ResponseDTO>> UpdateCartAsync([FromBody] UpdateFavoritesRequest request)
     {
         var response = await sender.Send(new UpdateFavoritesCommand(request));
+
+        return response.Match(
+            s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
+            ExceptionHandler.HandleException);
+    }
+    
+    [HttpGet("get-favorites/{userId:guid}")]
+    public async ValueTask<ActionResult<ResponseDTO>> GetCartAsync(Guid userId)
+    {
+        var response = await sender.Send(new GetFavoritesQuery(userId));
 
         return response.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),

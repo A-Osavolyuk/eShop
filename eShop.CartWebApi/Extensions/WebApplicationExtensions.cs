@@ -9,13 +9,25 @@ public static class WebApplicationExtensions
     {
         using var scope = app.Services.CreateScope();
         var database = scope.ServiceProvider.GetRequiredService<IMongoDatabase>();
-        var collection = database.GetCollection<CartEntity>("Carts");
-        await collection.InsertOneAsync(new CartEntity()
+        var cartCollection = database.GetCollection<CartEntity>("Carts");
+        var favoritesCollection = database.GetCollection<FavoritesEntity>("Favorites");
+        
+        await cartCollection.InsertOneAsync(new CartEntity()
         {
             CartId = Guid.NewGuid(), 
             UserId = Guid.NewGuid(),
             ItemsCount = 0,
             Items = new List<CartItem>(),
+            UpdatedAt = DateTime.UtcNow,
+            CreatedAt = DateTime.UtcNow
+        });
+
+        await favoritesCollection.InsertOneAsync(new FavoritesEntity()
+        {
+            FavoritesId = Guid.NewGuid(), 
+            UserId = Guid.NewGuid(),
+            ItemsCount = 0,
+            Items = new List<FavoritesItem>(),
             UpdatedAt = DateTime.UtcNow,
             CreatedAt = DateTime.UtcNow
         });

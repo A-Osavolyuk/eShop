@@ -2,7 +2,7 @@
 
 namespace eShop.Domain.Models
 {
-    public class Favorites
+    public class FavoritesModel
     {
         public Guid FavoritesId { get; set; }
         public int ItemsCount { get; set; }
