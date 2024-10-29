@@ -1,4 +1,5 @@
 ﻿using eShop.CartWebApi.Commands.Carts;
+using eShop.CartWebApi.Queries.Carts;
 using eShop.Domain.Requests.Cart;
 
 namespace eShop.CartWebApi.Controllers
@@ -18,6 +19,16 @@ namespace eShop.CartWebApi.Controllers
             return response.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
                     ExceptionHandler.HandleException);
+        }
+        
+        [HttpGet("get-cart/{cartId:guid}")]
+        public async ValueTask<ActionResult<ResponseDTO>> GetCartAsync(Guid cartId)
+        {
+            var response = await sender.Send(new GetCartQuery(cartId));
+
+            return response.Match(
+                s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
+                ExceptionHandler.HandleException);
         }
     }
 }

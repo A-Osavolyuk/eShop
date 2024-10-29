@@ -1,6 +1,5 @@
 ﻿using eShop.Domain.Entities.Cart;
 using MongoDB.Driver;
-using Cart = eShop.Domain.Entities.Cart.Cart;
 
 namespace eShop.CartWebApi.Extensions;
 
@@ -10,8 +9,8 @@ public static class WebApplicationExtensions
     {
         using var scope = app.Services.CreateScope();
         var database = scope.ServiceProvider.GetRequiredService<IMongoDatabase>();
-        var collection = database.GetCollection<Cart>("Carts");
-        await collection.InsertOneAsync(new Cart()
+        var collection = database.GetCollection<CartEntity>("Carts");
+        await collection.InsertOneAsync(new CartEntity()
         {
             CartId = Guid.NewGuid(), 
             UserId = Guid.NewGuid(),

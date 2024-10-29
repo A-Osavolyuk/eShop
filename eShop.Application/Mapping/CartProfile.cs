@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using eShop.Domain.DTOs;
 using eShop.Domain.Entities;
+using eShop.Domain.Entities.Cart;
 
 namespace eShop.Application.Mapping
 {
@@ -8,7 +9,7 @@ namespace eShop.Application.Mapping
     {
         public CartProfile()
         {
-
+            CreateMap<CartEntity, CartDto>();
         }
     }
 }

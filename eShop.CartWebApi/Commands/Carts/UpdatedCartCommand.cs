@@ -23,7 +23,7 @@ public class UpdatedCartCommandHandler(
             logger.LogInformation("Attempting to update cart with ID {cartId}. Request ID {requestId}",
                 request.Request.CartId, request.Request.RequestId);
             
-            var cartCollection = database.GetCollection<Cart>("Carts");
+            var cartCollection = database.GetCollection<CartEntity>("Carts");
             
             var cart = await cartCollection.Find(x => x.CartId == request.Request.CartId).FirstOrDefaultAsync(cancellationToken);
 
@@ -34,7 +34,7 @@ public class UpdatedCartCommandHandler(
             }
             else
             {
-                var newCart = new Cart
+                var newCart = new CartEntity
                 {
                     CartId = cart.CartId,
                     UserId = cart.UserId,

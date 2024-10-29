@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace eShop.Domain.Entities.Cart;
 
-public class Cart
+public class CartEntity
 {
     [BsonId]
     [BsonRepresentation(BsonType.String)]
