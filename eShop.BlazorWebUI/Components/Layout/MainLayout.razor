@@ -149,7 +149,7 @@
     {
         if (!await LocalDataAccessor.IsCartExistsAsync())
         {
-            await LocalDataAccessor.CreateCartAsync(new() { CartId = Guid.NewGuid().ToString(), ItemsCount = 0, Products = new() });
+            await LocalDataAccessor.CreateCartAsync(new() { CartId = Guid.NewGuid(), ItemsCount = 0, Products = new() });
         }
     }
 

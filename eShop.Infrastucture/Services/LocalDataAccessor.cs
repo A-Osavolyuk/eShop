@@ -1,6 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using eShop.Domain.DTOs;
 using eShop.Domain.Entities;
+using eShop.Domain.Entities.Cart;
 using eShop.Domain.Interfaces;
 using eShop.Domain.Models;
 using Cart = eShop.Domain.Models.Cart;
@@ -174,7 +175,7 @@ namespace eShop.Infrastructure.Services
             return false;
         }
 
-        public async ValueTask AddToCartAsync(StoreItem item)
+        public async ValueTask AddToCartAsync(CartItem item)
         {
             var key = "cart";
             var cart = new Cart();
@@ -191,11 +192,11 @@ namespace eShop.Infrastructure.Services
 
                         if (oldItem is not null)
                         {
-                            var newItem = new StoreItem()
+                            var newItem = new CartItem()
                             {
-                                AddedAt = DateTime.UtcNow,
+                                UpdatedAt = DateTime.UtcNow,
                                 Amount = oldItem.Amount + item.Amount,
-                                Article = oldItem.Article,
+                                ProductArticle = oldItem.ProductArticle,
                                 ProductId = oldItem.ProductId
                             };
                             cart.Products.Remove(oldItem);

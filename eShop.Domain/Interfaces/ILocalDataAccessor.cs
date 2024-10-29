@@ -1,4 +1,5 @@
-﻿using eShop.Domain.Models;
+﻿using eShop.Domain.Entities.Cart;
+using eShop.Domain.Models;
 
 namespace eShop.Domain.Interfaces
 {
@@ -10,7 +11,7 @@ namespace eShop.Domain.Interfaces
         public ValueTask<Cart> ReadCartAsync();
         public ValueTask CreateCartAsync(Cart cart);
         public ValueTask<bool> IsCartExistsAsync();
-        public ValueTask AddToCartAsync(StoreItem item);
+        public ValueTask AddToCartAsync(CartItem item);
         public ValueTask<bool> IsInFavoriteGoodsAsync(string id);
         public ValueTask RemoveFromFavoritesAsync(string id);
         public ValueTask<Favorites> ReadFavoriteGoodsAsync();

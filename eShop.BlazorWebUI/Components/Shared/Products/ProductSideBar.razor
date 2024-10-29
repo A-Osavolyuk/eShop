@@ -1,4 +1,5 @@
-﻿@using eShop.Infrastructure.Services
+﻿@using eShop.Domain.Entities.Cart
+@using eShop.Infrastructure.Services
 @inject NavigationManager NavigationManager
 @inject ILocalDataAccessor LocalDataAccessor
 @inject ISnackbar Snackbar
@@ -195,12 +196,11 @@
     private async Task AddToCart_OnClick()
     {
         NotificationService.NotificationsCount += 1;
-        await LocalDataAccessor.AddToCartAsync(new StoreItem()
+        await LocalDataAccessor.AddToCartAsync(new CartItem()
             {
                 ProductId = Model.Id,
-                Article = Model.Article,
+                ProductArticle = Model.Article,
                 AddedAt = DateTime.UtcNow,
-                Category = Model.Category,
                 Amount = 1,
             });
 

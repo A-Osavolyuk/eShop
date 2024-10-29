@@ -1,10 +1,12 @@
-﻿namespace eShop.Domain.Models
+﻿using eShop.Domain.Entities.Cart;
+
+namespace eShop.Domain.Models
 {
     public class Cart
     {
-        public string CartId { get; set; } = string.Empty;
+        public Guid CartId { get; set; }
         public int ItemsCount { get; set; }
-        public List<StoreItem> Products { get; set; } = new List<StoreItem>();
+        public List<CartItem> Products { get; set; } = new List<CartItem>();
 
         public void Count()
         {

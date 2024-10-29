@@ -11,4 +11,5 @@ public class CartItem
     public decimal ProductArticle { get; set; }
     public int Amount { get; set; }
     public DateTime UpdatedAt { get; set; } = DateTime.Now;
+    public DateTime AddedAt { get; set; } = DateTime.Now;
 }
