@@ -7,7 +7,7 @@ namespace eShop.Application.Utilities
 {
     public static class ExceptionHandler
     {
-        public static ActionResult<ResponseDTO> HandleException(Exception exception)
+        public static ActionResult HandleException(Exception exception)
         {
             return exception switch
             {

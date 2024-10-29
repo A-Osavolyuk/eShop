@@ -30,7 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\Carts\" />
     <Folder Include="Queries\Carts\" />
     <Folder Include="Receivers\" />
   </ItemGroup>
