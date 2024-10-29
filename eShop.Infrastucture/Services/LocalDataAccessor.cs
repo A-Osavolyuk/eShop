@@ -121,7 +121,7 @@ namespace eShop.Infrastructure.Services
             return new();
         }
 
-        public async ValueTask AddToFavoritesAsync(StoreItem item)
+        public async ValueTask AddToFavoritesAsync(FavoritesItem item)
         {
             var key = "favorites";
             if (await localStorageService.ContainKeyAsync(key))
@@ -137,7 +137,7 @@ namespace eShop.Infrastructure.Services
             }
             else
             {
-                var favorites = new Favorites() { Products = new List<StoreItem> { item } };
+                var favorites = new Favorites() { Products = new List<FavoritesItem> { item } };
                 favorites.Count();
                 await localStorageService.SetItemAsync(key, favorites);
             }

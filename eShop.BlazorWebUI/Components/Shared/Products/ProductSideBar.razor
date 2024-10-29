@@ -224,9 +224,7 @@
                 {
                     AddedAt = DateTime.UtcNow,
                     ProductId = Model.Id,
-                    Article = Model.Article,
-                    Category = Model.Category,
-                    Amount = 1
+                    ProductArticle = Model.Article,
 
                 });
             Snackbar.Add("Product was added to favorite list", MudBlazor.Severity.Success);
