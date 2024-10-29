@@ -13,6 +13,11 @@ namespace eShop.Infrastructure.Services
         private readonly ILocalStorageService localStorageService = localStorageService;
 
         public async ValueTask RemoveDataAsync() => await localStorageService.ClearAsync();
+        public async ValueTask SetCartAsync(Cart cart)
+        {
+            var key = "cart";
+            await localStorageService.SetItemAsync(key, cart);
+        }
 
         public async ValueTask WriteUserDataAsync(UserData user)
         {

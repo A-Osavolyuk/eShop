@@ -26,5 +26,6 @@ namespace eShop.Domain.Interfaces
         public ValueTask WriteSecurityDataAsync(SecurityData securityData);
         public ValueTask<SecurityData> ReadSecurityDataAsync();
         public ValueTask RemoveDataAsync();
+        public ValueTask SetCartAsync(Cart cart);
     }
 }

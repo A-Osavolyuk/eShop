@@ -21,10 +21,10 @@ namespace eShop.CartWebApi.Controllers
                     ExceptionHandler.HandleException);
         }
         
-        [HttpGet("get-cart/{cartId:guid}")]
-        public async ValueTask<ActionResult<ResponseDTO>> GetCartAsync(Guid cartId)
+        [HttpGet("get-cart/{userId:guid}")]
+        public async ValueTask<ActionResult<ResponseDTO>> GetCartAsync(Guid userId)
         {
-            var response = await sender.Send(new GetCartQuery(cartId));
+            var response = await sender.Send(new GetCartQuery(userId));
 
             return response.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),

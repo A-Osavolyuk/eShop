@@ -1,4 +1,5 @@
 ﻿@using eShop.Infrastructure.Services
+@using Severity = MudBlazor.Severity
 @inherits LayoutComponentBase
 
 @inject ITokenProvider TokenProvider
@@ -13,6 +14,7 @@
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider authenticationState
 @inject IConfiguration Configuration
+@inject IMapper Mapper
 
 @using Cart = Domain.Models.Cart
 
@@ -147,9 +149,20 @@
 
     private async Task EnsureCartAsync()
     {
-        if (!await LocalDataAccessor.IsCartExistsAsync())
+        if (!await LocalDataAccessor.IsFavoritesExistsAsync())
         {
-            await LocalDataAccessor.CreateCartAsync(new() { CartId = Guid.NewGuid(), ItemsCount = 0, Products = new() });
+            var userData = await LocalDataAccessor.ReadUserDataAsync();
+            var response = await CartService.GetCartAsync(Guid.Parse(userData.UserId));
+
+            if (response.IsSucceeded)
+            {
+                var data = JsonConvert.DeserializeObject<CartDto>(response.Result!.ToString()!);
+                await LocalDataAccessor.CreateCartAsync(Mapper.Map<Cart>(data));
+            }
+            else
+            {
+                Snackbar.Add(response.ErrorMessage, Severity.Warning);
+            }
         }
     }
 

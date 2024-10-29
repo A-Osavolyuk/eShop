@@ -21,7 +21,7 @@ public class GetCartQueryHandler(
         try
         {
             var collection = database.GetCollection<CartEntity>("Carts");
-            var cart = await collection.Find(x => x.CartId == request.Id).FirstOrDefaultAsync(cancellationToken);
+            var cart = await collection.Find(x => x.UserId == request.Id).FirstOrDefaultAsync(cancellationToken);
 
             if (cart is null)
             {
