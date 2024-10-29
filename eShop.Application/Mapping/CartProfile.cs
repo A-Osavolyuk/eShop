@@ -11,6 +11,7 @@ namespace eShop.Application.Mapping
         public CartProfile()
         {
             CreateMap<CartEntity, CartDto>();
+            CreateMap<CartDto, CartModel>();
         }
     }
 }

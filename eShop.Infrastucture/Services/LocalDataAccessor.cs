@@ -4,7 +4,6 @@ using eShop.Domain.Entities;
 using eShop.Domain.Entities.Cart;
 using eShop.Domain.Interfaces;
 using eShop.Domain.Models;
-using Cart = eShop.Domain.Models.Cart;
 
 namespace eShop.Infrastructure.Services
 {
@@ -13,10 +12,10 @@ namespace eShop.Infrastructure.Services
         private readonly ILocalStorageService localStorageService = localStorageService;
 
         public async ValueTask RemoveDataAsync() => await localStorageService.ClearAsync();
-        public async ValueTask SetCartAsync(Cart cart)
+        public async ValueTask SetCartAsync(CartModel cartModel)
         {
             var key = "cart";
-            await localStorageService.SetItemAsync(key, cart);
+            await localStorageService.SetItemAsync(key, cartModel);
         }
 
         public async ValueTask WriteUserDataAsync(UserData user)
@@ -183,11 +182,11 @@ namespace eShop.Infrastructure.Services
         public async ValueTask AddToCartAsync(CartItem item)
         {
             var key = "cart";
-            var cart = new Cart();
+            var cart = new CartModel();
 
             if (await localStorageService.ContainKeyAsync(key))
             {
-                cart = await localStorageService.GetItemAsync<Cart>(key);
+                cart = await localStorageService.GetItemAsync<CartModel>(key);
 
                 if (cart is not null)
                 {
@@ -235,16 +234,16 @@ namespace eShop.Infrastructure.Services
             return await localStorageService.ContainKeyAsync(key);
         }
 
-        public async ValueTask CreateCartAsync(Cart cart)
+        public async ValueTask CreateCartAsync(CartModel cartModel)
         {
             var key = "cart";
-            await localStorageService.SetItemAsync(key, cart);
+            await localStorageService.SetItemAsync(key, cartModel);
         }
 
-        public async ValueTask<Cart> ReadCartAsync()
+        public async ValueTask<CartModel> ReadCartAsync()
         {
             var key = "cart";
-            return (await localStorageService.GetItemAsync<Cart>(key))!;
+            return (await localStorageService.GetItemAsync<CartModel>(key))!;
         }
 
         public async ValueTask<int> GetStoreItemsCountAsync()
@@ -256,7 +255,7 @@ namespace eShop.Infrastructure.Services
 
             if (await localStorageService.ContainKeyAsync(cartKey))
             {
-                var cart = await localStorageService.GetItemAsync<Cart>(cartKey);
+                var cart = await localStorageService.GetItemAsync<CartModel>(cartKey);
                 cartCount = cart!.ItemsCount;
             }
 
@@ -278,7 +277,8 @@ namespace eShop.Infrastructure.Services
         public async ValueTask<bool> IsFavoritesExistsAsync()
         {
             var key = "favorites";
-            return await localStorageService.ContainKeyAsync(key);
+            var result = await localStorageService.ContainKeyAsync(key);
+            return result;
         }
     }
 }

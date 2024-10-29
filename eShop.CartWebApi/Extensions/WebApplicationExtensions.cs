@@ -15,7 +15,7 @@ public static class WebApplicationExtensions
         await cartCollection.InsertOneAsync(new CartEntity()
         {
             CartId = Guid.NewGuid(), 
-            UserId = Guid.NewGuid(),
+            UserId = Guid.Parse("abb9d2ed-c3d2-4df9-ba88-eab018b95bc3"),
             ItemsCount = 0,
             Items = new List<CartItem>(),
             UpdatedAt = DateTime.UtcNow,
@@ -25,7 +25,7 @@ public static class WebApplicationExtensions
         await favoritesCollection.InsertOneAsync(new FavoritesEntity()
         {
             FavoritesId = Guid.NewGuid(), 
-            UserId = Guid.NewGuid(),
+            UserId = Guid.Parse("abb9d2ed-c3d2-4df9-ba88-eab018b95bc3"),
             ItemsCount = 0,
             Items = new List<FavoritesItem>(),
             UpdatedAt = DateTime.UtcNow,

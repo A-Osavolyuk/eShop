@@ -8,8 +8,8 @@ namespace eShop.Domain.Interfaces
         public ValueTask<bool> IsFavoritesExistsAsync();
         public ValueTask CreateFavoritesAsync(FavoritesModel favoritesModel);
         public ValueTask<int> GetStoreItemsCountAsync();
-        public ValueTask<Cart> ReadCartAsync();
-        public ValueTask CreateCartAsync(Cart cart);
+        public ValueTask<CartModel> ReadCartAsync();
+        public ValueTask CreateCartAsync(CartModel cartModel);
         public ValueTask<bool> IsCartExistsAsync();
         public ValueTask AddToCartAsync(CartItem item);
         public ValueTask<bool> IsInFavoriteGoodsAsync(string id);
@@ -26,6 +26,6 @@ namespace eShop.Domain.Interfaces
         public ValueTask WriteSecurityDataAsync(SecurityData securityData);
         public ValueTask<SecurityData> ReadSecurityDataAsync();
         public ValueTask RemoveDataAsync();
-        public ValueTask SetCartAsync(Cart cart);
+        public ValueTask SetCartAsync(CartModel cartModel);
     }
 }

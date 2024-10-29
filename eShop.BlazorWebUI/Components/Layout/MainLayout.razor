@@ -6,6 +6,7 @@
 @inject ILocalDataAccessor LocalDataAccessor
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ICartService CartService
+@inject IFavoritesService FavoritesService
 @inject ISnackbar Snackbar
 @inject IJSRuntime JS
 @inject NotificationService NotificationService
@@ -16,27 +17,31 @@
 @inject IConfiguration Configuration
 @inject IMapper Mapper
 
-@using Cart = Domain.Models.Cart
+@using Cart = Domain.Models.CartModel
 
-<MudThemeProvider IsDarkMode />
-<MudDialogProvider />
-<MudSnackbarProvider />
-<MudPopoverProvider />
+<MudThemeProvider IsDarkMode/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
+<MudPopoverProvider/>
 
 <CascadingValue Value="this">
     <MudLayout Style="height:100vh">
         <MudAppBar Style="height:70px;" Class="align-content-center" Elevation="1">
-            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/>
             <MudText Align="Align.Center" Typo="Typo.h5" Class="ml-3 cursor-pointer" @onclick="@(() => NavigationManager.NavigateTo("/products"))">eShop</MudText>
-            <MudSpacer />
-            <SearchField />
-            <MudSpacer />
+            <MudSpacer/>
+            <SearchField/>
+            <MudSpacer/>
             <AuthorizeView>
                 <NotAuthorized>
                     <MudButton StartIcon="@Icons.Material.Filled.Login"
-                               Color="Color.Primary" Href="/account/login">Log In</MudButton>
+                               Color="Color.Primary" Href="/account/login">
+                        Log In
+                    </MudButton>
                     <MudButton StartIcon="@Icons.Material.Filled.AppRegistration"
-                               Color="Color.Primary" Href="/account/register" Class="ml-3">Register</MudButton>
+                               Color="Color.Primary" Href="/account/register" Class="ml-3">
+                        Register
+                    </MudButton>
                 </NotAuthorized>
                 <Authorized>
                     <MudMenu Style="margin-top:6px" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.BottomLeft" ActivationEvent="MouseEvent.LeftClick">
@@ -44,14 +49,14 @@
                             @if (NotificationService.NotificationsCount == 0)
                             {
                                 <MudAvatar>
-                                    <MudImage Alt="avatar" Src="@(string.IsNullOrEmpty(avatarUri) ? Configuration["DefaultAvatar"]! : avatarUri)" />
+                                    <MudImage Alt="avatar" Src="@(string.IsNullOrEmpty(avatarUri) ? Configuration["DefaultAvatar"]! : avatarUri)"/>
                                 </MudAvatar>
                             }
                             else
                             {
                                 <MudBadge Style="margin-top:6px" Max="99" @bind-content="NotificationService.NotificationsCount" Overlap Color="Color.Secondary">
                                     <MudAvatar>
-                                        <MudImage Alt="avatar" Src="@(string.IsNullOrEmpty(avatarUri) ? Configuration["DefaultAvatar"]! : avatarUri)" />
+                                        <MudImage Alt="avatar" Src="@(string.IsNullOrEmpty(avatarUri) ? Configuration["DefaultAvatar"]! : avatarUri)"/>
                                     </MudAvatar>
                                 </MudBadge>
                             }
@@ -72,7 +77,7 @@
                                     Settings
                                 </MudButton>
                             </MudMenuItem>
-                            <MudDivider />
+                            <MudDivider/>
                             <MudMenuItem>
                                 <MudButton StartIcon="@Icons.Material.Filled.Logout" Color="Color.Primary" OnClick="LogoutClick">
                                     Log Out
@@ -84,7 +89,7 @@
             </AuthorizeView>
         </MudAppBar>
         <MudDrawer Style="top:70px" @bind-Open="drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
-            <NavMenu />
+            <NavMenu/>
         </MudDrawer>
         <MudMainContent Style="height:100%">
             <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="py-5 position-relative" Style="height:100%">
@@ -109,9 +114,14 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await GetAvatarAsync();
-        await EnsureCartAsync();
-        await EnsureFavoritesAsync();
+        var user = await LocalDataAccessor.ReadUserDataAsync();
+
+        if (user is not null)
+        {
+            await GetAvatarAsync();
+            await EnsureCartAsync();
+            await EnsureFavoritesAsync();
+        }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -123,12 +133,17 @@
             {
                 var token = await TokenProvider.GetTokenAsync();
                 await (AuthenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(token);
-            }  
+            }
         }
 
-        await EnsureCartAsync();
-        await EnsureFavoritesAsync();
-        NotificationService.NotificationsCount = await LocalDataAccessor.GetStoreItemsCountAsync();
+        var user = await LocalDataAccessor.ReadUserDataAsync();
+
+        if (user is not null)
+        { 
+            await EnsureCartAsync();
+            await EnsureFavoritesAsync();
+            NotificationService.NotificationsCount = await LocalDataAccessor.GetStoreItemsCountAsync();
+        }
     }
 
     public void RerenderComponent()
@@ -149,7 +164,7 @@
 
     private async Task EnsureCartAsync()
     {
-        if (!await LocalDataAccessor.IsFavoritesExistsAsync())
+        if (!await LocalDataAccessor.IsCartExistsAsync())
         {
             var userData = await LocalDataAccessor.ReadUserDataAsync();
             var response = await CartService.GetCartAsync(Guid.Parse(userData.UserId));
@@ -161,7 +176,7 @@
             }
             else
             {
-                Snackbar.Add(response.ErrorMessage, Severity.Warning);
+                Snackbar.Add(response.ErrorMessage, Severity.Error);
             }
         }
     }
@@ -170,7 +185,17 @@
     {
         if (!await LocalDataAccessor.IsFavoritesExistsAsync())
         {
-            await LocalDataAccessor.CreateFavoritesAsync(new() {ItemsCount = 0, Products = new() });
+            var userData = await LocalDataAccessor.ReadUserDataAsync();
+            var response = await FavoritesService.GetFavoritesAsync(Guid.Parse(userData.UserId));
+            if (response.IsSucceeded)
+            {
+                var data = JsonConvert.DeserializeObject<FavoritesDto>(response.Result!.ToString()!);
+                await LocalDataAccessor.CreateFavoritesAsync(Mapper.Map<FavoritesModel>(data));
+            }
+            else
+            {
+                Snackbar.Add(response.ErrorMessage, Severity.Error);
+            }
         }
     }
 
@@ -211,4 +236,5 @@
         NavigationManager.NavigateTo(link);
         StateHasChanged();
     }
+
 }

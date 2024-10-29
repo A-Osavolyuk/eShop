@@ -2,7 +2,7 @@
 
 namespace eShop.Domain.Models
 {
-    public class Cart
+    public class CartModel
     {
         public Guid CartId { get; set; }
         public int ItemsCount { get; set; }

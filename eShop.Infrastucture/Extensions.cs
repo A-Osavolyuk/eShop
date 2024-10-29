@@ -61,6 +61,7 @@ namespace eShop.Infrastructure
             builder.Services.AddHttpClient<ICommentService, CommentService>();
             builder.Services.AddHttpClient<IReviewService, ReviewService>();
             builder.Services.AddHttpClient<ICartService, CartService>();
+            builder.Services.AddHttpClient<IFavoritesService, FavoritesService>();
 
             builder.Services.AddScoped<IHttpClientService, HttpClientService>();
             builder.Services.AddScoped<ITokenProvider, TokenProvider>();
@@ -71,6 +72,7 @@ namespace eShop.Infrastructure
             builder.Services.AddScoped<IStoreService, StoreService>();
             builder.Services.AddScoped<IReviewService, ReviewService>();
             builder.Services.AddScoped<ICartService, CartService>();
+            builder.Services.AddScoped<IFavoritesService, FavoritesService>();
             builder.Services.AddScoped<ICookieManager, CookieManager>();
 
             builder.Services.AddSingleton<NotificationService>();

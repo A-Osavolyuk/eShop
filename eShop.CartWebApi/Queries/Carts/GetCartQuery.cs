@@ -17,7 +17,7 @@ public class GetCartQueryHandler(
 
     public async Task<Result<CartDto>> Handle(GetCartQuery request, CancellationToken cancellationToken)
     {
-        var actionMessage = new ActionMessage("get cart with ID {id}", request.Id);
+        var actionMessage = new ActionMessage("get cart with ID {0}", request.Id);
         try
         {
             var collection = database.GetCollection<CartEntity>("Carts");
