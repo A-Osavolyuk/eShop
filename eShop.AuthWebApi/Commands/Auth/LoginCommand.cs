@@ -29,19 +29,24 @@ namespace eShop.AuthWebApi.Commands.Auth
 
                 if (!validationResult.IsValid)
                 {
-                    return logger.LogErrorWithException<LoginResponse>(new FailedValidationException(validationResult.Errors), actionMessage, request.Request.RequestId);
+                    return logger.LogInformationWithException<LoginResponse>(
+                        new FailedValidationException(validationResult.Errors), 
+                        actionMessage, request.Request.RequestId);
                 }
 
                 var user = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
 
                 if (user is null)
                 {
-                    return logger.LogErrorWithException<LoginResponse>(new NotFoundUserByEmailException(request.Request.Email), actionMessage, request.Request.RequestId);
+                    return logger.LogInformationWithException<LoginResponse>(
+                        new NotFoundException($"Cannot find user with email {request.Request.Email}."), 
+                        actionMessage, request.Request.RequestId);
                 }
 
                 if (!user.EmailConfirmed)
                 {
-                    return logger.LogErrorWithException<LoginResponse>(new InvalidLoginAttemptWithNotConfirmedEmailException(),
+                    return logger.LogErrorWithException<LoginResponse>(
+                        new BadRequestException("The email address is not confirmed."),
                         actionMessage, request.Request.RequestId);
                 }
 
@@ -49,11 +54,13 @@ namespace eShop.AuthWebApi.Commands.Auth
 
                 if (!isValidPassword)
                 {
-                    return logger.LogErrorWithException<LoginResponse>(new InvalidLoginAttemptException(), actionMessage, request.Request.RequestId);
+                    return logger.LogErrorWithException<LoginResponse>(
+                        new BadRequestException("The password is not valid."), 
+                        actionMessage, request.Request.RequestId);
                 }
 
                 var userDto = new UserDTO(user.Email!, user.UserName!, user.Id);
-                var securityToken = await context.UserAuthenticationTokens.AsNoTracking().SingleOrDefaultAsync(x => x.UserId == user.Id);
+                var securityToken = await context.UserAuthenticationTokens.AsNoTracking().SingleOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
 
                 if (securityToken is not null)
                 {

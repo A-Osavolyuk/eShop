@@ -1,4 +1,6 @@
 ﻿
+using NotFoundException = eShop.Domain.Exceptions.NotFoundException;
+
 namespace eShop.AuthWebApi.Commands.Admin
 {
     public record DeleteRoleCommand(DeleteRoleRequest Request) : IRequest<Result<DeleteRoleResponse>>;
@@ -22,19 +24,24 @@ namespace eShop.AuthWebApi.Commands.Admin
 
                 if(role is null || role.Id != request.Request.Id.ToString())
                 {
-                    return logger.LogErrorWithException<DeleteRoleResponse>(new NotFoundRoleException(request.Request.Id), actionMessage, request.Request.RequestId);
+                    return logger.LogInformationWithException<DeleteRoleResponse>(
+                        new NotFoundException($"Cannot find role with ID {request.Request.Id}."), 
+                        actionMessage, request.Request.RequestId);
                 }
 
                 if(role.Name != request.Request.Name)
                 {
-                    return logger.LogErrorWithException<DeleteRoleResponse>(new NotFoundRoleException(request.Request.Name), actionMessage, request.Request.RequestId);
+                    return logger.LogInformationWithException<DeleteRoleResponse>(new BadRequestException("Role name is different."), 
+                        actionMessage, request.Request.RequestId);
                 }
 
                 var result = await appManager.RoleManager.DeleteAsync(role);
 
                 if (!result.Succeeded)
                 {
-                    return logger.LogErrorWithException<DeleteRoleResponse>(new NotDeletedRoleException(result.Errors.First()), actionMessage, request.Request.RequestId);
+                    return logger.LogErrorWithException<DeleteRoleResponse>(
+                        new FailedOperationException($"Cannot delete role due to server error: {result.Errors.First()}."), 
+                        actionMessage, request.Request.RequestId);
                 }
 
                 logger.LogInformation("Role {roleName} with ID {roleId} was successfully deleted. Request ID {requestId}", 

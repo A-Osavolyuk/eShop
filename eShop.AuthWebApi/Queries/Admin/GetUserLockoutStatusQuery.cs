@@ -22,7 +22,8 @@
 
                 if (user is null)
                 {
-                    return logger.LogErrorWithException<UserLockoutStatusResponse>(new NotFoundUserByIdException(request.Email), actionMessagne);
+                    return logger.LogInformationWithException<UserLockoutStatusResponse>(
+                        new NotFoundException($"Cannot find user with email {request.Email}."), actionMessagne);
                 }
 
                 var lockoutStatus = await appManager.UserManager.GetLockoutStatusAsync(user);

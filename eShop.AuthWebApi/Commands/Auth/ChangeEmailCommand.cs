@@ -29,14 +29,18 @@ namespace eShop.AuthWebApi.Commands.Auth
 
                 if (!validationResult.IsValid)
                 {
-                    return logger.LogErrorWithException<ChangeEmailResponse>(new FailedValidationException(validationResult.Errors), actionMessage, request.Request.RequestId);
+                    return logger.LogInformationWithException<ChangeEmailResponse>(
+                        new FailedValidationException(validationResult.Errors), 
+                        actionMessage, request.Request.RequestId);
                 }
 
                 var user = await appManager.UserManager.FindByEmailAsync(request.Request.CurrentEmail);
 
                 if (user is null)
                 {
-                    return logger.LogErrorWithException<ChangeEmailResponse>(new NotFoundUserByEmailException(request.Request.CurrentEmail), actionMessage, request.Request.RequestId);
+                    return logger.LogInformationWithException<ChangeEmailResponse>(
+                        new NotFoundException($"Cannot find user with email {request.Request.CurrentEmail}"), 
+                        actionMessage, request.Request.RequestId);
                 }
 
                 var token = await appManager.UserManager.GenerateChangeEmailTokenAsync(user, request.Request.NewEmail);

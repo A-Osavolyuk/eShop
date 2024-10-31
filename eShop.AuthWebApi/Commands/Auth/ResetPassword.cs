@@ -29,7 +29,9 @@ namespace eShop.AuthWebApi.Commands.Auth
 
                 if (user is null)
                 {
-                    return logger.LogErrorWithException<ResetPasswordResponse>(new NotFoundUserByEmailException(request.Request.Email), actionMessage, request.Request.RequestId);
+                    return logger.LogInformationWithException<ResetPasswordResponse>(
+                        new NotFoundException($"Cannot find user with email {request.Request.Email}."), 
+                        actionMessage, request.Request.RequestId);
                 }
 
                 var token = await appManager.UserManager.GeneratePasswordResetTokenAsync(user);

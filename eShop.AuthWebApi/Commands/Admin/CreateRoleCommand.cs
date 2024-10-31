@@ -25,7 +25,8 @@
 
                 if (!validationResult.IsValid)
                 {
-                    return logger.LogErrorWithException<CreateRoleResponse>(new FailedValidationException(validationResult.Errors), actionMessage, request.Request.RequestId);
+                    return logger.LogInformationWithException<CreateRoleResponse>(new FailedValidationException(validationResult.Errors), 
+                        actionMessage, request.Request.RequestId);
                 }
 
                 var isRoleExists = await appManager.RoleManager.FindByNameAsync(request.Request.Name);
@@ -39,7 +40,8 @@
 
                 if (!result.Succeeded)
                 {
-                    return logger.LogErrorWithException<CreateRoleResponse>(new NotCreatedRoleException(validationResult.Errors.First().ErrorMessage),
+                    return logger.LogErrorWithException<CreateRoleResponse>(
+                        new FailedOperationException($"Cannot create role due to server error: {result.Errors.First().Description}"),
                         actionMessage, request.Request.RequestId);
                 }
 

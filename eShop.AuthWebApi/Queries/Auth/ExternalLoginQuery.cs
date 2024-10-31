@@ -24,8 +24,8 @@ namespace eShop.AuthWebApi.Queries.Auth
 
                 if (!validProvider)
                 {
-                    return logger.LogErrorWithException<ExternalLoginResponse>(new InvalidExternalProvider(request.Provider),
-                        actionMessage);
+                    return logger.LogInformationWithException<ExternalLoginResponse>(
+                        new BadRequestException($"Invalid external provider {request.Provider}."), actionMessage);
                 }
 
                 var handlerUri = UrlGenerator.Action("handle-external-login-response", "Auth", new { ReturnUri = request.ReturnUri ?? "/" });

@@ -23,14 +23,16 @@ namespace eShop.AuthWebApi.Queries.Admin
 
                 if (user is null)
                 {
-                    return logger.LogErrorWithException<UserRolesResponse>(new NotFoundUserByIdException(request.Id), actionMessage);
+                    return logger.LogInformationWithException<UserRolesResponse>(
+                        new NotFoundException($"Cannot find user with ID {request.Id}."), actionMessage);
                 }
 
                 var roleList = await appManager.UserManager.GetRolesAsync(user);
 
                 if (roleList is null || !roleList.Any())
                 {
-                    return logger.LogErrorWithException<UserRolesResponse>(new NotFoundRolesException(), actionMessage);
+                    return logger.LogInformationWithException<UserRolesResponse>(
+                        new NotFoundException($"Cannot find roles for user with ID {request.Id}."), actionMessage);
                 }
 
                 var result = new UserRolesResponse() with { UserId = Guid.Parse(user.Id) };
@@ -41,7 +43,8 @@ namespace eShop.AuthWebApi.Queries.Admin
 
                     if (roleInfo is null)
                     {
-                        return logger.LogErrorWithException<UserRolesResponse>(new NotFoundRoleException(role), actionMessage);
+                        return logger.LogInformationWithException<UserRolesResponse>(
+                            new NotFoundException($"Cannot find role {role}"), actionMessage);
                     }
 
                     result.Roles.Add(new RoleInfo()

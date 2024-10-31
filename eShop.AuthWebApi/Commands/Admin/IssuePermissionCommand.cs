@@ -25,18 +25,22 @@ namespace eShop.AuthWebApi.Commands.Admin
 
                 if(user is null)
                 {
-                    return logger.LogErrorWithException<IssuePermissionsResponse>(new NotFoundUserByIdException(request.Request.UserId), actionMessage, request.Request.RequestId);
+                    return logger.LogInformationWithException<IssuePermissionsResponse>(
+                        new NotFoundException($"Cannot find user with ID {request.Request.UserId}."), 
+                        actionMessage, request.Request.RequestId);
                 }
 
                 var permissions = new List<Permission>();
 
                 foreach (var p in request.Request.Permissions) 
                 {
-                    var permission = await context.Permissions.AsNoTracking().FirstOrDefaultAsync(x => x.Name == p);
+                    var permission = await context.Permissions.AsNoTracking().FirstOrDefaultAsync(x => x.Name == p, cancellationToken: cancellationToken);
 
                     if(permission is null)
                     {
-                        return logger.LogErrorWithException<IssuePermissionsResponse>(new NotFoundPermissison(p), actionMessage, request.Request.RequestId);
+                        return logger.LogInformationWithException<IssuePermissionsResponse>(
+                            new NotFoundException($"Cannot find permission {p}."), 
+                            actionMessage, request.Request.RequestId);
                     }
 
                     permissions.Add(permission);
@@ -44,17 +48,18 @@ namespace eShop.AuthWebApi.Commands.Admin
 
                 foreach(var permission in permissions)
                 {
-                    var alreadyHasPermission = await context.UserPermissions.AsNoTracking().AnyAsync(x => x.UserId == user.Id && x.PermissionId == permission.Id);
+                    var alreadyHasPermission = await context.UserPermissions.AsNoTracking().
+                        AnyAsync(x => x.UserId == user.Id && x.PermissionId == permission.Id, cancellationToken: cancellationToken);
 
                     if (!alreadyHasPermission)
                     {
-                        await context.UserPermissions.AddAsync(new UserPermissions() { PermissionId = permission.Id, UserId = user.Id });
+                        await context.UserPermissions.AddAsync(new UserPermissions() { PermissionId = permission.Id, UserId = user.Id }, cancellationToken);
                     }
 
                     continue;
                 }
 
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync(cancellationToken);
 
                 logger.LogInformation("Successfully issued permissions for user with ID {id}. Request ID {requestId}.", request.Request.UserId, request.Request.RequestId);
                 return new(new IssuePermissionsResponse() { Succeeded = true, Message = "Successfully issued permissions." });

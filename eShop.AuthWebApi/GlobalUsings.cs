@@ -1,7 +1,5 @@
 ﻿global using AutoMapper;
 global using eShop.Application.Extensions;
-global using eShop.AuthWebApi.Exceptions.Admin;
-global using eShop.AuthWebApi.Exceptions.Auth;
 global using eShop.AuthWebApi.Data;
 global using eShop.AuthWebApi.Services.Interfaces;
 global using eShop.Domain.Common;

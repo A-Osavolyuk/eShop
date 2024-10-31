@@ -3,7 +3,10 @@ using Newtonsoft.Json.Linq;
 
 namespace eShop.AuthWebApi.Queries.Auth
 {
-    public record HandleExternalLoginResponseQuery(ExternalLoginInfo ExternalLoginInfo, string? RemoteError, string? ReturnUri) : IRequest<Result<string>>;
+    public record HandleExternalLoginResponseQuery(
+        ExternalLoginInfo ExternalLoginInfo,
+        string? RemoteError,
+        string? ReturnUri) : IRequest<Result<string>>;
 
     public class HandleExternalLoginResponseQueryHandler(
         AppManager appManager,
@@ -21,19 +24,26 @@ namespace eShop.AuthWebApi.Queries.Auth
         private readonly AuthDbContext context = context;
         private readonly string frontendUri = configuration["GeneralSettings:FrontendBaseUri"]!;
         private readonly string defaultRole = configuration["DefaultValues:DeafultRole"]!;
-        private readonly List<string> defaultPermissions = configuration.GetValue<List<string>>("DefaultValues:DeafultPermissions")!;
 
-        public async Task<Result<string>> Handle(HandleExternalLoginResponseQuery request, CancellationToken cancellationToken)
+        private readonly List<string> defaultPermissions =
+            configuration.GetValue<List<string>>("DefaultValues:DeafultPermissions")!;
+
+        public async Task<Result<string>> Handle(HandleExternalLoginResponseQuery request,
+            CancellationToken cancellationToken)
         {
-            var actionMessage = new ActionMessage("handle external login response of provider {0}", request.ExternalLoginInfo.LoginProvider);
+            var actionMessage = new ActionMessage("handle external login response of provider {0}",
+                request.ExternalLoginInfo.LoginProvider);
             try
             {
-                logger.LogInformation("Attempting to handle external login response of provider {provider}", request.ExternalLoginInfo.LoginProvider);
-                var email = request.ExternalLoginInfo.Principal.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value;
+                logger.LogInformation("Attempting to handle external login response of provider {provider}",
+                    request.ExternalLoginInfo.LoginProvider);
+                var email = request.ExternalLoginInfo.Principal.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)!
+                    .Value;
 
                 if (email is null)
                 {
-                    return logger.LogErrorWithException<string>(new NullCredentialsException(), actionMessage);
+                    return logger.LogErrorWithException<string>(
+                        new BadRequestException("No email address specified in credentials."), actionMessage);
                 }
 
                 var user = await appManager.UserManager.FindByEmailAsync(email);
@@ -41,24 +51,28 @@ namespace eShop.AuthWebApi.Queries.Auth
                 if (user is not null)
                 {
                     var userDto = new UserDTO(user.Email!, user.UserName!, user.Id);
-                    var securityToken = await context.UserAuthenticationTokens.AsNoTracking().SingleOrDefaultAsync(x => x.UserId == user.Id);
+                    var securityToken = await context.UserAuthenticationTokens.AsNoTracking()
+                        .SingleOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
 
                     if (securityToken is not null)
                     {
                         var tokens = tokenHandler.ReuseToken(securityToken.Token);
 
-                        logger.LogInformation("Successfully logged in with external provider {provider}", request.ExternalLoginInfo.LoginProvider);
-                        var link = UrlGenerator.ActionLink("/account/confirm-external-login", frontendUri, new { tokens!.AccessToken, tokens.RefreshToken, request.ReturnUri });
+                        logger.LogInformation("Successfully logged in with external provider {provider}",
+                            request.ExternalLoginInfo.LoginProvider);
+                        var link = UrlGenerator.ActionLink("/account/confirm-external-login", frontendUri,
+                            new { tokens!.AccessToken, tokens.RefreshToken, request.ReturnUri });
                         return new(link);
                     }
                     else
                     {
-
-                        logger.LogInformation("Successfully logged in with external provider {provider}", request.ExternalLoginInfo.LoginProvider);
+                        logger.LogInformation("Successfully logged in with external provider {provider}",
+                            request.ExternalLoginInfo.LoginProvider);
                         var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
                         var permissions = (await appManager.PermissionManager.GetUserPermisisonsAsync(user)).ToList();
                         var tokens = await tokenHandler.GenerateTokenAsync(user, roles, permissions);
-                        var link = UrlGenerator.ActionLink("/account/confirm-external-login", frontendUri, new { tokens!.AccessToken, tokens.RefreshToken, request.ReturnUri });
+                        var link = UrlGenerator.ActionLink("/account/confirm-external-login", frontendUri,
+                            new { tokens!.AccessToken, tokens.RefreshToken, request.ReturnUri });
                         return new(link);
                     }
                 }
@@ -76,42 +90,56 @@ namespace eShop.AuthWebApi.Queries.Auth
 
                     if (!result.Succeeded)
                     {
-                        return logger.LogErrorWithException<string>(new InvalidRegisterAttemptException(), actionMessage);
+                        return logger.LogErrorWithException<string>(
+                            new FailedOperationException($"Cannot create user account " +
+                                                         $"due to server error: {result.Errors.First().Description}"),
+                            actionMessage);
                     }
 
                     var assignDefaultRoleResult = await appManager.UserManager.AddToRoleAsync(user, defaultRole);
 
                     if (!assignDefaultRoleResult.Succeeded)
                     {
-                        return logger.LogErrorWithException<string>(new NotAssignRoleException(assignDefaultRoleResult.Errors.First().Description),
-                            new("assign default role for user with email {0}", user.Email));
+                        return logger.LogErrorWithException<string>(
+                            new FailedOperationException(
+                                $"Cannot assign role {defaultRole} to user with email {user.Email}" +
+                                $"due to server error: {assignDefaultRoleResult.Errors.First().Description}"),
+                            new ActionMessage("assign default role for user with email {0}", user.Email));
                     }
 
-                    var issuingPermissionsResult = await appManager.PermissionManager.IssuePermissionsToUserAsync(user, defaultPermissions);
+                    var issuingPermissionsResult =
+                        await appManager.PermissionManager.IssuePermissionsToUserAsync(user, defaultPermissions);
 
                     if (!issuingPermissionsResult.Succeeded)
                     {
-                        return logger.LogErrorWithException<string>(new NotIssuedPermissionsException(assignDefaultRoleResult.Errors),
+                        return logger.LogErrorWithException<string>(
+                            new FailedOperationException(
+                                $"Cannot assing permissions for user with email {user.Email} " +
+                                $"due to server error: {issuingPermissionsResult.Errors.First().Description}"),
                             new("issie default permissions for user with email {0}", user.Email));
                     }
 
-                    logger.LogInformation("Successfully created account with email {email} based on external login data from provider {provider}",
-                            email, request.ExternalLoginInfo.LoginProvider);
+                    logger.LogInformation(
+                        "Successfully created account with email {email} based on external login data from provider {provider}",
+                        email, request.ExternalLoginInfo.LoginProvider);
 
-                    await emailSender.SendAccountRegisteredOnExternalLoginMessage(new AccountRegisteredOnExternalLoginMessage()
-                    {
-                        To = email,
-                        Subject = $"Account created with {request.ExternalLoginInfo!.ProviderDisplayName} sign in",
-                        TempPassword = tempPassword,
-                        UserName = email,
-                        ProviderName = request.ExternalLoginInfo!.ProviderDisplayName!
-                    });
+                    await emailSender.SendAccountRegisteredOnExternalLoginMessage(
+                        new AccountRegisteredOnExternalLoginMessage()
+                        {
+                            To = email,
+                            Subject = $"Account created with {request.ExternalLoginInfo!.ProviderDisplayName} sign in",
+                            TempPassword = tempPassword,
+                            UserName = email,
+                            ProviderName = request.ExternalLoginInfo!.ProviderDisplayName!
+                        });
 
-                    logger.LogInformation("Successfully logged in with external provider {provider}", request.ExternalLoginInfo.LoginProvider);
+                    logger.LogInformation("Successfully logged in with external provider {provider}",
+                        request.ExternalLoginInfo.LoginProvider);
                     var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
                     var permissions = (await appManager.PermissionManager.GetUserPermisisonsAsync(user)).ToList();
                     var token = await tokenHandler.GenerateTokenAsync(user, roles, permissions);
-                    var link = UrlGenerator.ActionLink("/account/confirm-external-login", frontendUri, new { Token = token, ReturnUri = request.ReturnUri });
+                    var link = UrlGenerator.ActionLink("/account/confirm-external-login", frontendUri,
+                        new { Token = token, ReturnUri = request.ReturnUri });
                     return new(link);
                 }
             }

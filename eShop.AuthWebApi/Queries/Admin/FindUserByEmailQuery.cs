@@ -1,5 +1,4 @@
-﻿
-using eShop.Domain.Entities;
+﻿using eShop.Domain.Entities;
 using eShop.Domain.Entities.Admin;
 using Microsoft.OpenApi.Validations;
 using System.IO;
@@ -19,7 +18,8 @@ namespace eShop.AuthWebApi.Queries.Admin
         private readonly IMapper mapper = mapper;
         private readonly AuthDbContext context = context;
 
-        public async Task<Result<FindUserResponse>> Handle(FindUserByEmailQuery request, CancellationToken cancellationToken)
+        public async Task<Result<FindUserResponse>> Handle(FindUserByEmailQuery request,
+            CancellationToken cancellationToken)
         {
             var actionMessage = new ActionMessage("find user with email {0}", request.Email);
             try
@@ -30,17 +30,20 @@ namespace eShop.AuthWebApi.Queries.Admin
 
                 if (user is null)
                 {
-                    return logger.LogErrorWithException<FindUserResponse>(new NotFoundUserByEmailException(request.Email), actionMessage);
+                    return logger.LogInformationWithException<FindUserResponse>(
+                        new NotFoundException($"Cannot find user with email {request.Email}."), actionMessage);
                 }
 
                 var accountData = mapper.Map<AccountData>(user);
-                var personalData = await context.PersonalData.AsNoTracking().FirstOrDefaultAsync(x => x.UserId == user.Id);
+                var personalData = await context.PersonalData.AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
                 var rolesList = await appManager.UserManager.GetRolesAsync(user);
                 var permissions = await appManager.PermissionManager.GetUserPermisisonsAsync(user);
 
                 if (rolesList is null || !rolesList.Any())
                 {
-                    return logger.LogErrorWithException<FindUserResponse>(new NotFoundRolesException(), actionMessage);
+                    return logger.LogInformationWithException<FindUserResponse>(
+                        new NotFoundException($"Cannot find roles for user with email {user.Email}."), actionMessage);
                 }
 
                 var permissionData = new PermissionsData() { Id = Guid.Parse(user.Id) };
@@ -50,7 +53,8 @@ namespace eShop.AuthWebApi.Queries.Admin
 
                     if (roleInfo is null)
                     {
-                        return logger.LogErrorWithException<FindUserResponse>(new NotFoundRoleException(role), actionMessage);
+                        return logger.LogInformationWithException<FindUserResponse>(
+                            new NotFoundException($"Cannot find role {role}."), actionMessage);
                     }
 
                     permissionData.Roles.Add(new RoleInfo()
@@ -61,13 +65,15 @@ namespace eShop.AuthWebApi.Queries.Admin
                     });
                 }
 
-                foreach(var permission in permissions)
+                foreach (var permission in permissions)
                 {
-                    var permissionInfo = await context.Permissions.AsNoTracking().SingleOrDefaultAsync(x => x.Name == permission);
+                    var permissionInfo = await context.Permissions.AsNoTracking()
+                        .SingleOrDefaultAsync(x => x.Name == permission, cancellationToken: cancellationToken);
 
                     if (permissionInfo is null)
                     {
-                        return logger.LogErrorWithException<FindUserResponse>(new NotFoundPermissison(permission), actionMessage);
+                        return logger.LogInformationWithException<FindUserResponse>(
+                            new NotFoundException($"Cannot find permission {permission}."), actionMessage);
                     }
 
                     permissionData.Permissions.Add(new Permission()
@@ -80,7 +86,7 @@ namespace eShop.AuthWebApi.Queries.Admin
                 var response = new FindUserResponse()
                 {
                     AccountData = accountData,
-                    PersonalData = personalData ?? new(),
+                    PersonalData = personalData ?? new PersonalData(),
                     PermissionsData = permissionData
                 };
 

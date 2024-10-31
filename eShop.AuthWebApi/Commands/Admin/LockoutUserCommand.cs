@@ -19,9 +19,11 @@ namespace eShop.AuthWebApi.Commands.Admin
 
                 var user = await appManager.UserManager.FindByIdAsync(request.Request.UserId);
 
-                if (user == null)
+                if (user is null)
                 {
-                    return logger.LogErrorWithException<LockoutUserResponse>(new NotFoundUserByIdException(request.Request.UserId), actionMessage, request.Request.UserId);
+                    return logger.LogInformationWithException<LockoutUserResponse>(
+                        new NotFoundException($"Cannot find user with ID {request.Request.UserId}."), 
+                        actionMessage, request.Request.UserId);
                 }
 
                 if (request.Request.Permanent)
@@ -30,7 +32,8 @@ namespace eShop.AuthWebApi.Commands.Admin
                     await appManager.UserManager.SetLockoutEnabledAsync(user, true);
                     await appManager.UserManager.SetLockoutEndDateAsync(user, lockoutEndDate);
 
-                    logger.LogInformation("User with ID {id} was successfully permanently banned. Request ID {requestID}.", request.Request.UserId, request.Request.RequestId);
+                    logger.LogInformation("User with ID {id} was successfully permanently banned. Request ID {requestID}.", 
+                        request.Request.UserId, request.Request.RequestId);
                     return new(new LockoutUserResponse()
                     {
                         LockoutEnabled = true,

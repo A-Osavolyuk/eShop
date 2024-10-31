@@ -20,7 +20,8 @@
 
                 if (roles.Count == 0)
                 {
-                    return logger.LogErrorWithException<IEnumerable<RoleDto>>(new NotFoundRolesException(), actionMessage);
+                    return logger.LogInformationWithException<IEnumerable<RoleDto>>(
+                        new NotFoundException("Cannot find roles."), actionMessage);
                 }
 
                 var response = new List<RoleDto>();
@@ -28,12 +29,13 @@
                 {
                     if (role is null)
                     {
-                        return logger.LogErrorWithException<IEnumerable<RoleDto>>(new NullableRoleException(), actionMessage);
+                        return logger.LogErrorWithException<IEnumerable<RoleDto>>(
+                            new NullReferenceException("Role from role list is null"), actionMessage);
                     }
 
                     var memberCount = await appManager.RoleManager.Roles
                         .Where(x => x.Id == role.Id)
-                        .CountAsync();
+                        .CountAsync(cancellationToken: cancellationToken);
 
                     response.Add(new()
                     {

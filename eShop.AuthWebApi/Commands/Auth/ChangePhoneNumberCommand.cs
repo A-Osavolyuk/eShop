@@ -30,7 +30,7 @@ namespace eShop.AuthWebApi.Commands.Auth
 
                 if (!validationResult.IsValid)
                 {
-                    return logger.LogErrorWithException<ChangePhoneNumberResponse>(new FailedValidationException(validationResult.Errors),
+                    return logger.LogInformationWithException<ChangePhoneNumberResponse>(new FailedValidationException(validationResult.Errors),
                             actionMessage, request.Request.RequestId);
                 }
 
@@ -38,7 +38,8 @@ namespace eShop.AuthWebApi.Commands.Auth
 
                 if (user is null)
                 {
-                    return logger.LogErrorWithException<ChangePhoneNumberResponse>(new NotFoundUserByEmailException(request.Request.Email),
+                    return logger.LogInformationWithException<ChangePhoneNumberResponse>(
+                        new NotFoundException($"Cannot find user with email {request.Request.Email}."),
                         actionMessage, request.Request.RequestId);
                 }
 

@@ -19,7 +19,8 @@
 
                 if (user is null)
                 {
-                    return logger.LogErrorWithException<GetPhoneNumberResponse>(new NotFoundUserByEmailException(request.Email), actionMessage);
+                    return logger.LogInformationWithException<GetPhoneNumberResponse>(
+                        new NotFoundException($"Cannot find user with email {request.Email}."), actionMessage);
                 }
 
                 logger.LogInformation("Successfully found a phone number of user with email {email}", request.Email);

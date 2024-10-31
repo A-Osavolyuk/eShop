@@ -15,17 +15,22 @@ namespace eShop.AuthWebApi.Commands.Auth
         private readonly IRequestClient<CreateCartRequest> requestClient = cartRequestClient;
         private readonly IEmailSender emailSender = emailSender;
 
-        public async Task<Result<ConfirmEmailResponse>> Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
+        public async Task<Result<ConfirmEmailResponse>> Handle(ConfirmEmailCommand request,
+            CancellationToken cancellationToken)
         {
-            var actionMessage = new ActionMessage("confirm email address of user with email {0}", request.Request.Email);
+            var actionMessage =
+                new ActionMessage("confirm email address of user with email {0}", request.Request.Email);
             try
             {
-                logger.LogInformation("Attempting to confirm email of user with email {email}. Request ID {requestId}", request.Request.Email, request.Request.RequestId);
+                logger.LogInformation("Attempting to confirm email of user with email {email}. Request ID {requestId}",
+                    request.Request.Email, request.Request.RequestId);
                 var user = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
 
                 if (user is null)
                 {
-                    return logger.LogErrorWithException<ConfirmEmailResponse>(new NotFoundUserByEmailException(request.Request.Email), actionMessage, request.Request.RequestId);
+                    return logger.LogInformationWithException<ConfirmEmailResponse>(
+                        new NotFoundException($"Cannot find user with email {request.Request.Email}."),
+                        actionMessage, request.Request.RequestId);
                 }
 
                 var token = Uri.UnescapeDataString(request.Request.Token);
@@ -33,11 +38,16 @@ namespace eShop.AuthWebApi.Commands.Auth
 
                 if (!confirmResult.Succeeded)
                 {
-                    return logger.LogErrorWithException<ConfirmEmailResponse>(new NotConfirmedEmailException(), actionMessage, request.Request.RequestId);
+                    return logger.LogErrorWithException<ConfirmEmailResponse>(
+                        new FailedOperationException(
+                            $"Cannot confirm email address of user with email {request.Request.Email} " +
+                            $"due to server error: {confirmResult.Errors.First().Description}."),
+                        actionMessage, request.Request.RequestId);
                 }
 
-                logger.LogInformation("Successfully confirmed email address of user with email {email}. Request ID {requestId}",
-                            request.Request.Email, request.Request.RequestId);
+                logger.LogInformation(
+                    "Successfully confirmed email address of user with email {email}. Request ID {requestId}",
+                    request.Request.Email, request.Request.RequestId);
 
                 await emailSender.SendAccountRegisteredMessage(new AccountRegisteredMessage()
                 {
@@ -54,12 +64,13 @@ namespace eShop.AuthWebApi.Commands.Auth
 
                 if (!response.Message.IsSucceeded)
                 {
-                    return logger.LogErrorWithException<ConfirmEmailResponse>(new FailedRpcException(response.Message.ErrorMessage),
+                    return logger.LogErrorWithException<ConfirmEmailResponse>(
+                        new FailedRpcException(response.Message.ErrorMessage),
                         actionMessage, request.Request.RequestId);
                 }
 
                 logger.LogInformation("Successfully created cart for user with email {email}. Request ID {requestId}",
-                        request.Request.Email, request.Request.RequestId);
+                    request.Request.Email, request.Request.RequestId);
                 return new(new ConfirmEmailResponse() { Message = "Your email address was successfully confirmed." });
             }
             catch (Exception ex)

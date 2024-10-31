@@ -40,5 +40,19 @@ namespace eShop.Application.Extensions
         {
             logger.LogError("Failed to {action}: {message}.", string.Format(actionMessage.Message, actionMessage.Args), exception.Message);
         }
+        
+        public static Result<TResponse> LogInformationWithException<TResponse>(this ILogger logger, Exception exception, ActionMessage actionMessage, Guid requestId)
+        {
+            logger.LogInformation("Failed to {action}: {message}. Request ID {requestId}", string.Format(actionMessage.Message, actionMessage.Args), exception.Message, requestId);
+
+            return new(exception);
+        }
+
+        public static Result<TResponse> LogInformationWithException<TResponse>(this ILogger logger, Exception exception, ActionMessage actionMessage)
+        {
+            logger.LogInformation("Failed to {action}: {message}.", string.Format(actionMessage.Message, actionMessage.Args), exception.Message);
+
+            return new(exception);
+        }
     }
 }

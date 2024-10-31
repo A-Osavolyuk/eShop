@@ -22,7 +22,8 @@ namespace eShop.AuthWebApi.Queries.Admin
 
                 if (!permissions.Any()) 
                 {
-                    return logger.LogErrorWithException<IEnumerable<Permission>>(new NoPermissionsException(), actionMessage);
+                    return logger.LogInformationWithException<IEnumerable<Permission>>(
+                        new NotFoundException("Cannot find permissions."), actionMessage);
                 }
 
                 return permissions.ToList();

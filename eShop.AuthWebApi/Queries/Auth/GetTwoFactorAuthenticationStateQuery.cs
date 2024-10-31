@@ -18,7 +18,8 @@
 
                 if (user is null)
                 {
-                    return logger.LogErrorWithException<TwoFactorAuthenticationStateResponse>(new NotFoundUserByEmailException(request.Email), actionMessage);
+                    return logger.LogInformationWithException<TwoFactorAuthenticationStateResponse>(
+                        new NotFoundException($"Cannot find user with email {request.Email}."), actionMessage);
                 }
 
                 logger.LogInformation("Successfully got 2FA state of user with email {email}", request.Email);

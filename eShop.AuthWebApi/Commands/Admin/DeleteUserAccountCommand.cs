@@ -1,7 +1,7 @@
-﻿
-namespace eShop.AuthWebApi.Commands.Admin
+﻿namespace eShop.AuthWebApi.Commands.Admin
 {
-    public record DeleteUserAccountCommand(DeleteUserAccountRequest Request) : IRequest<Result<DeleteUserAccountResponse>>;
+    public record DeleteUserAccountCommand(DeleteUserAccountRequest Request)
+        : IRequest<Result<DeleteUserAccountResponse>>;
 
     public class DeleteUserAccountCommandHandler(
         AppManager appManager,
@@ -12,65 +12,88 @@ namespace eShop.AuthWebApi.Commands.Admin
         private readonly ILogger<DeleteUserAccountCommandHandler> logger = logger;
         private readonly AuthDbContext context = context;
 
-        public async Task<Result<DeleteUserAccountResponse>> Handle(DeleteUserAccountCommand request, CancellationToken cancellationToken)
+        public async Task<Result<DeleteUserAccountResponse>> Handle(DeleteUserAccountCommand request,
+            CancellationToken cancellationToken)
         {
             var actionMessage = new ActionMessage("delete user account with ID {0}", request.Request.UserId);
             try
             {
-                logger.LogInformation("Atttempting to delete user account with ID {id}. Request ID {requestId}", request.Request.UserId, request.Request.RequestId);
+                logger.LogInformation("Attempting to delete user account with ID {id}. Request ID {requestId}",
+                    request.Request.UserId, request.Request.RequestId);
 
                 var user = await appManager.UserManager.FindByIdAsync(request.Request.UserId);
 
-                if(user is null)
+                if (user is null)
                 {
-                    return logger.LogErrorWithException<DeleteUserAccountResponse>(new NotFoundUserByIdException(request.Request.RequestId), actionMessage, request.Request.RequestId);
+                    return logger.LogInformationWithException<DeleteUserAccountResponse>(
+                        new NotFoundException($"Cannot find user with ID {request.Request.UserId}"),
+                        actionMessage, request.Request.RequestId);
                 }
 
                 var rolesResult = await appManager.UserManager.RemoveFromRolesAsync(user);
 
                 if (!rolesResult.Succeeded)
                 {
-                    return logger.LogErrorWithException<DeleteUserAccountResponse>(new NotRemovedRoleException(rolesResult.Errors.First().Description), 
+                    return logger.LogErrorWithException<DeleteUserAccountResponse>(
+                        new FailedOperationException(
+                            $"Cannot remove roles from user with ID {request.Request.UserId} " +
+                            $"due to server error: {rolesResult.Errors.First().Description}"),
                         actionMessage, request.Request.RequestId);
                 }
 
-                var permisisonsResult = await appManager.PermissionManager.RemoveUserFromPermissionsAsync(user);
+                var permissionsResult = await appManager.PermissionManager.RemoveUserFromPermissionsAsync(user);
 
-                if (!permisisonsResult.Succeeded)
+                if (!permissionsResult.Succeeded)
                 {
-                    return logger.LogErrorWithException<DeleteUserAccountResponse>(new NotRemovedPermissionException(rolesResult.Errors),
+                    return logger.LogErrorWithException<DeleteUserAccountResponse>(
+                        new FailedOperationException(
+                            $"Cannot remove permissions from user with ID {request.Request.UserId} " +
+                            $"due to server error: {permissionsResult.Errors.First().Description}"),
                         actionMessage, request.Request.RequestId);
                 }
 
-                var personalData = await context.PersonalData.AsNoTracking().SingleOrDefaultAsync(x => x.UserId == user.Id);
+                var personalData =
+                    await context.PersonalData.AsNoTracking().SingleOrDefaultAsync(x => x.UserId == user.Id,
+                        cancellationToken: cancellationToken);
 
-                if (personalData is not null) 
-                { 
+                if (personalData is not null)
+                {
                     context.PersonalData.Remove(personalData);
-                    await context.SaveChangesAsync();
+                    await context.SaveChangesAsync(cancellationToken);
                 }
 
-                var userTokens = await context.UserAuthenticationTokens.AsNoTracking().SingleOrDefaultAsync(x => x.UserId == user.Id);
+                var userTokens = await context.UserAuthenticationTokens.AsNoTracking()
+                    .SingleOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
 
                 if (userTokens is not null)
                 {
                     context.UserAuthenticationTokens.Remove(userTokens);
-                    await context.SaveChangesAsync();
+                    await context.SaveChangesAsync(cancellationToken);
                 }
 
                 var accountResult = await appManager.UserManager.DeleteAsync(user);
 
                 if (!accountResult.Succeeded)
                 {
-                    return logger.LogErrorWithException<DeleteUserAccountResponse>(new NotDeletedUserAccountException(accountResult.Errors), actionMessage, request.Request.RequestId);
+                    return logger.LogErrorWithException<DeleteUserAccountResponse>(
+                        new FailedOperationException($"Cannot delete user account with ID {request.Request.UserId} " +
+                                                     $"due to server error: {accountResult.Errors.First().Description}"),
+                        actionMessage, request.Request.RequestId);
                 }
 
-                logger.LogInformation("Successfully deleted user account with ID {id}. Request ID {requestId}", request.Request.UserId, request.Request.RequestId);
-                return new(new DeleteUserAccountResponse() { Message = "User account was successfully deleted.", Succeeded = true });
+                logger.LogInformation("Successfully deleted user account with ID {id}. Request ID {requestId}",
+                    request.Request.UserId, request.Request.RequestId);
+
+                return new(
+                    new DeleteUserAccountResponse()
+                    {
+                        Message = "User account was successfully deleted.", Succeeded = true
+                    });
             }
             catch (Exception ex)
             {
-                return logger.LogErrorWithException<DeleteUserAccountResponse>(ex, actionMessage, request.Request.RequestId);
+                return logger.LogErrorWithException<DeleteUserAccountResponse>(ex, actionMessage,
+                    request.Request.RequestId);
             }
         }
     }

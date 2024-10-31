@@ -15,7 +15,8 @@ namespace eShop.AuthWebApi.Queries.Admin
         private readonly AuthDbContext context = context;
         private readonly IMapper mapper = mapper;
 
-        public async Task<Result<IEnumerable<UserData>>> Handle(GetUsersListQuery request, CancellationToken cancellationToken)
+        public async Task<Result<IEnumerable<UserData>>> Handle(GetUsersListQuery request,
+            CancellationToken cancellationToken)
         {
             var actionMessage = new ActionMessage("get all users list");
             try
@@ -26,7 +27,8 @@ namespace eShop.AuthWebApi.Queries.Admin
 
                 if (usersList is null)
                 {
-                    return logger.LogErrorWithException<IEnumerable<UserData>>(new NoUsersException(), actionMessage);
+                    return logger.LogInformationWithException<IEnumerable<UserData>>(
+                        new NotFoundException("Cannot find any users."), actionMessage);
                 }
 
                 if (!usersList.Any())
@@ -40,12 +42,14 @@ namespace eShop.AuthWebApi.Queries.Admin
                 foreach (var user in usersList)
                 {
                     var accountData = mapper.Map<AccountData>(user);
-                    var personalData = await context.PersonalData.AsNoTracking().FirstOrDefaultAsync(x => x.UserId == user.Id);
+                    var personalData = await context.PersonalData.AsNoTracking()
+                        .FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
                     var rolesList = await appManager.UserManager.GetRolesAsync(user);
 
                     if (rolesList is null || !rolesList.Any())
                     {
-                        return logger.LogErrorWithException<IEnumerable<UserData>>(new NotFoundRolesException(), actionMessage);
+                        return logger.LogInformationWithException<IEnumerable<UserData>>(
+                            new NotFoundException($"Cannot find roles for user with ID {user.Id}."), actionMessage);
                     }
 
                     var rolesData = await appManager.RoleManager.GetRolesInfoAsync(rolesList);
@@ -53,18 +57,21 @@ namespace eShop.AuthWebApi.Queries.Admin
 
                     if (rolesData is null || !rolesData.Any())
                     {
-                        return logger.LogErrorWithException<IEnumerable<UserData>>(new NoRoleInfoException(), actionMessage);
+                        return logger.LogInformationWithException<IEnumerable<UserData>>(
+                            new NotFoundException("Cannot find roles data."), actionMessage);
                     }
 
                     var permissionsList = new List<Permission>();
 
                     foreach (var permission in permissions)
                     {
-                        var permissionInfo = await context.Permissions.AsNoTracking().SingleOrDefaultAsync(x => x.Name == permission);
+                        var permissionInfo = await context.Permissions.AsNoTracking()
+                            .SingleOrDefaultAsync(x => x.Name == permission, cancellationToken: cancellationToken);
 
                         if (permissionInfo is null)
                         {
-                            return logger.LogErrorWithException<IEnumerable<UserData>>(new NotFoundPermissison(permission), actionMessage);
+                            return logger.LogInformationWithException<IEnumerable<UserData>>(
+                                new NotFoundException($"Cannot find permission {permission}."), actionMessage);
                         }
 
                         permissionsList.Add(new Permission()

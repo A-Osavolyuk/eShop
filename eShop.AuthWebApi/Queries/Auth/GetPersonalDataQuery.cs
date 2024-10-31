@@ -13,7 +13,8 @@
         private readonly IMapper mapper = mapper;
         private readonly AuthDbContext context = context;
 
-        public async Task<Result<PersonalDataResponse>> Handle(GetPersonalDataQuery request, CancellationToken cancellationToken)
+        public async Task<Result<PersonalDataResponse>> Handle(GetPersonalDataQuery request,
+            CancellationToken cancellationToken)
         {
             var actionMessage = new ActionMessage("find personal data of user with email {0}", request.Email);
             try
@@ -23,14 +24,17 @@
 
                 if (user is null)
                 {
-                    return logger.LogErrorWithException<PersonalDataResponse>(new NotFoundUserByEmailException(request.Email), actionMessage);
+                    return logger.LogInformationWithException<PersonalDataResponse>(
+                        new NotFoundException($"Cannot find user with email {request.Email}."), actionMessage);
                 }
 
-                var personalData = await context.PersonalData.AsNoTracking().FirstOrDefaultAsync(x => x.UserId == user.Id);
+                var personalData = await context.PersonalData.AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
 
                 if (personalData is null)
                 {
-                    return logger.LogErrorWithException<PersonalDataResponse>(new UserHasNoPersonalDataException(user.Id), actionMessage);
+                    return logger.LogInformationWithException<PersonalDataResponse>(
+                        new NotFoundException($"Cannot find or user with email {user.Email} has no personal data."), actionMessage);
                 }
 
                 logger.LogInformation("Successfully found personal data of user with email {email}", request.Email);
