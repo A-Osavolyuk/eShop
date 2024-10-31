@@ -25,7 +25,8 @@ public class GetCartQueryHandler(
 
             if (cart is null)
             {
-                return logger.LogErrorWithException<CartDto>(new NotFoundCartException(request.Id), actionMessage);
+                return logger.LogInformationWithException<CartDto>(
+                    new NotFoundException($"Cannot find cart with user ID {request.Id}."), actionMessage);
             }
             
             logger.LogInformation("Cart with ID {id} was successfully found.", request.Id);

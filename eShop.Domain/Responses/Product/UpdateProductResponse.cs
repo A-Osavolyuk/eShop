@@ -2,7 +2,7 @@
 {
     public class UpdateProductResponse
     {
-        public Guid ProductId { get; set; }
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public string Message { get; set; } = string.Empty;
+        public bool IsSucceeded { get; set; }
     }
 }

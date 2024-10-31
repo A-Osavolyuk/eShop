@@ -2,7 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using eShop.Application.Extensions;
 using eShop.Domain.Common;
-using eShop.ProductWebApi.Exceptions;
+using eShop.Domain.Exceptions;
 using MediatR;
 
 namespace eShop.ProductWebApi.Queries.Brands
@@ -25,11 +25,14 @@ namespace eShop.ProductWebApi.Queries.Brands
             {
                 logger.LogInformation("Attempting to find brand with name {name}", request.Name);
 
-                var brand = await context.Brands.AsNoTracking().ProjectTo<BrandDTO>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Name == request.Name);
+                var brand = await context.Brands.AsNoTracking()
+                    .ProjectTo<BrandDTO>(mapper.ConfigurationProvider)
+                    .FirstOrDefaultAsync(x => x.Name == request.Name, cancellationToken: cancellationToken);
 
                 if (brand is null)
                 {
-                    return logger.LogErrorWithException<BrandDTO>(new NotFoundBrandException(request.Name), actionMessage);
+                    return logger.LogInformationWithException<BrandDTO>(
+                        new NotFoundException($"Cannot find brand {request.Name}."), actionMessage);
                 }
 
                 logger.LogInformation("Successfully found brand with name {name}", request.Name);

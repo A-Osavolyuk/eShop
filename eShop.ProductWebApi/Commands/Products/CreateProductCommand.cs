@@ -5,7 +5,7 @@ using eShop.Domain.Common;
 using eShop.Domain.Enums;
 using eShop.Domain.Exceptions;
 using eShop.Domain.Requests.Product;
-using eShop.ProductWebApi.Exceptions;
+using eShop.Domain.Responses.Product;
 using FluentValidation;
 using LanguageExt;
 using MediatR;
@@ -13,20 +13,20 @@ using Unit = LanguageExt.Unit;
 
 namespace eShop.ProductWebApi.Commands.Products
 {
-    public record CreateProductCommand(IEnumerable<CreateProductRequest> Requests) : IRequest<Result<Unit>>;
+    public record CreateProductCommand(IEnumerable<CreateProductRequest> Requests) : IRequest<Result<CreateProductResponse>>;
 
     public class CreateProductCommandHandler(
         ProductDbContext context,
         ILogger<CreateProductCommandHandler> logger,
         IValidator<CreateProductRequest> validator,
-        IMapper mapper) : IRequestHandler<CreateProductCommand, Result<Unit>>
+        IMapper mapper) : IRequestHandler<CreateProductCommand, Result<CreateProductResponse>>
     {
         private readonly ProductDbContext context = context;
         private readonly ILogger<CreateProductCommandHandler> logger = logger;
         private readonly IValidator<CreateProductRequest> validator = validator;
         private readonly IMapper mapper = mapper;
 
-        public async Task<Result<Unit>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+        public async Task<Result<CreateProductResponse>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
             var actionMessage = new ActionMessage("create product(s)");
             try
@@ -39,7 +39,8 @@ namespace eShop.ProductWebApi.Commands.Products
 
                     if (!validationResult.IsValid)
                     {
-                        return logger.LogErrorWithException<Unit>(new FailedValidationException(validationResult.Errors), actionMessage);
+                        return logger.LogInformationWithException<CreateProductResponse>(
+                            new FailedValidationException(validationResult.Errors), actionMessage);
                     }
                 }
 
@@ -55,14 +56,16 @@ namespace eShop.ProductWebApi.Commands.Products
                 
                 if (!productsList.Any())
                 {
-                    return logger.LogErrorWithException<Unit>(new EmptyRequestException(), actionMessage);
+                    return logger.LogInformationWithException<CreateProductResponse>(
+                        new BadRequestException("Request could not to be empty."), actionMessage);
                 }
 
                 var brandExists = await context.Brands.AsNoTracking().AnyAsync(_ => _.Id == productsList.First().BrandId, cancellationToken);
 
                 if (!brandExists)
                 {
-                    return logger.LogErrorWithException<Unit>(new NotFoundBrandException(productsList.First().BrandId), actionMessage);
+                    return logger.LogErrorWithException<CreateProductResponse>(
+                        new NotFoundException($"Cannot find brand with ID {productsList.First().BrandId}"), actionMessage);
                 }
 
                 await context.Products.AddRangeAsync(productsList, cancellationToken);
@@ -70,15 +73,19 @@ namespace eShop.ProductWebApi.Commands.Products
 
                 logger.LogInformation($"Product(s) was(were) successfully created.");
 
-                return new(new Unit());
+                return new(new CreateProductResponse()
+                {
+                    Message = "Product created successfully",
+                    IsSucceeded = true
+                });
             }
             catch (DbUpdateException dbUpdateException)
             {
-                return logger.LogErrorWithException<Unit>(dbUpdateException, actionMessage);
+                return logger.LogErrorWithException<CreateProductResponse>(dbUpdateException, actionMessage);
             }
             catch (Exception ex)
             {
-                return logger.LogErrorWithException<Unit>(ex, actionMessage);
+                return logger.LogErrorWithException<CreateProductResponse>(ex, actionMessage);
             }
         }
     }

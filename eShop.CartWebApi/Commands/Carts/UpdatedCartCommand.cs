@@ -29,7 +29,8 @@ public class UpdatedCartCommandHandler(
 
             if (cart is null)
             {
-                return logger.LogErrorWithException<UpdateCartResponse>(new NotFoundCartException(request.Request.CartId), 
+                return logger.LogInformationWithException<UpdateCartResponse>(
+                    new NotFoundException($"Cannot find cart with ID {request.Request.CartId}."), 
                     actionMessage, request.Request.RequestId);
             }
             else

@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using eShop.Application.Extensions;
 using eShop.Domain.Common;
+using eShop.Domain.Exceptions;
 using eShop.Domain.Responses.Product;
-using eShop.ProductWebApi.Exceptions;
 using MediatR;
 
 namespace eShop.ProductWebApi.Queries.Products
@@ -20,10 +20,10 @@ namespace eShop.ProductWebApi.Queries.Products
 
         public async Task<Result<SearchProductResponse>> Handle(SearchProductByNameQuery request, CancellationToken cancellationToken)
         {
-            var actionMessage = new ActionMessage("search product(s) with name caontaining '{0}'", request.Name);
+            var actionMessage = new ActionMessage("search product(s) with name containing '{0}'", request.Name);
             try
             {
-                logger.LogInformation("Attmepting to search product(s) with name containing {Name}.", request.Name);
+                logger.LogInformation("Attempting to search product(s) with name containing {Name}.", request.Name);
 
                 var quantity = await context.Products.AsNoTracking().Where(x => x.Name.Contains(request.Name)).CountAsync();
 
@@ -33,7 +33,8 @@ namespace eShop.ProductWebApi.Queries.Products
                     return new(new SearchProductResponse() { Found = true, Count = quantity });
                 }
 
-                return logger.LogErrorWithException<SearchProductResponse>(new NotFoundProductException(request.Name), actionMessage);
+                return logger.LogInformationWithException<SearchProductResponse>(
+                    new NotFoundException($"Cannot find product containing name {request.Name}."), actionMessage);
             }
             catch (Exception ex)
             {

@@ -3,7 +3,7 @@ using AutoMapper.QueryableExtensions;
 using eShop.Application.Extensions;
 using eShop.Domain.Common;
 using eShop.Domain.Enums;
-using eShop.ProductWebApi.Exceptions;
+using eShop.Domain.Exceptions;
 using MediatR;
 
 namespace eShop.ProductWebApi.Queries.Products
@@ -26,11 +26,14 @@ namespace eShop.ProductWebApi.Queries.Products
             {
                 logger.LogInformation("Attempting to find products with variant ID {id}.", request.VariantId);
 
-                var product = await context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.VariantId == request.VariantId);
+                var product = await context.Products
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.VariantId == request.VariantId, cancellationToken: cancellationToken);
 
                 if (product is null)
                 {
-                    return logger.LogErrorWithException<IEnumerable<ProductDTO>>(new NotFoundProductGroupException(request.VariantId), actionMessage);
+                    return logger.LogErrorWithException<IEnumerable<ProductDTO>>(
+                        new NotFoundException($"Cannot find product with variant ID {request.VariantId}"), actionMessage);
                 }
 
                 var output = product.Category switch

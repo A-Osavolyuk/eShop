@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using eShop.Application.Extensions;
 using eShop.Domain.Common;
+using eShop.Domain.Exceptions;
 using eShop.Domain.Responses.Product;
-using eShop.ProductWebApi.Exceptions;
 using MediatR;
 
 namespace eShop.ProductWebApi.Queries.Products
@@ -25,11 +25,14 @@ namespace eShop.ProductWebApi.Queries.Products
             {
                 logger.LogInformation("Attempting to search product with article {Article}.", request.Article);
 
-                var product = await context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Article == request.Article);
+                var product = await context.Products
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Article == request.Article, cancellationToken: cancellationToken);
 
                 if (product is null)
                 {
-                    return logger.LogErrorWithException<SearchProductResponse>(new NotFoundProductException(request.Article), actionMessage);
+                    return logger.LogInformationWithException<SearchProductResponse>(
+                        new NotFoundException($"Cannot find product with article {request.Article}"), actionMessage);
                 }
 
                 logger.LogInformation("Successfully found product with article {Article}.", request.Article);

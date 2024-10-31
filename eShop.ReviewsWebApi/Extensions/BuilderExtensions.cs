@@ -1,5 +1,4 @@
 ﻿using eShop.ReviewsWebApi.Receivers;
-using eShop.ReviewsWebApi.Repositories;
 using MassTransit;
 
 namespace eShop.ReviewsWebApi.Extensions
@@ -57,9 +56,6 @@ namespace eShop.ReviewsWebApi.Extensions
 
         public static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
         {
-            builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
-            builder.Services.AddScoped<ICommentRepository, CommentRepository>();
-
             return builder;
         }
 

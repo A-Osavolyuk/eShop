@@ -3,7 +3,7 @@ using AutoMapper.QueryableExtensions;
 using eShop.Application.Extensions;
 using eShop.Domain.Common;
 using eShop.Domain.Enums;
-using eShop.ProductWebApi.Exceptions;
+using eShop.Domain.Exceptions;
 using MediatR;
 
 namespace eShop.ProductWebApi.Queries.Products
@@ -26,11 +26,13 @@ namespace eShop.ProductWebApi.Queries.Products
             {
                 logger.LogInformation("Attempting to find product with article {article}", request.Article);
 
-                var product = await context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Article == request.Article);
+                var product = await context.Products.AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Article == request.Article, cancellationToken: cancellationToken);
 
                 if (product is null)
                 {
-                    return logger.LogErrorWithException<ProductDTO>(new NotFoundProductException(request.Article), actionMessage);
+                    return logger.LogInformationWithException<ProductDTO>(
+                        new NotFoundException($"Cannot find product with article {request.Article}"), actionMessage);
                 }
 
                 var output = product.Category switch

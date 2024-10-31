@@ -1,7 +1,6 @@
 ﻿global using AutoMapper;
 global using eShop.Application.Extensions;
 global using eShop.Application.Utilities;
-global using eShop.CartWebApi.Exceptions;
 global using eShop.CartWebApi.Extensions;
 global using eShop.Domain.DTOs;
 global using eShop.Domain.Entities;

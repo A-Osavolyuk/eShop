@@ -27,7 +27,8 @@ public class GetFavoritesQueryHandler(
 
             if (favorites is null)
             {
-                return logger.LogErrorWithException<FavoritesDto>(new NotFoundFavoritesByUserIdException(request.UserId), actionMessage);
+                return logger.LogInformationWithException<FavoritesDto>(
+                    new NotFoundException($"Cannot find favorites with user ID {request.UserId}"), actionMessage);
             }
             
             logger.LogInformation("Successfully found favorites with ID {id}.", request.UserId);

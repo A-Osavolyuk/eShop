@@ -28,7 +28,8 @@ public class UpdstateFavoritesCommandHandler(
 
             if (favorites is null)
             {
-                return logger.LogErrorWithException<UpdateFavoritesResponse>(new NotFoundFavoritesException(request.Request.FavoritesId), 
+                return logger.LogInformationWithException<UpdateFavoritesResponse>(
+                    new NotFoundException($"Cannot find favorites with ID {request.Request.FavoritesId}."), 
                     actionMessage, request.Request.RequestId);
             }
 
