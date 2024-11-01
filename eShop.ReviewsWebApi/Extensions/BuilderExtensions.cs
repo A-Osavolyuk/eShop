@@ -1,5 +1,5 @@
 ﻿using eShop.Application.Behaviours;
-using eShop.ReviewsWebApi.Middlewares;
+using eShop.Application.Middlewares;
 using eShop.ReviewsWebApi.Receivers;
 using FluentValidation;
 using MassTransit;
