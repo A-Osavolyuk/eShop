@@ -1,4 +1,7 @@
-﻿using eShop.ReviewsWebApi.Receivers;
+﻿using eShop.Application.Behaviours;
+using eShop.ReviewsWebApi.Middlewares;
+using eShop.ReviewsWebApi.Receivers;
+using FluentValidation;
 using MassTransit;
 
 namespace eShop.ReviewsWebApi.Extensions
@@ -10,7 +13,6 @@ namespace eShop.ReviewsWebApi.Extensions
             builder.AddJwtAuthentication();
             builder.ConfigureVersioning();
             builder.AddMapping();
-            builder.AddValidation();
             builder.AddSwaggerWithSecurity();
             builder.AddDependencyInjection();
             builder.AddMessageBus();
@@ -19,12 +21,19 @@ namespace eShop.ReviewsWebApi.Extensions
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddMediatR(x => x.RegisterServicesFromAssemblyContaining<IAssemblyMarker>());
+            builder.Services.AddMediatR(x =>
+            {
+                x.RegisterServicesFromAssemblyContaining<IAssemblyMarker>();
+            });
+            
+            builder.Services.AddValidatorsFromAssemblyContaining(typeof(IAssemblyMarker));
+            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+            builder.Services.AddProblemDetails();
 
             return builder;
         }
 
-        public static IHostApplicationBuilder AddSwaggerWithSecurity(this IHostApplicationBuilder builder)
+        private static IHostApplicationBuilder AddSwaggerWithSecurity(this IHostApplicationBuilder builder)
         {
             builder.Services.AddSwaggerGen(options =>
             {
@@ -54,12 +63,13 @@ namespace eShop.ReviewsWebApi.Extensions
             return builder;
         }
 
-        public static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
+        private static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
         {
+            builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             return builder;
         }
 
-        public static IHostApplicationBuilder AddMessageBus(this IHostApplicationBuilder builder)
+        private static IHostApplicationBuilder AddMessageBus(this IHostApplicationBuilder builder)
         {
             builder.Services.AddMassTransit(x =>
             {
