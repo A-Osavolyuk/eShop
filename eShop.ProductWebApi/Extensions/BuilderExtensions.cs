@@ -1,4 +1,5 @@
 ﻿using eShop.Domain.DTOs.Requests.Review;
+using eShop.Domain.Requests.Comments;
 using eShop.ProductWebApi.Behaviors;
 using eShop.ProductWebApi.Receivers;
 using MassTransit;
@@ -75,7 +76,7 @@ namespace eShop.ProductWebApi.Extensions
         {
             builder.Services.AddMassTransit(x =>
             {
-                x.AddRequestClient<DeleteReviewsRequest>();
+                x.AddRequestClient<DeleteCommentsRequest>();
                 x.UsingRabbitMq((context, cfg) =>
                 {
                     var uri = builder.Configuration["RabbitMQConfigurations:HostUri"]!;

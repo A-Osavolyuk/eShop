@@ -15,11 +15,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapDefaultEndpoints();
-
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
+app.UseExceptionHandler();
 
 app.Run();

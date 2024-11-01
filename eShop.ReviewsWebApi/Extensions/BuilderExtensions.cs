@@ -66,6 +66,7 @@ namespace eShop.ReviewsWebApi.Extensions
         private static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
         {
             builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviour<,>));
             return builder;
         }
 
