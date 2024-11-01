@@ -10,6 +10,6 @@
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public int Rating { get; set; }
-        public IEnumerable<CommentDTO> Comments { get; set; } = Enumerable.Empty<CommentDTO>();
+        public IEnumerable<CommentDto> Comments { get; set; } = Enumerable.Empty<CommentDto>();
     }
 }

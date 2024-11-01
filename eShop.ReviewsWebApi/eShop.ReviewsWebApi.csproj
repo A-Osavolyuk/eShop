@@ -26,8 +26,4 @@
 		<ProjectReference Include="..\eShop\eShop.ServiceDefaults\eShop.ServiceDefaults.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Queries\" />
-	</ItemGroup>
-
 </Project>
