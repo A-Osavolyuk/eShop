@@ -1,4 +1,7 @@
 ﻿using eShop.Application;
+using eShop.Application.Behaviours;
+using eShop.Application.Middlewares;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 
@@ -11,7 +14,6 @@ namespace eShop.CartWebApi.Extensions
             builder.AddJwtAuthentication();
             builder.ConfigureVersioning();
             builder.AddMapping();
-            builder.AddValidation();
             builder.AddSwaggerWithSecurity();
             builder.AddDependencyInjection();
             builder.AddMessageBus();
@@ -20,7 +22,16 @@ namespace eShop.CartWebApi.Extensions
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddMediatR(x => x.RegisterServicesFromAssemblyContaining<IAssemblyMarker>());
+            builder.Services.AddMediatR(x =>
+            {
+                x.RegisterServicesFromAssemblyContaining<IAssemblyMarker>();
+                x.AddOpenBehavior(typeof(LoggingBehaviour<,>), ServiceLifetime.Transient);
+                x.AddOpenBehavior(typeof(ValidationBehavior<,>), ServiceLifetime.Transient);
+            });
+            
+            builder.Services.AddValidatorsFromAssemblyContaining(typeof(IAssemblyMarker));
+            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+            builder.Services.AddProblemDetails();
 
             return builder;
         }

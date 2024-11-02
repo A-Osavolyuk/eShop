@@ -11,13 +11,11 @@ public class GetCartQueryHandler(
     ILogger<GetCartQueryHandler> logger,
     IMapper mapper) : IRequestHandler<GetCartQuery, Result<CartDto>>
 {
-    private readonly IMongoDatabase database = database;
     private readonly ILogger<GetCartQueryHandler> logger = logger;
     private readonly IMapper mapper = mapper;
 
     public async Task<Result<CartDto>> Handle(GetCartQuery request, CancellationToken cancellationToken)
     {
-        var actionMessage = new ActionMessage("get cart with ID {0}", request.Id);
         try
         {
             var collection = database.GetCollection<CartEntity>("Carts");
@@ -25,16 +23,14 @@ public class GetCartQueryHandler(
 
             if (cart is null)
             {
-                return logger.LogInformationWithException<CartDto>(
-                    new NotFoundException($"Cannot find cart with user ID {request.Id}."), actionMessage);
+                return new(new NotFoundException($"Cannot find cart with user ID {request.Id}."));
             }
             
-            logger.LogInformation("Cart with ID {id} was successfully found.", request.Id);
             return mapper.Map<CartDto>(cart);
         }
         catch (Exception ex)
         {
-            return logger.LogErrorWithException<CartDto>(ex, actionMessage);
+            return new(ex);
         }
     }
 }
