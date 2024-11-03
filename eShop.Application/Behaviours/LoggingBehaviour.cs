@@ -29,7 +29,7 @@ public class LoggingBehaviour<TRequest, TResponse>(ILogger<TRequest> logger)
         {
             switch (exception)
             {
-                case INotFoundException or IBadRequestException:
+                case INotFoundException or IBadRequestException or IFailedValidationException:
                     logger.LogInformation("{message}. Request ID {requestId}.", exception.Message, requestId);
                     break;
                 case IInternalServerError:
@@ -37,7 +37,7 @@ public class LoggingBehaviour<TRequest, TResponse>(ILogger<TRequest> logger)
                         requestId);
                     break;
                 default: 
-                    logger.LogError("{message}. {description}. Request ID {requestId}.", exception?.Message, exception.InnerException,
+                    logger.LogError("{message}. {description}. Request ID {requestId}.", exception?.Message, exception?.InnerException,
                         requestId);
                     break;
             }

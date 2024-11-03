@@ -1,6 +1,7 @@
 ﻿using eShop.CartWebApi.Commands.Favorites;
 using eShop.CartWebApi.Queries.Favorites;
 using eShop.Domain.Requests.Cart;
+using eShop.Domain.Requests.Favorites;
 
 namespace eShop.CartWebApi.Controllers;
 
@@ -21,10 +22,10 @@ public class FavoritesController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
     
-    [HttpGet("get-favorites/{userId:guid}")]
-    public async ValueTask<ActionResult<ResponseDTO>> GetCartAsync(Guid userId)
+    [HttpGet("get-favorites")]
+    public async ValueTask<ActionResult<ResponseDTO>> GetCartAsync([FromRoute] GetFavoritesRequest request)
     {
-        var response = await sender.Send(new GetFavoritesQuery(userId));
+        var response = await sender.Send(new GetFavoritesQuery(request));
 
         return response.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
