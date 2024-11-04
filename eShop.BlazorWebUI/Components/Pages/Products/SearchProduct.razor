@@ -32,7 +32,7 @@ else
     [SupplyParameterFromQuery(Name = "name")] public string Name { get; set; } = "";
     [SupplyParameterFromQuery(Name = "article")] public long Article { get; set; }
 
-    private List<ProductDTO> Products { get; set; } = new();
+    private List<ProductDto> Products { get; set; } = new();
     private string Message { get; set; } = string.Empty;
     private bool IsLoading { get; set; } = true;
 
@@ -67,7 +67,7 @@ else
 
                 if (response.IsSucceeded)
                 {
-                    Products = JsonConvert.DeserializeObject<List<ProductDTO>>(response.Result!.ToString()!)!;
+                    Products = JsonConvert.DeserializeObject<List<ProductDto>>(response.Result!.ToString()!)!;
                     IsLoading = false;
                 }
                 else

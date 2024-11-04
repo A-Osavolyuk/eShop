@@ -4,20 +4,22 @@
 
 @inject IProductService ProductService
 
-<Title Text="Products" />
+<Title Text="Products"/>
 
 <MudGrid>
     @if (ProductsList.Any())
     {
         @foreach (var p in ProductsList)
         {
-            <Product Model="p" />
+            <Product Model="p"/>
         }
     }
     else
     {
         <MudItem xs="12">
-            <MudText Align="Align.Center" Typo="Typo.h5">No products at the moment</MudText>
+            <MudText Align="Align.Center" Typo="Typo.h5">
+                No products at the moment
+            </MudText>
         </MudItem>
     }
 </MudGrid>
@@ -26,14 +28,17 @@
     <Authorized>
         <div class="position-absolute" style="right:50px; bottom: 50px">
             <MudTooltip Text="Create product" Color="Color.Success" Arrow>
-                <MudFab ButtonType="ButtonType.Button" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" OnClick="@(() => NavigationManager.NavigateTo("/products/create-product"))" />
+                <MudFab ButtonType="ButtonType.Button"
+                        Color="Color.Success"
+                        StartIcon="@Icons.Material.Filled.Add"
+                        OnClick="@(() => NavigationManager.NavigateTo("/products/create-product"))"/>
             </MudTooltip>
         </div>
     </Authorized>
 </AuthorizeView>
 
 @code {
-    private List<ProductDTO> ProductsList { get; set; } = new();
+    private List<ProductDto> ProductsList { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -46,11 +51,12 @@
 
         if (result.IsSucceeded)
         {
-            ProductsList = JsonConvert.DeserializeObject<List<ProductDTO>>(result.Result!.ToString()!)!;
+            ProductsList = JsonConvert.DeserializeObject<List<ProductDto>>(result.Result!.ToString()!)!;
         }
         else
         {
             Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
         }
     }
+
 }

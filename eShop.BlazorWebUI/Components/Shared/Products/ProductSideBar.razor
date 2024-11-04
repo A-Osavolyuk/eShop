@@ -1,9 +1,16 @@
 ﻿@using eShop.Domain.Entities.Cart
+@using eShop.Domain.Requests.Cart
+@using eShop.Domain.Requests.Favorites
+@using eShop.Domain.Responses.Cart
+@using Severity = MudBlazor.Severity
 @using eShop.Infrastructure.Services
 @inject NavigationManager NavigationManager
 @inject ILocalDataAccessor LocalDataAccessor
 @inject ISnackbar Snackbar
 @inject NotificationService NotificationService
+@inject IFavoritesService FavoritesService
+@inject ICartService CartService
+@inject IMapper Mapper
 
 <MudGrid Spacing="1">
     <MudItem xs="12">
@@ -183,7 +190,7 @@
 </MudGrid>
 
 @code {
-    [Parameter, NotNull] public ProductDTO Model { get; set; } = new();
+    [Parameter, NotNull] public ProductDto Model { get; set; } = new();
     [CascadingParameter] MainLayout Layout { get; set; } = new();
 
     private bool isFavorite = false;
@@ -207,6 +214,7 @@
         Snackbar.Add("Product was added to your cart", MudBlazor.Severity.Success);
         StateHasChanged();
         Layout.RerenderComponent();
+        await UpdateCartAsync();
     }
 
     private async Task AddToFavorite_OnClick()
@@ -232,5 +240,30 @@
         isFavorite = !isFavorite;
         StateHasChanged();
         Layout.RerenderComponent();
+        await UpdateFavoritesAsync();
+    }
+
+    private async Task UpdateCartAsync()
+    {
+        var cart = await LocalDataAccessor.ReadCartAsync();
+        var request = Mapper.Map<UpdateCartRequest>(cart);
+        var response = await CartService.UpdateCartAsync(request);
+
+        if (!response.IsSucceeded)
+        {
+            Snackbar.Add(response.ErrorMessage, Severity.Error);
+        }
+    }
+    
+    private async Task UpdateFavoritesAsync()
+    {
+        var cart = await LocalDataAccessor.ReadFavoritesAsync();
+        var request = Mapper.Map<UpdateFavoritesRequest>(cart);
+        var response = await FavoritesService.UpdateFavoritesAsync(request);
+
+        if (!response.IsSucceeded)
+        {
+            Snackbar.Add(response.ErrorMessage, Severity.Error);
+        }
     }
 }

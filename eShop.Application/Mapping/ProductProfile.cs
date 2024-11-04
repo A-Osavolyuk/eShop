@@ -14,16 +14,16 @@ namespace eShop.Application.Mapping
             CreateMap<CreateProductRequest, ProductEntity>();
             CreateMap<CreateProductRequest, ClothingEntity>();
             CreateMap<CreateProductRequest, ShoesEntity>();
-            CreateMap<ProductEntity, ProductDTO>();
+            CreateMap<ProductEntity, ProductDto>();
             CreateMap<ProductEntity, ShoesDTO>();
             CreateMap<ProductEntity, ClothingDTO>();
             CreateMap<ProductEntity, ShoesEntity>();
             CreateMap<ProductEntity, ClothingEntity>();
             CreateMap<ClothingEntity, ClothingDTO>();
             CreateMap<ShoesEntity, ShoesDTO>();
-            CreateMap<ShoesEntity, ProductDTO>();
-            CreateMap<ClothingEntity, ProductDTO>();
-            CreateMap<ProductEntity, ProductDTO>();
+            CreateMap<ShoesEntity, ProductDto>();
+            CreateMap<ClothingEntity, ProductDto>();
+            CreateMap<ProductEntity, ProductDto>();
         }
     }
 }

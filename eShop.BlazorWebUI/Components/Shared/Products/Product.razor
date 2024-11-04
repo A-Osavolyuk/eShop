@@ -1,48 +1,59 @@
 ﻿@inject NavigationManager NavigationManager
 
-<MudItem lg="3" md="4" sm="6" xs="12">
-    <MudCard>
-        <MudCardMedia Class="cursor-pointer" @onclick=@(() => ToProductDetails(Model.Article)) Image="@Model.Images[0]"></MudCardMedia>
-        <MudCardContent>
-            <MudText Typo="Typo.h6">
-                <MudLink OnClick="@(() => ToBrandDetails(Model.Brand.Name))"
-                         Typo="Typo.h6"
-                         Color="Color.Inherit">@Model.Brand.Name</MudLink> | @(FormatName(Model.Name))
-            </MudText>
-            <MudGrid>
-                <MudItem Class="d-flex">
-                    <MudText Typo="Typo.h6" Class="mr-1" Color="Color.Warning">@Model.Rating</MudText>
-                    <MudRating Class="mt-1" ReadOnly SelectedValue="Model.Rating" />
-                    <MudText Typo="Typo.subtitle2">(@Model.ReviewsCount)</MudText>
-                </MudItem>
-            </MudGrid>
-            <MudText Typo="Typo.h6" Color="Color.Success">@Model.Price &dollar;</MudText>
-        </MudCardContent>
-    </MudCard>
-</MudItem>
+@if (Model is not null)
+{
+    <MudItem lg="3" md="4" sm="6" xs="12">
+        <MudCard>
+            <MudCardMedia Class="cursor-pointer" @onclick=@(() => ToProductDetails(Model.Article)) Image="@Model.Images[0]"></MudCardMedia>
+            <MudCardContent>
+                <MudText Typo="Typo.h6">
+                    <MudLink OnClick="@(() => ToBrandDetails(Model.Brand?.Name ?? "Brand"))"
+                             Typo="Typo.h6"
+                             Color="Color.Inherit">@(Model.Brand?.Name ?? "Brand")</MudLink> | @(FormatName(Model.Name))
+                </MudText>
+                <MudGrid>
+                    <MudItem Class="d-flex">
+                        <MudText Typo="Typo.h6" Class="mr-1" Color="Color.Warning">@Model.Rating</MudText>
+                        <MudRating Class="mt-1" ReadOnly SelectedValue="Model.Rating" />
+                        <MudText Typo="Typo.subtitle2">(@Model.CommentsCount)</MudText>
+                    </MudItem>
+                </MudGrid>
+                <MudText Typo="Typo.h6" Color="Color.Success">@Model.Price &dollar;</MudText>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+}
 
 @code {
-    [Parameter] public ProductDTO Model { get; set; } = new();
+    [Parameter] public ProductDto? Model { get; set; } = new();
 
     protected override void OnInitialized()
     {
-        Model = Model with { Rating = 5 };
+        if (Model is not null)
+        {
+            Model = Model with { Rating = 5 };
+        }
+        else
+        {
+            Model = new();
+        }
     }
 
-    private void ToProductDetails(long Article)
+    private void ToProductDetails(long article)
     {
-        NavigationManager.NavigateTo($"/products/details?article={Article}", true);
+        NavigationManager.NavigateTo($"/products/details?article={article}", true);
     }
 
-    private void ToBrandDetails(string Name)
+    private void ToBrandDetails(string name)
     {
-        NavigationManager.NavigateTo($"/brands/details?={Name}", true);
+        NavigationManager.NavigateTo($"/brands/details?={name}", true);
     }
 
-    private string FormatName(string Name)
+    private string FormatName(string name)
     {
-        return Name.Length > 20
-        ? $"{Name.Take(20).Aggregate(new StringBuilder(), (acc, v) => acc.Append(v), r => r.Append("...").ToString())}"
-        : $"{Name}";
+        if (name == null) throw new ArgumentNullException(nameof(name));
+        return name.Length > 20
+        ? $"{name.Take(20).Aggregate(new StringBuilder(), (acc, v) => acc.Append(v), r => r.Append("...").ToString())}"
+        : $"{name}";
     }
 }

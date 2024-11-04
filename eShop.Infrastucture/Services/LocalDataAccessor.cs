@@ -104,7 +104,7 @@ namespace eShop.Infrastructure.Services
             await localStorageService.RemoveItemAsync("avatar-link");
         }
 
-        public async ValueTask<FavoritesModel> ReadFavoriteGoodsAsync()
+        public async ValueTask<FavoritesModel> ReadFavoritesAsync()
         {
             var key = "favorites";
             if (await localStorageService.ContainKeyAsync(key))

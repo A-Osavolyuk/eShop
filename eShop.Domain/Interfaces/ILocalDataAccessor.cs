@@ -14,7 +14,7 @@ namespace eShop.Domain.Interfaces
         public ValueTask AddToCartAsync(CartItem item);
         public ValueTask<bool> IsInFavoriteGoodsAsync(string id);
         public ValueTask RemoveFromFavoritesAsync(string id);
-        public ValueTask<FavoritesModel> ReadFavoriteGoodsAsync();
+        public ValueTask<FavoritesModel> ReadFavoritesAsync();
         public ValueTask AddToFavoritesAsync(FavoritesItem item);
         public ValueTask RemoveAvatarLinkAsync();
         public ValueTask WriteAvatarLinkAsync(string link);

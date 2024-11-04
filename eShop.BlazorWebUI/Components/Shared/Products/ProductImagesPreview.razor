@@ -16,7 +16,7 @@
                     }
                 </MudItem>
                 <MudItem xs="11">
-                    <MudImage Src="@Model.Images[SelectedIndex]"
+                    <MudImage Src="@Model.Images[selectedIndex]"
                               Style="width:100%; max-height:500px;"
                               ObjectFit="ObjectFit.Contain" />
                 </MudItem>
@@ -26,21 +26,31 @@
 }
 
 @code {
-    [Parameter, NotNull] public ProductDTO Model { get; set; } = new();
+    [Parameter] public ProductDto? Model { get; set; }
 
-    private int SelectedIndex = 0;
+    private int selectedIndex = 0;
 
     private void SetPreviewImage(string img)
     {
-        SelectedIndex = Model.Images.IndexOf(img);
+        if (Model is not null)
+        {
+            selectedIndex = Model.Images.IndexOf(img);
+        }
     }
 
     private string IsActive(string img)
     {
-        if(Model.Images.IndexOf(img) == SelectedIndex)
+        if (Model is not null)
         {
-            return "mb-1 cursor-pointer mud-border-primary border-1";
+            if(Model.Images.IndexOf(img) == selectedIndex)
+            {
+                return "mb-1 cursor-pointer mud-border-primary border-1";
+            }
+            return "mb-1 cursor-pointer";
         }
-        return "mb-1 cursor-pointer";
+        else
+        {
+            return string.Empty;
+        }
     }
 }

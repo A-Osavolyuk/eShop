@@ -20,8 +20,6 @@ namespace eShop.ProductWebApi.Extensions
             builder.AddSwaggerWithSecurity();
             builder.AddMessageBus();
 
-            builder.AddSqlServerDbContext<ProductDbContext>("SqlServer");
-
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
 

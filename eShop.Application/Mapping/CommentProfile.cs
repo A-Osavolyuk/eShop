@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using eShop.Domain.DTOs;
 using eShop.Domain.Entities;
+using eShop.Domain.Models;
 using eShop.Domain.Requests.Comments;
 
 namespace eShop.Application.Mapping;
@@ -12,5 +13,6 @@ public class CommentProfile : Profile
         CreateMap<CreateCommentRequest, CommentEntity>();
         CreateMap<UpdateCommentRequest, CommentEntity>();
         CreateMap<CommentEntity, CommentDto>();
+        CreateMap<CommentDto, CommentModel>();
     }
 }

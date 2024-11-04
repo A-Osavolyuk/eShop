@@ -15,7 +15,6 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    await app.ConfigureDatabaseAsync<ProductDbContext>();
 }
 
 app.UseHttpsRedirection();

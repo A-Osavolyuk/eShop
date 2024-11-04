@@ -1,0 +1,70 @@
+﻿@using AutoMapper.QueryableExtensions
+@using Microsoft.EntityFrameworkCore
+@using Severity = MudBlazor.Severity
+@using eShop.Domain.Responses.Comments
+@inject ICommentService CommentService
+@inject IMapper Mapper
+@inject ISnackbar Snackbar
+
+@if (Model is not null)
+{
+    <MudPaper Class="pa-5" Outlined>
+        @if (commentsList.Any())
+        {
+            <MudGrid Justify="Justify.Center">
+                <MudItem xs="12">
+                    @foreach (var comment in commentsList)
+                    {
+                        <Comment Model="comment"/>
+                    }
+                </MudItem>
+            </MudGrid>
+        }
+        else
+        {
+            <MudGrid Justify="Justify.Center">
+                <MudItem xs="12">
+                    <MudText Typo="Typo.h6">
+                        No comments at the moment
+                    </MudText>
+                </MudItem>
+            </MudGrid>
+        }
+    </MudPaper>
+}
+else
+{
+    <MudGrid Justify="Justify.Center">
+        <MudItem xs="12">
+            <MudProgressCircular Color="Color.Primary"/>
+        </MudItem>
+    </MudGrid>
+}
+
+@code {
+    [Parameter] public ProductDto? Model { get; set; }
+
+    private List<CommentModel> commentsList = new List<CommentModel>();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (Model is not null)
+        {
+            var response = await CommentService.GetCommentsAsync(new() { ProductId = Model.Id });
+
+            if (response.IsSucceeded)
+            {
+                var data = ResponseConverter.Deserialize<GetCommentsResponse>(response.Result!);
+                commentsList = await data.Comments
+                    .AsQueryable()
+                    .ProjectTo<CommentModel>(Mapper.ConfigurationProvider)
+                    .ToListAsync();
+            }
+            else
+            {
+                Snackbar.Add(response.ErrorMessage, Severity.Error);
+            }
+        }
+    }
+
+}

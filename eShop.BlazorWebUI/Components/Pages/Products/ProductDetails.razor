@@ -1,12 +1,13 @@
 ﻿@page "/products/details"
+@using eShop.BlazorWebUI.Components.Shared.Comments
 
 @inject NavigationManager NavigationManager
 @inject IProductService ProductService
 @inject ISnackbar Snackbar
 
-<Title Text="@(string.IsNullOrEmpty(Model.Name) ? "Product Details" : Model.Name)" />
+<Title Text="@(string.IsNullOrEmpty(Model?.Name) ? "Product Details" : Model.Name)" />
 
-@if (Model is not null && Model.Brand is not null)
+@if (Model is not null)
 {
     <MudGrid Justify="Justify.Center">
         <MudItem xs="10">
@@ -15,7 +16,7 @@
                     <MudGrid Spacing="1">
                         <ProductImagesPreview Model="Model" />
                         <PropsAndDescription Model="Model" />
-                        <Reviews Model="Model" />
+                        <Comments></Comments>
                     </MudGrid>
                 </MudItem>
 
@@ -26,12 +27,16 @@
         </MudItem>
     </MudGrid>
 }
+else
+{
+    
+}
 
 @code {
-    [SupplyParameterFromQuery(Name = "name")] public string Name { get; set; } = string.Empty;
-    [SupplyParameterFromQuery(Name = "article")] public long Article { get; set; }
+    [SupplyParameterFromQuery(Name = "name")] private string Name { get; set; } = string.Empty;
+    [SupplyParameterFromQuery(Name = "article")] private long Article { get; set; }
 
-    private ProductDTO Model { get; set; } = new();
+    private ProductDto? Model { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -49,17 +54,17 @@
         StateHasChanged();
     }
 
-    private ProductDTO? DeserializeResponse(ResponseDTO response)
+    private ProductDto? DeserializeResponse(ResponseDTO response)
     {
         if (response.IsSucceeded)
         {
-            var type = JsonConvert.DeserializeObject<ProductDTO>(response.Result!.ToString()!)!.Category;
+            var type = JsonConvert.DeserializeObject<ProductDto>(response.Result!.ToString()!)!.Category;
 
             return type switch
             {
                 Category.Clothing => JsonConvert.DeserializeObject<ClothingDTO>(response.Result!.ToString()!),
                 Category.Shoes => JsonConvert.DeserializeObject<ShoesDTO>(response.Result!.ToString()!),
-                _ => JsonConvert.DeserializeObject<ProductDTO>(response.Result!.ToString()!)
+                _ => JsonConvert.DeserializeObject<ProductDto>(response.Result!.ToString()!)
             };
         }
         else
