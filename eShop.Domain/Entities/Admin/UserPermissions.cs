@@ -1,5 +1,4 @@
 ﻿using eShop.Domain.Entities.Auth;
-using Microsoft.EntityFrameworkCore;
 
 namespace eShop.Domain.Entities.Admin
 {

@@ -1,6 +1,4 @@
 ﻿
-using eShop.Domain.Entities.Auth;
-
 namespace eShop.AuthWebApi.BackgroundServices
 {
     public class BackgroundTokenValidator(

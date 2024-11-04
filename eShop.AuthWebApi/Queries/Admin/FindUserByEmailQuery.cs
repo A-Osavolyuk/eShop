@@ -1,7 +1,4 @@
-﻿using eShop.Domain.Entities;
-using eShop.Domain.Entities.Admin;
-using Microsoft.OpenApi.Validations;
-using System.IO;
+﻿using eShop.Domain.Entities.Admin;
 
 namespace eShop.AuthWebApi.Queries.Admin
 {

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-namespace eShop.AuthWebApi.Commands.Auth
+﻿namespace eShop.AuthWebApi.Commands.Auth
 {
     public record ConfirmResetPasswordCommand(ConfirmResetPasswordRequest Request)
         : IRequest<Result<ConfirmResetPasswordResponse>>;

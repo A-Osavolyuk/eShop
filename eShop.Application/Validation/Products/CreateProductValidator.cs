@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-using eShop.Domain.Entities.Product;
-using eShop.Domain.Enums;
+﻿using eShop.Domain.Enums;
 using eShop.Domain.Requests.Product;
 using FluentValidation;
 

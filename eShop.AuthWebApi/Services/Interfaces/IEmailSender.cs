@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Messages;
-
-namespace eShop.AuthWebApi.Services.Interfaces
+﻿namespace eShop.AuthWebApi.Services.Interfaces
 {
     public interface IEmailSender
     {

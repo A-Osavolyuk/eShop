@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using eShop.Domain.DTOs;
-using eShop.Domain.Entities;
 using eShop.Domain.Entities.Cart;
 using eShop.Domain.Models;
 

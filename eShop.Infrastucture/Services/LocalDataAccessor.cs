@@ -1,6 +1,4 @@
 ﻿using Blazored.LocalStorage;
-using eShop.Domain.DTOs;
-using eShop.Domain.Entities;
 using eShop.Domain.Entities.Cart;
 using eShop.Domain.Interfaces;
 using eShop.Domain.Models;

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace eShop.Domain.Interfaces
+﻿namespace eShop.Domain.Interfaces
 {
     public interface ICookieManager
     {

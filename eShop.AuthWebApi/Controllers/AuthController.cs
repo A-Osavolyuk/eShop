@@ -1,7 +1,5 @@
-﻿using eShop.Application.Utilities;
-using eShop.AuthWebApi.Commands.Auth;
+﻿using eShop.AuthWebApi.Commands.Auth;
 using eShop.AuthWebApi.Queries.Auth;
-using eShop.Domain.Entities.Auth;
 using eShop.Domain.Requests.Auth;
 using Microsoft.AspNetCore.Authorization;
 

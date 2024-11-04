@@ -1,8 +1,4 @@
-﻿using eShop.Application.Extensions;
-using eShop.Domain.Entities;
-using eShop.Domain.Responses.Admin;
-
-namespace eShop.AuthWebApi.Commands.Admin
+﻿namespace eShop.AuthWebApi.Commands.Admin
 {
     public record RemoveUserRoleCommand(RemoveUserRoleRequest Request) : IRequest<Result<RemoveUserRoleResponse>>;
 

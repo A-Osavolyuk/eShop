@@ -1,4 +1,3 @@
-using eShop.Application.Extensions;
 using eShop.ProductWebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -1,6 +1,5 @@
 ﻿using eShop.Domain.DTOs.Requests.Auth;
 using FluentValidation;
-using System.Text.RegularExpressions;
 
 namespace eShop.Application.Validation.Auth
 {

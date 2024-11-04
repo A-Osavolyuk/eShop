@@ -1,6 +1,4 @@
 ﻿using eShop.Domain.Enums;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace eShop.Domain.Entities.Product;
 

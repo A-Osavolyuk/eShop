@@ -1,6 +1,5 @@
 ﻿using eShop.CartWebApi.Commands.Favorites;
 using eShop.CartWebApi.Queries.Favorites;
-using eShop.Domain.Requests.Cart;
 using eShop.Domain.Requests.Favorites;
 
 namespace eShop.CartWebApi.Controllers;

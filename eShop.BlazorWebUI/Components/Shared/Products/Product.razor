@@ -2,26 +2,26 @@
 
 @if (Model is not null)
 {
-    <MudItem lg="3" md="4" sm="6" xs="12">
-        <MudCard>
-            <MudCardMedia Class="cursor-pointer" @onclick=@(() => ToProductDetails(Model.Article)) Image="@Model.Images[0]"></MudCardMedia>
-            <MudCardContent>
-                <MudText Typo="Typo.h6">
-                    <MudLink OnClick="@(() => ToBrandDetails(Model.Brand?.Name ?? "Brand"))"
-                             Typo="Typo.h6"
-                             Color="Color.Inherit">@(Model.Brand?.Name ?? "Brand")</MudLink> | @(FormatName(Model.Name))
-                </MudText>
-                <MudGrid>
-                    <MudItem Class="d-flex">
-                        <MudText Typo="Typo.h6" Class="mr-1" Color="Color.Warning">@Model.Rating</MudText>
-                        <MudRating Class="mt-1" ReadOnly SelectedValue="Model.Rating" />
-                        <MudText Typo="Typo.subtitle2">(@Model.CommentsCount)</MudText>
-                    </MudItem>
-                </MudGrid>
-                <MudText Typo="Typo.h6" Color="Color.Success">@Model.Price &dollar;</MudText>
-            </MudCardContent>
-        </MudCard>
-    </MudItem>
+    @* <MudItem lg="3" md="4" sm="6" xs="12"> *@
+    @*     <MudCard> *@
+    @*         <MudCardMedia Class="cursor-pointer" @onclick=@(() => ToProductDetails(Model.Article)) Image="@Model.Images[0]"></MudCardMedia> *@
+    @*         <MudCardContent> *@
+    @*             <MudText Typo="Typo.h6"> *@
+    @*                 <MudLink OnClick="@(() => ToBrandDetails(Model.Brand?.Name ?? "Brand"))" *@
+    @*                          Typo="Typo.h6" *@
+    @*                          Color="Color.Inherit">@(Model.Brand?.Name ?? "Brand")</MudLink> | @(FormatName(Model.Name)) *@
+    @*             </MudText> *@
+    @*             <MudGrid> *@
+    @*                 <MudItem Class="d-flex"> *@
+    @*                     <MudText Typo="Typo.h6" Class="mr-1" Color="Color.Warning">@Model.Rating</MudText> *@
+    @*                     <MudRating Class="mt-1" ReadOnly SelectedValue="Model.Rating" /> *@
+    @*                     <MudText Typo="Typo.subtitle2">(@Model.CommentsCount)</MudText> *@
+    @*                 </MudItem> *@
+    @*             </MudGrid> *@
+    @*             <MudText Typo="Typo.h6" Color="Color.Success">@Model.Price &dollar;</MudText> *@
+    @*         </MudCardContent> *@
+    @*     </MudCard> *@
+    @* </MudItem> *@
 }
 
 @code {
@@ -29,14 +29,7 @@
 
     protected override void OnInitialized()
     {
-        if (Model is not null)
-        {
-            Model = Model with { Rating = 5 };
-        }
-        else
-        {
-            Model = new();
-        }
+
     }
 
     private void ToProductDetails(long article)

@@ -1,6 +1,5 @@
 ﻿using eShop.Domain.Exceptions;
 using FluentValidation;
-using LanguageExt.Common;
 using MediatR;
 
 namespace eShop.Application.Behaviours;

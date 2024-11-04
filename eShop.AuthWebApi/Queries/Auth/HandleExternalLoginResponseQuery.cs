@@ -1,5 +1,4 @@
 ﻿using eShop.AuthWebApi.Utilities;
-using Newtonsoft.Json.Linq;
 
 namespace eShop.AuthWebApi.Queries.Auth
 {

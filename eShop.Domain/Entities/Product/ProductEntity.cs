@@ -1,5 +1,4 @@
-﻿using System.Net.Mime;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using eShop.Domain.Enums;
 

@@ -1,8 +1,6 @@
 ﻿
 
 using eShop.Domain.Entities.Admin;
-using eShop.Domain.Entities.Auth;
-using LanguageExt.Pipes;
 
 namespace eShop.AuthWebApi.Services.Implementation
 {

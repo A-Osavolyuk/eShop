@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Entities.Admin;
-
-namespace eShop.Domain.Responses.Admin
+﻿namespace eShop.Domain.Responses.Admin
 {
     public class CreateUserAccountResponse
     {

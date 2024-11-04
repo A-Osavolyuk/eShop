@@ -1,5 +1,4 @@
 ﻿using eShop.Domain.Entities.Admin;
-using Microsoft.AspNetCore.Identity;
 
 namespace eShop.Domain.Responses.Admin
 {

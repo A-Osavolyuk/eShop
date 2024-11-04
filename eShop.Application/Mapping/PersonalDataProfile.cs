@@ -2,8 +2,6 @@
 using eShop.Domain.DTOs;
 using eShop.Domain.DTOs.Requests.Auth;
 using eShop.Domain.DTOs.Responses.Auth;
-using eShop.Domain.Entities.Admin;
-using eShop.Domain.Models;
 using PersonalData = eShop.Domain.Models.PersonalData;
 
 namespace eShop.Application.MappingProfiles

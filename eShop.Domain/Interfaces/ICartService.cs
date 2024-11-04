@@ -1,5 +1,4 @@
 ﻿using eShop.Domain.DTOs;
-using eShop.Domain.Models;
 using eShop.Domain.Requests.Cart;
 
 namespace eShop.Domain.Interfaces

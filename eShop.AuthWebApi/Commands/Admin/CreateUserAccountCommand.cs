@@ -1,9 +1,4 @@
-﻿using eShop.AuthWebApi.Utilities;
-using eShop.Domain.Entities;
-using eShop.Domain.Entities.Admin;
-using eShop.Domain.Entities.Auth;
-using Microsoft.Extensions.Configuration;
-using System.Data;
+﻿using eShop.Domain.Entities.Admin;
 
 namespace eShop.AuthWebApi.Commands.Admin
 {

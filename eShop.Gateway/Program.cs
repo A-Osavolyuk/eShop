@@ -1,6 +1,5 @@
 using eShop.Application;
 using Ocelot.DependencyInjection;
-using Ocelot.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,5 +1,4 @@
-﻿using LanguageExt.ClassInstances;
-using MongoDB.Bson.Serialization;
+﻿using MongoDB.Bson.Serialization;
 
 namespace eShop.ProductWebApi.Extensions;
 

@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Entities.Auth;
-using eShop.Domain.Responses.Auth;
-using LanguageExt.Pipes;
+﻿using eShop.Domain.Responses.Auth;
 
 namespace eShop.AuthWebApi.Services.Implementation
 {

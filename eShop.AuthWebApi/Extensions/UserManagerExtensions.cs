@@ -1,5 +1,4 @@
 ﻿using eShop.Domain.Entities.Admin;
-using eShop.Domain.Entities.Auth;
 
 namespace eShop.AuthWebApi.Extensions
 {

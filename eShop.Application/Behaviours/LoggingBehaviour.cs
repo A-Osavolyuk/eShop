@@ -1,11 +1,7 @@
 ﻿using System.Reflection;
-using eShop.Domain.Exceptions;
 using eShop.Domain.Interfaces;
-using LanguageExt.Common;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Unit = LanguageExt.Unit;
 
 namespace eShop.Application.Behaviours;
 

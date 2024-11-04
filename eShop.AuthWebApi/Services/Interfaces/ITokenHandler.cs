@@ -1,5 +1,4 @@
-﻿using eShop.Domain.Entities.Auth;
-using eShop.Domain.Responses.Auth;
+﻿using eShop.Domain.Responses.Auth;
 
 namespace eShop.AuthWebApi.Services.Interfaces
 {

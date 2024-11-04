@@ -1,9 +1,7 @@
 ﻿using eShop.Domain.DTOs;
 using eShop.Domain.Enums;
 using eShop.Domain.Interfaces;
-using eShop.Domain.Models;
 using eShop.Domain.Requests.Cart;
-using eShop.Domain.Requests.Favorites;
 using Microsoft.Extensions.Configuration;
 
 namespace eShop.Infrastructure.Services

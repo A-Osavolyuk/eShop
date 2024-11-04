@@ -1,6 +1,4 @@
-﻿using eShop.Domain.DTOs;
-
-namespace eShop.AuthWebApi.Commands.Auth
+﻿namespace eShop.AuthWebApi.Commands.Auth
 {
     public record LoginCommand(LoginRequest Request) : IRequest<Result<LoginResponse>>;
 

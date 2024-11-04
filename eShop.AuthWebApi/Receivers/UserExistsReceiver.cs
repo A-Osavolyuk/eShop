@@ -1,7 +1,5 @@
-﻿using eShop.Domain.Entities.Auth;
-using eShop.Domain.Requests.Auth;
+﻿using eShop.Domain.Requests.Auth;
 using eShop.Domain.Responses.Auth;
-using LanguageExt;
 
 namespace eShop.AuthWebApi.Receivers
 {

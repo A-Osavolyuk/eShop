@@ -1,5 +1,4 @@
 ﻿using eShop.Domain.Common;
-using eShop.Domain.Enums;
 using LanguageExt.Common;
 using Microsoft.Extensions.Logging;
 

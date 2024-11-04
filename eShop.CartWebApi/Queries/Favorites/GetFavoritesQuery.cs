@@ -1,5 +1,4 @@
-﻿using eShop.Domain.Common;
-using eShop.Domain.Entities.Cart;
+﻿using eShop.Domain.Entities.Cart;
 using eShop.Domain.Requests.Favorites;
 using MongoDB.Driver;
 

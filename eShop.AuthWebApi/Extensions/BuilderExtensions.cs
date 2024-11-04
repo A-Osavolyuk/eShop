@@ -3,7 +3,6 @@ using eShop.AuthWebApi.BackgroundServices;
 using eShop.AuthWebApi.Receivers;
 using eShop.AuthWebApi.Security.Authorization;
 using eShop.AuthWebApi.Services.Implementation;
-using eShop.Domain.Entities.Auth;
 using eShop.Domain.Requests.Cart;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;

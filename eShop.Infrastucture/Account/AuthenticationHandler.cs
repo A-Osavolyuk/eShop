@@ -1,6 +1,4 @@
-﻿using System.Security.Claims;
-
-namespace eShop.Infrastructure.Account
+﻿namespace eShop.Infrastructure.Account
 {
     public static class AuthenticationHandler
     {

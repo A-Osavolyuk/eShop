@@ -1,5 +1,4 @@
 ﻿using eShop.Domain.Requests.Comments;
-using eShop.Domain.Responses.Comments;
 using eShop.ReviewsWebApi.Commands.Comments;
 using eShop.ReviewsWebApi.Queries.Comments;
 

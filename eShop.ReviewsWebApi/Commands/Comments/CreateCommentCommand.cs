@@ -1,7 +1,6 @@
 ﻿using eShop.Domain.Entities;
 using eShop.Domain.Requests.Comments;
 using eShop.Domain.Responses.Comments;
-using FluentValidation;
 
 namespace eShop.ReviewsWebApi.Commands.Comments;
 
