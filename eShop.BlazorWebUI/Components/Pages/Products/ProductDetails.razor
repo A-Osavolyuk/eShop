@@ -40,38 +40,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        if (Article != 0)
-        {
-            var result = await ProductService.GetProductByArticleAsync(Article);
-            Model = DeserializeResponse(result)!;
-        }
-        else if (!string.IsNullOrEmpty(Name))
-        {
-            var result = await ProductService.GetProductByNameAsync(Name!);
-            Model = DeserializeResponse(result)!;
-        }
-
-        StateHasChanged();
     }
 
-    private ProductDto? DeserializeResponse(ResponseDTO response)
-    {
-        if (response.IsSucceeded)
-        {
-            var type = JsonConvert.DeserializeObject<ProductDto>(response.Result!.ToString()!)!.Category;
-
-            return type switch
-            {
-                Category.Clothing => JsonConvert.DeserializeObject<ClothingDTO>(response.Result!.ToString()!),
-                Category.Shoes => JsonConvert.DeserializeObject<ShoesDTO>(response.Result!.ToString()!),
-                _ => JsonConvert.DeserializeObject<ProductDto>(response.Result!.ToString()!)
-            };
-        }
-        else
-        {
-            Snackbar.Add(response.ErrorMessage, MudBlazor.Severity.Error);
-            return null;
-        }
-    }
 
 }

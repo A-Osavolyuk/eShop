@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Forms;
 
 namespace eShop.Domain.Models
 {
-    public record CreateProduct
+    public record CreateProductRequest
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;

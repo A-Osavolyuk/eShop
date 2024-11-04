@@ -25,7 +25,7 @@ public class LoggingBehaviour<TRequest, TResponse>(ILogger<TRequest> logger)
         var response = await next();
         var exception = GetException(response);
 
-        if (exception is null)
+        if (exception is not null)
         {
             switch (exception)
             {

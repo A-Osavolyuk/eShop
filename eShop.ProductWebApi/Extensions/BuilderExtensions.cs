@@ -1,7 +1,7 @@
-﻿using eShop.Domain.DTOs.Requests.Review;
+﻿using eShop.Application.Behaviours;
+using eShop.Application.Middlewares;
 using eShop.Domain.Requests.Comments;
-using eShop.ProductWebApi.Behaviors;
-using eShop.ProductWebApi.Receivers;
+using FluentValidation;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
@@ -16,25 +16,28 @@ namespace eShop.ProductWebApi.Extensions
             builder.AddDependencyInjection();
             builder.ConfigureVersioning();
             builder.AddMapping();
-            builder.AddValidation();
             builder.AddSwaggerWithSecurity();
             builder.AddMessageBus();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-
+            builder.AddMongoDBClient("MongoDB");
 
             builder.Services.AddMediatR(c =>
             {
                 c.RegisterServicesFromAssemblyContaining<IAssemblyMarker>();
-                c.AddOpenBehavior(typeof(LoggingBehavior<,>));
-
+                c.AddOpenBehavior(typeof(LoggingBehaviour<,>));
+                c.AddOpenBehavior(typeof(ValidationBehavior<,>));
             });
-
+            
+            builder.Services.AddValidatorsFromAssemblyContaining(typeof(IAssemblyMarker));
+            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+            builder.Services.AddProblemDetails();
+            
             return builder;
         }
 
-        public static IHostApplicationBuilder AddSwaggerWithSecurity(this IHostApplicationBuilder builder)
+        private static IHostApplicationBuilder AddSwaggerWithSecurity(this IHostApplicationBuilder builder)
         {
             builder.Services.AddSwaggerGen(options =>
             {
@@ -64,13 +67,13 @@ namespace eShop.ProductWebApi.Extensions
             return builder;
         }
 
-        public static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
+        private static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
         {
 
             return builder;
         }
 
-        public static IHostApplicationBuilder AddMessageBus(this IHostApplicationBuilder builder)
+        private static IHostApplicationBuilder AddMessageBus(this IHostApplicationBuilder builder)
         {
             builder.Services.AddMassTransit(x =>
             {
@@ -86,11 +89,7 @@ namespace eShop.ProductWebApi.Extensions
                         h.Username(username);
                         h.Password(password);
                     });
-                    
-                    cfg.ReceiveEndpoint("product-exists", e => e.ConfigureConsumer<ProductExistsReceiver>(context));
                 });
-
-                x.AddConsumer<ProductExistsReceiver>();
             });
 
             return builder;

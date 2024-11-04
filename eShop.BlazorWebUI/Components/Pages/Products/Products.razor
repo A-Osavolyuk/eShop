@@ -47,16 +47,7 @@
 
     private async Task GetAllProducts()
     {
-        var result = await ProductService.GetProductsListAsync();
 
-        if (result.IsSucceeded)
-        {
-            ProductsList = JsonConvert.DeserializeObject<List<ProductDto>>(result.Result!.ToString()!)!;
-        }
-        else
-        {
-            Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
-        }
     }
 
 }

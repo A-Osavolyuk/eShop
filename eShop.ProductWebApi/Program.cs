@@ -18,10 +18,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
+app.ConfigureMongoDB();
+app.UseExceptionHandler();
 
 app.Run();
