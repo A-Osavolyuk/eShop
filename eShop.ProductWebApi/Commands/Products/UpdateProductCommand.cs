@@ -1,4 +1,6 @@
-﻿namespace eShop.ProductWebApi.Commands.Products;
+﻿using eShop.Application.Mapping;
+
+namespace eShop.ProductWebApi.Commands.Products;
 
 public record UpdateProductCommand(UpdateProductRequest Request) : IRequest<Result<UpdateProductResponse>>;
 
@@ -7,7 +9,6 @@ public class UpdateProductCommandHandler(
     IMapper mapper) : IRequestHandler<UpdateProductCommand, Result<UpdateProductResponse>>
 {
     private readonly IMongoDatabase database = database;
-    private readonly IMapper mapper = mapper;
 
     public async Task<Result<UpdateProductResponse>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
@@ -24,9 +25,9 @@ public class UpdateProductCommandHandler(
             
             var entity = request.Request.ProductType switch
             {
-                ProductTypes.Clothing => mapper.Map<ClothingEntity>(request.Request),
-                ProductTypes.Shoes => mapper.Map<ShoesEntity>(request.Request),
-                _ or ProductTypes.None => mapper.Map<ProductEntity>(request.Request)
+                ProductTypes.Clothing => ProductMapper.ToClothingEntity(request.Request),
+                ProductTypes.Shoes => ProductMapper.ToShoesEntity(request.Request),
+                _ or ProductTypes.None => ProductMapper.ToProductEntity(request.Request)
             };
             
             await collection.ReplaceOneAsync(x => x.Id == entity.Id, entity, cancellationToken: cancellationToken);

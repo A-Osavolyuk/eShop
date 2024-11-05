@@ -1,4 +1,5 @@
-﻿using eShop.Domain.DTOs.Products;
+﻿using eShop.Application.Mapping;
+using eShop.Domain.DTOs.Products;
 
 namespace eShop.ProductWebApi.Queries.Products;
 
@@ -34,9 +35,9 @@ public class GetProductQueryByNameHandler(
 
             var response = entity.ProductType switch
             {
-                ProductTypes.Shoes => mapper.Map<ShoesDto>(entity),
-                ProductTypes.Clothing => mapper.Map<ClothingDto>(entity),
-                _ or ProductTypes.None => mapper.Map<ProductDto>(entity),
+                ProductTypes.Shoes => ProductMapper.ToShoesDto((ShoesEntity)entity),
+                ProductTypes.Clothing => ProductMapper.ToClothingDto((ClothingEntity)entity),
+                _ or ProductTypes.None => ProductMapper.ToProductDto(entity),
             };
 
             return new(response);
