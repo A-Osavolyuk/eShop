@@ -1,7 +1,5 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using MediatR;
-using MongoDB.Driver;
+﻿using AutoMapper.QueryableExtensions;
+using eShop.Domain.DTOs.Products;
 
 namespace eShop.ProductWebApi.Queries.Products;
 

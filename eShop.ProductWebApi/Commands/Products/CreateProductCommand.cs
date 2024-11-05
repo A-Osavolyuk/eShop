@@ -1,11 +1,4 @@
-﻿using AutoMapper;
-using eShop.Domain.Enums;
-using eShop.Domain.Requests.Product;
-using eShop.Domain.Responses.Products;
-using MediatR;
-using MongoDB.Driver;
-
-namespace eShop.ProductWebApi.Commands;
+﻿namespace eShop.ProductWebApi.Commands;
 
 public record CreateProductCommand(CreateProductRequest Request) : IRequest<Result<CreateProductResponse>>;
 

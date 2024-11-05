@@ -1,6 +1,4 @@
 ﻿using eShop.Application.Validation.Products;
-using eShop.ProductWebApi.Commands;
-using FluentValidation;
 
 namespace eShop.ProductWebApi.Validation;
 

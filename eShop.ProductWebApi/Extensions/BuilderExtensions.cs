@@ -1,12 +1,4 @@
-﻿using eShop.Application.Behaviours;
-using eShop.Application.Middlewares;
-using eShop.Domain.Requests.Comments;
-using FluentValidation;
-using MassTransit;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.OpenApi.Models;
-
-namespace eShop.ProductWebApi.Extensions
+﻿namespace eShop.ProductWebApi.Extensions
 {
     public static class BuilderExtensions
     {

@@ -1,7 +1,7 @@
 ﻿using eShop.Domain.Entities.Product;
 using eShop.Domain.Enums;
 
-namespace eShop.Domain.DTOs
+namespace eShop.Domain.DTOs.Products
 {
     public record class ProductDto
     {
