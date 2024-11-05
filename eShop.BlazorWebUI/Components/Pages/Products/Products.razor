@@ -1,5 +1,6 @@
 ﻿@page "/products"
 
+@using Severity = MudBlazor.Severity
 @using eShop.Domain.DTOs.Products
 @inherits PageBase
 
@@ -41,14 +42,27 @@
 @code {
     private List<ProductDto> ProductsList { get; set; } = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await GetAllProducts();
+        if (firstRender)
+        {
+            await GetAllProducts();
+        }
     }
 
     private async Task GetAllProducts()
     {
+        var response = await ProductService.GetProductsAsync();
 
+        if (response.IsSucceeded)
+        {
+            var data = ResponseConverter.Deserialize<List<ProductDto>>(response.Result!);
+            ProductsList = data;
+        }
+        else
+        {
+            Snackbar.Add(response.ErrorMessage, Severity.Error);
+        }
     }
 
 }
