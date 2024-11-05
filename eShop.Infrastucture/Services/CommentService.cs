@@ -11,10 +11,9 @@ namespace eShop.Infrastructure.Services
         private readonly IHttpClientService httpClient = httpClient;
         private readonly IConfiguration configuration = configuration;
 
-        public async ValueTask<ResponseDTO> GetCommentsAsync(GetCommentsRequest request) => await httpClient.SendAsync(
+        public async ValueTask<ResponseDTO> GetCommentsAsync(Guid productId) => await httpClient.SendAsync(
             new RequestDto(
-                Url: $"{configuration["Services:Gateway"]}/api/v1/Comments/get-comments",
-                Data: request, Method: HttpMethods.GET));
+                Url: $"{configuration["Services:Gateway"]}/api/v1/Comments/get-comments/{productId}", Method: HttpMethods.GET));
 
         public async ValueTask<ResponseDTO> CreateCommentAsync(CreateCommentRequest request) =>
             await httpClient.SendAsync(new RequestDto(

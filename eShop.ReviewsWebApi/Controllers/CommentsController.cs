@@ -11,10 +11,10 @@ namespace eShop.ReviewsWebApi.Controllers
     {
         private readonly ISender sender = sender;
 
-        [HttpGet("get-comments")]
-        public async ValueTask<ActionResult<ResponseDTO>> GetCommentAsync([FromBody] GetCommentsRequest request)
+        [HttpGet("get-comments/{productId:guid}")]
+        public async ValueTask<ActionResult<ResponseDTO>> GetCommentAsync(Guid productId)
         {
-            var result = await sender.Send(new GetCommentsQuery(request));
+            var result = await sender.Send(new GetCommentsQuery(productId));
             
             return result.Match(
                 s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),

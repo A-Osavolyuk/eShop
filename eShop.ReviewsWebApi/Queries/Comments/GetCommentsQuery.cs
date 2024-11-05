@@ -4,7 +4,7 @@ using eShop.Domain.Responses.Comments;
 
 namespace eShop.ReviewsWebApi.Queries.Comments;
 
-public record GetCommentsQuery(GetCommentsRequest Request) : IRequest<Result<GetCommentsResponse>>;
+public record GetCommentsQuery(Guid ProductId) : IRequest<Result<GetCommentsResponse>>;
 
 public class GetCommentsQueryHandler(
     ReviewDbContext context,
@@ -19,7 +19,7 @@ public class GetCommentsQueryHandler(
         {
             var commentsList = await context.Comments
                 .AsNoTracking()
-                .Where(x => x.ProductId == request.Request.ProductId)
+                .Where(x => x.ProductId == request.ProductId)
                 .ToListAsync(cancellationToken);
 
             var response = await commentsList

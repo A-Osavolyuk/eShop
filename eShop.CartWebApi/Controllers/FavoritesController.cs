@@ -21,10 +21,10 @@ public class FavoritesController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
     
-    [HttpGet("get-favorites")]
-    public async ValueTask<ActionResult<ResponseDTO>> GetCartAsync([FromRoute] GetFavoritesRequest request)
+    [HttpGet("get-favorites/{userId:guid}")]
+    public async ValueTask<ActionResult<ResponseDTO>> GetCartAsync(Guid userId)
     {
-        var response = await sender.Send(new GetFavoritesQuery(request));
+        var response = await sender.Send(new GetFavoritesQuery(userId));
 
         return response.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),

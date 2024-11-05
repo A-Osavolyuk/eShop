@@ -51,7 +51,7 @@ else
     {
         if (Model is not null)
         {
-            var response = await CommentService.GetCommentsAsync(new() { ProductId = Model.Id });
+            var response = await CommentService.GetCommentsAsync(Model.Id);
 
             if (response.IsSucceeded)
             {

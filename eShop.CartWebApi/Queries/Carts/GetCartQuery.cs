@@ -4,7 +4,7 @@ using MongoDB.Driver;
 
 namespace eShop.CartWebApi.Queries.Carts;
 
-public record GetCartQuery(GetCartRequest Request) : IRequest<Result<CartDto>>;
+public record GetCartQuery(Guid UserId) : IRequest<Result<CartDto>>;
 
 public class GetCartQueryHandler(
     IMongoDatabase database,
@@ -19,11 +19,11 @@ public class GetCartQueryHandler(
         try
         {
             var collection = database.GetCollection<CartEntity>("Carts");
-            var cart = await collection.Find(x => x.UserId == request.Request.UserId).FirstOrDefaultAsync(cancellationToken);
+            var cart = await collection.Find(x => x.UserId == request.UserId).FirstOrDefaultAsync(cancellationToken);
 
             if (cart is null)
             {
-                return new(new NotFoundException($"Cannot find cart with user ID {request.Request.UserId}."));
+                return new(new NotFoundException($"Cannot find cart with user ID {request.UserId}."));
             }
             
             return mapper.Map<CartDto>(cart);

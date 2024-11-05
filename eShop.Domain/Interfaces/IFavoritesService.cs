@@ -5,6 +5,6 @@ namespace eShop.Domain.Interfaces;
 
 public interface IFavoritesService
 {
-    public ValueTask<ResponseDTO> GetFavoritesAsync(GetFavoritesRequest request);
+    public ValueTask<ResponseDTO> GetFavoritesAsync(Guid UserId);
     public ValueTask<ResponseDTO> UpdateFavoritesAsync(UpdateFavoritesRequest request);
 }
