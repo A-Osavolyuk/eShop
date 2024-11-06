@@ -10,11 +10,11 @@ public record CreateProductRequest : RequestBase
     public string Article { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
-    public Price Price { get; set; } =  new Price { Amount = 0, Currency = Currency.None };
+    public decimal Price { get; set; }
+    public Currency Currency { get; set; }
     public List<string> Images { get; set; } = new List<string>();
     public BrandEntity Brand { get; set; } = new BrandEntity();
-    
     public ProductColor Color { get; set; } = ProductColor.None;
-    public HashSet<ProductSize> Size { get; set; } = new HashSet<ProductSize>();
+    public IEnumerable<ProductSize> Size { get; set; } = Enumerable.Empty<ProductSize>();
     public Audience Audience { get; set; } = Audience.None;
 };

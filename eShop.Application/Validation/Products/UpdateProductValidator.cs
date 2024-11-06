@@ -1,22 +1,12 @@
-﻿using eShop.Domain.Entities.Product;
-using eShop.Domain.Enums;
+﻿using eShop.Domain.Enums;
 using eShop.Domain.Requests.Product;
 using FluentValidation;
 
 namespace eShop.Application.Validation.Products;
 
-public class CreateProductValidator : AbstractValidator<CreateProductRequest>
+public class UpdateProductValidator : AbstractValidator<UpdateProductRequest>
 {
-    
-    public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
-    {
-        var result = await ValidateAsync(ValidationContext<CreateProductRequest>
-            .CreateWithOptions((CreateProductRequest)model, x => x.IncludeProperties(propertyName)));
-        if (result.IsValid)
-            return Array.Empty<string>();
-        return result.Errors.Select(e => e.ErrorMessage);
-    };
-    public CreateProductValidator()
+    public UpdateProductValidator()
     {
         RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Name is required")
@@ -56,32 +46,15 @@ public class CreateProductValidator : AbstractValidator<CreateProductRequest>
             .When(x => x?.Brand is not null);
         
         RuleFor(x => x.Size)
-            .Must(x => !x.Contains(ProductSize.None)).WithMessage("Size is required")
-            .When(x => x.ProductType is ProductTypes.Shoes or ProductTypes.Clothing)
-            .Must(x => x.Any()).WithMessage("Size is required")
-            .When(x => x.ProductType switch
-            {
-                ProductTypes.Shoes => true,
-                ProductTypes.Clothing => true,
-                _ or ProductTypes.None => false,
-            });
+            .Must(x => !x.Contains(ProductSize.None) && x.Any())
+            .When(x => x.ProductType is ProductTypes.Shoes or ProductTypes.Clothing);
         
         RuleFor(x => x.Color)
             .NotEqual(ProductColor.None).WithMessage("Choose product color")
-            .When(x => x.ProductType switch
-            {
-                ProductTypes.Shoes => true,
-                ProductTypes.Clothing => true,
-                _ or ProductTypes.None => false,
-            });
+            .When(x => x.ProductType is ProductTypes.Shoes or ProductTypes.Clothing);
         
         RuleFor(x => x.Audience)
             .NotEqual(Audience.None).WithMessage("Choose product audience")
-            .When(x => x.ProductType switch
-            {
-                ProductTypes.Shoes => true,
-                ProductTypes.Clothing => true,
-                _ or ProductTypes.None => false,
-            });
+            .When(x => x.ProductType is ProductTypes.Shoes or ProductTypes.Clothing);
     }
 }

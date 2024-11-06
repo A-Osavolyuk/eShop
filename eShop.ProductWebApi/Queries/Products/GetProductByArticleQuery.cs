@@ -1,12 +1,12 @@
-﻿using eShop.Domain.DTOs.Products;
+﻿using eShop.Application.Mapping;
+using eShop.Domain.DTOs.Products;
 
 namespace eShop.ProductWebApi.Queries.Products;
 
 public record GetProductByArticleQuery(string ProductArticle) : IRequest<Result<ProductDto>>;
 
 public class GetProductByArticleQueryHandler(
-    IMongoDatabase database,
-    IMapper mapper) : IRequestHandler<GetProductByArticleQuery, Result<ProductDto>>
+    IMongoDatabase database) : IRequestHandler<GetProductByArticleQuery, Result<ProductDto>>
 {
     private readonly IMongoDatabase database = database;
 
@@ -34,9 +34,9 @@ public class GetProductByArticleQueryHandler(
 
             var response = entity.ProductType switch
             {
-                ProductTypes.Shoes => mapper.Map<ShoesDto>(entity),
-                ProductTypes.Clothing => mapper.Map<ClothingDto>(entity),
-                _ or ProductTypes.None => mapper.Map<ProductDto>(entity),
+                ProductTypes.Shoes => ProductMapper.ToShoesDto((ShoesEntity)entity),
+                ProductTypes.Clothing => ProductMapper.ToClothingDto((ClothingEntity)entity),
+                _ or ProductTypes.None => ProductMapper.ToProductDto(entity),
             };
 
             return new(response);

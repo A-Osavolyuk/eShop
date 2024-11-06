@@ -1,0 +1,94 @@
+﻿@using CreateProductRequest = eShop.Domain.Requests.Product.CreateProductRequest
+
+<MudSelect
+    T="ProductSize"
+    SelectedValues="Model.Size"
+    MultiSelection
+    Variant="Variant.Outlined"
+    Placeholder="Select sizes..."
+    Label="Sizes"
+    ShrinkLabel
+    SelectAll
+    Required
+    RequiredError="You must choose at least one size">
+    @foreach (var size in GetSizes())
+    {
+        <MudSelectItem
+            T="ProductSize"
+            Value="size">
+        </MudSelectItem>
+    }
+</MudSelect>
+<MudSelect
+    T="ProductColor"
+    Variant="Variant.Outlined"
+    Placeholder="Select color..."
+    Label="Color"
+    ShrinkLabel
+    Immediate
+    For="() => Model.Color"
+    @bind-Value="Model.Color">
+    <MudSelectItem
+        Disabled
+        T="ProductColor"
+        Value="ProductColor.None">
+    </MudSelectItem>
+    @foreach (var color in GetColors())
+    {
+        <MudSelectItem
+            T="ProductColor"
+            Value="color">
+        </MudSelectItem>
+    }
+</MudSelect>
+<MudSelect
+    T="Audience"
+    Variant="Variant.Outlined"
+    Placeholder="Select audience..."
+    Label="Audience"
+    ShrinkLabel
+    Immediate
+    For="() => Model.Audience"
+    @bind-Value="Model.Audience">
+    <MudSelectItem
+        Disabled
+        T="Audience"
+        Value="Audience.None">
+    </MudSelectItem>
+    @foreach (var audience in GetAudience())
+    {
+        <MudSelectItem
+            T="Audience"
+            Value="audience">
+        </MudSelectItem>
+    }
+</MudSelect>
+
+@code {
+    [Parameter] public CreateProductRequest Model { get; set; } = new();
+
+    private List<ProductSize> GetSizes()
+    {
+        return Enum
+            .GetValues<ProductSize>()
+            .Where(x => x != ProductSize.None)
+            .ToList();
+    }
+
+    private List<ProductColor> GetColors()
+    {
+        return Enum
+            .GetValues<ProductColor>()
+            .Where(x => x != ProductColor.None)
+            .ToList();
+    }
+
+    private List<Audience> GetAudience()
+    {
+        return Enum
+            .GetValues<Audience>()
+            .Where(x => x != Audience.None)
+            .ToList();
+    }
+
+}

@@ -1,4 +1,5 @@
 ﻿using AutoMapper.QueryableExtensions;
+using eShop.Application.Mapping;
 using eShop.Domain.DTOs.Products;
 
 namespace eShop.ProductWebApi.Queries.Products;
@@ -6,11 +7,9 @@ namespace eShop.ProductWebApi.Queries.Products;
 public record GetProductsQuery() : IRequest<Result<IEnumerable<ProductDto>>>;
 
 public class GetProductsQueryHandler(
-    IMongoDatabase database,
-    IMapper mapper) : IRequestHandler<GetProductsQuery, Result<IEnumerable<ProductDto>>>
+    IMongoDatabase database) : IRequestHandler<GetProductsQuery, Result<IEnumerable<ProductDto>>>
 {
     private readonly IMongoDatabase database = database;
-    private readonly IMapper mapper = mapper;
 
     public async Task<Result<IEnumerable<ProductDto>>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
     {
@@ -20,10 +19,9 @@ public class GetProductsQueryHandler(
             var products = await collection.Find(x => true).ToListAsync(cancellationToken);
             if (products.Any())
             {
-                var response = await products
-                    .AsQueryable()
-                    .ProjectTo<ProductDto>(mapper.ConfigurationProvider)
-                    .ToListAsync(cancellationToken);
+                var response = products
+                    .Select(ProductMapper.ToProductDto)
+                    .ToList();
                 
                 return new(response);
             }

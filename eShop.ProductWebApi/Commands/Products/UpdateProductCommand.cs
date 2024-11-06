@@ -5,8 +5,7 @@ namespace eShop.ProductWebApi.Commands.Products;
 public record UpdateProductCommand(UpdateProductRequest Request) : IRequest<Result<UpdateProductResponse>>;
 
 public class UpdateProductCommandHandler(
-    IMongoDatabase database,
-    IMapper mapper) : IRequestHandler<UpdateProductCommand, Result<UpdateProductResponse>>
+    IMongoDatabase database) : IRequestHandler<UpdateProductCommand, Result<UpdateProductResponse>>
 {
     private readonly IMongoDatabase database = database;
 

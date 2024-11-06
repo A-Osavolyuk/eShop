@@ -1,12 +1,11 @@
 ﻿using eShop.Application.Mapping;
 
-namespace eShop.ProductWebApi.Commands;
+namespace eShop.ProductWebApi.Commands.Products;
 
 public record CreateProductCommand(CreateProductRequest Request) : IRequest<Result<CreateProductResponse>>;
 
 public sealed class CreateProductCommandHandler(
-    IMongoDatabase database,
-    IMapper mapper) : IRequestHandler<CreateProductCommand, Result<CreateProductResponse>>
+    IMongoDatabase database) : IRequestHandler<CreateProductCommand, Result<CreateProductResponse>>
 {
     private readonly IMongoDatabase database = database;
     

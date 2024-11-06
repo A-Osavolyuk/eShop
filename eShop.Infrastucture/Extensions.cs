@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using eShop.Infrastructure.StateContainers;
 
 namespace eShop.Infrastructure
 {
@@ -76,6 +77,7 @@ namespace eShop.Infrastructure
             builder.Services.AddScoped<ICookieManager, CookieManager>();
 
             builder.Services.AddSingleton<NotificationService>();
+            builder.Services.AddSingleton<InputImagesStateContainer>();
 
             return builder;
         }

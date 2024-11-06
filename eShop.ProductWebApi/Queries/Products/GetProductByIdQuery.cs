@@ -6,8 +6,7 @@ namespace eShop.ProductWebApi.Queries.Products;
 public record GetProductByIdQuery(Guid ProductId) : IRequest<Result<ProductDto>>;
 
 public class GetProductByIdQueryHandler(
-    IMongoDatabase database,
-    IMapper mapper) : IRequestHandler<GetProductByIdQuery, Result<ProductDto>>
+    IMongoDatabase database) : IRequestHandler<GetProductByIdQuery, Result<ProductDto>>
 {
     private readonly IMongoDatabase database = database;
 
