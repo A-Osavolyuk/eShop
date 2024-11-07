@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.OpenApi.Models;
 
 namespace eShop.Application;
 
@@ -23,7 +24,7 @@ public static class BuilderExtensions
         return builder;
     }
 
-    public static IHostApplicationBuilder ConfigureVersioning(this IHostApplicationBuilder builder)
+    public static IHostApplicationBuilder AddVersioning(this IHostApplicationBuilder builder)
     {
         builder.Services.AddApiVersioning(options =>
         {
@@ -43,6 +44,37 @@ public static class BuilderExtensions
             options.GroupNameFormat = "'v'V";
         });
 
+        return builder;
+    }
+    
+    public static IHostApplicationBuilder AddSwaggerWithSecurity(this IHostApplicationBuilder builder)
+    {
+        builder.Services.AddSwaggerGen(options =>
+        {
+            builder.Services.AddEndpointsApiExplorer();
+            options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new()
+            {
+                Name = "Authorization",
+                Description = "Enter the Bearer Authorization string as following: 'Bearer Generated-JWT-Token'",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = JwtBearerDefaults.AuthenticationScheme
+            });
+
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme()
+                    {
+                        Reference = new OpenApiReference()
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = JwtBearerDefaults.AuthenticationScheme
+                        }
+                    }, new string[] { }
+                }
+            });
+        });
         return builder;
     }
 

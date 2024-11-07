@@ -14,7 +14,7 @@ namespace eShop.AuthWebApi.Extensions
     {
         public static IHostApplicationBuilder AddApiServices(this IHostApplicationBuilder builder)
         {
-            builder.ConfigureVersioning();
+            builder.AddVersioning();
             builder.AddMapping();
             builder.AddValidation();
             builder.AddMessageBus();
@@ -43,7 +43,7 @@ namespace eShop.AuthWebApi.Extensions
             return builder;
         }
 
-        public static IHostApplicationBuilder AddAuth(this IHostApplicationBuilder builder)
+        private static IHostApplicationBuilder AddAuth(this IHostApplicationBuilder builder)
         {
             builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
             {
@@ -94,7 +94,7 @@ namespace eShop.AuthWebApi.Extensions
             return builder;
         }
 
-        public static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
+        private static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
         {
             builder.Services.AddScoped<ITokenHandler, TokenHandler>();
             builder.Services.AddScoped<IEmailSender, EmailSender>();
@@ -107,7 +107,7 @@ namespace eShop.AuthWebApi.Extensions
             return builder;
         }
 
-        public static IHostApplicationBuilder AddMessageBus(this IHostApplicationBuilder builder)
+        private static IHostApplicationBuilder AddMessageBus(this IHostApplicationBuilder builder)
         {
             builder.Services.AddMassTransit(x =>
             {
@@ -130,36 +130,6 @@ namespace eShop.AuthWebApi.Extensions
                 x.AddConsumer<UserExistsReceiver>();
             });
 
-            return builder;
-        }
-
-        public static IHostApplicationBuilder AddSwaggerWithSecurity(this IHostApplicationBuilder builder)
-        {
-            builder.Services.AddSwaggerGen(options =>
-            {
-                options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new()
-                {
-                    Name = "Authorization",
-                    Description = "Enter the Bearer Authorization string as following: 'Bearer Generated-JWT-Token'",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = JwtBearerDefaults.AuthenticationScheme
-                });
-
-                options.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme()
-                        {
-                            Reference = new OpenApiReference()
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = JwtBearerDefaults.AuthenticationScheme
-                            }
-                        }, new string[] { }
-                    }
-                });
-            });
             return builder;
         }
     }

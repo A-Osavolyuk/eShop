@@ -11,7 +11,7 @@ namespace eShop.ReviewsWebApi.Extensions
         public static IHostApplicationBuilder AddApiServices(this IHostApplicationBuilder builder)
         {
             builder.AddJwtAuthentication();
-            builder.ConfigureVersioning();
+            builder.AddVersioning();
             builder.AddMapping();
             builder.AddSwaggerWithSecurity();
             builder.AddDependencyInjection();
@@ -30,36 +30,6 @@ namespace eShop.ReviewsWebApi.Extensions
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
             builder.Services.AddProblemDetails();
 
-            return builder;
-        }
-
-        private static IHostApplicationBuilder AddSwaggerWithSecurity(this IHostApplicationBuilder builder)
-        {
-            builder.Services.AddSwaggerGen(options =>
-            {
-                options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new()
-                {
-                    Name = "Authorization",
-                    Description = "Enter the Bearer Authorization string as following: 'Bearer Generated-JWT-Token'",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = JwtBearerDefaults.AuthenticationScheme
-                });
-
-                options.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme()
-                        {
-                            Reference = new OpenApiReference()
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = JwtBearerDefaults.AuthenticationScheme
-                            }
-                        }, new string[] { }
-                    }
-                });
-            });
             return builder;
         }
 
