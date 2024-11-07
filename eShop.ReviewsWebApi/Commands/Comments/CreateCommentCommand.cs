@@ -26,7 +26,6 @@ public class CreateCommentCommandHandler(
             return new(new CreateCommentResponse()
             {
                 Message = "Comment was successfully created.",
-                IsSucceeded = true
             });
         }
         catch (Exception ex)

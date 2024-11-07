@@ -17,7 +17,7 @@ namespace eShop.Infrastructure.Services
             {
                 var blobContainerClient = GetContainerClient(configuration["ProductContainer"]!);
                 var blobClient = blobContainerClient.GetBlobClient($"{productId}_{i}");
-                using (var stream = images[i].OpenReadStream())
+                await using (var stream = images[i].OpenReadStream())
                 {
                     await blobClient.UploadAsync(stream, true);
                 }
@@ -44,7 +44,7 @@ namespace eShop.Infrastructure.Services
         {
             var blobContainerClient = GetContainerClient(configuration["AvatarContainer"]!);
             var blobClient = blobContainerClient.GetBlobClient($"avatar_{userId}");
-            using (var stream = file.OpenReadStream())
+            await using (var stream = file.OpenReadStream())
             {
                 await blobClient.UploadAsync(stream, true);
             }

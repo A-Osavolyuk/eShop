@@ -8,14 +8,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Azure.Storage.Blobs" Version="12.22.1" />
-		<PackageReference Include="Azure.Storage.Files.Shares" Version="12.20.0" />
-		<PackageReference Include="Azure.Storage.Queues" Version="12.20.0" />
+		<PackageReference Include="Azure.Storage.Blobs" Version="12.22.2" />
+		<PackageReference Include="Azure.Storage.Files.Shares" Version="12.20.1" />
+		<PackageReference Include="Azure.Storage.Queues" Version="12.20.1" />
 		<PackageReference Include="Blazored.FluentValidation" Version="2.2.0" />
 		<PackageReference Include="Blazored.Toast" Version="4.2.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.10" />
-		<PackageReference Include="Microsoft.Extensions.Azure" Version="1.7.6" />
-		<PackageReference Include="MudBlazor" Version="7.9.0" />
+		<PackageReference Include="Microsoft.Extensions.Azure" Version="1.8.0" />
+		<PackageReference Include="MudBlazor" Version="7.15.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	</ItemGroup>
 

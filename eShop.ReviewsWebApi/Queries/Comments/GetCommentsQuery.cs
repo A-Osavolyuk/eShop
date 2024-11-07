@@ -31,7 +31,6 @@ public class GetCommentsQueryHandler(
             {
                 Comments = response,
                 Message = "Successfully found comments",
-                IsSucceeded = true
             });
         }
         catch (Exception ex)

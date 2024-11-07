@@ -44,7 +44,6 @@ public class UpdatedCartCommandHandler(
                 return new UpdateCartResponse()
                 {
                     Message = "Cart was successfully updated",
-                    IsSucceeded = true
                 };
             }
         }

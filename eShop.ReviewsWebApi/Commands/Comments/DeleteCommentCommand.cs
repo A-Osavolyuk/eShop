@@ -32,7 +32,6 @@ public class DeleteCommentCommandHandler(
             return new(new DeleteCommentResponse()
             {
                 Message = "Comment successfully deleted.",
-                IsSucceeded = true
             });
         }
         catch (Exception ex)

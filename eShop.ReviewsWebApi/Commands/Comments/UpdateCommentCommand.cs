@@ -35,7 +35,6 @@ public class UpdateCommentCommandHandler(
             return new Result<UpdateCommentResponse>(new UpdateCommentResponse()
             {
                 Message = "Comment was successfully updated.",
-                IsSucceeded = true
             });
         }
         catch (Exception ex)

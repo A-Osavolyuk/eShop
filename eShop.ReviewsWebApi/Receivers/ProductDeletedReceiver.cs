@@ -33,7 +33,6 @@ namespace eShop.ReviewsWebApi.Receivers
                 await context.RespondAsync<DeleteCommentResponse>(new DeleteCommentResponse()
                 {
                     Message = "Comments were successfully deleted.",
-                    IsSucceeded = true
                 });
             
             logger.LogInformation($"Response was successfully sent.", context.Message.RequestId);

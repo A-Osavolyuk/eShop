@@ -7,11 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2"/>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Controllers\" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.8.1" />
+        <PackageReference Include="Azure.Storage.Blobs" Version="12.22.2" />
+        <PackageReference Include="Azure.Storage.Files.Shares" Version="12.20.1" />
+        <PackageReference Include="Azure.Storage.Queues" Version="12.20.1" />
+        <PackageReference Include="Microsoft.Extensions.Azure" Version="1.8.0" />
     </ItemGroup>
 
     <ItemGroup>

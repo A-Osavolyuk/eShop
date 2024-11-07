@@ -24,7 +24,6 @@ public class DeleteProductCommandHandler(
             return new(new DeleteProductResponse()
             {
                 Message = "Product was successfully deleted",
-                IsSucceeded = true
             });
 
         }

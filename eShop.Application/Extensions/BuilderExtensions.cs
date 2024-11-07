@@ -49,9 +49,9 @@ public static class BuilderExtensions
     
     public static IHostApplicationBuilder AddSwaggerWithSecurity(this IHostApplicationBuilder builder)
     {
+        builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>
         {
-            builder.Services.AddEndpointsApiExplorer();
             options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new()
             {
                 Name = "Authorization",

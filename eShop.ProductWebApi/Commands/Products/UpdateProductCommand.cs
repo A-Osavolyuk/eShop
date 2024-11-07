@@ -34,7 +34,6 @@ public class UpdateProductCommandHandler(
             return new(new UpdateProductResponse
             {
                 Message = "Product was updated successfully.",
-                IsSucceeded = true
             });
         }
         catch (Exception ex)

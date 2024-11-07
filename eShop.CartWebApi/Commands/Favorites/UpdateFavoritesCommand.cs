@@ -40,7 +40,6 @@ public class UpdstateFavoritesCommandHandler(
 
             return new UpdateFavoritesResponse()
             {
-                IsSucceeded = true,
                 Message = "Favorites successfully updated"
             };
         }

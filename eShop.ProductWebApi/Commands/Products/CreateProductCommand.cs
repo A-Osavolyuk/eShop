@@ -26,7 +26,6 @@ public sealed class CreateProductCommandHandler(
             return new(new CreateProductResponse()
             {
                 Message = "Product created successfully.",
-                IsSucceeded = true
             });
         }
         catch (Exception ex)
