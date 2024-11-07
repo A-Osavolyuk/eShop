@@ -2,6 +2,7 @@
 
 @using eShop.Application.Validation.Products
 @using eShop.Infrastructure.StateContainers
+@using LanguageExt.Pipes
 @using CreateProductRequest = Domain.Requests.Product.CreateProductRequest
 
 @inherits PageBase
@@ -15,10 +16,10 @@
 <MudGrid Justify="Justify.Center">
     <MudItem xs="8">
         <MudPaper Outlined Class="pa-5">
-            <MudGrid>
-                <MudForm @ref="form" Model="Model" Validation="Validator.ValidateValue">
+            <MudForm @ref="form" Model="Model" Validation="Validator.ValidateValue">
+                <MudGrid>
                     <MudItem xs="4">
-                        <ImagesInput Files="@Files"/>
+                        <ImagesInput Model="Model"/>
                     </MudItem>
                     <MudItem xs="8">
                         <MudText Typo="Typo.h5">Main properties</MudText>
@@ -28,10 +29,11 @@
                                 @* --- Name --- *@
                                 <MudTextField
                                     Variant="Variant.Outlined"
+                                    Immediate
                                     AutoGrow
                                     Label="Name"
                                     For="(() => Model.Name)"
-                                    Value="Model.Name"
+                                    @bind-Value="Model.Name"
                                     MaxLength="100"
                                     Counter="100"
                                     InputType="InputType.Text"
@@ -40,10 +42,11 @@
                                 @* --- Description --- *@
                                 <MudTextField
                                     Variant="Variant.Outlined"
+                                    Immediate
                                     AutoGrow
                                     Label="Description"
                                     For="(() => Model.Description)"
-                                    Value="Model.Description"
+                                    @bind-Value="Model.Description"
                                     MaxLength="3000"
                                     Counter="3000"
                                     Lines="5"
@@ -56,6 +59,7 @@
                                     <MudItem xs="6">
                                         <MudNumericField
                                             For="(() => Model.Price)"
+                                            Immediate
                                             @bind-Value="Model.Price"
                                             Step="0.1m"
                                             Max="100000"
@@ -68,6 +72,7 @@
 
                                         <MudSelect
                                             Variant="Variant.Outlined"
+                                            Immediate
                                             @bind-Value="Model.Currency"
                                             For="() => Model.Currency"
                                             Label="Currency">
@@ -85,6 +90,7 @@
                                     Variant="Variant.Outlined"
                                     For="() => Model.ProductType"
                                     @bind-Value="Model.ProductType"
+                                    Immediate
                                     Label="Type">
                                     <MudSelectItem Value="ProductTypes.None" Disabled>None</MudSelectItem>
                                     @foreach (var type in GetTypes())
@@ -137,8 +143,8 @@
                             </MudItem>
                         </MudGrid>
                     </MudItem>
-                </MudForm>
-            </MudGrid>
+                </MudGrid>
+            </MudForm>
         </MudPaper>
     </MudItem>
 </MudGrid>
@@ -146,7 +152,6 @@
 @code {
     private MudForm form = new();
     private CreateProductRequest Model { get; set; } = new();
-    private IReadOnlyList<IBrowserFile> Files { get; set; } = default!;
 
     #region Private methods
 
@@ -171,8 +176,8 @@
 
     private void ResetForm()
     {
+        form.ResetValidation();
         Model = new();
-        Files = default!;
         InputImagesStateContainer.OnClearImages();
         StateHasChanged();
     }
