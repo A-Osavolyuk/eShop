@@ -27,26 +27,26 @@ var rabbitMq = builder.AddRabbitMQ("eShopRabbitMQ", port: 25001)
     .WithEnvironment(EnvironmentVariables.RabbitmqDefaultUser, "user")
     .WithEnvironment(EnvironmentVariables.RabbitmqDefaultPass, "b2ce482e-9678-43b9-82e3-3b5ec7148355");
 
-var emailService = builder.AddProject<Projects.eShop_EmailSenderWebApi>("eshop-email-sender-webapi")
+var emailService = builder.AddProject<Projects.eShop_EmailSenderApi>("eshop-email-sender-api")
     .WithReference(rabbitMq);
 
-var authApi = builder.AddProject<Projects.eShop_AuthWebApi>("eshop-auth-webapi")
+var authApi = builder.AddProject<Projects.eShop_AuthApi>("eshop-auth-api")
     .WithReference(authDb)
     .WithReference(emailService);
 
-var productApi = builder.AddProject<Projects.eShop_ProductWebApi>("eshop-product-webapi")
+var productApi = builder.AddProject<Projects.eShop_ProductApi>("eshop-product-api")
     .WithReference(authApi)
     .WithReference(productDb);
 
-var reviewsApi = builder.AddProject<Projects.eShop_ReviewsWebApi>("eshop-reviews-webapi")
+var reviewsApi = builder.AddProject<Projects.eShop_ReviewsApi>("eshop-reviews-api")
     .WithReference(authApi)
     .WithReference(reviewsDb);
 
-var cartApi = builder.AddProject<Projects.eShop_CartWebApi>("eshop-cart-webapi")
+var cartApi = builder.AddProject<Projects.eShop_CartApi>("eshop-cart-api")
     .WithReference(cartDb)
     .WithReference(authApi);
 
-var filesStorageApi = builder.AddProject<Projects.eShop_FilesStorageWebApi>("eshop-file-store-webapi")
+var filesStorageApi = builder.AddProject<Projects.eShop_FilesStorageApi>("eshop-file-store-api")
     .WithReference(authApi);
 
 var gateway = builder.AddProject<Projects.eShop_Gateway>("eshop-gateway");

@@ -1,0 +1,11 @@
+﻿global using AutoMapper;
+global using eShop.Application.Extensions;
+global using eShop.Application.Utilities;
+global using eShop.CartApi.Extensions;
+global using eShop.Domain.DTOs;
+global using eShop.Domain.Entities;
+global using eShop.Domain.Exceptions;
+global using LanguageExt.Common;
+global using MassTransit;
+global using MediatR;
+global using Microsoft.AspNetCore.Mvc;

@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.Application", "eShop.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.Infrastructure", "eShop.Infrastucture\eShop.Infrastructure.csproj", "{EE98FE03-5928-4E87-A072-ADD40873AC9E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.AuthWebApi", "eShop.AuthWebApi\eShop.AuthWebApi.csproj", "{A319947C-3A10-40C3-89F3-A9C2A9778A15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.AuthApi", "eShop.AuthApi\eShop.AuthApi.csproj", "{A319947C-3A10-40C3-89F3-A9C2A9778A15}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main", "Main", "{B613A38A-075A-4881-905E-BB3BBBF2E7BD}"
 EndProject
@@ -25,17 +25,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{F98374CC-05C3-
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.BlazorWebUI", "eShop.BlazorWebUI\eShop.BlazorWebUI.csproj", "{5B1B4D1B-55A3-481D-90AE-626F42801DD5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.ProductWebApi", "eShop.ProductWebApi\eShop.ProductWebApi.csproj", "{628C7868-F50E-4BF1-893B-62F87114E29F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.ProductApi", "eShop.ProductApi\eShop.ProductApi.csproj", "{628C7868-F50E-4BF1-893B-62F87114E29F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.EmailSenderWebApi", "eShop.EmailSenderWebApi\eShop.EmailSenderWebApi.csproj", "{6EDB4ABB-AAF5-4BE5-A535-D9FF5FB3B83E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.EmailSenderApi", "eShop.EmailSenderApi\eShop.EmailSenderApi.csproj", "{6EDB4ABB-AAF5-4BE5-A535-D9FF5FB3B83E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.AppHost", "eShop\eShop.AppHost\eShop.AppHost.csproj", "{C0668F07-162F-4870-8207-0EA3FAC79DAD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.ServiceDefaults", "eShop\eShop.ServiceDefaults\eShop.ServiceDefaults.csproj", "{B8F5BFB0-038B-49F2-A3D1-518BB35B4D3D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.ReviewsWebApi", "eShop.ReviewsWebApi\eShop.ReviewsWebApi.csproj", "{6521BC9F-1951-4C8E-9216-193A25F3C3DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.ReviewsApi", "eShop.ReviewsApi\eShop.ReviewsApi.csproj", "{6521BC9F-1951-4C8E-9216-193A25F3C3DF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.CartWebApi", "eShop.CartWebApi\eShop.CartWebApi.csproj", "{FF34FF4A-E9FA-42B4-8C0E-5AEBE61458EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.CartApi", "eShop.CartApi\eShop.CartApi.csproj", "{FF34FF4A-E9FA-42B4-8C0E-5AEBE61458EA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateway", "Gateway", "{B69FD745-58C4-46EB-A0A2-1C7242B25750}"
 EndProject
@@ -43,7 +43,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.Gateway", "eShop.Gate
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "eShop.AngularWebUI", "eShop.AngularWebUI\eShop.AngularWebUI.esproj", "{A0D750E3-848A-4BE9-9F85-805B6B228091}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eShop.FilesStorageWebApi", "eShop.FilesStorageWebApi\eShop.FilesStorageWebApi.csproj", "{1F9BA980-B39D-49DD-A4FD-D2FE91A996C1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eShop.FilesStorageApi", "eShop.FilesStorageApi\eShop.FilesStorageApi.csproj", "{1F9BA980-B39D-49DD-A4FD-D2FE91A996C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
