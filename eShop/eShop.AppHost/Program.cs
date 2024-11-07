@@ -46,6 +46,9 @@ var cartApi = builder.AddProject<Projects.eShop_CartWebApi>("eshop-cart-webapi")
     .WithReference(cartDb)
     .WithReference(authApi);
 
+var filesStorageApi = builder.AddProject<Projects.eShop_FilesStorageWebApi>("eshop-file-store-webapi")
+    .WithReference(authApi);
+
 var gateway = builder.AddProject<Projects.eShop_Gateway>("eshop-gateway");
 
 #endregion

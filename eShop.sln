@@ -43,6 +43,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.Gateway", "eShop.Gate
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "eShop.AngularWebUI", "eShop.AngularWebUI\eShop.AngularWebUI.esproj", "{A0D750E3-848A-4BE9-9F85-805B6B228091}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eShop.FilesStorageWebApi", "eShop.FilesStorageWebApi\eShop.FilesStorageWebApi.csproj", "{1F9BA980-B39D-49DD-A4FD-D2FE91A996C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +105,10 @@ Global
 		{A0D750E3-848A-4BE9-9F85-805B6B228091}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0D750E3-848A-4BE9-9F85-805B6B228091}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A0D750E3-848A-4BE9-9F85-805B6B228091}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{1F9BA980-B39D-49DD-A4FD-D2FE91A996C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F9BA980-B39D-49DD-A4FD-D2FE91A996C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F9BA980-B39D-49DD-A4FD-D2FE91A996C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F9BA980-B39D-49DD-A4FD-D2FE91A996C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -126,6 +132,7 @@ Global
 		{B69FD745-58C4-46EB-A0A2-1C7242B25750} = {C738A752-84CC-4456-BD72-B31A8BBCA7C2}
 		{4F4C7074-77BA-4A0D-AB71-77B5AD746292} = {B69FD745-58C4-46EB-A0A2-1C7242B25750}
 		{A0D750E3-848A-4BE9-9F85-805B6B228091} = {F98374CC-05C3-4332-9C94-8340FA0F30AE}
+		{1F9BA980-B39D-49DD-A4FD-D2FE91A996C1} = {074D3F96-0865-438D-9379-D836D9C5A13D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EFA1E0D7-C795-49E5-BC36-F86C4991E09D}
