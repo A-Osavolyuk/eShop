@@ -29,9 +29,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.ProductApi", "eShop.P
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.EmailSenderApi", "eShop.EmailSenderApi\eShop.EmailSenderApi.csproj", "{6EDB4ABB-AAF5-4BE5-A535-D9FF5FB3B83E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.AppHost", "eShop\eShop.AppHost\eShop.AppHost.csproj", "{C0668F07-162F-4870-8207-0EA3FAC79DAD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.AppHost", "eShop.AppHost\eShop.AppHost.csproj", "{C0668F07-162F-4870-8207-0EA3FAC79DAD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.ServiceDefaults", "eShop\eShop.ServiceDefaults\eShop.ServiceDefaults.csproj", "{B8F5BFB0-038B-49F2-A3D1-518BB35B4D3D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.ServiceDefaults", "eShop.ServiceDefaults\eShop.ServiceDefaults.csproj", "{B8F5BFB0-038B-49F2-A3D1-518BB35B4D3D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.ReviewsApi", "eShop.ReviewsApi\eShop.ReviewsApi.csproj", "{6521BC9F-1951-4C8E-9216-193A25F3C3DF}"
 EndProject

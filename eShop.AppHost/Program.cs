@@ -60,7 +60,7 @@ var blazorClient = builder.AddProject<Projects.eShop_BlazorWebUI>("eshop-blazor-
     .WithReference(gateway);
 
 var angularClient = builder.AddNpmApp("eshop-angular-webui",
-        "C:/Users/sasha/source/repos/A-Osavolyuk/eShop/eShop.AngularWebUI")
+        "../eShop.AngularWebUI")
     .WithReference(authApi)
     .WithReference(gateway)
     .WithHttpEndpoint(port: 5103, targetPort: 4200, env: "PORT")

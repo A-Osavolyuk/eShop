@@ -28,15 +28,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\eShop.AngularWebUI\eShop.AngularWebUI.esproj" />
-    <ProjectReference Include="..\..\eShop.AuthApi\eShop.AuthApi.csproj" />
-    <ProjectReference Include="..\..\eShop.BlazorWebUI\eShop.BlazorWebUI.csproj" />
-    <ProjectReference Include="..\..\eShop.CartApi\eShop.CartApi.csproj" />
-    <ProjectReference Include="..\..\eShop.EmailSenderApi\eShop.EmailSenderApi.csproj" />
-    <ProjectReference Include="..\..\eShop.FilesStorageApi\eShop.FilesStorageApi.csproj" />
-    <ProjectReference Include="..\..\eShop.Gateway\eShop.Gateway.csproj" />
-    <ProjectReference Include="..\..\eShop.ProductApi\eShop.ProductApi.csproj" />
-    <ProjectReference Include="..\..\eShop.ReviewsApi\eShop.ReviewsApi.csproj" />
+    <ProjectReference Include="..\eShop.AngularWebUI\eShop.AngularWebUI.esproj" />
+    <ProjectReference Include="..\eShop.AuthApi\eShop.AuthApi.csproj" />
+    <ProjectReference Include="..\eShop.BlazorWebUI\eShop.BlazorWebUI.csproj" />
+    <ProjectReference Include="..\eShop.CartApi\eShop.CartApi.csproj" />
+    <ProjectReference Include="..\eShop.EmailSenderApi\eShop.EmailSenderApi.csproj" />
+    <ProjectReference Include="..\eShop.FilesStorageApi\eShop.FilesStorageApi.csproj" />
+    <ProjectReference Include="..\eShop.Gateway\eShop.Gateway.csproj" />
+    <ProjectReference Include="..\eShop.ProductApi\eShop.ProductApi.csproj" />
+    <ProjectReference Include="..\eShop.ReviewsApi\eShop.ReviewsApi.csproj" />
   </ItemGroup>
 
 </Project>
