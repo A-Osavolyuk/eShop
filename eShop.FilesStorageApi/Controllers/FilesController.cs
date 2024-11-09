@@ -25,7 +25,7 @@ public class FilesController(IStoreService storeService,
     }
     
     [HttpPost("upload-product-images")]
-    public async ValueTask<ActionResult<ResponseDTO>> UploadProductImagesAsync([FromForm] IFormFileCollection files, [FromForm] Guid productId)
+    public async ValueTask<ActionResult<ResponseDto>> UploadProductImagesAsync([FromForm] IFormFileCollection files, [FromForm] Guid productId)
     {
         var response = await sender.Send(new UploadProductImagesCommand(files, productId));
         return response.Match(
@@ -34,7 +34,7 @@ public class FilesController(IStoreService storeService,
     }
     
     [HttpDelete("delete-product-images/{productId:guid}")]
-    public async ValueTask<ActionResult<ResponseDTO>> DeleteProductImagesAsync(Guid productId)
+    public async ValueTask<ActionResult<ResponseDto>> DeleteProductImagesAsync(Guid productId)
     {
         var response = await sender.Send(new DeleteProductImagesCommand(productId));
         return response.Match(

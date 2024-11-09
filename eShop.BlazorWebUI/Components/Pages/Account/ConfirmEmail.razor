@@ -5,7 +5,7 @@
 @inject ISnackbar SnackBar
 
 @code {
-    private ResponseDTO Result { get; set; } = new();
+    private ResponseDto Result { get; set; } = new();
 
     [SupplyParameterFromQuery(Name = "token")] public string Token { get; set; } = string.Empty;
     [SupplyParameterFromQuery(Name = "email")] public string Email { get; set; } = string.Empty;

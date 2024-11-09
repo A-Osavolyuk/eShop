@@ -12,7 +12,7 @@ namespace eShop.ProductApi.Controllers
         private readonly IMongoDatabase database = database;
         
         [HttpGet("get-products")]
-        public async ValueTask<ActionResult<ResponseDTO>> GetProductsAsync()
+        public async ValueTask<ActionResult<ResponseDto>> GetProductsAsync()
         {
             var result = await sender.Send(new GetProductsQuery());
 
@@ -22,7 +22,7 @@ namespace eShop.ProductApi.Controllers
         }
         
         [HttpGet("get-product-by-name/{name}")]
-        public async ValueTask<ActionResult<ResponseDTO>> GetProductByNameAsync(string name)
+        public async ValueTask<ActionResult<ResponseDto>> GetProductByNameAsync(string name)
         {
             var result = await sender.Send(new GetProductByNameQuery(name));
 
@@ -32,7 +32,7 @@ namespace eShop.ProductApi.Controllers
         }
         
         [HttpGet("get-product-by-article/{article}")]
-        public async ValueTask<ActionResult<ResponseDTO>> GetProductByArticleAsync(string article)
+        public async ValueTask<ActionResult<ResponseDto>> GetProductByArticleAsync(string article)
         {
             var result = await sender.Send(new GetProductByArticleQuery(article));
 
@@ -42,7 +42,7 @@ namespace eShop.ProductApi.Controllers
         }
         
         [HttpGet("get-product-by-id/{id:guid}")]
-        public async ValueTask<ActionResult<ResponseDTO>> GetProductByIdAsync(Guid id)
+        public async ValueTask<ActionResult<ResponseDto>> GetProductByIdAsync(Guid id)
         {
             var result = await sender.Send(new GetProductByIdQuery(id));
 
@@ -52,7 +52,7 @@ namespace eShop.ProductApi.Controllers
         }
         
         [HttpPost("create-product")]
-        public async ValueTask<ActionResult<ResponseDTO>> CreateProductAsync([FromBody] CreateProductRequest request)
+        public async ValueTask<ActionResult<ResponseDto>> CreateProductAsync([FromBody] CreateProductRequest request)
         {
             var result = await sender.Send(new CreateProductCommand(request));
 
@@ -62,7 +62,7 @@ namespace eShop.ProductApi.Controllers
         }
         
         [HttpPut("update-product")]
-        public async ValueTask<ActionResult<ResponseDTO>> UpdateProductAsync([FromBody] UpdateProductRequest request)
+        public async ValueTask<ActionResult<ResponseDto>> UpdateProductAsync([FromBody] UpdateProductRequest request)
         {
             var result = await sender.Send(new UpdateProductCommand(request));
 
@@ -72,7 +72,7 @@ namespace eShop.ProductApi.Controllers
         }
         
         [HttpDelete("delete-product")]
-        public async ValueTask<ActionResult<ResponseDTO>> DeleteProductAsync([FromBody] DeleteProductRequest request)
+        public async ValueTask<ActionResult<ResponseDto>> DeleteProductAsync([FromBody] DeleteProductRequest request)
         {
             var result = await sender.Send(new DeleteProductCommand(request));
 

@@ -63,6 +63,7 @@ namespace eShop.Infrastructure
             builder.Services.AddHttpClient<IReviewService, ReviewService>();
             builder.Services.AddHttpClient<ICartService, CartService>();
             builder.Services.AddHttpClient<IFavoritesService, FavoritesService>();
+            builder.Services.AddHttpClient<IStoreService, StoreService>();
 
             builder.Services.AddScoped<IHttpClientService, HttpClientService>();
             builder.Services.AddScoped<ITokenProvider, TokenProvider>();

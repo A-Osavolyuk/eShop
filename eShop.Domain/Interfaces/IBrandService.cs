@@ -4,6 +4,6 @@ namespace eShop.Domain.Interfaces
 {
     public interface IBrandService
     {
-        public ValueTask<ResponseDTO> GetBrandsListAsync();
+        public ValueTask<ResponseDto> GetBrandsListAsync();
     }
 }

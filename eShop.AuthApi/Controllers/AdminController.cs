@@ -14,7 +14,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManageUsersPolicy")]
         [HttpGet("find-user-by-email/{Email}")]
-        public async ValueTask<ActionResult<ResponseDTO>> FindUserByEmailAsync(string Email)
+        public async ValueTask<ActionResult<ResponseDto>> FindUserByEmailAsync(string Email)
         {
             var result = await sender.Send(new FindUserByEmailQuery(Email));
 
@@ -25,7 +25,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManageUsersPolicy")]
         [HttpGet("find-user-by-id/{Id:guid}")]
-        public async ValueTask<ActionResult<ResponseDTO>> FindUserByIdAsync(Guid Id)
+        public async ValueTask<ActionResult<ResponseDto>> FindUserByIdAsync(Guid Id)
         {
             var result = await sender.Send(new FindUserByIdQuery(Id));
 
@@ -36,7 +36,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManageUsersPolicy")]
         [HttpGet("get-all-users")]
-        public async ValueTask<ActionResult<ResponseDTO>> GetAllUsersAsync()
+        public async ValueTask<ActionResult<ResponseDto>> GetAllUsersAsync()
         {
             var result = await sender.Send(new GetUsersListQuery());
 
@@ -47,7 +47,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManageRolesPolicy")]
         [HttpGet("get-roles")]
-        public async ValueTask<ActionResult<ResponseDTO>> GetRolesListAsync()
+        public async ValueTask<ActionResult<ResponseDto>> GetRolesListAsync()
         {
             var result = await sender.Send(new GetRolesListQuery());
 
@@ -58,7 +58,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManageRolesPolicy")]
         [HttpGet("get-user-roles/{Id:guid}")]
-        public async ValueTask<ActionResult<ResponseDTO>> GetUserRolesAsync(Guid Id)
+        public async ValueTask<ActionResult<ResponseDto>> GetUserRolesAsync(Guid Id)
         {
             var result = await sender.Send(new GetUserRolesQuery(Id));
 
@@ -69,7 +69,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManageLockoutPolicy")]
         [HttpGet("get-lockout-status/{Email}")]
-        public async ValueTask<ActionResult<ResponseDTO>> GetRolesListAsync(string Email)
+        public async ValueTask<ActionResult<ResponseDto>> GetRolesListAsync(string Email)
         {
             var result = await sender.Send(new GetUserLockoutStatusQuery(Email));
 
@@ -80,7 +80,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManagePermissionsPolicy")]
         [HttpGet("get-permissions")]
-        public async ValueTask<ActionResult<ResponseDTO>> GetPermissionsListAsync()
+        public async ValueTask<ActionResult<ResponseDto>> GetPermissionsListAsync()
         {
             var result = await sender.Send(new GetPermissionsListQuery());
 
@@ -91,7 +91,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManageRolesPolicy")]
         [HttpPost("assign-role")]
-        public async ValueTask<ActionResult<ResponseDTO>> AssignRoleAsync([FromBody] AssignRoleRequest request)
+        public async ValueTask<ActionResult<ResponseDto>> AssignRoleAsync([FromBody] AssignRoleRequest request)
         {
             var result = await sender.Send(new AssignRoleCommand(request));
             return result.Match(
@@ -101,7 +101,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManagePermissionsPolicy")]
         [HttpPost("issue-permissions")]
-        public async ValueTask<ActionResult<ResponseDTO>> IssuePermissionsAsync([FromBody] IssuePermissionRequest request)
+        public async ValueTask<ActionResult<ResponseDto>> IssuePermissionsAsync([FromBody] IssuePermissionRequest request)
         {
             var result = await sender.Send(new IssuePermissionCommand(request));
             return result.Match(
@@ -111,7 +111,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManageRolesPolicy")]
         [HttpPost("create-role")]
-        public async ValueTask<ActionResult<ResponseDTO>> CreateRoleAsync([FromBody] CreateRoleRequest request)
+        public async ValueTask<ActionResult<ResponseDto>> CreateRoleAsync([FromBody] CreateRoleRequest request)
         {
             var result = await sender.Send(new CreateRoleCommand(request));
             return result.Match(
@@ -121,7 +121,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManageUsersPolicy")]
         [HttpPost("create-user-account")]
-        public async ValueTask<ActionResult<ResponseDTO>> CreateUserAccount([FromBody] CreateUserAccountRequest request)
+        public async ValueTask<ActionResult<ResponseDto>> CreateUserAccount([FromBody] CreateUserAccountRequest request)
         {
             var result = await sender.Send(new CreateUserAccountCommand(request));
             return result.Match(
@@ -131,7 +131,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManageLockoutPolicy")]
         [HttpPost("lockout-user")]
-        public async ValueTask<ActionResult<ResponseDTO>> LockoutUserAsync([FromBody] LockoutUserRequest request)
+        public async ValueTask<ActionResult<ResponseDto>> LockoutUserAsync([FromBody] LockoutUserRequest request)
         {
             var result = await sender.Send(new LockoutUserCommand(request));
             return result.Match(
@@ -141,7 +141,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManageLockoutPolicy")]
         [HttpPost("unlock-user")]
-        public async ValueTask<ActionResult<ResponseDTO>> UnlockUserAsync([FromBody] UnlockUserRequest request)
+        public async ValueTask<ActionResult<ResponseDto>> UnlockUserAsync([FromBody] UnlockUserRequest request)
         {
             var result = await sender.Send(new UnlockUserCommand(request));
             return result.Match(
@@ -151,7 +151,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManageRolesPolicy")]
         [HttpDelete("remove-user-roles")]
-        public async ValueTask<ActionResult<ResponseDTO>> RemoveUserRolesAsync([FromBody] RemoveUserRolesRequest request)
+        public async ValueTask<ActionResult<ResponseDto>> RemoveUserRolesAsync([FromBody] RemoveUserRolesRequest request)
         {
             var result = await sender.Send(new RemoveUserRolesCommand(request));
             return result.Match(
@@ -161,7 +161,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManageRolesPolicy")]
         [HttpDelete("remove-user-role")]
-        public async ValueTask<ActionResult<ResponseDTO>> RemoveUserRoleAsync([FromBody] RemoveUserRoleRequest request)
+        public async ValueTask<ActionResult<ResponseDto>> RemoveUserRoleAsync([FromBody] RemoveUserRoleRequest request)
         {
             var result = await sender.Send(new RemoveUserRoleCommand(request));
             return result.Match(
@@ -171,7 +171,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManageRolesPolicy")]
         [HttpDelete("delete-role")]
-        public async ValueTask<ActionResult<ResponseDTO>> DeleteRoleAsync([FromBody] DeleteRoleRequest request)
+        public async ValueTask<ActionResult<ResponseDto>> DeleteRoleAsync([FromBody] DeleteRoleRequest request)
         {
             var result = await sender.Send(new DeleteRoleCommand(request));
             return result.Match(
@@ -181,7 +181,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManagePermissionsPolicy")]
         [HttpDelete("delete-user-from-permission")]
-        public async ValueTask<ActionResult<ResponseDTO>> DeleteUserFromPermissionAsync([FromBody] RemoveUserFromPermissionRequest request)
+        public async ValueTask<ActionResult<ResponseDto>> DeleteUserFromPermissionAsync([FromBody] RemoveUserFromPermissionRequest request)
         {
             var result = await sender.Send(new RemoveUserFromPermissionCommand(request));
             return result.Match(
@@ -191,7 +191,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManageUsersPolicy")]
         [HttpDelete("delete-user-account")]
-        public async ValueTask<ActionResult<ResponseDTO>> DeleteUserAccountAsync([FromBody] DeleteUserAccountRequest request)
+        public async ValueTask<ActionResult<ResponseDto>> DeleteUserAccountAsync([FromBody] DeleteUserAccountRequest request)
         {
             var result = await sender.Send(new DeleteUserAccountCommand(request));
             return result.Match(

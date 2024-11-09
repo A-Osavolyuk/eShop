@@ -5,12 +5,12 @@ namespace eShop.Domain.Interfaces
 {
     public interface IProductService
     {
-        public ValueTask<ResponseDTO> CreateProductAsync(CreateProductRequest request);
-        public ValueTask<ResponseDTO> UpdateProductAsync(UpdateProductRequest request);
-        public ValueTask<ResponseDTO> DeleteProductAsync(DeleteProductRequest request);
-        public ValueTask<ResponseDTO> GetProductsAsync();
-        public ValueTask<ResponseDTO> GetProductByNameAsync(string name);
-        public ValueTask<ResponseDTO> GetProductByArticleAsync(string article);
-        public ValueTask<ResponseDTO> GetProductByIdAsync(Guid id);
+        public ValueTask<ResponseDto> CreateProductAsync(CreateProductRequest request);
+        public ValueTask<ResponseDto> UpdateProductAsync(UpdateProductRequest request);
+        public ValueTask<ResponseDto> DeleteProductAsync(DeleteProductRequest request);
+        public ValueTask<ResponseDto> GetProductsAsync();
+        public ValueTask<ResponseDto> GetProductByNameAsync(string name);
+        public ValueTask<ResponseDto> GetProductByArticleAsync(string article);
+        public ValueTask<ResponseDto> GetProductByIdAsync(Guid id);
     }
 }

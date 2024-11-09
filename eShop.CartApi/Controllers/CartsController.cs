@@ -12,7 +12,7 @@ namespace eShop.CartApi.Controllers
         private readonly ISender sender = sender;
 
         [HttpPut("update-cart")]
-        public async ValueTask<ActionResult<ResponseDTO>> UpdateCartAsync([FromBody] UpdateCartRequest request)
+        public async ValueTask<ActionResult<ResponseDto>> UpdateCartAsync([FromBody] UpdateCartRequest request)
         {
             var response = await sender.Send(new UpdatedCartCommand(request));
 
@@ -22,7 +22,7 @@ namespace eShop.CartApi.Controllers
         }
         
         [HttpGet("get-cart/{userId:guid}")]
-        public async ValueTask<ActionResult<ResponseDTO>> GetCartAsync(Guid userId)
+        public async ValueTask<ActionResult<ResponseDto>> GetCartAsync(Guid userId)
         {
             var response = await sender.Send(new GetCartQuery(userId));
 

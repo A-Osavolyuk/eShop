@@ -6,24 +6,24 @@ namespace eShop.Domain.Interfaces
 {
     public interface IAuthenticationService
     {
-        public ValueTask<ResponseDTO> LoginAsync(LoginRequest loginRequestDto);
-        public ValueTask<ResponseDTO> RegisterAsync(RegistrationRequest registrationRequest);
-        public ValueTask<ResponseDTO> ChangePersonalDataAsync(ChangePersonalDataRequest changePersonalDataRequestDto);
-        public ValueTask<ResponseDTO> GetPersonalDataAsync(string Email);
-        public ValueTask<ResponseDTO> RequestResetPasswordAsync(ResetPasswordRequest request);
-        public ValueTask<ResponseDTO> ConfirmResetPasswordAsync(ConfirmResetPasswordRequest confirmPasswordResetRequest);
-        public ValueTask<ResponseDTO> ConfirmEmailAsync(ConfirmEmailRequest confirmEmailRequest);
-        public ValueTask<ResponseDTO> GetExternalProvidersAsync();
-        public ValueTask<ResponseDTO> LoginWithTwoFactorAuthenticationAsync(TwoFactorAuthenticationLoginRequest twoFactorAuthenticationLoginRequest);
-        public ValueTask<ResponseDTO> RequestChangeEmailAsync(ChangeEmailRequest changeEmailRequest);
-        public ValueTask<ResponseDTO> ConfirmChangeEmailAsync(ConfirmChangeEmailRequest changeEmailRequest);
-        public ValueTask<ResponseDTO> ChangePasswordAsync(ChangePasswordRequest changePasswordRequest);
-        public ValueTask<ResponseDTO> ChangeUserNameAsync(ChangeUserNameRequest changeUserNameRequest);
-        public ValueTask<ResponseDTO> ChangeTwoFactorAuthenticationStateAsync(ChangeTwoFactorAuthenticationRequest request);
-        public ValueTask<ResponseDTO> GetTwoFactorStateAsync(string Email);
-        public ValueTask<ResponseDTO> RefreshToken(RefreshTokenRequest refreshTokenRequest);
-        public ValueTask<ResponseDTO> RequestChangePhoneNumberAsync(ChangePhoneNumberRequest changePhoneNumberRequest);
-        public ValueTask<ResponseDTO> ConfirmChangePhoneNumberAsync(ConfirmChangePhoneNumberRequest confirmChangePhoneNumberRequest);
-        public ValueTask<ResponseDTO> GetPhoneNumber(string Email);
+        public ValueTask<ResponseDto> LoginAsync(LoginRequest loginRequestDto);
+        public ValueTask<ResponseDto> RegisterAsync(RegistrationRequest registrationRequest);
+        public ValueTask<ResponseDto> ChangePersonalDataAsync(ChangePersonalDataRequest changePersonalDataRequestDto);
+        public ValueTask<ResponseDto> GetPersonalDataAsync(string Email);
+        public ValueTask<ResponseDto> RequestResetPasswordAsync(ResetPasswordRequest request);
+        public ValueTask<ResponseDto> ConfirmResetPasswordAsync(ConfirmResetPasswordRequest confirmPasswordResetRequest);
+        public ValueTask<ResponseDto> ConfirmEmailAsync(ConfirmEmailRequest confirmEmailRequest);
+        public ValueTask<ResponseDto> GetExternalProvidersAsync();
+        public ValueTask<ResponseDto> LoginWithTwoFactorAuthenticationAsync(TwoFactorAuthenticationLoginRequest twoFactorAuthenticationLoginRequest);
+        public ValueTask<ResponseDto> RequestChangeEmailAsync(ChangeEmailRequest changeEmailRequest);
+        public ValueTask<ResponseDto> ConfirmChangeEmailAsync(ConfirmChangeEmailRequest changeEmailRequest);
+        public ValueTask<ResponseDto> ChangePasswordAsync(ChangePasswordRequest changePasswordRequest);
+        public ValueTask<ResponseDto> ChangeUserNameAsync(ChangeUserNameRequest changeUserNameRequest);
+        public ValueTask<ResponseDto> ChangeTwoFactorAuthenticationStateAsync(ChangeTwoFactorAuthenticationRequest request);
+        public ValueTask<ResponseDto> GetTwoFactorStateAsync(string Email);
+        public ValueTask<ResponseDto> RefreshToken(RefreshTokenRequest refreshTokenRequest);
+        public ValueTask<ResponseDto> RequestChangePhoneNumberAsync(ChangePhoneNumberRequest changePhoneNumberRequest);
+        public ValueTask<ResponseDto> ConfirmChangePhoneNumberAsync(ConfirmChangePhoneNumberRequest confirmChangePhoneNumberRequest);
+        public ValueTask<ResponseDto> GetPhoneNumber(string Email);
     }
 }

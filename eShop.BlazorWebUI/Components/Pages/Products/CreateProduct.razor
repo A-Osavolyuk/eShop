@@ -158,6 +158,10 @@
     private async Task OnSubmit()
     {
         await form.Validate();
+        if (form.IsValid)
+        {
+            var images = InputImagesStateContainer.OnUploadImages();
+        }
     }
 
     private List<string> GetCurrencies()

@@ -13,6 +13,7 @@ public static class ProductMapper
         ArgumentNullException.ThrowIfNull(request, nameof(request));
         return new ClothingEntity()
         {
+            Id = request.Id,
             Name = request.Name,
             Price = new Price()
             {
@@ -35,6 +36,7 @@ public static class ProductMapper
         ArgumentNullException.ThrowIfNull(request, nameof(request));
         return new ShoesEntity()
         {
+            Id = request.Id,
             Name = request.Name,
             Price = new Price()
             {
@@ -57,6 +59,7 @@ public static class ProductMapper
         ArgumentNullException.ThrowIfNull(request, nameof(request));
         return new ProductEntity()
         {
+            Id = request.Id,
             Name = request.Name,
             Price = new Price()
             {

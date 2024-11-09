@@ -4,6 +4,7 @@ using eShop.Domain.Interfaces;
 using eShop.Infrastructure.Account;
 using Newtonsoft.Json;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace eShop.Infrastructure.Services
@@ -19,7 +20,7 @@ namespace eShop.Infrastructure.Services
             this.tokenProvider = tokenProvider;
         }
 
-        public async ValueTask<ResponseDTO?> SendAsync(RequestDto request, bool withBearer = true)
+        public async ValueTask<ResponseDto> SendAsync(RequestDto request, bool withBearer = true)
         {
             try
             {
@@ -62,19 +63,83 @@ namespace eShop.Infrastructure.Services
             }
         }
 
-        private async ValueTask<ResponseDTO> HandleStatusCode(HttpResponseMessage httpResponse)
+        public async ValueTask<ResponseDto> SendFilesAsync(FileRequestDto request, bool withBearer = true)
         {
-            var response = JsonConvert.DeserializeObject<ResponseDTO>(await httpResponse.Content.ReadAsStringAsync())!;
+            try
+            {
+                HttpRequestMessage message = new();
+
+                message.Headers.Add("Accept", "multipart/form-data");
+                message.RequestUri = new Uri(request.Url);
+                message.Method = request.Method switch
+                {
+                    HttpMethods.POST => HttpMethod.Post,
+                    HttpMethods.PUT => HttpMethod.Put,
+                    HttpMethods.DELETE => HttpMethod.Delete,
+                    HttpMethods.GET => HttpMethod.Get,
+                    _ => throw new NotImplementedException("Invalid HTTP method"),
+                };
+
+                if (withBearer)
+                {
+                    var token = AuthenticationHandler.Token;
+                    message.Headers.Add("Authorization", $"Bearer {token}");
+                }
+
+                var content = new MultipartFormDataContent();
+
+                if (request.Data.Files.Any())
+                {
+                    foreach (var file in request.Data.Files)
+                    {
+                        var fileContent = new StreamContent(file.OpenReadStream());
+                        fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+                        content.Add(fileContent, "files", file.Name);
+                    }
+                }
+                else
+                {
+                    var fileContent = new StreamContent(request.Data.File.OpenReadStream());
+                    fileContent.Headers.ContentType = new MediaTypeHeaderValue(request.Data.File.ContentType);
+                    content.Add(fileContent, "file", request.Data.File.Name);
+                }
+
+                if (!string.IsNullOrEmpty(request.Data.StringData) && !string.IsNullOrEmpty(request.Data.DataName))
+                {
+                    content.Add(new StringContent(request.Data.StringData), request.Data.DataName);
+                }
+
+                message.Content = content;
+
+                var httpResponse = await httpClient.SendAsync(message);
+
+                return await HandleStatusCode(httpResponse);
+            }
+            catch(Exception ex)
+            {
+                return new ResponseBuilder()
+                    .Failed()
+                    .WithErrorMessage(ex.Message)
+                    .Build();
+            }
+        }
+
+        private async ValueTask<ResponseDto> HandleStatusCode(HttpResponseMessage httpResponse)
+        {
+            var response = JsonConvert.DeserializeObject<ResponseDto>(await httpResponse.Content.ReadAsStringAsync())!;
 
             return httpResponse.StatusCode switch
             {
-                HttpStatusCode.InternalServerError => new ResponseBuilder().Failed().WithErrorMessage($"Internal Server Error. {response!.ErrorMessage}").Build(),
-                HttpStatusCode.NotFound => new ResponseBuilder().Failed().WithErrorMessage($"Not Found. {response!.ErrorMessage}").Build(),
+                HttpStatusCode.InternalServerError => new ResponseBuilder().Failed()
+                    .WithErrorMessage(response!.ErrorMessage).Build(),
+                HttpStatusCode.NotFound => new ResponseBuilder().Failed().WithErrorMessage(response!.ErrorMessage)
+                    .Build(),
                 HttpStatusCode.Forbidden => new ResponseBuilder().Failed().WithErrorMessage("Forbidden").Build(),
                 HttpStatusCode.Unauthorized => new ResponseBuilder().Failed().WithErrorMessage($"Unauthorized").Build(),
-                HttpStatusCode.BadRequest => response.Errors.Any() ? 
-                    new ResponseBuilder().Failed().WithErrorMessage($"Bad Request. {response!.ErrorMessage}").WithErrors(response.Errors).Build() :
-                    new ResponseBuilder().Failed().WithErrorMessage($"Bad Request. {response!.ErrorMessage}").Build(),
+                HttpStatusCode.BadRequest => response.Errors.Any()
+                    ? new ResponseBuilder().Failed().WithErrorMessage(response!.ErrorMessage)
+                        .WithErrors(response.Errors).Build()
+                    : new ResponseBuilder().Failed().WithErrorMessage(response!.ErrorMessage).Build(),
                 _ => response
             };
         }

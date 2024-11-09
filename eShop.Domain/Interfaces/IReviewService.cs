@@ -5,9 +5,9 @@ namespace eShop.Domain.Interfaces
 {
     public interface IReviewService
     {
-        public Task<ResponseDTO> GetReviewListByProductIdAsync(Guid Id);
-        public Task<ResponseDTO> CreateReviewAsync(CreateReviewRequest request);
-        public Task<ResponseDTO> DeleteReviewsWithProductIdAsync(Guid Id);
-        public Task<ResponseDTO> UpdateReviewAsync(UpdateReviewRequest request);
+        public Task<ResponseDto> GetReviewListByProductIdAsync(Guid Id);
+        public Task<ResponseDto> CreateReviewAsync(CreateReviewRequest request);
+        public Task<ResponseDto> DeleteReviewsWithProductIdAsync(Guid Id);
+        public Task<ResponseDto> UpdateReviewAsync(UpdateReviewRequest request);
     }
 }

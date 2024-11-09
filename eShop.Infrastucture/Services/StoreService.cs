@@ -1,32 +1,17 @@
 ﻿using Azure.Storage.Blobs;
+using eShop.Domain.DTOs;
+using eShop.Domain.Enums;
 using eShop.Domain.Interfaces;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Configuration;
 
 namespace eShop.Infrastructure.Services
 {
-    class StoreService(IConfiguration configuration) : IStoreService
+    class StoreService(IConfiguration configuration, IHttpClientService clientService) : IStoreService
     {
         private readonly IConfiguration configuration = configuration;
-
-        public async ValueTask<IEnumerable<string>> AddProductImagesAsync(IReadOnlyList<IBrowserFile> images, Guid productId)
-        {
-            var uriList = new List<string>();
-
-            for (var i = 0; i < images.Count(); i++)
-            {
-                var blobContainerClient = GetContainerClient(configuration["ProductContainer"]!);
-                var blobClient = blobContainerClient.GetBlobClient($"{productId}_{i}");
-                await using (var stream = images[i].OpenReadStream())
-                {
-                    await blobClient.UploadAsync(stream, true);
-                }
-                uriList.Add(blobClient.Uri.ToString());
-            }
-
-            return uriList;
-        }
-
+        private readonly IHttpClientService clientService = clientService;
+        
         public async ValueTask<string> GetUserAvatarAsync(string userId)
         {
             var blobContainerClient = GetContainerClient(configuration["AvatarContainer"]!);
@@ -34,10 +19,15 @@ namespace eShop.Infrastructure.Services
             return blobClient.Uri.ToString();
         }
 
+        public async ValueTask<ResponseDto> UploadProductImagesAsync(IReadOnlyList<IBrowserFile> files, Guid productId) =>
+            await clientService.SendFilesAsync(
+                new FileRequestDto(new FileData(files, productId.ToString(), "productId"), HttpMethods.POST, 
+                    $"{configuration["Services:Gateway"]}/api/v1/Files/upload-product-images"));
+
         public async ValueTask RemoveUserAvatarAsync(string userId)
         {
-            var blobContainerClinet = GetContainerClient(configuration["AvatarContainer"]!);
-            var result = await blobContainerClinet.DeleteBlobIfExistsAsync($"avatar_{userId}");
+            var blobContainerClient = GetContainerClient(configuration["AvatarContainer"]!);
+            var result = await blobContainerClient.DeleteBlobIfExistsAsync($"avatar_{userId}");
         }
 
         public async ValueTask<string> UploadUserAvatarAsync(string userId, IBrowserFile file)

@@ -13,9 +13,9 @@ public class FavoritesService(
     private readonly IHttpClientService clientService = clientService;
     private readonly IConfiguration configuration = configuration;
 
-    public async ValueTask<ResponseDTO> GetFavoritesAsync(Guid userId) => await clientService.SendAsync(
+    public async ValueTask<ResponseDto> GetFavoritesAsync(Guid userId) => await clientService.SendAsync(
         new RequestDto(Url: $"{configuration["Services:Gateway"]}/api/v1/Favorites/get-favorites/{userId}", Method: HttpMethods.GET));
 
-    public async ValueTask<ResponseDTO> UpdateFavoritesAsync(UpdateFavoritesRequest request) => await clientService.SendAsync(
-        new RequestDto(Url: $"{configuration["Services:Gateway"]}/api/v1/Favorites/update-favorites", Data:request, Method: HttpMethods.PUT));
+    public async ValueTask<ResponseDto> UpdateFavoritesAsync(UpdateFavoritesRequest request) => await clientService.SendAsync(
+        new RequestDto(Url: $"{configuration["Services:Gateway"]}/api/v1/Favorites/update-favorites", Method: HttpMethods.PUT, Data: request));
 }

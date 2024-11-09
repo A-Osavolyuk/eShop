@@ -12,7 +12,7 @@ public class FavoritesController(ISender sender) : ControllerBase
     private readonly ISender sender = sender;
     
     [HttpPut("update-favorites")]
-    public async ValueTask<ActionResult<ResponseDTO>> UpdateCartAsync([FromBody] UpdateFavoritesRequest request)
+    public async ValueTask<ActionResult<ResponseDto>> UpdateCartAsync([FromBody] UpdateFavoritesRequest request)
     {
         var response = await sender.Send(new UpdateFavoritesCommand(request));
 
@@ -22,7 +22,7 @@ public class FavoritesController(ISender sender) : ControllerBase
     }
     
     [HttpGet("get-favorites/{userId:guid}")]
-    public async ValueTask<ActionResult<ResponseDTO>> GetCartAsync(Guid userId)
+    public async ValueTask<ActionResult<ResponseDto>> GetCartAsync(Guid userId)
     {
         var response = await sender.Send(new GetFavoritesQuery(userId));
 

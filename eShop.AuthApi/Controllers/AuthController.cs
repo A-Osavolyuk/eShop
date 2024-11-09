@@ -16,7 +16,7 @@ namespace eShop.AuthApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public async ValueTask<ActionResult<ResponseDTO>> Register([FromBody] RegistrationRequest registrationRequest)
+        public async ValueTask<ActionResult<ResponseDto>> Register([FromBody] RegistrationRequest registrationRequest)
         {
             var result = await sender.Send(new RegisterCommand(registrationRequest));
 
@@ -27,7 +27,7 @@ namespace eShop.AuthApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public async ValueTask<ActionResult<ResponseDTO>> Login([FromBody] LoginRequest loginRequest)
+        public async ValueTask<ActionResult<ResponseDto>> Login([FromBody] LoginRequest loginRequest)
         {
             var result = await sender.Send(new LoginCommand(loginRequest));
 
@@ -38,7 +38,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManageAccountPolicy")]
         [HttpPost("change-personal-data")]
-        public async ValueTask<ActionResult<ResponseDTO>> ChangePersonalData([FromBody] ChangePersonalDataRequest changePersonalDataRequest)
+        public async ValueTask<ActionResult<ResponseDto>> ChangePersonalData([FromBody] ChangePersonalDataRequest changePersonalDataRequest)
         {
             var result = await sender.Send(new ChangePersonalDataCommand(changePersonalDataRequest));
 
@@ -49,7 +49,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManageAccountPolicy")]
         [HttpGet("get-personal-data/{Email}")]
-        public async ValueTask<ActionResult<ResponseDTO>> GetPersonalData(string Email)
+        public async ValueTask<ActionResult<ResponseDto>> GetPersonalData(string Email)
         {
             var result = await sender.Send(new GetPersonalDataQuery(Email));
 
@@ -60,7 +60,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManageAccountPolicy")]
         [HttpPost("change-password")]
-        public async ValueTask<ActionResult<ResponseDTO>> ChangePassword([FromBody] ChangePasswordRequest changePasswordRequest)
+        public async ValueTask<ActionResult<ResponseDto>> ChangePassword([FromBody] ChangePasswordRequest changePasswordRequest)
         {
             var result = await sender.Send(new ChangePasswordCommand(changePasswordRequest));
 
@@ -71,7 +71,7 @@ namespace eShop.AuthApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("request-reset-password")]
-        public async ValueTask<ActionResult<ResponseDTO>> ResetPasswordRequest(ResetPasswordRequest request)
+        public async ValueTask<ActionResult<ResponseDto>> ResetPasswordRequest(ResetPasswordRequest request)
         {
             var result = await sender.Send(new RequestResetPasswordCommand(request));
 
@@ -82,7 +82,7 @@ namespace eShop.AuthApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("confirm-reset-password")]
-        public async ValueTask<ActionResult<ResponseDTO>> ConfirmResetPassword([FromBody] ConfirmResetPasswordRequest confirmPasswordResetRequest)
+        public async ValueTask<ActionResult<ResponseDto>> ConfirmResetPassword([FromBody] ConfirmResetPasswordRequest confirmPasswordResetRequest)
         {
             var result = await sender.Send(new ConfirmResetPasswordCommand(confirmPasswordResetRequest));
 
@@ -93,7 +93,7 @@ namespace eShop.AuthApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("confirm-email")]
-        public async ValueTask<ActionResult<ResponseDTO>> ConfirmEmail([FromBody] ConfirmEmailRequest confirmEmailRequest)
+        public async ValueTask<ActionResult<ResponseDto>> ConfirmEmail([FromBody] ConfirmEmailRequest confirmEmailRequest)
         {
             var result = await sender.Send(new ConfirmEmailCommand(confirmEmailRequest));
 
@@ -104,7 +104,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManageAccountPolicy")]
         [HttpPost("change-2fa-state")]
-        public async ValueTask<ActionResult<ResponseDTO>> ChangeTwoFactorAuthentication([FromBody] ChangeTwoFactorAuthenticationRequest request)
+        public async ValueTask<ActionResult<ResponseDto>> ChangeTwoFactorAuthentication([FromBody] ChangeTwoFactorAuthenticationRequest request)
         {
             var result = await sender.Send(new ChangeTwoFactorAuthenticationStateCommand(request));
 
@@ -115,7 +115,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManageAccountPolicy")]
         [HttpGet("get-2fa-state/{Email}")]
-        public async ValueTask<ActionResult<ResponseDTO>> GetTwoFactorAuthenticationState(string Email)
+        public async ValueTask<ActionResult<ResponseDto>> GetTwoFactorAuthenticationState(string Email)
         {
             var result = await sender.Send(new GetTwoFactorAuthenticationStateQuery(Email));
 
@@ -132,7 +132,7 @@ namespace eShop.AuthApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("2fa-login")]
-        public async ValueTask<ActionResult<ResponseDTO>> LoginWithTwoFactorAuthenticationCode([FromBody] TwoFactorAuthenticationLoginRequest twoFactorAuthenticationLoginRequest)
+        public async ValueTask<ActionResult<ResponseDto>> LoginWithTwoFactorAuthenticationCode([FromBody] TwoFactorAuthenticationLoginRequest twoFactorAuthenticationLoginRequest)
         {
             var result = await sender.Send(new TwoFactorAuthenticationLoginCommand(twoFactorAuthenticationLoginRequest));
 
@@ -143,7 +143,7 @@ namespace eShop.AuthApi.Controllers
 
         [AllowAnonymous]
         [HttpGet("external-login/{provider}")]
-        public async ValueTask<ActionResult<ResponseDTO>> ExternalLogin(string provider, string? returnUri = null)
+        public async ValueTask<ActionResult<ResponseDto>> ExternalLogin(string provider, string? returnUri = null)
         {
             var result = await sender.Send(new ExternalLoginQuery(provider, returnUri));
 
@@ -154,7 +154,7 @@ namespace eShop.AuthApi.Controllers
 
         [AllowAnonymous]
         [HttpGet("handle-external-login-response")]
-        public async ValueTask<ActionResult<ResponseDTO>> HandleExternalLoginResponse(string? remoteError = null, string? returnUri = null)
+        public async ValueTask<ActionResult<ResponseDto>> HandleExternalLoginResponse(string? remoteError = null, string? returnUri = null)
         {
             var info = await signInManager.GetExternalLoginInfoAsync();
 
@@ -167,7 +167,7 @@ namespace eShop.AuthApi.Controllers
 
         [AllowAnonymous]
         [HttpGet("get-external-providers")]
-        public async ValueTask<ActionResult<ResponseDTO>> GetExternalProvidersList()
+        public async ValueTask<ActionResult<ResponseDto>> GetExternalProvidersList()
         {
             var result = await sender.Send(new GetExternalProvidersQuery());
 
@@ -178,7 +178,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManageAccountPolicy")]
         [HttpPost("request-change-email")]
-        public async ValueTask<ActionResult<ResponseDTO>> RequestChangeEmail([FromBody] ChangeEmailRequest changeEmailRequest)
+        public async ValueTask<ActionResult<ResponseDto>> RequestChangeEmail([FromBody] ChangeEmailRequest changeEmailRequest)
         {
             var result = await sender.Send(new ChangeEmailCommand(changeEmailRequest));
 
@@ -189,7 +189,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManageAccountPolicy")]
         [HttpPost("confirm-change-email")]
-        public async ValueTask<ActionResult<ResponseDTO>> ConfirmChangeEmail([FromBody] ConfirmChangeEmailRequest confirmChangeEmailRequest)
+        public async ValueTask<ActionResult<ResponseDto>> ConfirmChangeEmail([FromBody] ConfirmChangeEmailRequest confirmChangeEmailRequest)
         {
             var result = await sender.Send(new ConfirmChangeEmailCommand(confirmChangeEmailRequest));
 
@@ -200,7 +200,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManageAccountPolicy")]
         [HttpPost("change-user-name")]
-        public async ValueTask<ActionResult<ResponseDTO>> ChangeUserName([FromBody] ChangeUserNameRequest changeUserNameRequest)
+        public async ValueTask<ActionResult<ResponseDto>> ChangeUserName([FromBody] ChangeUserNameRequest changeUserNameRequest)
         {
             var result = await sender.Send(new ChangeUserNameCommand(changeUserNameRequest));
 
@@ -211,7 +211,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManageAccountPolicy")]
         [HttpPost("request-change-phone-number")]
-        public async ValueTask<ActionResult<ResponseDTO>> RequestChangePhoneNumber([FromBody] ChangePhoneNumberRequest changePhoneNumberRequest)
+        public async ValueTask<ActionResult<ResponseDto>> RequestChangePhoneNumber([FromBody] ChangePhoneNumberRequest changePhoneNumberRequest)
         {
             var result = await sender.Send(new ChangePhoneNumberCommand(changePhoneNumberRequest));
 
@@ -222,7 +222,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManageAccountPolicy")]
         [HttpPost("confirm-change-phone-number")]
-        public async ValueTask<ActionResult<ResponseDTO>> ConfirmChangePhoneNumber([FromBody] ConfirmChangePhoneNumberRequest confirmChangePhoneNumberRequest)
+        public async ValueTask<ActionResult<ResponseDto>> ConfirmChangePhoneNumber([FromBody] ConfirmChangePhoneNumberRequest confirmChangePhoneNumberRequest)
         {
             var result = await sender.Send(new ConfirmChangePhoneNumberCommand(confirmChangePhoneNumberRequest));
 
@@ -233,7 +233,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManageAccountPolicy")]
         [HttpGet("get-phone-number/{Email}")]
-        public async ValueTask<ActionResult<ResponseDTO>> GetPhoneNumber(string Email)
+        public async ValueTask<ActionResult<ResponseDto>> GetPhoneNumber(string Email)
         {
             var result = await sender.Send(new GetPhoneNumberQuery(Email));
 

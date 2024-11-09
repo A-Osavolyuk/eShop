@@ -61,7 +61,7 @@ namespace eShop.AuthApi.Commands.Auth
                     request.Request.Email, request.Request.RequestId);
 
                 var handler = requestClient.Create(new CreateCartRequest() { UserId = Guid.Parse(user.Id) });
-                var response = await handler.GetResponse<ResponseDTO>();
+                var response = await handler.GetResponse<ResponseDto>();
 
                 if (!response.Message.IsSucceeded)
                 {

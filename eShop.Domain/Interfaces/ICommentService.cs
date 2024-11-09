@@ -5,9 +5,9 @@ namespace eShop.Domain.Interfaces
 {
     public interface ICommentService
     {
-        public ValueTask<ResponseDTO> GetCommentsAsync(Guid productId);
-        public ValueTask<ResponseDTO> CreateCommentAsync(CreateCommentRequest request);
-        public ValueTask<ResponseDTO> UpdateCommentAsync(UpdateCommentRequest request);
-        public ValueTask<ResponseDTO> DeleteCommentAsync(DeleteCommentsRequest request);
+        public ValueTask<ResponseDto> GetCommentsAsync(Guid productId);
+        public ValueTask<ResponseDto> CreateCommentAsync(CreateCommentRequest request);
+        public ValueTask<ResponseDto> UpdateCommentAsync(UpdateCommentRequest request);
+        public ValueTask<ResponseDto> DeleteCommentAsync(DeleteCommentsRequest request);
     }
 }

@@ -1,10 +1,13 @@
 ﻿@using eShop.Infrastructure.StateContainers
+@using Severity = MudBlazor.Severity
 @using CreateProductRequest = eShop.Domain.Requests.Product.CreateProductRequest
 
 @implements IDisposable 
 
 @inject InputImagesStateContainer InputImagesStateContainer
 @inject IDialogService DialogService
+@inject IStoreService StoreService
+@inject ISnackbar Snackbar
 
 <MudStack Spacing="1">
     <MudPaper
@@ -85,8 +88,14 @@
     {
         InputImagesStateContainer.ClearImages += ClearImages;
         InputImagesStateContainer.ClearImages += StateHasChanged;
+        InputImagesStateContainer.UploadImages += OnUploadImages;
     }
 
+    private IReadOnlyList<IBrowserFile> OnUploadImages()
+    {
+        return Files;
+    }
+    
     private async Task OnPreviewImages()
     {
         var parameters = new DialogParameters<ImagesPreviewDialog>()
@@ -137,6 +146,7 @@
     {
         InputImagesStateContainer.ClearImages -= ClearImages;
         InputImagesStateContainer.ClearImages -= StateHasChanged;
+        InputImagesStateContainer.UploadImages -= OnUploadImages;
     }
 
 }
