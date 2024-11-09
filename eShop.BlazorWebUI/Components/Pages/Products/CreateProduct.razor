@@ -1,8 +1,12 @@
 ﻿@page "/products/create-product"
 
+@using System.Runtime.InteropServices.JavaScript
 @using eShop.Application.Validation.Products
+@using eShop.Domain.Responses.Files
+@using eShop.Domain.Responses.Products
 @using eShop.Infrastructure.StateContainers
 @using LanguageExt.Pipes
+@using Severity = MudBlazor.Severity
 @using CreateProductRequest = Domain.Requests.Product.CreateProductRequest
 
 @inherits PageBase
@@ -10,6 +14,7 @@
 @inject IProductService ProductService
 @inject CreateProductValidator Validator
 @inject InputImagesStateContainer InputImagesStateContainer
+@inject IStoreService StoreService
 
 <Title Text="Create product"></Title>
 
@@ -19,7 +24,7 @@
             <MudForm @ref="form" Model="Model" Validation="Validator.ValidateValue">
                 <MudGrid>
                     <MudItem xs="4">
-                        <ImagesInput Model="Model"/>
+                        <ImagesInput/>
                     </MudItem>
                     <MudItem xs="8">
                         <MudText Typo="Typo.h5">Main properties</MudText>
@@ -158,9 +163,18 @@
     private async Task OnSubmit()
     {
         await form.Validate();
+        
         if (form.IsValid)
         {
-            var images = InputImagesStateContainer.OnUploadImages();
+            var files = InputImagesStateContainer.OnUploadImages();
+            var images = await UploadImagesAsync(files, Model.Id);
+            Model = Model with { Images = images, Brand = new ()
+            {
+                Name = "Some",
+                Id = Guid.NewGuid(),
+                Country = "USA"
+            }};
+            await CreateProductAsync(Model);
         }
     }
 
@@ -184,6 +198,38 @@
         Model = new();
         InputImagesStateContainer.OnClearImages();
         StateHasChanged();
+    }
+
+    private async Task<List<string>> UploadImagesAsync(IReadOnlyList<IBrowserFile> files, Guid id)
+    {
+        var response = await StoreService.UploadProductImagesAsync(files, id);
+
+        if (response.IsSucceeded)
+        {
+            var data = ResponseConverter.Deserialize<UploadProductImagesResponse>(response.Result!);
+            return data.Images;
+        }
+        else
+        {
+            Snackbar.Add(response.ErrorMessage, Severity.Error);
+            return new();
+        }
+    }
+
+    private async Task CreateProductAsync(CreateProductRequest request)
+    {
+        var response = await ProductService.CreateProductAsync(request);
+
+        if (response.IsSucceeded)
+        {
+            var data = ResponseConverter.Deserialize<CreateProductResponse>(response.Result!);
+            Snackbar.Add(data.Message, Severity.Success);
+            NavigationManager.NavigateTo("products");
+        }
+        else
+        {
+            Snackbar.Add(response.ErrorMessage, Severity.Error);
+        }
     }
 
     #endregion

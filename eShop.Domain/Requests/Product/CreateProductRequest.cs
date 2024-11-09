@@ -6,7 +6,8 @@ namespace eShop.Domain.Requests.Product;
 
 public record CreateProductRequest : RequestBase
 {
-    public Guid Id { get; set; }
+    public CreateProductRequest() => Article = ProductEntity.GenerateArticle();
+    public Guid Id { get; set; } = Guid.NewGuid();
     public ProductTypes ProductType { get; set; } = ProductTypes.None;
     public string Article { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;

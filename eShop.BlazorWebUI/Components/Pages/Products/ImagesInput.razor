@@ -74,13 +74,13 @@
         StartIcon="@Icons.Material.Filled.Preview"
         FullWidth
         OnClick="async () => await OnPreviewImages()"
-        Disabled="@(!Model.Images.Any())">
+        Disabled="@(!Images.Any())">
         Preview images
     </MudButton>
 </MudStack>
 
 @code {
-    [Parameter] public CreateProductRequest Model { get; set; } = new();
+    private List<string> Images { get; set; } = new();
     private IReadOnlyList<IBrowserFile> Files { get; set; } = default!;
     private string CurrentImage { get; set; } = string.Empty;
 
@@ -100,7 +100,7 @@
     {
         var parameters = new DialogParameters<ImagesPreviewDialog>()
         {
-            { x => x.Images, Model.Images }
+            { x => x.Images, Images }
         };
 
         var options = new DialogOptions()
@@ -118,7 +118,7 @@
 
         foreach (var file in Files)
         {
-            Model.Images.Add(await CreateImageUrl(file));
+            Images.Add(await CreateImageUrl(file));
         }
         
         StateHasChanged();
@@ -138,7 +138,7 @@
     {
         Files = default!;
         CurrentImage = string.Empty;
-        Model.Images.Clear();
+        Images.Clear();
         StateHasChanged();
     }
 

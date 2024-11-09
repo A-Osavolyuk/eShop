@@ -77,7 +77,7 @@ namespace eShop.Infrastructure.Services
                     HttpMethods.PUT => HttpMethod.Put,
                     HttpMethods.DELETE => HttpMethod.Delete,
                     HttpMethods.GET => HttpMethod.Get,
-                    _ => throw new NotImplementedException("Invalid HTTP method"),
+                    _ => throw new Exception("Invalid HTTP method"),
                 };
 
                 if (withBearer)
@@ -126,7 +126,8 @@ namespace eShop.Infrastructure.Services
 
         private async ValueTask<ResponseDto> HandleStatusCode(HttpResponseMessage httpResponse)
         {
-            var response = JsonConvert.DeserializeObject<ResponseDto>(await httpResponse.Content.ReadAsStringAsync())!;
+            var json = await httpResponse.Content.ReadAsStringAsync();
+            var response = JsonConvert.DeserializeObject<ResponseDto>(json);
 
             return httpResponse.StatusCode switch
             {
@@ -137,7 +138,7 @@ namespace eShop.Infrastructure.Services
                 HttpStatusCode.Forbidden => new ResponseBuilder().Failed().WithErrorMessage("Forbidden").Build(),
                 HttpStatusCode.Unauthorized => new ResponseBuilder().Failed().WithErrorMessage($"Unauthorized").Build(),
                 HttpStatusCode.BadRequest => response.Errors.Any()
-                    ? new ResponseBuilder().Failed().WithErrorMessage(response!.ErrorMessage)
+                    ? new ResponseBuilder().Failed().WithErrorMessage(response!.ErrorMessage + " " + string.Join(';', response.Errors))
                         .WithErrors(response.Errors).Build()
                     : new ResponseBuilder().Failed().WithErrorMessage(response!.ErrorMessage).Build(),
                 _ => response

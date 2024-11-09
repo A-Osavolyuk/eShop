@@ -18,5 +18,5 @@ public class ProductEntity
     public List<string> Images { get; set; } = new List<string>();
     public BrandEntity Brand { get; set; } = new BrandEntity();
 
-    private static string GenerateArticle() => new Random().NextInt64(100_000_000, 999_999_999_999).ToString();
+    public static string GenerateArticle() => new Random().NextInt64(100_000_000, 999_999_999_999).ToString();
 }
