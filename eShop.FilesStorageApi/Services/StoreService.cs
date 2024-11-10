@@ -64,6 +64,32 @@ public class StoreService(IConfiguration configuration) : IStoreService
         }
     }
 
+    public async ValueTask<string> UploadUserAvatarAsync(IFormFile file, Guid userId)
+    {
+        var blobContainerClient = GetContainerClient(avatarContainer);
+        var blobClient = blobContainerClient.GetBlobClient($"avatar_{userId}");
+        await using var stream = file.OpenReadStream();
+        await blobClient.UploadAsync(stream);
+        return blobClient.Uri.ToString();
+    }
+
+    public async ValueTask DeleteUserAvatarAsync(Guid userId)
+    {
+        var blobContainerClient = GetContainerClient(avatarContainer);
+        var blobClient = blobContainerClient.GetBlobClient($"avatar_{userId}");
+        if (await blobClient.ExistsAsync())
+        {
+            await blobClient.DeleteAsync();
+        }
+    }
+
+    public ValueTask<string> GetUserAvatarAsync(Guid userId)
+    {
+        var blobContainerClient = GetContainerClient(avatarContainer);
+        var blobClient = blobContainerClient.GetBlobClient($"avatar_{userId}");
+        return ValueTask.FromResult(blobClient.Uri.ToString());
+    }
+
     private BlobContainerClient GetContainerClient(string containerName)
     {
         var blobServiceClient = new BlobServiceClient(connectionString);

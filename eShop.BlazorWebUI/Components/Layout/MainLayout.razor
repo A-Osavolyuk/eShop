@@ -204,24 +204,24 @@
     private async Task GetAvatarAsync()
     {
         user = await LocalDataAccessor.ReadUserDataAsync();
+        
         if (user is not null)
         {
-            var link = await LocalDataAccessor.ReadAvatarLinkAsync();
+            avatarUri = await LocalDataAccessor.ReadAvatarLinkAsync();
 
-            if (string.IsNullOrEmpty(link))
+            if (string.IsNullOrEmpty(avatarUri))
             {
-                link = await StoreService.GetUserAvatarAsync(user!.UserId);
+                var response = await StoreService.GetUserAvatarAsync(user.UserId);
 
-                if (string.IsNullOrEmpty(link))
+                if (response.IsSucceeded)
                 {
+                    avatarUri = ResponseConverter.Deserialize<string>(response.Result!);
+                }
+                else
+                {
+                    Snackbar.Add(response.ErrorMessage, Severity.Error);
                     avatarUri = Configuration["DefaultAvatar"]!;
                 }
-
-                avatarUri = link;
-            }
-            else
-            {
-                avatarUri = link;
             }
         }
     }

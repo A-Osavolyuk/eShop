@@ -1,5 +1,7 @@
 ﻿@page "/profile/change-avatar"
 
+@using eShop.Domain.Responses.Files
+@using Severity = MudBlazor.Severity
 @inherits PageBase
 
 @inject IStoreService StoreService
@@ -18,13 +20,13 @@
                         </MudItem>
                         <MudItem xs=12>
                             <MudPaper Class="pa-1 d-flex justify-content-center" Outlined Style="height:300px">
-                                @if (string.IsNullOrEmpty(CurrentImage))
+                                @if (string.IsNullOrEmpty(currentImage))
                                 {
                                     <MudText Class="m-auto" Typo="Typo.body1"> Your avatar preview </MudText>
                                 }
                                 else
                                 {
-                                    <MudImage ObjectFit="ObjectFit.Fill" Class="h-100" Src="@CurrentImage" Alt="avatar preview" />
+                                    <MudImage ObjectFit="ObjectFit.Fill" Class="h-100" Src="@currentImage" Alt="avatar preview" />
                                 }
                             </MudPaper>
                         </MudItem>
@@ -36,8 +38,8 @@
                                            Hidden="@false"
                                            InputClass="absolute m-auto cursor-pointer mud-width-full mud-height-full z-20"
                                            InputStyle="opacity:0"
-                                           @bind-Files="@File"
-                                           For="@(() => File)"
+                                           @bind-Files="@file"
+                                           For="@(() => file)"
                                            SuppressOnChangeWhenInvalid>
                                 <ActivatorContent>
                                     <MudButton Class="cursor-pointer" FullWidth HtmlTag="button" Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.FileOpen">
@@ -47,12 +49,12 @@
                             </MudFileUpload>
                         </MudItem>
                         <MudItem xs="4" Style="margin-top:6px">
-                            <MudButton FullWidth ButtonType="ButtonType.Button" Disabled="@(File is null ? true : false)" Color="Color.Success" Variant="Variant.Filled" OnClick="UploadClick" StartIcon="@Icons.Material.Filled.Upload">
+                            <MudButton FullWidth ButtonType="ButtonType.Button" Disabled="@(file is null ? true : false)" Color="Color.Success" Variant="Variant.Filled" OnClick="UploadClick" StartIcon="@Icons.Material.Filled.Upload">
                                 Upload file
                             </MudButton>
                         </MudItem>
                         <MudItem xs="4" Style="margin-top:6px">
-                            <MudButton FullWidth ButtonType="ButtonType.Button" Disabled="@(File is null ? true : false)" Color="Color.Error" Variant="Variant.Filled" OnClick="ClearClick" StartIcon="@Icons.Material.Filled.Clear">
+                            <MudButton FullWidth ButtonType="ButtonType.Button" Disabled="@(file is null ? true : false)" Color="Color.Error" Variant="Variant.Filled" OnClick="ClearClick" StartIcon="@Icons.Material.Filled.Clear">
                                 Clear
                             </MudButton>
                         </MudItem>
@@ -67,13 +69,13 @@
 </AuthorizeView>
 
 @code {
-    private IBrowserFile? File;
-    private string CurrentImage = "";
+    private IBrowserFile? file;
+    private string currentImage = "";
 
     private async void OnInputFileChanged(InputFileChangeEventArgs e)
     {
-        File = e.File;
-        CurrentImage = await CreateImageUrl(File);
+        file = e.File;
+        currentImage = await CreateImageUrl(file);
         StateHasChanged();
     }
 
@@ -87,14 +89,23 @@
         return imageUrl;
     }
 
-    private void ClearClick() => CurrentImage = string.Empty;
+    private void ClearClick() => currentImage = string.Empty;
 
     private async Task UploadClick()
     {
         var userData = await LocalDataAccessor.ReadUserDataAsync();
-        var link = await StoreService.UploadUserAvatarAsync(userData.UserId, File);
-        await LocalDataAccessor.WriteAvatarLinkAsync(link);
-        NavigationManager.NavigateTo("/profile");
+        var response = await StoreService.UploadUserAvatarAsync(userData.UserId, file!);
+
+        if (response.IsSucceeded)
+        {
+            var data = ResponseConverter.Deserialize<UploadAvatarResponse>(response.Result!);
+            await LocalDataAccessor.WriteAvatarLinkAsync(data.Uri);
+            NavigationManager.NavigateTo("/profile");
+        }
+        else
+        {
+            Snackbar.Add(response.ErrorMessage, Severity.Error);
+        }
     }
 }
 

@@ -1,5 +1,6 @@
 ﻿@page "/profile"
 
+@using Severity = MudBlazor.Severity
 @inherits PageBase
 
 @inject IAuthenticationService AuthService
@@ -13,7 +14,7 @@
         <MudGrid Justify="Justify.Center">
             <MudItem xs="8">
                 <MudPaper Class="pa-3" Outlined>
-                    @if (UserData is null)
+                    @if (userData is null)
                     {
                         <MudText Typo="Typo.h3">Loading...</MudText>
                     }
@@ -22,12 +23,12 @@
                         <MudGrid Justify="Justify.Center">
                             <MudItem xs="3">
                                 <MudPaper Class="pa-1" Outlined>
-                                    <MudImage ObjectFit="ObjectFit.Fill" Class="w-100 h-100" Alt="user-avatar" Src="@AvatarUri" />
+                                    <MudImage ObjectFit="ObjectFit.Fill" Class="w-100 h-100" Alt="user-avatar" Src="@avatarUri" />
                                 </MudPaper>
                                 <MudGrid Justify="Justify.Center">
                                     <MudItem Class="mt-1" xs="12">
                                         <MudStack Spacing="1">
-                                            <MudButton Disabled="@(AvatarUri == Configuration["DefaultAvatar"] ? true : false)" OnClick="RemoveAvatar"
+                                            <MudButton Disabled="@(avatarUri == Configuration["DefaultAvatar"] ? true : false)" OnClick="RemoveAvatar"
                                                        Variant="Variant.Filled" FullWidth Color="Color.Error" ButtonType="ButtonType.Button" EndIcon="@Icons.Material.Filled.Delete">Remove avatar</MudButton>
                                             <MudButton Variant="Variant.Filled" FullWidth Color="Color.Primary" OnClick="@(() => NavigationManager.NavigateTo("/profile/change-avatar"))"
                                                        ButtonType="ButtonType.Button" EndIcon="@Icons.Material.Filled.AddAPhoto">Change avatar</MudButton>
@@ -39,11 +40,11 @@
                                 <MudPaper Outlined Class="pa-3 mb-3">
                                     <MudText Typo="Typo.h6">Account Information</MudText>
                                     <MudGrid Spacing="3" Class="mt-3">
-                                        <ProfileField Divided Label="User name" Text="@UserData.UserName" HasButton
+                                        <ProfileField Divided Label="User name" Text="@userData.UserName" HasButton
                                                       Tooltip="Change user name" OnEditClick="@(() => NavigationManager.NavigateTo("/profile/change-username"))" />
-                                        <ProfileField Divided Label="Email address" Text="@UserData.Email" HasButton
+                                        <ProfileField Divided Label="Email address" Text="@userData.Email" HasButton
                                                       Tooltip="Change email address" OnEditClick="@(() => NavigationManager.NavigateTo("/profile/change-email"))" />
-                                        <ProfileField Divided Label="Phone number" Text="@UserData.PhoneNumber" HasButton
+                                        <ProfileField Divided Label="Phone number" Text="@userData.PhoneNumber" HasButton
                                                       Tooltip="Change phone number" OnEditClick="@(() => NavigationManager.NavigateTo("/profile/change-phone-number"))" />
                                     </MudGrid>
                                 </MudPaper>
@@ -61,9 +62,9 @@
                                         </MudItem>
                                     </MudGrid>
                                     <MudGrid Spacing="3" Class="mt-3">
-                                        <ProfileField Divided Label="Full Name" Text="@($"{PersonalData.FirstName} {PersonalData.LastName}")" />
-                                        <ProfileField Divided Label="Date of birth" Text="@(PersonalData.DateOfBirth.ToLongDateString())" />
-                                        <ProfileField Divided Label="Gender" Text="@PersonalData.Gender" />
+                                        <ProfileField Divided Label="Full Name" Text="@($"{personalData.FirstName} {personalData.LastName}")" />
+                                        <ProfileField Divided Label="Date of birth" Text="@(personalData.DateOfBirth.ToLongDateString())" />
+                                        <ProfileField Divided Label="Gender" Text="@personalData.Gender" />
                                     </MudGrid>
                                 </MudPaper>
                                 <MudPaper Outlined Class="pa-3">
@@ -78,8 +79,8 @@
                                             <MudText Typo="Typo.body2">Two factor authentication</MudText>
                                         </MudItem>
                                         <MudItem xs="8" Class="m-auto">
-                                            <MudText Color="@(SecurityData.TwoFactorAuthenticationState ? Color.Success : Color.Error)"
-                                                     Typo="Typo.body2">@(SecurityData.TwoFactorAuthenticationState ? "Enabled" : "Disabled")</MudText>
+                                            <MudText Color="@(securityData.TwoFactorAuthenticationState ? Color.Success : Color.Error)"
+                                                     Typo="Typo.body2">@(securityData.TwoFactorAuthenticationState ? "Enabled" : "Disabled")</MudText>
                                         </MudItem>
                                         <MudItem xs="1">
                                             <MudTooltip Text="Change two factor authentication state" Color="Color.Primary">
@@ -87,7 +88,7 @@
                                                                OnClick="ChangeTwoFactorAuthenticationState" />
                                             </MudTooltip>
                                         </MudItem>
-                                        <ProfileField Divided Label="Password" Text="@($"Last updated at {SecurityData.PasswordUpdatedDate.ToLongDateString()}")"
+                                        <ProfileField Divided Label="Password" Text="@($"Last updated at {securityData.PasswordUpdatedDate.ToLongDateString()}")"
                                                       HasButton Tooltip="Change password" OnEditClick="@(() => NavigationManager.NavigateTo("/profile/change-password"))" />
                                     </MudGrid>
                                 </MudPaper>
@@ -104,14 +105,14 @@
 </AuthorizeView>
 
 @code {
-    private UserData UserData = null!;
-    private PersonalData PersonalData = null!;
-    private SecurityData SecurityData = null!;
-    private string AvatarUri = string.Empty;
+    private UserData userData = null!;
+    private PersonalData personalData = null!;
+    private SecurityData securityData = null!;
+    private string avatarUri = string.Empty;
 
-    protected async override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        UserData = await LocalDataAccessor.ReadUserDataAsync();
+        userData = await LocalDataAccessor.ReadUserDataAsync();
         await GetPersonalData();
         await GetSecurityData();
         await GetAvatar();
@@ -123,17 +124,17 @@
 
     private async Task GetPersonalData()
     {
-        PersonalData = await LocalDataAccessor.ReadPersonalDataAsync();
+        personalData = await LocalDataAccessor.ReadPersonalDataAsync();
 
-        if (string.IsNullOrEmpty(PersonalData.FirstName) || string.IsNullOrEmpty(PersonalData.LastName) || string.IsNullOrEmpty(PersonalData.Gender))
+        if (string.IsNullOrEmpty(personalData.FirstName) || string.IsNullOrEmpty(personalData.LastName) || string.IsNullOrEmpty(personalData.Gender))
         {
-            var response = await AuthService.GetPersonalDataAsync(UserData!.Email);
+            var response = await AuthService.GetPersonalDataAsync(userData!.Email);
 
             if (response.IsSucceeded)
             {
                 var data = JsonConvert.DeserializeObject<PersonalDataResponse>(response.Result!.ToString()!);
 
-                PersonalData = new()
+                personalData = new()
                     {
                         FirstName = data.FirstName,
                         LastName = data.LastName,
@@ -141,7 +142,7 @@
                         DateOfBirth = data.DateOfBirth
                     };
 
-                await LocalDataAccessor.WritePersonalDataAsync(PersonalData);
+                await LocalDataAccessor.WritePersonalDataAsync(personalData);
             }
             else
             {
@@ -152,23 +153,23 @@
 
     private async Task GetSecurityData()
     {
-        SecurityData = await LocalDataAccessor.ReadSecurityDataAsync();
+        securityData = await LocalDataAccessor.ReadSecurityDataAsync();
 
-        if (SecurityData.PasswordUpdatedDate == new DateTime(1, 1, 1))
+        if (securityData.PasswordUpdatedDate == new DateTime(1, 1, 1))
         {
-            var response = await AuthService.GetTwoFactorStateAsync(UserData.Email);
+            var response = await AuthService.GetTwoFactorStateAsync(userData.Email);
 
             if (response.IsSucceeded)
             {
                 var data = JsonConvert.DeserializeObject<TwoFactorAuthenticationStateResponse>(response.Result!.ToString()!);
 
-                SecurityData = new()
+                securityData = new()
                     {
                         PasswordUpdatedDate = new(2024, 1, 1),
                         TwoFactorAuthenticationState = data!.TwoFactorAuthenticationState
                     };
 
-                await LocalDataAccessor.WriteSecurityDataAsync(SecurityData);
+                await LocalDataAccessor.WriteSecurityDataAsync(securityData);
             }
             else
             {
@@ -179,34 +180,33 @@
 
     private async Task GetAvatar()
     {
-        var link = await LocalDataAccessor.ReadAvatarLinkAsync();
+        avatarUri = await LocalDataAccessor.ReadAvatarLinkAsync();
 
-        if (string.IsNullOrEmpty(link))
+        if (string.IsNullOrEmpty(avatarUri))
         {
-            link = await StoreService.GetUserAvatarAsync(UserData.UserId);
+            var response = await StoreService.GetUserAvatarAsync(userData.UserId);
 
-            if (string.IsNullOrEmpty(link))
+            if (response.IsSucceeded)
             {
-                AvatarUri = Configuration["DefaultAvatar"]!;
+                avatarUri = ResponseConverter.Deserialize<string>(response.Result!);
             }
-
-            AvatarUri = link;
-        }
-        else
-        {
-            AvatarUri = link;
+            else
+            {
+                Snackbar.Add(response.ErrorMessage, Severity.Error);
+                avatarUri = Configuration["DefaultAvatar"]!;
+            }
         }
     }
 
     private async Task ChangeTwoFactorAuthenticationState()
     {
-        var response = await AuthService.ChangeTwoFactorAuthenticationStateAsync(new() { Email = UserData.Email });
+        var response = await AuthService.ChangeTwoFactorAuthenticationStateAsync(new() { Email = userData.Email });
 
         if (response.IsSucceeded)
         {
             var data = JsonConvert.DeserializeObject<ChangeTwoFactorAuthenticationResponse>(response.Result!.ToString()!);
-            SecurityData.TwoFactorAuthenticationState = data!.TwoFactorAuthenticationState;
-            await LocalDataAccessor.WriteSecurityDataAsync(SecurityData);
+            securityData.TwoFactorAuthenticationState = data!.TwoFactorAuthenticationState;
+            await LocalDataAccessor.WriteSecurityDataAsync(securityData);
             StateHasChanged();
         }
         else
@@ -217,8 +217,8 @@
 
     private async Task RemoveAvatar()
     {
-        AvatarUri = Configuration["DefaultAvatar"]!;
-        await StoreService.RemoveUserAvatarAsync(UserData.UserId);
+        avatarUri = Configuration["DefaultAvatar"]!;
+        await StoreService.RemoveUserAvatarAsync(userData.UserId);
         await LocalDataAccessor.RemoveAvatarLinkAsync();
         StateHasChanged();
     }
