@@ -1,8 +1,8 @@
 ﻿namespace eShop.AuthApi.Queries.Auth
 {
-    public record GetExternalProvidersQuery() : IRequest<Result<IEnumerable<ExternalProviderDto>>>;
+    internal sealed record GetExternalProvidersQuery() : IRequest<Result<IEnumerable<ExternalProviderDto>>>;
 
-    public class GetExternalProvidersQueryHandler(
+    internal sealed class GetExternalProvidersQueryHandler(
         ILogger<GetExternalProvidersQueryHandler> logger,
         AppManager appManager) : IRequestHandler<GetExternalProvidersQuery, Result<IEnumerable<ExternalProviderDto>>>
     {

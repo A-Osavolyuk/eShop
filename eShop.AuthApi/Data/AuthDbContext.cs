@@ -2,7 +2,7 @@
 
 namespace eShop.AuthApi.Data
 {
-    public class AuthDbContext(DbContextOptions<AuthDbContext> options) : IdentityDbContext<AppUser>(options)
+    internal sealed class AuthDbContext(DbContextOptions<AuthDbContext> options) : IdentityDbContext<AppUser>(options)
     {
         public DbSet<PersonalData> PersonalData => Set<PersonalData>();
         public DbSet<Permission> Permissions => Set<Permission>();

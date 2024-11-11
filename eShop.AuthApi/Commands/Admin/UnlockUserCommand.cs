@@ -1,8 +1,8 @@
 ﻿namespace eShop.AuthApi.Commands.Admin
 {
-    public record UnlockUserCommand(UnlockUserRequest Request) : IRequest<Result<UnlockUserResponse>>;
+    internal sealed record UnlockUserCommand(UnlockUserRequest Request) : IRequest<Result<UnlockUserResponse>>;
 
-    public class UnlockUserCommandHandler(
+    internal sealed class UnlockUserCommandHandler(
         AppManager appManager,
         ILogger<UnlockUserCommandHandler> logger) : IRequestHandler<UnlockUserCommand, Result<UnlockUserResponse>>
     {

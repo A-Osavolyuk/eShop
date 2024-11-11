@@ -1,9 +1,9 @@
 ﻿namespace eShop.AuthApi.Commands.Auth
 {
-    public record ChangeTwoFactorAuthenticationStateCommand(ChangeTwoFactorAuthenticationRequest Request)
+    internal sealed record ChangeTwoFactorAuthenticationStateCommand(ChangeTwoFactorAuthenticationRequest Request)
         : IRequest<Result<ChangeTwoFactorAuthenticationResponse>>;
 
-    public class ChangeTwoFactorAuthenticationStateCommandHandler(
+    internal sealed class ChangeTwoFactorAuthenticationStateCommandHandler(
         AppManager appManager,
         ILogger<ChangeTwoFactorAuthenticationStateCommandHandler> logger)
         : IRequestHandler<ChangeTwoFactorAuthenticationStateCommand, Result<ChangeTwoFactorAuthenticationResponse>>

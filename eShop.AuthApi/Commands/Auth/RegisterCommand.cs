@@ -3,9 +3,9 @@ using eShop.AuthApi.Utilities;
 
 namespace eShop.AuthApi.Commands.Auth
 {
-    public record RegisterCommand(RegistrationRequest Request) : IRequest<Result<RegistrationResponse>>;
+    internal sealed record RegisterCommand(RegistrationRequest Request) : IRequest<Result<RegistrationResponse>>;
 
-    public class RegisterCommandHandler(
+    internal sealed class RegisterCommandHandler(
         IValidator<RegistrationRequest> validator,
         AppManager appManager,
         ILogger<RegisterCommandHandler> logger,

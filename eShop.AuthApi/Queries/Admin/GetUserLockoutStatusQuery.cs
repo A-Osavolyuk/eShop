@@ -1,8 +1,8 @@
 ﻿namespace eShop.AuthApi.Queries.Admin
 {
-    public record GetUserLockoutStatusQuery(string Email) : IRequest<Result<UserLockoutStatusResponse>>;
+    internal sealed record GetUserLockoutStatusQuery(string Email) : IRequest<Result<UserLockoutStatusResponse>>;
 
-    public class GetUserLockoutStatusQueryHandler(
+    internal sealed class GetUserLockoutStatusQueryHandler(
         AppManager appManager,
         ILogger<GetUserLockoutStatusQueryHandler> logger,
         IMapper mapper) : IRequestHandler<GetUserLockoutStatusQuery, Result<UserLockoutStatusResponse>>

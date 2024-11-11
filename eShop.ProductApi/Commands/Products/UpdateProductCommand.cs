@@ -2,7 +2,7 @@
 
 namespace eShop.ProductApi.Commands.Products;
 
-internal record UpdateProductCommand(UpdateProductRequest Request) : IRequest<Result<UpdateProductResponse>>;
+internal sealed record UpdateProductCommand(UpdateProductRequest Request) : IRequest<Result<UpdateProductResponse>>;
 
 internal sealed class UpdateProductCommandHandler(
     IMongoDatabase database) : IRequestHandler<UpdateProductCommand, Result<UpdateProductResponse>>

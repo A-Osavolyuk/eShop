@@ -3,9 +3,9 @@ using eShop.Domain.Entities.Admin;
 
 namespace eShop.AuthApi.Queries.Admin
 {
-    public record FindUserByEmailQuery(string Email) : IRequest<Result<FindUserResponse>>;
+    internal sealed record FindUserByEmailQuery(string Email) : IRequest<Result<FindUserResponse>>;
 
-    public class FindUserByEmailQueryHandler(
+    internal sealed class FindUserByEmailQueryHandler(
         AppManager appManager,
         ILogger<FindUserByEmailQueryHandler> logger,
         IMapper mapper,

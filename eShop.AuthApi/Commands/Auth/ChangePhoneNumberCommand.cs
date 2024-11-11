@@ -3,9 +3,9 @@ using eShop.AuthApi.Utilities;
 
 namespace eShop.AuthApi.Commands.Auth
 {
-    public record ChangePhoneNumberCommand(ChangePhoneNumberRequest Request) : IRequest<Result<ChangePhoneNumberResponse>>;
+    internal sealed record ChangePhoneNumberCommand(ChangePhoneNumberRequest Request) : IRequest<Result<ChangePhoneNumberResponse>>;
 
-    public class RequestChangePhoneNumberCommandHandler(
+    internal sealed class RequestChangePhoneNumberCommandHandler(
         IValidator<ChangePhoneNumberRequest> validator,
         AppManager appManager,
         ILogger<RequestChangePhoneNumberCommandHandler> logger,

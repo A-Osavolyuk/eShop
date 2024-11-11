@@ -1,6 +1,6 @@
 ﻿namespace eShop.AuthApi.Services.Interfaces
 {
-    public interface IEmailSender
+    internal interface IEmailSender
     {
         public ValueTask SendResetPasswordMessage(ResetPasswordMessage resetPasswordMessage);
         public ValueTask SendConfirmEmailMessage(ConfirmEmailMessage confirmEmailMessage);

@@ -3,9 +3,9 @@ using eShop.Domain.Requests.Cart;
 
 namespace eShop.AuthApi.Commands.Auth
 {
-    public record ConfirmEmailCommand(ConfirmEmailRequest Request) : IRequest<Result<ConfirmEmailResponse>>;
+    internal sealed record ConfirmEmailCommand(ConfirmEmailRequest Request) : IRequest<Result<ConfirmEmailResponse>>;
 
-    public class ConfirmEmailCommandHandler(
+    internal sealed class ConfirmEmailCommandHandler(
         AppManager appManager,
         ILogger<ConfirmEmailCommandHandler> logger,
         IRequestClient<CreateCartRequest> cartRequestClient,

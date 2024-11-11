@@ -5,7 +5,7 @@ using eShop.ReviewsApi.Data;
 
 namespace eShop.ReviewsApi.Queries.Comments;
 
-internal record GetCommentsQuery(Guid ProductId) : IRequest<Result<GetCommentsResponse>>;
+internal sealed record GetCommentsQuery(Guid ProductId) : IRequest<Result<GetCommentsResponse>>;
 
 internal sealed class GetCommentsQueryHandler(
     ReviewDbContext context,

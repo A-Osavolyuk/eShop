@@ -1,8 +1,8 @@
 ﻿namespace eShop.AuthApi.Queries.Auth
 {
-    public record GetPhoneNumberQuery(string Email) : IRequest<Result<GetPhoneNumberResponse>>;
+    internal sealed record GetPhoneNumberQuery(string Email) : IRequest<Result<GetPhoneNumberResponse>>;
 
-    public class GetPhoneNumberQueryHandler(
+    internal sealed class GetPhoneNumberQueryHandler(
         AppManager appManager,
         ILogger<GetPhoneNumberQueryHandler> logger) : IRequestHandler<GetPhoneNumberQuery, Result<GetPhoneNumberResponse>>
     {

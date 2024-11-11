@@ -2,10 +2,10 @@
 
 namespace eShop.AuthApi.Commands.Admin
 {
-    public record DeleteUserAccountCommand(DeleteUserAccountRequest Request)
+    internal sealed record DeleteUserAccountCommand(DeleteUserAccountRequest Request)
         : IRequest<Result<DeleteUserAccountResponse>>;
 
-    public class DeleteUserAccountCommandHandler(
+    internal sealed class DeleteUserAccountCommandHandler(
         AppManager appManager,
         ILogger<DeleteUserAccountCommandHandler> logger,
         AuthDbContext context) : IRequestHandler<DeleteUserAccountCommand, Result<DeleteUserAccountResponse>>

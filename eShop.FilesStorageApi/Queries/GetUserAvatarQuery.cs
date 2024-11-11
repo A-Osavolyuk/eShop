@@ -2,9 +2,9 @@
 
 namespace eShop.FilesStorageApi.Queries;
 
-public record GetUserAvatarQuery(Guid UserId) : IRequest<Result<string>>;
+internal sealed record GetUserAvatarQuery(Guid UserId) : IRequest<Result<string>>;
 
-public class GetUserAvatarQueryHandler(IStoreService service) : IRequestHandler<GetUserAvatarQuery, Result<string>>
+internal sealed class GetUserAvatarQueryHandler(IStoreService service) : IRequestHandler<GetUserAvatarQuery, Result<string>>
 {
     private readonly IStoreService service = service;
 

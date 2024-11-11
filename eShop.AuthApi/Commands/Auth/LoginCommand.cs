@@ -3,9 +3,9 @@ using eShop.AuthApi.Services.Interfaces;
 
 namespace eShop.AuthApi.Commands.Auth
 {
-    public record LoginCommand(LoginRequest Request) : IRequest<Result<LoginResponse>>;
+    internal sealed record LoginCommand(LoginRequest Request) : IRequest<Result<LoginResponse>>;
 
-    public class LoginCommandHandler(
+    internal sealed class LoginCommandHandler(
         IValidator<LoginRequest> validator,
         ILogger<LoginCommandHandler> logger,
         AppManager appManager,

@@ -3,9 +3,9 @@ using NotFoundException = eShop.Domain.Exceptions.NotFoundException;
 
 namespace eShop.AuthApi.Commands.Admin
 {
-    public record DeleteRoleCommand(DeleteRoleRequest Request) : IRequest<Result<DeleteRoleResponse>>;
+    internal sealed record DeleteRoleCommand(DeleteRoleRequest Request) : IRequest<Result<DeleteRoleResponse>>;
 
-    public class DeleteRoleCommandHandler(
+    internal sealed class DeleteRoleCommandHandler(
         AppManager appManager,
         ILogger<DeleteRoleCommandHandler> logger) : IRequestHandler<DeleteRoleCommand, Result<DeleteRoleResponse>>
     {

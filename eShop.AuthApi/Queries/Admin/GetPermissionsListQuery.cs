@@ -2,9 +2,9 @@
 
 namespace eShop.AuthApi.Queries.Admin
 {
-    public record GetPermissionsListQuery() : IRequest<Result<IEnumerable<Permission>>>;
+    internal sealed record GetPermissionsListQuery() : IRequest<Result<IEnumerable<Permission>>>;
 
-    public class GetPermissionsListQueryHandler(
+    internal sealed class GetPermissionsListQueryHandler(
         AppManager appManager,
         ILogger<GetPermissionsListQueryHandler> logger) : IRequestHandler<GetPermissionsListQuery, Result<IEnumerable<Permission>>>
     {

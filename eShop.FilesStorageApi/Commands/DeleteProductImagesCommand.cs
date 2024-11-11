@@ -2,9 +2,9 @@
 
 namespace eShop.FilesStorageApi.Commands;
 
-public record DeleteProductImagesCommand(Guid ProductId) : IRequest<Result<DeleteProductImagesResponse>>;
+internal sealed record DeleteProductImagesCommand(Guid ProductId) : IRequest<Result<DeleteProductImagesResponse>>;
 
-public class DeleteProductImagesCommandHandler(IStoreService service) : IRequestHandler<DeleteProductImagesCommand, Result<DeleteProductImagesResponse>>
+internal sealed class DeleteProductImagesCommandHandler(IStoreService service) : IRequestHandler<DeleteProductImagesCommand, Result<DeleteProductImagesResponse>>
 {
     private readonly IStoreService service = service;
 

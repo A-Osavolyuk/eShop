@@ -2,7 +2,7 @@
 
 namespace eShop.AuthApi
 {
-    public sealed class AppManager(
+    internal sealed class AppManager(
         SignInManager<AppUser> signInManager,
         UserManager<AppUser> userManager,
         RoleManager<IdentityRole> roleManager,

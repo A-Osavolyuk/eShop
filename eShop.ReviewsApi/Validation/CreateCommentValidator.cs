@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace eShop.ReviewsApi.Validation;
 
-internal class CreateCommentValidator : AbstractValidator<CreateCommentCommand>
+internal sealed class CreateCommentValidator : AbstractValidator<CreateCommentCommand>
 {
     public CreateCommentValidator()
     {

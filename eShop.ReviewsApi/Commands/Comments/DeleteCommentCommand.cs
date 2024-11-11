@@ -5,7 +5,7 @@ using eShop.ReviewsApi.Data;
 
 namespace eShop.ReviewsApi.Commands.Comments;
 
-internal record DeleteCommentCommand(DeleteCommentRequest Request) : IRequest<Result<DeleteCommentResponse>>;
+internal sealed record DeleteCommentCommand(DeleteCommentRequest Request) : IRequest<Result<DeleteCommentResponse>>;
 
 internal sealed class DeleteCommentCommandHandler(
     ReviewDbContext context) : IRequestHandler<DeleteCommentCommand, Result<DeleteCommentResponse>>

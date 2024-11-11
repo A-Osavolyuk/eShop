@@ -4,9 +4,9 @@ using eShop.Domain.Entities.Admin;
 
 namespace eShop.AuthApi.Commands.Admin
 {
-    public record IssuePermissionCommand(IssuePermissionRequest Request) : IRequest<Result<IssuePermissionsResponse>>;
+    internal sealed record IssuePermissionCommand(IssuePermissionRequest Request) : IRequest<Result<IssuePermissionsResponse>>;
 
-    public class IssuePermissionCommandHandler(
+    internal sealed class IssuePermissionCommandHandler(
         AppManager appManager,
         ILogger<IssuePermissionCommandHandler> logger,
         AuthDbContext context) : IRequestHandler<IssuePermissionCommand, Result<IssuePermissionsResponse>>

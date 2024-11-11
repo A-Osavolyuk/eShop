@@ -3,9 +3,9 @@ using eShop.Domain.Entities.Admin;
 
 namespace eShop.AuthApi.Queries.Admin
 {
-    public record FindUserByIdQuery(Guid UserId) : IRequest<Result<FindUserResponse>>;
+    internal sealed record FindUserByIdQuery(Guid UserId) : IRequest<Result<FindUserResponse>>;
 
-    public class FindUserByIdQueryHandler(
+    internal sealed class FindUserByIdQueryHandler(
         AppManager appManager,
         ILogger<FindUserByIdQueryHandler> logger,
         IMapper mapper,

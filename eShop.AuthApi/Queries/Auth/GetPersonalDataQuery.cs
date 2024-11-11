@@ -2,9 +2,9 @@
 
 namespace eShop.AuthApi.Queries.Auth
 {
-    public record GetPersonalDataQuery(string Email) : IRequest<Result<PersonalDataResponse>>;
+    internal sealed record GetPersonalDataQuery(string Email) : IRequest<Result<PersonalDataResponse>>;
 
-    public class GetPersonalDataQueryHandler(
+    internal sealed class GetPersonalDataQueryHandler(
         ILogger<GetPersonalDataQueryHandler> logger,
         AppManager appManager,
         IMapper mapper,

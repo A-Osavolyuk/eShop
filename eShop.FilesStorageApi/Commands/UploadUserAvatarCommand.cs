@@ -2,9 +2,9 @@
 
 namespace eShop.FilesStorageApi.Commands;
 
-public record UploadUserAvatarCommand(IFormFile File, Guid UserId) : IRequest<Result<UploadAvatarResponse>>;
+internal sealed record UploadUserAvatarCommand(IFormFile File, Guid UserId) : IRequest<Result<UploadAvatarResponse>>;
 
-public class UploadUserAvatarCommandHandler(
+internal sealed class UploadUserAvatarCommandHandler(
     IStoreService service) : IRequestHandler<UploadUserAvatarCommand, Result<UploadAvatarResponse>>
 {
     private readonly IStoreService service = service;

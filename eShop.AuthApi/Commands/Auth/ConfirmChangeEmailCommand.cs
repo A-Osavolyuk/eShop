@@ -1,9 +1,9 @@
 ﻿namespace eShop.AuthApi.Commands.Auth
 {
-    public record ConfirmChangeEmailCommand(ConfirmChangeEmailRequest Request)
+    internal sealed record ConfirmChangeEmailCommand(ConfirmChangeEmailRequest Request)
         : IRequest<Result<ConfirmChangeEmailResponse>>;
 
-    public class ConfirmChangeEmailCommandHandler(
+    internal sealed class ConfirmChangeEmailCommandHandler(
         AppManager appManager,
         ILogger<ConfirmChangeEmailCommandHandler> logger)
         : IRequestHandler<ConfirmChangeEmailCommand, Result<ConfirmChangeEmailResponse>>

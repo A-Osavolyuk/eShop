@@ -1,9 +1,9 @@
 ﻿
 namespace eShop.AuthApi.Commands.Admin
 {
-    public record LockoutUserCommand(LockoutUserRequest Request) : IRequest<Result<LockoutUserResponse>>;
+    internal sealed record LockoutUserCommand(LockoutUserRequest Request) : IRequest<Result<LockoutUserResponse>>;
 
-    public class LockoutUserCommandHandler(
+    internal sealed class LockoutUserCommandHandler(
         AppManager appManager,
         ILogger<LockoutUserCommandHandler> logger) : IRequestHandler<LockoutUserCommand, Result<LockoutUserResponse>>
     {

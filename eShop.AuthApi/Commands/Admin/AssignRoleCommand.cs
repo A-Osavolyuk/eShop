@@ -1,7 +1,7 @@
 ﻿namespace eShop.AuthApi.Commands.Admin
 {
-    public record AssignRoleCommand(AssignRoleRequest Request) : IRequest<Result<AssignRoleResponse>>;
-    public class AssignRoleCommandHandler(
+    internal sealed record AssignRoleCommand(AssignRoleRequest Request) : IRequest<Result<AssignRoleResponse>>;
+    internal sealed class AssignRoleCommandHandler(
         AppManager appManager,
         ILogger<AssignRoleCommandHandler> logger) : IRequestHandler<AssignRoleCommand, Result<AssignRoleResponse>>
     {

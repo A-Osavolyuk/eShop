@@ -4,7 +4,7 @@ using MongoDB.Driver;
 
 namespace eShop.CartApi.Queries.Favorites;
 
-internal record GetFavoritesQuery(Guid UserId) : IRequest<Result<FavoritesDto>>;
+internal sealed record GetFavoritesQuery(Guid UserId) : IRequest<Result<FavoritesDto>>;
 
 internal sealed class GetFavoritesQueryHandler(
     IMongoDatabase database,

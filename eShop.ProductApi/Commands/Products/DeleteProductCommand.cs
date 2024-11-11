@@ -1,6 +1,6 @@
 ﻿namespace eShop.ProductApi.Commands.Products;
 
-internal record DeleteProductCommand(DeleteProductRequest Request) : IRequest<Result<DeleteProductResponse>>;
+internal sealed record DeleteProductCommand(DeleteProductRequest Request) : IRequest<Result<DeleteProductResponse>>;
 
 internal sealed class DeleteProductCommandHandler(
     IMongoDatabase database) : IRequestHandler<DeleteProductCommand, Result<DeleteProductResponse>>

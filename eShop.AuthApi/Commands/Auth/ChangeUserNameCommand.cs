@@ -3,9 +3,9 @@ using eShop.AuthApi.Services.Interfaces;
 
 namespace eShop.AuthApi.Commands.Auth
 {
-    public record ChangeUserNameCommand(ChangeUserNameRequest Request) : IRequest<Result<ChangeUserNameResponse>>;
+    internal sealed record ChangeUserNameCommand(ChangeUserNameRequest Request) : IRequest<Result<ChangeUserNameResponse>>;
 
-    public class ChangeUserNameCommandHandler(
+    internal sealed class ChangeUserNameCommandHandler(
         ITokenHandler tokenHandler,
         AppManager appManager,
         IValidator<ChangeUserNameRequest> validator,

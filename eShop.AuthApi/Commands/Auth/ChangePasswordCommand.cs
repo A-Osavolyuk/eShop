@@ -1,8 +1,8 @@
 ﻿namespace eShop.AuthApi.Commands.Auth
 {
-    public record ChangePasswordCommand(ChangePasswordRequest Request) : IRequest<Result<ChangePasswordResponse>>;
+    internal sealed record ChangePasswordCommand(ChangePasswordRequest Request) : IRequest<Result<ChangePasswordResponse>>;
 
-    public class ChangePasswordCommandHandler(
+    internal sealed class ChangePasswordCommandHandler(
         AppManager appManager,
         IValidator<ChangePasswordRequest> validator,
         ILogger<ChangePasswordCommandHandler> logger)

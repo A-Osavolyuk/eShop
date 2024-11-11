@@ -2,7 +2,7 @@
 
 namespace eShop.AuthApi.Services.Implementation
 {
-    public class EmailSender : IEmailSender
+    internal sealed class EmailSender : IEmailSender
     {
         private readonly IBus bus;
 

@@ -2,10 +2,10 @@
 
 namespace eShop.AuthApi.Commands.Auth
 {
-    public record ConfirmChangePhoneNumberCommand(ConfirmChangePhoneNumberRequest Request)
+    internal sealed record ConfirmChangePhoneNumberCommand(ConfirmChangePhoneNumberRequest Request)
         : IRequest<Result<ConfirmChangePhoneNumberResponse>>;
 
-    public class ConfirmChangePhoneNumberCommandHandler(
+    internal sealed class ConfirmChangePhoneNumberCommandHandler(
         AppManager appManager,
         ILogger<ConfirmChangePhoneNumberCommandHandler> logger,
         ITokenHandler tokenHandler)

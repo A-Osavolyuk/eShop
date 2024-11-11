@@ -3,10 +3,10 @@ using eShop.Domain.Entities.Admin;
 
 namespace eShop.AuthApi.Commands.Auth
 {
-    public record ChangePersonalDataCommand(ChangePersonalDataRequest Request)
+    internal sealed record ChangePersonalDataCommand(ChangePersonalDataRequest Request)
         : IRequest<Result<ChangePersonalDataResponse>>;
 
-    public class ChangePersonalDataCommandHandler(
+    internal sealed class ChangePersonalDataCommandHandler(
         AppManager appManager,
         IValidator<ChangePersonalDataRequest> validator,
         ILogger<ChangePasswordCommandHandler> logger,

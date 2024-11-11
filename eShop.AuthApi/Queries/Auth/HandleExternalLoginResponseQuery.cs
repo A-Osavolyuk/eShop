@@ -4,12 +4,12 @@ using eShop.AuthApi.Utilities;
 
 namespace eShop.AuthApi.Queries.Auth
 {
-    public record HandleExternalLoginResponseQuery(
+    internal sealed record HandleExternalLoginResponseQuery(
         ExternalLoginInfo ExternalLoginInfo,
         string? RemoteError,
         string? ReturnUri) : IRequest<Result<string>>;
 
-    public class HandleExternalLoginResponseQueryHandler(
+    internal sealed class HandleExternalLoginResponseQueryHandler(
         AppManager appManager,
         ILogger<HandleExternalLoginResponseQuery> logger,
         ITokenHandler tokenHandler,

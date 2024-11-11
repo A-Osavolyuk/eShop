@@ -3,9 +3,9 @@ using eShop.Domain.Entities.Admin;
 
 namespace eShop.AuthApi.Queries.Admin
 {
-    public record GetUserRolesQuery(Guid Id) : IRequest<Result<UserRolesResponse>>;
+    internal sealed record GetUserRolesQuery(Guid Id) : IRequest<Result<UserRolesResponse>>;
 
-    public class GetUserRolesQueryHandler(
+    internal sealed class GetUserRolesQueryHandler(
         AppManager appManager,
         ILogger<GetUserRolesQueryHandler> logger) : IRequestHandler<GetUserRolesQuery, Result<UserRolesResponse>>
     {

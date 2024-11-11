@@ -3,9 +3,9 @@ using eShop.FilesStorageApi.Services;
 
 namespace eShop.FilesStorageApi.Commands;
 
-public record UploadProductImagesCommand(IFormFileCollection Files, Guid ProductId) : IRequest<Result<UploadProductImagesResponse>>;
+internal sealed record UploadProductImagesCommand(IFormFileCollection Files, Guid ProductId) : IRequest<Result<UploadProductImagesResponse>>;
 
-public class UploadProductImagesCommandHandler(
+internal sealed class UploadProductImagesCommandHandler(
     IStoreService service) : IRequestHandler<UploadProductImagesCommand, Result<UploadProductImagesResponse>>
 {
     private readonly IStoreService service = service;

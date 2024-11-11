@@ -1,7 +1,7 @@
 ﻿namespace eShop.AuthApi.Queries.Auth
 {
-    public record GetTwoFactorAuthenticationStateQuery(string Email) : IRequest<Result<TwoFactorAuthenticationStateResponse>>;
-    public class GetTwoFactorAuthenticationStateQueryHandler(
+    internal sealed record GetTwoFactorAuthenticationStateQuery(string Email) : IRequest<Result<TwoFactorAuthenticationStateResponse>>;
+    internal sealed class GetTwoFactorAuthenticationStateQueryHandler(
         AppManager appManager,
         ILogger<GetTwoFactorAuthenticationStateQueryHandler> logger) : IRequestHandler<GetTwoFactorAuthenticationStateQuery, Result<TwoFactorAuthenticationStateResponse>>
     {

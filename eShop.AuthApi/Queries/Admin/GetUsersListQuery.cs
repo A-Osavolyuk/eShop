@@ -3,9 +3,9 @@ using eShop.Domain.Entities.Admin;
 
 namespace eShop.AuthApi.Queries.Admin
 {
-    public record GetUsersListQuery() : IRequest<Result<IEnumerable<UserData>>>;
+    internal sealed record GetUsersListQuery() : IRequest<Result<IEnumerable<UserData>>>;
 
-    public class GetUsersListQueryHandler(
+    internal sealed class GetUsersListQueryHandler(
         AppManager appManager,
         ILogger<GetUsersListQueryHandler> logger,
         AuthDbContext context,

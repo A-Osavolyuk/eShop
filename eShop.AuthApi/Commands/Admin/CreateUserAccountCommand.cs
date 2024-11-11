@@ -3,10 +3,10 @@ using eShop.Domain.Entities.Admin;
 
 namespace eShop.AuthApi.Commands.Admin
 {
-    public record CreateUserAccountCommand(CreateUserAccountRequest Request)
+    internal sealed record CreateUserAccountCommand(CreateUserAccountRequest Request)
         : IRequest<Result<CreateUserAccountResponse>>;
 
-    public class CreateUserAccountCommandHandler(
+    internal sealed class CreateUserAccountCommandHandler(
         AppManager appManager,
         ILogger<CreateUserAccountCommandHandler> logger,
         AuthDbContext context,

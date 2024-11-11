@@ -1,8 +1,8 @@
 ﻿namespace eShop.FilesStorageApi.Commands;
 
-public record DeleteUserAvatarCommand(Guid UserId) : IRequest<Result<DeleteUserAvatarResponse>>;
+internal sealed record DeleteUserAvatarCommand(Guid UserId) : IRequest<Result<DeleteUserAvatarResponse>>;
 
-public class DeleteUserAvatarCommandHandler(
+internal sealed class DeleteUserAvatarCommandHandler(
     IStoreService service) : IRequestHandler<DeleteUserAvatarCommand, Result<DeleteUserAvatarResponse>>
 {
     private readonly IStoreService service = service;

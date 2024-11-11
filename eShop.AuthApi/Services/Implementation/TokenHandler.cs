@@ -4,7 +4,7 @@ using eShop.Domain.Responses.Auth;
 
 namespace eShop.AuthApi.Services.Implementation
 {
-    public class TokenHandler : ITokenHandler
+    internal sealed class TokenHandler : ITokenHandler
     {
         private readonly JwtOptions jwtOptions;
         private readonly AuthDbContext context;

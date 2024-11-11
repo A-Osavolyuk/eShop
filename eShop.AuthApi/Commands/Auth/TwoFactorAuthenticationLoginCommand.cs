@@ -3,10 +3,10 @@ using eShop.AuthApi.Services.Interfaces;
 
 namespace eShop.AuthApi.Commands.Auth
 {
-    public record TwoFactorAuthenticationLoginCommand(TwoFactorAuthenticationLoginRequest Request)
+    internal sealed record TwoFactorAuthenticationLoginCommand(TwoFactorAuthenticationLoginRequest Request)
         : IRequest<Result<LoginResponse>>;
 
-    public class TwoFactorAuthenticationLoginCommandHandler(
+    internal sealed class TwoFactorAuthenticationLoginCommandHandler(
         ILogger<TwoFactorAuthenticationLoginCommandHandler> logger,
         AppManager appManager,
         ITokenHandler tokenHandler,

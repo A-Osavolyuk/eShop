@@ -6,7 +6,7 @@ using eShop.Domain.Entities.Admin;
 
 namespace eShop.AuthApi.Services.Implementation
 {
-    public class PermissionManager(AuthDbContext context) : IPermissionManager
+    internal sealed class PermissionManager(AuthDbContext context) : IPermissionManager
     {
         private readonly AuthDbContext context = context;
 

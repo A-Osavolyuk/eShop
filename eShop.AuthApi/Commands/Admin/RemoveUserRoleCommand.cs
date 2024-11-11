@@ -2,9 +2,9 @@
 
 namespace eShop.AuthApi.Commands.Admin
 {
-    public record RemoveUserRoleCommand(RemoveUserRoleRequest Request) : IRequest<Result<RemoveUserRoleResponse>>;
+    internal sealed record RemoveUserRoleCommand(RemoveUserRoleRequest Request) : IRequest<Result<RemoveUserRoleResponse>>;
 
-    public class RemoveUserRoleCommandHandler(
+    internal sealed class RemoveUserRoleCommandHandler(
         AuthDbContext context,
         ILogger<RemoveUserRoleCommandHandler> logger,
         AppManager appManager) : IRequestHandler<RemoveUserRoleCommand, Result<RemoveUserRoleResponse>>

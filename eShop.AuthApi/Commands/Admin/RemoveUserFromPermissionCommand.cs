@@ -1,9 +1,9 @@
 namespace eShop.AuthApi.Commands.Admin
 {
-    public record RemoveUserFromPermissionCommand(RemoveUserFromPermissionRequest Request)
+    internal sealed record RemoveUserFromPermissionCommand(RemoveUserFromPermissionRequest Request)
         : IRequest<Result<RemoveUserFromPermissionResponse>>;
 
-    public class RemoveUserFromPermissionCommandHandler(
+    internal sealed class RemoveUserFromPermissionCommandHandler(
         AppManager appManager,
         ILogger<RemoveUserFromPermissionCommandHandler> logger)
         : IRequestHandler<RemoveUserFromPermissionCommand, Result<RemoveUserFromPermissionResponse>>

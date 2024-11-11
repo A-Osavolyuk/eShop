@@ -4,9 +4,9 @@ using eShop.Domain.Requests.Auth;
 
 namespace eShop.AuthApi.Commands.Auth
 {
-    public record RequestResetPasswordCommand(ResetPasswordRequest Request) : IRequest<Result<ResetPasswordResponse>>;
+    internal sealed record RequestResetPasswordCommand(ResetPasswordRequest Request) : IRequest<Result<ResetPasswordResponse>>;
 
-    public class RequestResetPasswordCommandHandler(
+    internal sealed class RequestResetPasswordCommandHandler(
         AppManager appManager,
         ILogger<RequestResetPasswordCommandHandler> logger,
         IEmailSender emailSender,

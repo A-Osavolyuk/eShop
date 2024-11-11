@@ -1,16 +1,16 @@
 ﻿namespace eShop.AuthApi.Commands.Auth
 {
-    public record ConfirmResetPasswordCommand(ConfirmResetPasswordRequest Request)
+    internal sealed record ConfirmResetPasswordCommand(ConfirmResetPasswordRequest Request)
         : IRequest<Result<ConfirmResetPasswordResponse>>;
 
-    public class ConfirmResetPasswordCommandHandler(
+    internal sealed class ConfirmResetPasswordCommandHandler(
         AppManager appManager,
-        ILogger<ConfirmChangeEmailCommandHandler> logger,
+        ILogger<ConfirmResetPasswordCommandHandler> logger,
         IValidator<ConfirmResetPasswordRequest> validator)
         : IRequestHandler<ConfirmResetPasswordCommand, Result<ConfirmResetPasswordResponse>>
     {
         private readonly AppManager appManager = appManager;
-        private readonly ILogger<ConfirmChangeEmailCommandHandler> logger = logger;
+        private readonly ILogger<ConfirmResetPasswordCommandHandler> logger = logger;
         private readonly IValidator<ConfirmResetPasswordRequest> validator = validator;
 
         public async Task<Result<ConfirmResetPasswordResponse>> Handle(ConfirmResetPasswordCommand request,

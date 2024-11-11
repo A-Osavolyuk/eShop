@@ -2,9 +2,9 @@
 
 namespace eShop.AuthApi.Commands.Admin
 {
-    public record CreateRoleCommand(CreateRoleRequest Request) : IRequest<Result<CreateRoleResponse>>;
+    internal sealed record CreateRoleCommand(CreateRoleRequest Request) : IRequest<Result<CreateRoleResponse>>;
 
-    public class CreateRoleCommandHandler(
+    internal sealed class CreateRoleCommandHandler(
         AppManager appManager,
         AuthDbContext context,
         IValidator<CreateRoleRequest> validator,

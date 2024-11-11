@@ -2,7 +2,7 @@
 
 namespace eShop.AuthApi.Services.Interfaces
 {
-    public interface IPermissionManager
+    internal interface IPermissionManager
     {
         public ValueTask<bool> UserHasPermissionAsync(AppUser user, string name);
         public ValueTask<IList<Permission>> GetPermissionsAsync();

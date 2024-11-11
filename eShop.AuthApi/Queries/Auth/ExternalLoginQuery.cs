@@ -3,9 +3,9 @@ using eShop.AuthApi.Utilities;
 
 namespace eShop.AuthApi.Queries.Auth
 {
-    public record ExternalLoginQuery(string Provider, string? ReturnUri) : IRequest<Result<ExternalLoginResponse>>;
+    internal sealed record ExternalLoginQuery(string Provider, string? ReturnUri) : IRequest<Result<ExternalLoginResponse>>;
 
-    public class ExternalLoginQueryHandler(
+    internal sealed class ExternalLoginQueryHandler(
         ILogger<ExternalLoginQueryHandler> logger,
         AppManager appManager) : IRequestHandler<ExternalLoginQuery, Result<ExternalLoginResponse>>
     {

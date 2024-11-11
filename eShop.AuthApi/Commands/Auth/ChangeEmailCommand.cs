@@ -3,9 +3,9 @@ using eShop.AuthApi.Utilities;
 
 namespace eShop.AuthApi.Commands.Auth
 {
-    public record ChangeEmailCommand(ChangeEmailRequest Request) : IRequest<Result<ChangeEmailResponse>>;
+    internal sealed record ChangeEmailCommand(ChangeEmailRequest Request) : IRequest<Result<ChangeEmailResponse>>;
 
-    public class RequestChangeEmailCommandHandler(
+    internal sealed class RequestChangeEmailCommandHandler(
         IValidator<ChangeEmailRequest> validator,
         AppManager appManager,
         ILogger<RequestChangeEmailCommandHandler> logger,

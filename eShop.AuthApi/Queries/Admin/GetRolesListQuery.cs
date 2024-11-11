@@ -1,8 +1,8 @@
 ﻿namespace eShop.AuthApi.Queries.Admin
 {
-    public record GetRolesListQuery() : IRequest<Result<IEnumerable<RoleDto>>>;
+    internal sealed record GetRolesListQuery() : IRequest<Result<IEnumerable<RoleDto>>>;
 
-    public class GetRolesListQueryHandler(
+    internal sealed class GetRolesListQueryHandler(
         AppManager appManager,
         ILogger<GetRolesListQueryHandler> logger) : IRequestHandler<GetRolesListQuery, Result<IEnumerable<RoleDto>>>
     {
