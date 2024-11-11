@@ -2,9 +2,9 @@
 
 namespace eShop.ProductApi.Commands.Products;
 
-public record CreateProductCommand(CreateProductRequest Request) : IRequest<Result<CreateProductResponse>>;
+internal record CreateProductCommand(CreateProductRequest Request) : IRequest<Result<CreateProductResponse>>;
 
-public sealed class CreateProductCommandHandler(
+internal sealed class CreateProductCommandHandler(
     IMongoDatabase database) : IRequestHandler<CreateProductCommand, Result<CreateProductResponse>>
 {
     private readonly IMongoDatabase database = database;

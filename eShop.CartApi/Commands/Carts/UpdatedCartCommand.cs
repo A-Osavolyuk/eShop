@@ -5,9 +5,9 @@ using MongoDB.Driver;
 
 namespace eShop.CartApi.Commands.Carts;
 
-public record UpdatedCartCommand(UpdateCartRequest Request) : IRequest<Result<UpdateCartResponse>>;
+internal record UpdatedCartCommand(UpdateCartRequest Request) : IRequest<Result<UpdateCartResponse>>;
 
-public class UpdatedCartCommandHandler(
+internal sealed class UpdatedCartCommandHandler(
     IMongoDatabase database) : IRequestHandler<UpdatedCartCommand, Result<UpdateCartResponse>>
 {
     private readonly IMongoDatabase database = database;

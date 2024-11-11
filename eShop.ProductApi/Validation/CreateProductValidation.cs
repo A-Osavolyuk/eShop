@@ -3,7 +3,7 @@ using eShop.ProductApi.Commands.Products;
 
 namespace eShop.ProductApi.Validation;
 
-public class CreateProductValidation : AbstractValidator<CreateProductCommand>
+internal class CreateProductValidation : AbstractValidator<CreateProductCommand>
 {
     public CreateProductValidation()
     {

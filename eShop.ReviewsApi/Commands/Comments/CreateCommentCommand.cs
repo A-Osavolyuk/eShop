@@ -5,9 +5,9 @@ using eShop.ReviewsApi.Data;
 
 namespace eShop.ReviewsApi.Commands.Comments;
 
-public record CreateCommentCommand(CreateCommentRequest Request) : IRequest<Result<CreateCommentResponse>>;
+internal record CreateCommentCommand(CreateCommentRequest Request) : IRequest<Result<CreateCommentResponse>>;
 
-public class CreateCommentCommandHandler(
+internal sealed class CreateCommentCommandHandler(
     ReviewDbContext context,
     ILogger<CreateCommentCommandHandler> logger,
     IMapper mapper) : IRequestHandler<CreateCommentCommand, Result<CreateCommentResponse>>

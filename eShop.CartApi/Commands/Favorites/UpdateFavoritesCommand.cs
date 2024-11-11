@@ -6,9 +6,9 @@ using MongoDB.Driver;
 
 namespace eShop.CartApi.Commands.Favorites;
 
-public record UpdateFavoritesCommand(UpdateFavoritesRequest Request) : IRequest<Result<UpdateFavoritesResponse>>;
+internal record UpdateFavoritesCommand(UpdateFavoritesRequest Request) : IRequest<Result<UpdateFavoritesResponse>>;
 
-public class UpdstateFavoritesCommandHandler(
+internal sealed class UpdateFavoritesCommandHandler(
     IMongoDatabase database) : IRequestHandler<UpdateFavoritesCommand, Result<UpdateFavoritesResponse>>
 {
     private readonly IMongoDatabase database = database;

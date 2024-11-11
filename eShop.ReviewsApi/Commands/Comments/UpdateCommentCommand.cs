@@ -6,9 +6,9 @@ using eShop.ReviewsApi.Data;
 
 namespace eShop.ReviewsApi.Commands.Comments;
 
-public record UpdateCommentCommand(UpdateCommentRequest Request) : IRequest<Result<UpdateCommentResponse>>;
+internal record UpdateCommentCommand(UpdateCommentRequest Request) : IRequest<Result<UpdateCommentResponse>>;
 
-public class UpdateCommentCommandHandler(
+internal sealed class UpdateCommentCommandHandler(
     ReviewDbContext context,
     IMapper mapper) : IRequestHandler<UpdateCommentCommand, Result<UpdateCommentResponse>>
 {

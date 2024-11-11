@@ -4,9 +4,9 @@ using eShop.Domain.DTOs.Products;
 
 namespace eShop.ProductApi.Queries.Products;
 
-public record GetProductsQuery() : IRequest<Result<IEnumerable<ProductDto>>>;
+internal record GetProductsQuery() : IRequest<Result<IEnumerable<ProductDto>>>;
 
-public class GetProductsQueryHandler(
+internal sealed class GetProductsQueryHandler(
     IMongoDatabase database) : IRequestHandler<GetProductsQuery, Result<IEnumerable<ProductDto>>>
 {
     private readonly IMongoDatabase database = database;

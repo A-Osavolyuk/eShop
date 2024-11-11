@@ -1,8 +1,8 @@
 ﻿namespace eShop.ProductApi.Commands.Products;
 
-public record DeleteProductCommand(DeleteProductRequest Request) : IRequest<Result<DeleteProductResponse>>;
+internal record DeleteProductCommand(DeleteProductRequest Request) : IRequest<Result<DeleteProductResponse>>;
 
-public class DeleteProductCommandHandler(
+internal sealed class DeleteProductCommandHandler(
     IMongoDatabase database) : IRequestHandler<DeleteProductCommand, Result<DeleteProductResponse>>
 {
     private readonly IMongoDatabase database = database;

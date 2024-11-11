@@ -3,9 +3,9 @@ using eShop.Domain.DTOs.Products;
 
 namespace eShop.ProductApi.Queries.Products;
 
-public record GetProductByIdQuery(Guid ProductId) : IRequest<Result<ProductDto>>;
+internal record GetProductByIdQuery(Guid ProductId) : IRequest<Result<ProductDto>>;
 
-public class GetProductByIdQueryHandler(
+internal sealed class GetProductByIdQueryHandler(
     IMongoDatabase database) : IRequestHandler<GetProductByIdQuery, Result<ProductDto>>
 {
     private readonly IMongoDatabase database = database;

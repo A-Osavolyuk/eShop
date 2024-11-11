@@ -4,9 +4,9 @@ using MongoDB.Driver;
 
 namespace eShop.CartApi.Queries.Carts;
 
-public record GetCartQuery(Guid UserId) : IRequest<Result<CartDto>>;
+internal record GetCartQuery(Guid UserId) : IRequest<Result<CartDto>>;
 
-public class GetCartQueryHandler(
+internal sealed class GetCartQueryHandler(
     IMongoDatabase database,
     ILogger<GetCartQueryHandler> logger,
     IMapper mapper) : IRequestHandler<GetCartQuery, Result<CartDto>>
