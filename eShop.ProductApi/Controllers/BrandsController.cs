@@ -4,7 +4,7 @@
     [ApiController]
     [ApiVersion("1.0")]
     [Authorize]
-    public class BrandsController(ISender sender) : ControllerBase
+    internal sealed class BrandsController(ISender sender) : ControllerBase
     {
         private readonly ISender sender = sender;
     }

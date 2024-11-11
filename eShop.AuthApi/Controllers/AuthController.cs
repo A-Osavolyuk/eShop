@@ -9,7 +9,7 @@ namespace eShop.AuthApi.Controllers
     [ApiController]
     [ApiVersion("1.0")]
     [Authorize]
-    public class AuthController(SignInManager<AppUser> signInManager, ISender sender) : ControllerBase
+    internal sealed class AuthController(SignInManager<AppUser> signInManager, ISender sender) : ControllerBase
     {
         private readonly SignInManager<AppUser> signInManager = signInManager;
         private readonly ISender sender = sender;
@@ -22,7 +22,7 @@ namespace eShop.AuthApi.Controllers
 
             return result.Match(
                 succ => Ok(new ResponseBuilder().Succeeded().WithResultMessage(succ.Message).Build()),
-                fail => ExceptionHandler.HandleException(fail));
+                ExceptionHandler.HandleException);
         }
 
         [AllowAnonymous]
@@ -33,7 +33,7 @@ namespace eShop.AuthApi.Controllers
 
             return result.Match(
                 succ => Ok(new ResponseBuilder().Succeeded().WithResult(succ).WithResultMessage(succ.Message).Build()),
-                fail => ExceptionHandler.HandleException(fail));
+                ExceptionHandler.HandleException);
         }
 
         [Authorize(Policy = "ManageAccountPolicy")]

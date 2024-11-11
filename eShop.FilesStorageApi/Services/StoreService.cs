@@ -1,6 +1,6 @@
 ﻿namespace eShop.FilesStorageApi.Services;
 
-public class StoreService(IConfiguration configuration) : IStoreService
+internal sealed class StoreService(IConfiguration configuration) : IStoreService
 {
     private readonly IConfiguration configuration = configuration;
 

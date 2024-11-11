@@ -4,7 +4,7 @@
     [ApiController]
     [ApiVersion("1.0")]
     [Authorize]
-    public class ReviewsController(ISender sender) : ControllerBase
+    internal sealed  class ReviewsController(ISender sender) : ControllerBase
     {
         private readonly ISender sender = sender;
     }

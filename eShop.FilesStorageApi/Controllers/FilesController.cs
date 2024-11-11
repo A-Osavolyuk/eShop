@@ -9,7 +9,7 @@ namespace eShop.FilesStorageApi.Controllers;
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
 [ApiVersion("1.0")]
-public class FilesController(IStoreService storeService,
+internal sealed class FilesController(IStoreService storeService,
     ISender sender) : ControllerBase
 {
     private readonly IStoreService storeService = storeService;

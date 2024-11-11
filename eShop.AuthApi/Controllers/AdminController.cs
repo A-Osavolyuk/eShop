@@ -8,7 +8,7 @@ namespace eShop.AuthApi.Controllers
     [ApiController]
     [ApiVersion("1.0")]
     [Authorize]
-    public class AdminController(ISender sender) : ControllerBase
+    internal sealed  class AdminController(ISender sender) : ControllerBase
     {
         private readonly ISender sender = sender;
 

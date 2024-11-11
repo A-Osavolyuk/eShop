@@ -1,6 +1,6 @@
 ﻿namespace eShop.FilesStorageApi.Services;
 
-public interface IStoreService
+internal interface IStoreService
 {
     public ValueTask<List<string>> GetProductImagesAsync(Guid productId);
     public ValueTask<List<string>> UploadProductImagesAsync(IReadOnlyCollection<IFormFile> files, Guid productId);
