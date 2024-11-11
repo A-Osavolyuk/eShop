@@ -77,8 +77,9 @@ namespace eShop.Infrastructure
             builder.Services.AddScoped<IFavoritesService, FavoritesService>();
             builder.Services.AddScoped<ICookieManager, CookieManager>();
 
-            builder.Services.AddSingleton<NotificationService>();
+            builder.Services.AddScoped<INotificationService, NotificationService>();
             builder.Services.AddSingleton<InputImagesStateContainer>();
+            builder.Services.AddSingleton<NotificationsStateContainer>();
 
             return builder;
         }

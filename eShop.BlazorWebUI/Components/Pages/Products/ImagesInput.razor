@@ -64,7 +64,7 @@
         Variant="Variant.Filled"
         StartIcon="@Icons.Material.Filled.Delete"
         FullWidth
-        OnClick="ClearImages">
+        OnClick="OnClearImages">
         Clear images
     </MudButton>
     <MudButton
@@ -86,9 +86,9 @@
 
     protected override void OnInitialized()
     {
-        InputImagesStateContainer.ClearImages += ClearImages;
-        InputImagesStateContainer.ClearImages += StateHasChanged;
-        InputImagesStateContainer.UploadImages += OnUploadImages;
+        InputImagesStateContainer.OnClearImages += OnClearImages;
+        InputImagesStateContainer.OnClearImages += StateHasChanged;
+        InputImagesStateContainer.OnUploadImages += OnUploadImages;
     }
 
     private IReadOnlyList<IBrowserFile> OnUploadImages()
@@ -134,7 +134,7 @@
         return imageUrl;
     }
 
-    private void ClearImages()
+    private void OnClearImages()
     {
         Files = default!;
         CurrentImage = string.Empty;
@@ -144,9 +144,9 @@
 
     public void Dispose()
     {
-        InputImagesStateContainer.ClearImages -= ClearImages;
-        InputImagesStateContainer.ClearImages -= StateHasChanged;
-        InputImagesStateContainer.UploadImages -= OnUploadImages;
+        InputImagesStateContainer.OnClearImages -= OnClearImages;
+        InputImagesStateContainer.OnClearImages -= StateHasChanged;
+        InputImagesStateContainer.OnUploadImages -= OnUploadImages;
     }
 
 }

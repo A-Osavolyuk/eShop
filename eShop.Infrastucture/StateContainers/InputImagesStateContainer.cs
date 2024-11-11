@@ -4,17 +4,17 @@ namespace eShop.Infrastructure.StateContainers;
 
 public class InputImagesStateContainer
 {
-    public event Action? ClearImages;
-    public event Func<IReadOnlyList<IBrowserFile>> UploadImages;
+    public event Action? OnClearImages;
+    public event Func<IReadOnlyList<IBrowserFile>>? OnUploadImages;
 
-    public void OnClearImages()
+    public void ClearImages()
     {
-        ClearImages?.Invoke();
+        OnClearImages?.Invoke();
     }
 
-    public IReadOnlyList<IBrowserFile> OnUploadImages()
+    public IReadOnlyList<IBrowserFile> UploadImages()
     {
-        var response = UploadImages?.Invoke();
+        var response = OnUploadImages?.Invoke();
         return response!;
     }
 }

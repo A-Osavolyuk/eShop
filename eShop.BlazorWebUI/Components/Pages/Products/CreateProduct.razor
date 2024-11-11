@@ -166,7 +166,7 @@
         
         if (form.IsValid)
         {
-            var files = InputImagesStateContainer.OnUploadImages();
+            var files = InputImagesStateContainer.UploadImages();
             var images = await UploadImagesAsync(files, Model.Id);
             Model = Model with { Images = images, Brand = new ()
             {
@@ -196,7 +196,7 @@
     {
         form.ResetValidation();
         Model = new();
-        InputImagesStateContainer.OnClearImages();
+        InputImagesStateContainer.ClearImages();
         StateHasChanged();
     }
 

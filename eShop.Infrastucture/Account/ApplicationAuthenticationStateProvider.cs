@@ -16,15 +16,13 @@ namespace eShop.Infrastructure.Account
         ITokenProvider tokenProvider,
         IAuthenticationService authenticationService,
         ILocalDataAccessor localDataAccessor,
-        ICookieManager cookieManager,
-        NotificationService notificationService) : AuthenticationStateProvider
+        ICookieManager cookieManager) : AuthenticationStateProvider
     {
         private readonly AuthenticationState anonymous = new(new ClaimsPrincipal());
         private readonly ITokenProvider tokenProvider = tokenProvider;
         private readonly IAuthenticationService authenticationService = authenticationService;
         private readonly ILocalDataAccessor localDataAccessor = localDataAccessor;
         private readonly ICookieManager cookieManager = cookieManager;
-        private readonly NotificationService notificationService = notificationService;
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
@@ -226,9 +224,7 @@ namespace eShop.Infrastructure.Account
 
         public async Task LogOutAsync()
         {
-            notificationService.NotificationsCount = 0;
             await tokenProvider.RemoveTokenAsync();
-            await cookieManager.DeleteCookie("jwt-token");
             await localDataAccessor.RemoveDataAsync();
             await UpdateAuthenticationState(string.Empty);
         }

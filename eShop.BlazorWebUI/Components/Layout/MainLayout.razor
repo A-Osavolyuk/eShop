@@ -1,17 +1,21 @@
 ﻿@using eShop.Domain.Requests.Cart
 @using eShop.Domain.Requests.Favorites
 @using eShop.Infrastructure.Services
+@using eShop.Infrastructure.StateContainers
 @using Severity = MudBlazor.Severity
 @inherits LayoutComponentBase
+
+@implements IDisposable
 
 @inject ITokenProvider TokenProvider
 @inject ILocalDataAccessor LocalDataAccessor
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NotificationsStateContainer NotificationsStateContainer
+@inject INotificationService NotificationService 
 @inject ICartService CartService
 @inject IFavoritesService FavoritesService
 @inject ISnackbar Snackbar
 @inject IJSRuntime JS
-@inject NotificationService NotificationService
 @inject IStoreService StoreService
 @inject IAuthenticationService authenticationService
 @inject NavigationManager NavigationManager
@@ -26,80 +30,78 @@
 <MudSnackbarProvider/>
 <MudPopoverProvider/>
 
-<CascadingValue Value="this">
-    <MudLayout Style="height:100vh">
-        <MudAppBar Style="height:70px;" Class="align-content-center" Elevation="1">
-            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/>
-            <MudText Align="Align.Center" Typo="Typo.h5" Class="ml-3 cursor-pointer" @onclick="@(() => NavigationManager.NavigateTo("/products"))">eShop</MudText>
-            <MudSpacer/>
-            <SearchField/>
-            <MudSpacer/>
-            <AuthorizeView>
-                <NotAuthorized>
-                    <MudButton StartIcon="@Icons.Material.Filled.Login"
-                               Color="Color.Primary" Href="/account/login">
-                        Log In
-                    </MudButton>
-                    <MudButton StartIcon="@Icons.Material.Filled.AppRegistration"
-                               Color="Color.Primary" Href="/account/register" Class="ml-3">
-                        Register
-                    </MudButton>
-                </NotAuthorized>
-                <Authorized>
-                    <MudMenu Style="margin-top:6px" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.BottomLeft" ActivationEvent="MouseEvent.LeftClick">
-                        <ActivatorContent>
-                            @if (NotificationService.NotificationsCount == 0)
-                            {
+<MudLayout Style="height:100vh">
+    <MudAppBar Style="height:70px;" Class="align-content-center" Elevation="1">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/>
+        <MudText Align="Align.Center" Typo="Typo.h5" Class="ml-3 cursor-pointer" @onclick="@(() => NavigationManager.NavigateTo("/products"))">eShop</MudText>
+        <MudSpacer/>
+        <SearchField/>
+        <MudSpacer/>
+        <AuthorizeView>
+            <NotAuthorized>
+                <MudButton StartIcon="@Icons.Material.Filled.Login"
+                           Color="Color.Primary" Href="/account/login">
+                    Log In
+                </MudButton>
+                <MudButton StartIcon="@Icons.Material.Filled.AppRegistration"
+                           Color="Color.Primary" Href="/account/register" Class="ml-3">
+                    Register
+                </MudButton>
+            </NotAuthorized>
+            <Authorized>
+                <MudMenu Style="margin-top:6px" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.BottomLeft" ActivationEvent="MouseEvent.LeftClick">
+                    <ActivatorContent>
+                        @if (notificationsCount == 0)
+                        {
+                            <MudAvatar>
+                                <MudImage Alt="avatar" Src="@(string.IsNullOrEmpty(avatarUri) ? Configuration["DefaultAvatar"]! : avatarUri)"/>
+                            </MudAvatar>
+                        }
+                        else
+                        {
+                            <MudBadge Style="margin-top:6px" Max="99" @bind-content="notificationsCount" Overlap Color="Color.Secondary">
                                 <MudAvatar>
                                     <MudImage Alt="avatar" Src="@(string.IsNullOrEmpty(avatarUri) ? Configuration["DefaultAvatar"]! : avatarUri)"/>
                                 </MudAvatar>
-                            }
-                            else
-                            {
-                                <MudBadge Style="margin-top:6px" Max="99" @bind-content="NotificationService.NotificationsCount" Overlap Color="Color.Secondary">
-                                    <MudAvatar>
-                                        <MudImage Alt="avatar" Src="@(string.IsNullOrEmpty(avatarUri) ? Configuration["DefaultAvatar"]! : avatarUri)"/>
-                                    </MudAvatar>
-                                </MudBadge>
-                            }
-                        </ActivatorContent>
-                        <ChildContent>
-                            <MudMenuItem>
-                                <MudButton StartIcon="@Icons.Material.Filled.ShoppingCart" Color="Color.Primary" OnClick="@(() => RedirectTo("/cart"))">
-                                    Your Cart
-                                </MudButton>
-                            </MudMenuItem>
-                            <MudMenuItem>
-                                <MudButton StartIcon="@Icons.Material.Filled.ManageAccounts" Color="Color.Primary" OnClick="@(() => RedirectTo("/profile"))">
-                                    Profile
-                                </MudButton>
-                            </MudMenuItem>
-                            <MudMenuItem>
-                                <MudButton StartIcon="@Icons.Material.Filled.Settings" Color="Color.Primary" OnClick="@(() => RedirectTo("/setting"))">
-                                    Settings
-                                </MudButton>
-                            </MudMenuItem>
-                            <MudDivider/>
-                            <MudMenuItem>
-                                <MudButton StartIcon="@Icons.Material.Filled.Logout" Color="Color.Primary" OnClick="LogoutClick">
-                                    Log Out
-                                </MudButton>
-                            </MudMenuItem>
-                        </ChildContent>
-                    </MudMenu>
-                </Authorized>
-            </AuthorizeView>
-        </MudAppBar>
-        <MudDrawer Style="top:70px" @bind-Open="drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
-            <NavMenu/>
-        </MudDrawer>
-        <MudMainContent Style="height:100%">
-            <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="py-5 position-relative" Style="height:100%">
-                @Body
-            </MudContainer>
-        </MudMainContent>
-    </MudLayout>
-</CascadingValue>
+                            </MudBadge>
+                        }
+                    </ActivatorContent>
+                    <ChildContent>
+                        <MudMenuItem>
+                            <MudButton StartIcon="@Icons.Material.Filled.ShoppingCart" Color="Color.Primary" OnClick="@(() => RedirectTo("/cart"))">
+                                Your Cart
+                            </MudButton>
+                        </MudMenuItem>
+                        <MudMenuItem>
+                            <MudButton StartIcon="@Icons.Material.Filled.ManageAccounts" Color="Color.Primary" OnClick="@(() => RedirectTo("/profile"))">
+                                Profile
+                            </MudButton>
+                        </MudMenuItem>
+                        <MudMenuItem>
+                            <MudButton StartIcon="@Icons.Material.Filled.Settings" Color="Color.Primary" OnClick="@(() => RedirectTo("/setting"))">
+                                Settings
+                            </MudButton>
+                        </MudMenuItem>
+                        <MudDivider/>
+                        <MudMenuItem>
+                            <MudButton StartIcon="@Icons.Material.Filled.Logout" Color="Color.Primary" OnClick="LogoutClick">
+                                Log Out
+                            </MudButton>
+                        </MudMenuItem>
+                    </ChildContent>
+                </MudMenu>
+            </Authorized>
+        </AuthorizeView>
+    </MudAppBar>
+    <MudDrawer Style="top:70px" @bind-Open="drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+        <NavMenu/>
+    </MudDrawer>
+    <MudMainContent Style="height:100%">
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="py-5 position-relative" Style="height:100%">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
 
 @code {
     [CascadingParameter] Task<AuthenticationState>? AuthenticationStateTask { get; set; }
@@ -108,6 +110,7 @@
     private string pageTitle = string.Empty;
     private string avatarUri = string.Empty;
     private UserData user = new();
+    private int notificationsCount = 0;
 
     void DrawerToggle()
     {
@@ -116,6 +119,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+        NotificationsStateContainer.OnNotificationsChanged += NotificationCountChanged;
+
         var user = await LocalDataAccessor.ReadUserDataAsync();
 
         if (user is not null)
@@ -141,16 +146,11 @@
         var user = await LocalDataAccessor.ReadUserDataAsync();
 
         if (user is not null)
-        { 
+        {
             await EnsureCartAsync();
             await EnsureFavoritesAsync();
-            NotificationService.NotificationsCount = await LocalDataAccessor.GetStoreItemsCountAsync();
+            notificationsCount = await NotificationService.GetNotificationsCountAsync();
         }
-    }
-
-    public void RerenderComponent()
-    {
-        StateHasChanged();
     }
 
     private string GetPageTitle()
@@ -204,7 +204,7 @@
     private async Task GetAvatarAsync()
     {
         user = await LocalDataAccessor.ReadUserDataAsync();
-        
+
         if (user is not null)
         {
             avatarUri = await LocalDataAccessor.ReadAvatarLinkAsync();
@@ -215,7 +215,7 @@
 
                 if (response.IsSucceeded)
                 {
-                    avatarUri = ResponseConverter.Deserialize<string>(response.Result!);
+                    avatarUri = response!.Result?.ToString() ?? Configuration["DefaultAvatar"]!;
                 }
                 else
                 {
@@ -237,6 +237,17 @@
     {
         NavigationManager.NavigateTo(link);
         StateHasChanged();
+    }
+
+    private async Task NotificationCountChanged()
+    {
+        notificationsCount = await NotificationService.GetNotificationsCountAsync();
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        NotificationsStateContainer.OnNotificationsChanged -= NotificationCountChanged;
     }
 
 }

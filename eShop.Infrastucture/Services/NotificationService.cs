@@ -1,7 +1,59 @@
-﻿namespace eShop.Infrastructure.Services
+﻿using Blazored.LocalStorage;
+using eShop.Domain.Interfaces;
+using eShop.Infrastructure.StateContainers;
+
+namespace eShop.Infrastructure.Services
 {
-    public class NotificationService
+    public class NotificationService(
+        ILocalStorageService storageService, 
+        ILocalDataAccessor localDataAccessor,
+        NotificationsStateContainer notificationsStateContainer) : INotificationService
     {
-        public int NotificationsCount { get; set; } = 0;
+        private readonly ILocalStorageService storageService = storageService;
+        private readonly ILocalDataAccessor localDataAccessor = localDataAccessor;
+        private readonly NotificationsStateContainer notificationsStateContainer = notificationsStateContainer;
+        private readonly string key = "notifications-count";
+
+        public async ValueTask<int> GetNotificationsCountAsync()
+        {
+            if (await storageService.ContainKeyAsync(key))
+            {
+                return await storageService.GetItemAsync<int>(key);
+            }
+            else
+            {
+                var count = await localDataAccessor.GetStoreItemsCountAsync();
+                await storageService.SetItemAsync(key, count);
+                return count;
+            }
+        }
+
+        public async ValueTask SetNotificationsCountAsync(int notificationsCount) => await storageService.SetItemAsync(key, notificationsCount);
+
+        public async ValueTask IncrementNotificationsCountAsync()
+        {
+            if (await storageService.ContainKeyAsync(key))
+            {
+                var count = await storageService.GetItemAsync<int>(key);
+                count++;
+                await storageService.SetItemAsync(key, count);
+                notificationsStateContainer.ChangeNotificationCount();
+            }
+        }
+
+        public async ValueTask DecrementNotificationsCountAsync()
+        {
+            if (await storageService.ContainKeyAsync(key))
+            {
+                var count = await storageService.GetItemAsync<int>(key);
+
+                if (count > 0)
+                {
+                    count--;
+                    await storageService.SetItemAsync(key, count);
+                    notificationsStateContainer.ChangeNotificationCount();
+                }
+            }
+        }
     }
 }

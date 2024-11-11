@@ -188,7 +188,7 @@
 
             if (response.IsSucceeded)
             {
-                avatarUri = ResponseConverter.Deserialize<string>(response.Result!);
+                avatarUri = response!.Result?.ToString() ?? Configuration["DefaultAvatar"]!;
             }
             else
             {
