@@ -1,4 +1,6 @@
-﻿namespace eShop.ProductApi.Extensions
+﻿using eShop.ProductApi.Data;
+
+namespace eShop.ProductApi.Extensions
 {
     public static class BuilderExtensions
     {
@@ -13,6 +15,7 @@
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.AddMongoDBClient("MongoDB");
+            builder.AddSqlServerDbContext<AppDbContext>("SqlServer");
 
             builder.Services.AddMediatR(c =>
             {

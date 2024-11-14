@@ -11,6 +11,7 @@ var sqlServer = builder.AddSqlServer("eShopSqlServer", port: 25201)
 
 var authDb = sqlServer.AddDatabase("AuthDB");
 var reviewsDb = sqlServer.AddDatabase("ReviewsDB");
+var productsDb = sqlServer.AddDatabase("ProductsDB");
 
 var mongoServer = builder.AddMongoDB("eShopMongo", 25202)
     .WithMongoExpress();
