@@ -11,7 +11,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     {
         modelBuilder.Entity<ProductEntity>(x =>
         {
-            x.HasKey(x => x.Id);
+            x.HasKey(entity => entity.Id);
             x.UseTptMappingStrategy();
         });
         
@@ -20,19 +20,19 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         
         modelBuilder.Entity<BrandEntity>(x =>
         {
-            x.HasKey(x => x.Id);
+            x.HasKey(entity => entity.Id);
         });
 
         modelBuilder.Entity<SellerEntity>(x =>
         {
-            x.HasKey(x => x.Id);
+            x.HasKey(entity => entity.Id);
         });
 
         modelBuilder.Entity<SellerProductsEntity>(x =>
         {
-            x.HasKey(x => new { x.SellerId, x.ProductId });
-            x.HasOne(x => x.Seller).WithOne().HasForeignKey<SellerProductsEntity>(x => x.SellerId);
-            x.HasOne(x => x.Product).WithOne().HasForeignKey<SellerProductsEntity>(x => x.ProductId);
+            x.HasKey(entity => new { entity.SellerId, entity.ProductId });
+            x.HasOne(entity => entity.Seller).WithOne().HasForeignKey<SellerProductsEntity>(entity => entity.SellerId);
+            x.HasOne(entity => entity.Product).WithOne().HasForeignKey<SellerProductsEntity>(entity => entity.ProductId);
         });
     }
 }

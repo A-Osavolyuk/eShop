@@ -60,19 +60,5 @@
       <jdbc-url>Server=127.0.0.1,25201;User ID=sa;Password=k47sUFZ4hx2x5wN9Wy2bDD;TrustServerCertificate=true;Database=ReviewsDB</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="ProductDB" uuid="c9b85219-c126-4403-9a56-bb55980562d9">
-      <driver-ref>mongo.4</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>com.dbschema.MongoJdbcDriver</jdbc-driver>
-      <jdbc-url>mongodb://localhost:25202/ProductDB</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
-    <data-source source="LOCAL" name="ReviewsDB" uuid="a2229767-6ba5-4975-8a97-da417e42b8d8">
-      <driver-ref>sqlserver.jb</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>com.jetbrains.jdbc.sqlserver.SqlServerDriver</jdbc-driver>
-      <jdbc-url>Server=127.0.0.1,25201;User ID=sa;Password=k47sUFZ4hx2x5wN9Wy2bDD;TrustServerCertificate=true;Database=ReviewsDB</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
   </component>
 </project>
