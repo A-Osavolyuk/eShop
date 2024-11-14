@@ -7,7 +7,7 @@ namespace eShop.ReviewsApi.Controllers
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     [ApiVersion("1.0")]
-    internal sealed  class CommentsController(ISender sender) : ControllerBase
+    public class CommentsController(ISender sender) : ControllerBase
     {
         private readonly ISender sender = sender;
 

@@ -7,7 +7,7 @@ namespace eShop.CartApi.Controllers
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     [ApiVersion("1.0")]
-    internal sealed  class CartsController(ISender sender) : ControllerBase
+    public class CartsController(ISender sender) : ControllerBase
     {
         private readonly ISender sender = sender;
 

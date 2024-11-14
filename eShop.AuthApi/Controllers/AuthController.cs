@@ -9,7 +9,7 @@ namespace eShop.AuthApi.Controllers
     [ApiController]
     [ApiVersion("1.0")]
     [Authorize]
-    internal sealed class AuthController(SignInManager<AppUser> signInManager, ISender sender) : ControllerBase
+    public class AuthController(SignInManager<AppUser> signInManager, ISender sender) : ControllerBase
     {
         private readonly SignInManager<AppUser> signInManager = signInManager;
         private readonly ISender sender = sender;
