@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.DTOs
 {
-    public class ReviewDTO
+    public class ReviewDto
     {
         public Guid ReviewId { get; set; }
         public Guid ProductId { get; set; }

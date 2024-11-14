@@ -51,7 +51,7 @@ namespace eShop.AuthApi.Queries.Auth
 
                 if (user is not null)
                 {
-                    var userDto = new UserDTO(user.Email!, user.UserName!, user.Id);
+                    var userDto = new UserDto(user.Email!, user.UserName!, user.Id);
                     var securityToken = await context.UserAuthenticationTokens.AsNoTracking()
                         .SingleOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
 

@@ -11,51 +11,51 @@ public class ResponseDto
 
 public class ResponseBuilder
 {
-    private string _ResultMessage = "";
-    private string _ErrorMessage = "";
-    private object? _Result;
-    private bool _IsSucceeded = false;
-    private List<string> _Errors = [];
+    private string resultMessage = "";
+    private string errorMessage = "";
+    private object? result;
+    private bool isSucceeded = false;
+    private List<string> errors = [];
 
-    public ResponseBuilder WithResult(object? Result)
+    public ResponseBuilder WithResult(object? result)
     {
-        _Result = Result;
+        result = result;
         return this;
     }
 
-    public ResponseBuilder WithResultMessage(string ResultMessage)
+    public ResponseBuilder WithResultMessage(string resultMessage)
     {
-        _ResultMessage = ResultMessage;
+        resultMessage = resultMessage;
         return this;
     }
 
-    public ResponseBuilder WithErrorMessage(string ErrorMessage)
+    public ResponseBuilder WithErrorMessage(string errorMessage)
     {
-        _ErrorMessage = ErrorMessage;
+        errorMessage = errorMessage;
         return this;
     }
 
     public ResponseBuilder Failed()
     {
-        _IsSucceeded = false;
+        isSucceeded = false;
         return this;
     }
 
     public ResponseBuilder Succeeded()
     {
-        _IsSucceeded = true;
+        isSucceeded = true;
         return this;
     }
 
-    public ResponseBuilder WithErrors(List<string> Errors)
+    public ResponseBuilder WithErrors(List<string> errors)
     {
-        _Errors.AddRange(Errors);
+        errors.AddRange(errors);
         return this;
     }
 
-    public ResponseBuilder AddError(string Error)
+    public ResponseBuilder AddError(string error)
     {
-        _Errors.Add(Error);
+        errors.Add(error);
         return this;
     }
 
@@ -63,11 +63,11 @@ public class ResponseBuilder
     {
         return new ResponseDto()
         {
-            IsSucceeded = _IsSucceeded,
-            ErrorMessage = _ErrorMessage,
-            Result = _Result,
-            ResultMessage = _ResultMessage,
-            Errors = _Errors
+            IsSucceeded = isSucceeded,
+            ErrorMessage = errorMessage,
+            Result = result,
+            ResultMessage = resultMessage,
+            Errors = errors
         };
     }
 }

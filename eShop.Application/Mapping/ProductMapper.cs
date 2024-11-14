@@ -15,15 +15,17 @@ public static class ProductMapper
         {
             Id = request.Id,
             Name = request.Name,
-            Price = new Price()
-            {
-                Amount = request.Price,
-                Currency = request.Currency
-            },
+            Price = request.Price,
+            Currency = request.Currency,
             Audience = request.Audience,
             ProductType = request.ProductType,
             Article = request.Article,
-            Brand = request.Brand,
+            Brand = new()
+            {
+                Name = request.Brand.Name,
+                Country = request.Brand.Country,
+                Id = request.Brand.Id,
+            },
             Color = request.Color,
             Description = request.Description,
             Images = request.Images,
@@ -38,15 +40,17 @@ public static class ProductMapper
         {
             Id = request.Id,
             Name = request.Name,
-            Price = new Price()
-            {
-                Amount = request.Price,
-                Currency = request.Currency
-            },
+            Price = request.Price,
+            Currency = request.Currency,
             Audience = request.Audience,
             ProductType = request.ProductType,
             Article = request.Article,
-            Brand = request.Brand,
+            Brand = new()
+            {
+                Name = request.Brand.Name,
+                Country = request.Brand.Country,
+                Id = request.Brand.Id,
+            },
             Color = request.Color,
             Description = request.Description,
             Images = request.Images,
@@ -61,14 +65,16 @@ public static class ProductMapper
         {
             Id = request.Id,
             Name = request.Name,
-            Price = new Price()
-            {
-                Amount = request.Price,
-                Currency = request.Currency
-            },
+            Price = request.Price,
+            Currency = request.Currency,
             ProductType = request.ProductType,
             Article = request.Article,
-            Brand = request.Brand,
+            Brand = new()
+            {
+                Name = request.Brand.Name,
+                Country = request.Brand.Country,
+                Id = request.Brand.Id,
+            },
             Description = request.Description,
             Images = request.Images,
         };
@@ -84,15 +90,17 @@ public static class ProductMapper
         return new ClothingEntity()
         {
             Name = request.Name,
-            Price = new Price()
-            {
-                Amount = request.Price,
-                Currency = request.Currency
-            },
+            Price = request.Price,
+            Currency = request.Currency,
             Audience = request.Audience,
             ProductType = request.ProductType,
             Article = request.Article,
-            Brand = request.Brand,
+            Brand = new()
+            {
+                Name = request.Brand.Name,
+                Country = request.Brand.Country,
+                Id = request.Brand.Id,
+            },
             Color = request.Color,
             Description = request.Description,
             Images = request.Images,
@@ -106,15 +114,17 @@ public static class ProductMapper
         return new ShoesEntity()
         {
             Name = request.Name,
-            Price = new Price()
-            {
-                Amount = request.Price,
-                Currency = request.Currency
-            },
+            Price = request.Price,
+            Currency = request.Currency,
             Audience = request.Audience,
             ProductType = request.ProductType,
             Article = request.Article,
-            Brand = request.Brand,
+            Brand = new()
+            {
+                Name = request.Brand.Name,
+                Country = request.Brand.Country,
+                Id = request.Brand.Id,
+            },
             Color = request.Color,
             Description = request.Description,
             Images = request.Images,
@@ -128,14 +138,16 @@ public static class ProductMapper
         return new ProductEntity()
         {
             Name = request.Name,
-            Price = new Price()
-            {
-                Amount = request.Price,
-                Currency = request.Currency
-            },
+            Price = request.Price,
+            Currency = request.Currency,
             ProductType = request.ProductType,
             Article = request.Article,
-            Brand = request.Brand,
+            Brand = new()
+            {
+                Name = request.Brand.Name,
+                Country = request.Brand.Country,
+                Id = request.Brand.Id,
+            },
             Description = request.Description,
             Images = request.Images,
         };
@@ -151,12 +163,18 @@ public static class ProductMapper
         {
             Id = entity.Id,
             Article = entity.Article,
-            Brand = entity.Brand,
+            Brand = new()
+            {
+                Name = entity.Brand.Name,
+                Country = entity.Brand.Country,
+                Id = entity.Brand.Id,
+            },
             Description = entity.Description,
             Images = entity.Images,
             ProductType = entity.ProductType,
             Name = entity.Name,
             Price = entity.Price,
+            Currency = entity.Currency,
         };
     }
     
@@ -166,12 +184,18 @@ public static class ProductMapper
         {
             Id = entity.Id,
             Article = entity.Article,
-            Brand = entity.Brand,
+            Brand = new()
+            {
+                Name = entity.Brand.Name,
+                Country = entity.Brand.Country,
+                Id = entity.Brand.Id,
+            },
             Description = entity.Description,
             Images = entity.Images,
             ProductType = entity.ProductType,
             Name = entity.Name,
             Price = entity.Price,
+            Currency = entity.Currency,
             Audience = entity.Audience,
             Color = entity.Color,
             Size = entity.Size,
@@ -184,7 +208,12 @@ public static class ProductMapper
         {
             Id = entity.Id,
             Article = entity.Article,
-            Brand = entity.Brand,
+            Brand = new()
+            {
+                Name = entity.Brand.Name,
+                Country = entity.Brand.Country,
+                Id = entity.Brand.Id,
+            },
             Description = entity.Description,
             Images = entity.Images,
             ProductType = entity.ProductType,

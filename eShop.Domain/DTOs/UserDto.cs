@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.DTOs;
 
-public record UserDTO(
+public record UserDto(
     string Email = "",
     string UserName = "",
     string Id = ""

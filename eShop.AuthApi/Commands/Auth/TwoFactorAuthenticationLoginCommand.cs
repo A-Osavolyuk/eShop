@@ -47,7 +47,7 @@ namespace eShop.AuthApi.Commands.Auth
                         actionMessage, request.Request.RequestId);
                 }
 
-                var userDto = new UserDTO(user.Email!, user.UserName!, user.Id);
+                var userDto = new UserDto(user.Email!, user.UserName!, user.Id);
                 var securityToken = await context.UserAuthenticationTokens.AsNoTracking()
                     .SingleOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
 

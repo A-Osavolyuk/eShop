@@ -10,8 +10,9 @@ namespace eShop.Domain.DTOs.Products
         public string Article { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public Price Price { get; set; } =  new Price { Amount = 0, Currency = Currency.None };
+        public decimal Price { get; set; }
+        public Currency Currency { get; set; }
         public List<string> Images { get; set; } = new List<string>();
-        public BrandEntity Brand { get; set; } = new BrandEntity();
+        public BrandDto Brand { get; set; } = new BrandDto();
     }
 }

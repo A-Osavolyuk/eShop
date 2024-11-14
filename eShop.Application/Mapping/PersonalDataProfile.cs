@@ -10,8 +10,8 @@ namespace eShop.Application.MappingProfiles
     {
         public PersonalDataProfile()
         {
-            CreateMap<PersonalDataDTO, ChangePersonalDataRequest>();
-            CreateMap<PersonalDataResponse, PersonalDataDTO>();
+            CreateMap<PersonalDataDto, ChangePersonalDataRequest>();
+            CreateMap<PersonalDataResponse, PersonalDataDto>();
             CreateMap<Domain.Entities.Admin.PersonalData, PersonalDataResponse>();
             CreateMap<Domain.Entities.Admin.PersonalData, ChangeEmailResponse>();
             CreateMap<PersonalData, ChangePersonalDataRequest>();

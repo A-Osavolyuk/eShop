@@ -11,7 +11,7 @@ namespace eShop.Application.Mapping
         {
             CreateMap<CreateReviewRequest, ReviewEntity>();
             CreateMap<UpdateReviewRequest, ReviewEntity>();
-            CreateMap<ReviewEntity, ReviewDTO>();
+            CreateMap<ReviewEntity, ReviewDto>();
         }
     }
 }
