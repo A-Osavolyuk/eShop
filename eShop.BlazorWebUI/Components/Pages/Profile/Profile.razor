@@ -63,9 +63,9 @@
                                         </MudItem>
                                     </MudGrid>
                                     <MudGrid Spacing="3" Class="mt-3">
-                                        <ProfileField Divided Label="Full Name" Text="@($"{personalData.FirstName} {personalData.LastName}")" />
-                                        <ProfileField Divided Label="Date of birth" Text="@(personalData.DateOfBirth.ToLongDateString())" />
-                                        <ProfileField Divided Label="Gender" Text="@personalData.Gender" />
+                                        <ProfileField Divided Label="Full Name" Text="@($"{personalDataModel.FirstName} {personalDataModel.LastName}")" />
+                                        <ProfileField Divided Label="Date of birth" Text="@(personalDataModel.DateOfBirth.ToLongDateString())" />
+                                        <ProfileField Divided Label="Gender" Text="@personalDataModel.Gender" />
                                     </MudGrid>
                                 </MudPaper>
                                 <MudPaper Outlined Class="pa-3">
@@ -107,7 +107,7 @@
 
 @code {
     private UserData userData = null!;
-    private PersonalData personalData = null!;
+    private PersonalDataModel personalDataModel = null!;
     private SecurityData securityData = null!;
     private string avatarUri = string.Empty;
 
@@ -125,9 +125,9 @@
 
     private async Task GetPersonalData()
     {
-        personalData = await LocalDataAccessor.ReadPersonalDataAsync();
+        personalDataModel = await LocalDataAccessor.ReadPersonalDataAsync();
 
-        if (string.IsNullOrEmpty(personalData.FirstName) || string.IsNullOrEmpty(personalData.LastName) || string.IsNullOrEmpty(personalData.Gender))
+        if (string.IsNullOrEmpty(personalDataModel.FirstName) || string.IsNullOrEmpty(personalDataModel.LastName) || string.IsNullOrEmpty(personalDataModel.Gender))
         {
             var response = await AuthService.GetPersonalDataAsync(userData!.Email);
 
@@ -135,7 +135,7 @@
             {
                 var data = JsonConvert.DeserializeObject<PersonalDataResponse>(response.Result!.ToString()!);
 
-                personalData = new()
+                personalDataModel = new()
                     {
                         FirstName = data.FirstName,
                         LastName = data.LastName,
@@ -143,7 +143,7 @@
                         DateOfBirth = data.DateOfBirth
                     };
 
-                await LocalDataAccessor.WritePersonalDataAsync(personalData);
+                await LocalDataAccessor.WritePersonalDataAsync(personalDataModel);
             }
             else
             {

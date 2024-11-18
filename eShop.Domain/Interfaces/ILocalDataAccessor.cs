@@ -21,8 +21,8 @@ namespace eShop.Domain.Interfaces
         public ValueTask<string> ReadAvatarLinkAsync();
         public ValueTask WriteUserDataAsync(UserData user);
         public ValueTask<UserData> ReadUserDataAsync();
-        public ValueTask WritePersonalDataAsync(PersonalData personalData);
-        public ValueTask<PersonalData> ReadPersonalDataAsync();
+        public ValueTask WritePersonalDataAsync(PersonalDataModel personalDataModel);
+        public ValueTask<PersonalDataModel> ReadPersonalDataAsync();
         public ValueTask WriteSecurityDataAsync(SecurityData securityData);
         public ValueTask<SecurityData> ReadSecurityDataAsync();
         public ValueTask RemoveDataAsync();

@@ -1,4 +1,5 @@
-﻿using eShop.AuthApi.Services.Interfaces;
+﻿using eShop.Application.Mapping;
+using eShop.AuthApi.Services.Interfaces;
 using eShop.AuthApi.Utilities;
 using eShop.Domain.Requests.Auth;
 using eShop.Domain.Responses.Auth;
@@ -11,14 +12,12 @@ namespace eShop.AuthApi.Commands.Auth
         IValidator<RegistrationRequest> validator,
         AppManager appManager,
         ILogger<RegisterCommandHandler> logger,
-        IMapper mapper,
         IEmailSender emailSender,
         IConfiguration configuration) : IRequestHandler<RegisterCommand, Result<RegistrationResponse>>
     {
         private readonly IValidator<RegistrationRequest> validator = validator;
         private readonly AppManager appManager = appManager;
         private readonly ILogger<RegisterCommandHandler> logger = logger;
-        private readonly IMapper mapper = mapper;
         private readonly IEmailSender emailSender = emailSender;
         private readonly IConfiguration configuration = configuration;
         private readonly string frontendUri = configuration["GeneralSettings:FrontendBaseUri"]!;
@@ -53,7 +52,7 @@ namespace eShop.AuthApi.Commands.Auth
                         actionMessage, request.Request.RequestId);
                 }
 
-                var newUser = mapper.Map<AppUser>(request.Request);
+                var newUser = UserMapper.ToAppUser(request.Request);
                 var registrationResult = await appManager.UserManager.CreateAsync(newUser, request.Request.Password);
 
                 if (!registrationResult.Succeeded)

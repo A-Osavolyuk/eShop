@@ -10,13 +10,11 @@ namespace eShop.AuthApi.Commands.Admin
         AppManager appManager,
         ILogger<CreateUserAccountCommandHandler> logger,
         AuthDbContext context,
-        IMapper mapper,
         IConfiguration configuration) : IRequestHandler<CreateUserAccountCommand, Result<CreateUserAccountResponse>>
     {
         private readonly AppManager appManager = appManager;
         private readonly ILogger<CreateUserAccountCommandHandler> logger = logger;
         private readonly AuthDbContext context = context;
-        private readonly IMapper mapper = mapper;
         private readonly IConfiguration configuration = configuration;
         private readonly string defaultRole = configuration["DefaultValues:DeafultRole"]!;
 
@@ -65,16 +63,16 @@ namespace eShop.AuthApi.Commands.Admin
                         actionMessage, request.Request.RequestId);
                 }
 
-                await context.PersonalData.AddAsync(new PersonalData()
+                await context.PersonalData.AddAsync(new PersonalDataEntity()
                 {
                     UserId = userId.ToString(),
                     FirstName = request.Request.FirstName,
                     LastName = request.Request.LastName,
                     DateOfBirth = request.Request.DateOfBirth,
                     Gender = request.Request.Gender,
-                });
+                }, cancellationToken);
 
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync(cancellationToken);
 
                 if (request.Request.Roles.Any())
                 {

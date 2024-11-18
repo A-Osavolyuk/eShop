@@ -171,7 +171,7 @@ namespace eShop.AuthApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PersonalData",
+                name: "PersonalDataEntity",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -278,7 +278,7 @@ namespace eShop.AuthApi.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "PersonalData",
+                table: "PersonalDataEntity",
                 columns: new[] { "Id", "DateOfBirth", "FirstName", "Gender", "LastName", "UserId" },
                 values: new object[] { new Guid("f9ebf56f-c732-46ab-9db2-23904e391ad1"), new DateTime(2004, 2, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "Alexander", "Male", "Osavolyuk", "abb9d2ed-c3d2-4df9-ba88-eab018b95bc3" });
 
@@ -335,7 +335,7 @@ namespace eShop.AuthApi.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_PersonalData_UserId",
-                table: "PersonalData",
+                table: "PersonalDataEntity",
                 column: "UserId",
                 unique: true);
 
@@ -370,7 +370,7 @@ namespace eShop.AuthApi.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "PersonalData");
+                name: "PersonalDataEntity");
 
             migrationBuilder.DropTable(
                 name: "UserAuthenticationTokens");

@@ -38,19 +38,19 @@ namespace eShop.Infrastructure.Services
             return user;
         }
 
-        public async ValueTask WritePersonalDataAsync(PersonalData personalData)
+        public async ValueTask WritePersonalDataAsync(PersonalDataModel personalDataModel)
         {
-            if (personalData is null)
+            if (personalDataModel is null)
             {
-                throw new ArgumentNullException(nameof(personalData));
+                throw new ArgumentNullException(nameof(personalDataModel));
             }
 
-            await localStorageService.SetItemAsync("personal-data", personalData);
+            await localStorageService.SetItemAsync("personal-data", personalDataModel);
         }
 
-        public async ValueTask<PersonalData> ReadPersonalDataAsync()
+        public async ValueTask<PersonalDataModel> ReadPersonalDataAsync()
         {
-            var personalData = await localStorageService.GetItemAsync<PersonalData>("personal-data");
+            var personalData = await localStorageService.GetItemAsync<PersonalDataModel>("personal-data");
 
             if (personalData is null)
             {

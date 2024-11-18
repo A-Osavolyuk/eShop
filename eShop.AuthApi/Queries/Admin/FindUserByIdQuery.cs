@@ -1,4 +1,5 @@
-﻿using eShop.AuthApi.Data;
+﻿using eShop.Application.Mapping;
+using eShop.AuthApi.Data;
 using eShop.Domain.Entities.Admin;
 
 namespace eShop.AuthApi.Queries.Admin
@@ -8,12 +9,10 @@ namespace eShop.AuthApi.Queries.Admin
     internal sealed class FindUserByIdQueryHandler(
         AppManager appManager,
         ILogger<FindUserByIdQueryHandler> logger,
-        IMapper mapper,
         AuthDbContext context) : IRequestHandler<FindUserByIdQuery, Result<FindUserResponse>>
     {
         private readonly AppManager appManager = appManager;
         private readonly ILogger<FindUserByIdQueryHandler> logger = logger;
-        private readonly IMapper mapper = mapper;
         private readonly AuthDbContext context = context;
 
         public async Task<Result<FindUserResponse>> Handle(FindUserByIdQuery request,
@@ -33,7 +32,7 @@ namespace eShop.AuthApi.Queries.Admin
                         actionMessage);
                 }
 
-                var accountData = mapper.Map<AccountData>(user);
+                var accountData = UserMapper.ToAccountData(user);
                 var personalData =
                     await context.PersonalData.AsNoTracking()
                         .FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
@@ -87,7 +86,7 @@ namespace eShop.AuthApi.Queries.Admin
                 var response = new FindUserResponse()
                 {
                     AccountData = accountData,
-                    PersonalData = personalData ?? new(),
+                    PersonalDataEntity = personalData ?? new(),
                     PermissionsData = permissionData
                 };
 

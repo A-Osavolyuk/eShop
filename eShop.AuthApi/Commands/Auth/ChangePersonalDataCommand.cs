@@ -1,4 +1,5 @@
-﻿using eShop.AuthApi.Data;
+﻿using eShop.Application.Mapping;
+using eShop.AuthApi.Data;
 using eShop.Domain.Entities.Admin;
 using eShop.Domain.Requests.Auth;
 using eShop.Domain.Responses.Auth;
@@ -12,8 +13,7 @@ namespace eShop.AuthApi.Commands.Auth
         AppManager appManager,
         IValidator<ChangePersonalDataRequest> validator,
         ILogger<ChangePasswordCommandHandler> logger,
-        AuthDbContext context,
-        IMapper mapper) : IRequestHandler<ChangePersonalDataCommand, Result<ChangePersonalDataResponse>>
+        AuthDbContext context) : IRequestHandler<ChangePersonalDataCommand, Result<ChangePersonalDataResponse>>
     {
         private readonly AppManager appManager = appManager;
         private readonly IValidator<ChangePersonalDataRequest> validator = validator;
@@ -57,7 +57,7 @@ namespace eShop.AuthApi.Commands.Auth
                         actionMessage, request.Request.RequestId);
                 }
 
-                personalData = mapper.Map<PersonalData>(request.Request) with
+                personalData = PersonalDataMapper.ToPersonalDataEntity(request.Request) with
                 {
                     Id = personalData.Id, UserId = user.Id
                 };
@@ -68,7 +68,7 @@ namespace eShop.AuthApi.Commands.Auth
                     "Successfully change personal data of user with email {email}. Request ID {requestId}",
                     request.Request.Email, request.Request.RequestId);
 
-                return new(mapper.Map<ChangePersonalDataResponse>(personalData));
+                return new(PersonalDataMapper.ToChangePersonalDataResponse(personalData));
             }
             catch (Exception ex)
             {

@@ -5,6 +5,6 @@
         Pending = 0,
         Processing = 1,
         Delivering = 2,
-        Bounht = 3
+        Bought = 3
     }
 }

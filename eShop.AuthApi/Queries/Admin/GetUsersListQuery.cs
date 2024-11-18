@@ -1,4 +1,5 @@
-﻿using eShop.AuthApi.Data;
+﻿using eShop.Application.Mapping;
+using eShop.AuthApi.Data;
 using eShop.Domain.Entities.Admin;
 
 namespace eShop.AuthApi.Queries.Admin
@@ -8,13 +9,11 @@ namespace eShop.AuthApi.Queries.Admin
     internal sealed class GetUsersListQueryHandler(
         AppManager appManager,
         ILogger<GetUsersListQueryHandler> logger,
-        AuthDbContext context,
-        IMapper mapper) : IRequestHandler<GetUsersListQuery, Result<IEnumerable<UserData>>>
+        AuthDbContext context) : IRequestHandler<GetUsersListQuery, Result<IEnumerable<UserData>>>
     {
         private readonly AppManager appManager = appManager;
         private readonly ILogger<GetUsersListQueryHandler> logger = logger;
         private readonly AuthDbContext context = context;
-        private readonly IMapper mapper = mapper;
 
         public async Task<Result<IEnumerable<UserData>>> Handle(GetUsersListQuery request,
             CancellationToken cancellationToken)
@@ -24,13 +23,7 @@ namespace eShop.AuthApi.Queries.Admin
             {
                 logger.LogInformation("Attempting to get all users list.");
 
-                var usersList = await appManager.UserManager.Users.AsNoTracking().ToListAsync();
-
-                if (usersList is null)
-                {
-                    return logger.LogInformationWithException<IEnumerable<UserData>>(
-                        new NotFoundException("Cannot find any users."), actionMessage);
-                }
+                var usersList = await appManager.UserManager.Users.AsNoTracking().ToListAsync(cancellationToken: cancellationToken);
 
                 if (!usersList.Any())
                 {
@@ -42,12 +35,12 @@ namespace eShop.AuthApi.Queries.Admin
 
                 foreach (var user in usersList)
                 {
-                    var accountData = mapper.Map<AccountData>(user);
+                    var accountData = UserMapper.ToAccountData(user);
                     var personalData = await context.PersonalData.AsNoTracking()
                         .FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
                     var rolesList = await appManager.UserManager.GetRolesAsync(user);
 
-                    if (rolesList is null || !rolesList.Any())
+                    if (!rolesList.Any())
                     {
                         return logger.LogInformationWithException<IEnumerable<UserData>>(
                             new NotFoundException($"Cannot find roles for user with ID {user.Id}."), actionMessage);
@@ -91,7 +84,7 @@ namespace eShop.AuthApi.Queries.Admin
                     users.Add(new UserData()
                     {
                         PermissionsData = permissionData,
-                        PersonalData = personalData ?? new(),
+                        PersonalDataEntity = personalData ?? new(),
                         AccountData = accountData
                     });
                 }

@@ -254,7 +254,7 @@ namespace eShop.AuthApi.Migrations
                         });
                 });
 
-            modelBuilder.Entity("eShop.Domain.Entities.Admin.PersonalData", b =>
+            modelBuilder.Entity("eShop.Domain.Entities.Admin.PersonalDataEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -284,7 +284,7 @@ namespace eShop.AuthApi.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("PersonalData");
+                    b.ToTable("PersonalDataEntity");
 
                     b.HasData(
                         new
@@ -500,11 +500,11 @@ namespace eShop.AuthApi.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("eShop.Domain.Entities.Admin.PersonalData", b =>
+            modelBuilder.Entity("eShop.Domain.Entities.Admin.PersonalDataEntity", b =>
                 {
                     b.HasOne("eShop.Domain.Entities.Auth.AppUser", "User")
-                        .WithOne("PersonalData")
-                        .HasForeignKey("eShop.Domain.Entities.Admin.PersonalData", "UserId")
+                        .WithOne("PersonalDataEntity")
+                        .HasForeignKey("eShop.Domain.Entities.Admin.PersonalDataEntity", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -552,7 +552,7 @@ namespace eShop.AuthApi.Migrations
 
                     b.Navigation("Permissions");
 
-                    b.Navigation("PersonalData");
+                    b.Navigation("PersonalDataEntity");
                 });
 #pragma warning restore 612, 618
         }

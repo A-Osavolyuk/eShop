@@ -1,5 +1,6 @@
 ﻿@page "/profile/change-personal-data"
 
+@using eShop.Application.Mapping
 @using eShop.Domain.Requests.Auth
 @using eShop.Domain.Responses.Auth
 @inherits PageBase
@@ -56,7 +57,7 @@
 
             if (personalDataModel is not null)
             {
-                Request = Mapper.Map<ChangePersonalDataRequest>(personalDataModel) with { Email = User.Email };
+                Request = PersonalDataMapper.ToChangePersonalDataRequest(personalDataModel) with { Email = User.Email };
             }
 
             StateHasChanged();
@@ -70,7 +71,7 @@
         if (response.IsSucceeded)
         {
             var data = JsonConvert.DeserializeObject<ChangePersonalDataResponse>(response.Result!.ToString()!);
-            await LocalDataAccessor.WritePersonalDataAsync(Mapper.Map<PersonalData>(data));
+            await LocalDataAccessor.WritePersonalDataAsync(Mapper.Map<PersonalDataModel>(data));
             NavigationManager.NavigateTo("/account/profile", true);
             Snackbar.Add(response.ResultMessage, MudBlazor.Severity.Success);
         }

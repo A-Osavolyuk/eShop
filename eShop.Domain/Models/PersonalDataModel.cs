@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.Models
 {
-    public class PersonalData
+    public class PersonalDataModel
     {
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;

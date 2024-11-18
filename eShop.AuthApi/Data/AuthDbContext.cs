@@ -4,7 +4,7 @@ namespace eShop.AuthApi.Data
 {
     internal sealed class AuthDbContext(DbContextOptions<AuthDbContext> options) : IdentityDbContext<AppUser>(options)
     {
-        public DbSet<PersonalData> PersonalData => Set<PersonalData>();
+        public DbSet<PersonalDataEntity> PersonalData => Set<PersonalDataEntity>();
         public DbSet<Permission> Permissions => Set<Permission>();
         public DbSet<UserPermissions> UserPermissions => Set<UserPermissions>();
         public DbSet<UserAuthenticationToken> UserAuthenticationTokens => Set<UserAuthenticationToken>();
@@ -24,12 +24,12 @@ namespace eShop.AuthApi.Data
                 new IdentityUserRole<string>() { RoleId = "270910a1-d582-4ce0-8b23-c8141d720064", UserId = "abb9d2ed-c3d2-4df9-ba88-eab018b95bc3" },
                 new IdentityUserRole<string>() { RoleId = "26bb7907-e254-41d4-96f0-8afb7deccae4", UserId = "abb9d2ed-c3d2-4df9-ba88-eab018b95bc3" });
 
-            builder.Entity<PersonalData>(x =>
+            builder.Entity<PersonalDataEntity>(x =>
             {
                 x.HasKey(p => p.Id);
-                x.HasOne(x => x.User).WithOne(x => x.PersonalData).HasForeignKey<PersonalData>(x => x.UserId);
+                x.HasOne(x => x.User).WithOne(x => x.PersonalData).HasForeignKey<PersonalDataEntity>(x => x.UserId);
 
-                x.HasData(new PersonalData()
+                x.HasData(new PersonalDataEntity()
                 {
                     Id = Guid.NewGuid(),
                     FirstName = "Alexander",

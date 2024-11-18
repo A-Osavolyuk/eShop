@@ -1,4 +1,5 @@
-﻿using eShop.AuthApi.Data;
+﻿using eShop.Application.Mapping;
+using eShop.AuthApi.Data;
 using eShop.Domain.Entities.Admin;
 
 namespace eShop.AuthApi.Queries.Admin
@@ -8,12 +9,10 @@ namespace eShop.AuthApi.Queries.Admin
     internal sealed class FindUserByEmailQueryHandler(
         AppManager appManager,
         ILogger<FindUserByEmailQueryHandler> logger,
-        IMapper mapper,
         AuthDbContext context) : IRequestHandler<FindUserByEmailQuery, Result<FindUserResponse>>
     {
         private readonly AppManager appManager = appManager;
         private readonly ILogger<FindUserByEmailQueryHandler> logger = logger;
-        private readonly IMapper mapper = mapper;
         private readonly AuthDbContext context = context;
 
         public async Task<Result<FindUserResponse>> Handle(FindUserByEmailQuery request,
@@ -32,13 +31,13 @@ namespace eShop.AuthApi.Queries.Admin
                         new NotFoundException($"Cannot find user with email {request.Email}."), actionMessage);
                 }
 
-                var accountData = mapper.Map<AccountData>(user);
+                var accountData = UserMapper.ToAccountData(user);
                 var personalData = await context.PersonalData.AsNoTracking()
                     .FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
                 var rolesList = await appManager.UserManager.GetRolesAsync(user);
                 var permissions = await appManager.PermissionManager.GetUserPermisisonsAsync(user);
 
-                if (rolesList is null || !rolesList.Any())
+                if (!rolesList.Any())
                 {
                     return logger.LogInformationWithException<FindUserResponse>(
                         new NotFoundException($"Cannot find roles for user with email {user.Email}."), actionMessage);
@@ -84,7 +83,7 @@ namespace eShop.AuthApi.Queries.Admin
                 var response = new FindUserResponse()
                 {
                     AccountData = accountData,
-                    PersonalData = personalData ?? new PersonalData(),
+                    PersonalDataEntity = personalData ?? new PersonalDataEntity(),
                     PermissionsData = permissionData
                 };
 

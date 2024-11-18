@@ -3,7 +3,7 @@ using eShop.Domain.Entities.Auth;
 
 namespace eShop.Domain.Entities.Admin
 {
-    public record class PersonalData
+    public record class PersonalDataEntity
     {
         public Guid Id { get; set; }
         public string FirstName { get; set; } = string.Empty;

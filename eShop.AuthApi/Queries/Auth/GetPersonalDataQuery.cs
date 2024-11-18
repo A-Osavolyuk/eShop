@@ -1,4 +1,5 @@
-﻿using eShop.AuthApi.Data;
+﻿using eShop.Application.Mapping;
+using eShop.AuthApi.Data;
 using eShop.Domain.Responses.Auth;
 
 namespace eShop.AuthApi.Queries.Auth
@@ -8,12 +9,10 @@ namespace eShop.AuthApi.Queries.Auth
     internal sealed class GetPersonalDataQueryHandler(
         ILogger<GetPersonalDataQueryHandler> logger,
         AppManager appManager,
-        IMapper mapper,
         AuthDbContext context) : IRequestHandler<GetPersonalDataQuery, Result<PersonalDataResponse>>
     {
         private readonly ILogger<GetPersonalDataQueryHandler> logger = logger;
         private readonly AppManager appManager = appManager;
-        private readonly IMapper mapper = mapper;
         private readonly AuthDbContext context = context;
 
         public async Task<Result<PersonalDataResponse>> Handle(GetPersonalDataQuery request,
@@ -41,7 +40,7 @@ namespace eShop.AuthApi.Queries.Auth
                 }
 
                 logger.LogInformation("Successfully found personal data of user with email {email}", request.Email);
-                return new(mapper.Map<PersonalDataResponse>(personalData));
+                return new(PersonalDataMapper.ToPersonalDataResponse(personalData));
             }
             catch (Exception ex)
             {
