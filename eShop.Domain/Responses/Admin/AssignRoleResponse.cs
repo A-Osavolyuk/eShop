@@ -1,4 +1,4 @@
-﻿namespace eShop.Domain.DTOs.Responses.Admin
+﻿namespace eShop.Domain.Responses.Admin
 {
     public class AssignRoleResponse
     {

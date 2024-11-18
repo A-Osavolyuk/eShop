@@ -1,5 +1,4 @@
-﻿using eShop.Domain.DTOs.Requests;
-using eShop.Domain.Entities.Cart;
+﻿using eShop.Domain.Entities.Cart;
 
 namespace eShop.Domain.Requests.Cart;
 

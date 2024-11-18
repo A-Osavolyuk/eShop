@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using eShop.Domain.DTOs;
-using eShop.Domain.DTOs.Requests.Review;
 using eShop.Domain.Entities;
+using eShop.Domain.Requests.Review;
 
 namespace eShop.Application.Mapping
 {

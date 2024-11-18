@@ -1,5 +1,5 @@
-﻿using eShop.Domain.DTOs.Requests.Review;
-using eShop.Domain.DTOs;
+﻿using eShop.Domain.DTOs;
+using eShop.Domain.Requests.Review;
 
 namespace eShop.Domain.Interfaces
 {

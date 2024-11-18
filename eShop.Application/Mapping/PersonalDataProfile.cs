@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using eShop.Domain.DTOs;
-using eShop.Domain.DTOs.Requests.Auth;
-using eShop.Domain.DTOs.Responses.Auth;
+using eShop.Domain.Requests.Auth;
+using eShop.Domain.Responses.Auth;
 using PersonalData = eShop.Domain.Models.PersonalData;
 
-namespace eShop.Application.MappingProfiles
+namespace eShop.Application.Mapping
 {
     public class PersonalDataProfile : Profile
     {

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace eShop.Application.MappingProfiles
+namespace eShop.Application.Mapping
 {
     public class BrandProfile : Profile
     {

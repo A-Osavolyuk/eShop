@@ -1,4 +1,4 @@
-﻿namespace eShop.Domain.DTOs.Responses.Auth
+﻿namespace eShop.Domain.Responses.Auth
 {
     public class ConfirmEmailResponse
     {

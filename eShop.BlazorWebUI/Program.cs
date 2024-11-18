@@ -1,7 +1,9 @@
 using Blazored.Toast;
 using eShop.Application;
+using eShop.Application.Extensions;
 using eShop.BlazorWebUI.Components;
 using eShop.Infrastructure;
+using eShop.ServiceDefaults;
 using MudBlazor;
 using MudBlazor.Services;
 

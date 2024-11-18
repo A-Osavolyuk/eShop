@@ -1,6 +1,4 @@
-﻿using eShop.Domain.DTOs.Requests;
-
-namespace eShop.Domain.Requests.Auth
+﻿namespace eShop.Domain.Requests.Auth
 {
     public record class ExternalLoginRequest : RequestBase
     {

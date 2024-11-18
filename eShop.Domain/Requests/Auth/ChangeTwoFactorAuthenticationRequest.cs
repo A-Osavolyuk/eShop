@@ -1,4 +1,4 @@
-﻿namespace eShop.Domain.DTOs.Requests.Auth
+﻿namespace eShop.Domain.Requests.Auth
 {
     public record class ChangeTwoFactorAuthenticationRequest : RequestBase
     {

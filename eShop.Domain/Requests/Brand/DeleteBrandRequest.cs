@@ -1,6 +1,4 @@
-﻿using eShop.Domain.DTOs.Requests;
-
-namespace eShop.Domain.Requests.Brand
+﻿namespace eShop.Domain.Requests.Brand
 {
     public record DeleteBrandRequest : RequestBase
     {

@@ -1,4 +1,4 @@
-﻿namespace eShop.Domain.DTOs.Requests.Admin
+﻿namespace eShop.Domain.Requests.Admin
 {
     public record class AssignRoleRequest : RequestBase
     {

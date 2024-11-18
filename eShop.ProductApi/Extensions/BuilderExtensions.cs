@@ -1,4 +1,5 @@
-﻿using eShop.ProductApi.Data;
+﻿using eShop.Application.Extensions;
+using eShop.ProductApi.Data;
 
 namespace eShop.ProductApi.Extensions
 {

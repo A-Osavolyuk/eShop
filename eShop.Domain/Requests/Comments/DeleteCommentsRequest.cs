@@ -1,6 +1,4 @@
-﻿using eShop.Domain.DTOs.Requests;
-
-namespace eShop.Domain.Requests.Comments
+﻿namespace eShop.Domain.Requests.Comments
 {
     public record class DeleteCommentsRequest : RequestBase
     {

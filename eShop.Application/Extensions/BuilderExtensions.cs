@@ -1,3 +1,4 @@
+using System.Text;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
@@ -5,10 +6,9 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Microsoft.OpenApi.Models;
 
-namespace eShop.Application;
+namespace eShop.Application.Extensions;
 
 public static class BuilderExtensions
 {
@@ -71,7 +71,7 @@ public static class BuilderExtensions
                             Type = ReferenceType.SecurityScheme,
                             Id = JwtBearerDefaults.AuthenticationScheme
                         }
-                    }, new string[] { }
+                    }, []
                 }
             });
         });

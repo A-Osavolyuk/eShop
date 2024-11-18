@@ -1,5 +1,4 @@
 ﻿using eShop.Domain.DTOs;
-using eShop.Domain.DTOs.Requests;
 using eShop.Domain.Entities.Product;
 using eShop.Domain.Enums;
 

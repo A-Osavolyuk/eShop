@@ -1,4 +1,6 @@
-﻿namespace eShop.Domain.DTOs.Responses.Auth;
+﻿using eShop.Domain.DTOs;
+
+namespace eShop.Domain.Responses.Auth;
 
 public record LoginResponse
 {

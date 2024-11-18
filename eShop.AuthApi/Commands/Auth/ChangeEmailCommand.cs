@@ -1,5 +1,7 @@
 ﻿using eShop.AuthApi.Services.Interfaces;
 using eShop.AuthApi.Utilities;
+using eShop.Domain.Requests.Auth;
+using eShop.Domain.Responses.Auth;
 
 namespace eShop.AuthApi.Commands.Auth
 {

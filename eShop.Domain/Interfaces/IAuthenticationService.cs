@@ -1,5 +1,4 @@
 ﻿using eShop.Domain.DTOs;
-using eShop.Domain.DTOs.Requests.Auth;
 using eShop.Domain.Requests.Auth;
 
 namespace eShop.Domain.Interfaces

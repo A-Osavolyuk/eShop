@@ -1,5 +1,6 @@
 ﻿
 using eShop.AuthApi.Utilities;
+using eShop.Domain.Responses.Auth;
 
 namespace eShop.AuthApi.Queries.Auth
 {

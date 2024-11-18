@@ -1,4 +1,4 @@
-﻿namespace eShop.Domain.DTOs.Requests.Review
+﻿namespace eShop.Domain.Requests.Review
 {
     public record class UpdateReviewRequest
     {

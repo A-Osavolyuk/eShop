@@ -1,4 +1,4 @@
-﻿namespace eShop.Domain.DTOs.Requests
+﻿namespace eShop.Domain.Requests
 {
     public record class RequestBase
     {

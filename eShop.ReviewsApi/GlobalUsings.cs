@@ -11,7 +11,6 @@ global using UnitM = MediatR.Unit;
 global using Unit = LanguageExt.Unit;
 global using Microsoft.AspNetCore.Mvc;
 global using eShop.Application.Utilities;
-global using eShop.Domain.DTOs.Requests.Review;
 global using Microsoft.AspNetCore.Authorization;
 global using eShop.Application.Extensions;
 global using eShop.ReviewsApi.Extensions;

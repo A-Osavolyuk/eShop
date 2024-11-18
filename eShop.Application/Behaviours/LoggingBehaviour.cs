@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using eShop.Domain.Exceptions;
 using eShop.Domain.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Logging;

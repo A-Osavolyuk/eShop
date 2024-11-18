@@ -1,5 +1,6 @@
 using eShop.Domain.Options;
-using eShop.EmailSenderApi.Services;
+using eShop.EmailSenderApi.Receivers;
+using eShop.ServiceDefaults;
 using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);

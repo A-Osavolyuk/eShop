@@ -1,6 +1,4 @@
-﻿using eShop.Domain.DTOs.Requests;
-
-namespace eShop.Domain.Requests.Product;
+﻿namespace eShop.Domain.Requests.Product;
 
 public record DeleteProductRequest() : RequestBase()
 {

@@ -5,7 +5,7 @@ using MassTransit;
 using Microsoft.Extensions.Options;
 using MimeKit;
 
-namespace eShop.EmailSenderApi.Services
+namespace eShop.EmailSenderApi.Receivers
 {
     public class TwoFactorAuthenticationCodeReceiver(IOptions<EmailOptions> _options) : IConsumer<TwoFactorAuthenticationCodeMessage>
     {
