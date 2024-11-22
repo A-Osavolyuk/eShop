@@ -13,25 +13,25 @@ public class ResponseBuilder
 {
     private string resultMessage = "";
     private string errorMessage = "";
-    private object? result;
+    private object result;
     private bool isSucceeded = false;
     private List<string> errors = [];
 
-    public ResponseBuilder WithResult(object? result)
+    public ResponseBuilder WithResult(object result)
     {
-        result = result;
+        this.result = result;
         return this;
     }
 
     public ResponseBuilder WithResultMessage(string resultMessage)
     {
-        resultMessage = resultMessage;
+        this.resultMessage = resultMessage;
         return this;
     }
 
     public ResponseBuilder WithErrorMessage(string errorMessage)
     {
-        errorMessage = errorMessage;
+        this.errorMessage = errorMessage;
         return this;
     }
 
@@ -49,13 +49,13 @@ public class ResponseBuilder
 
     public ResponseBuilder WithErrors(List<string> errors)
     {
-        errors.AddRange(errors);
+        this.errors.AddRange(errors);
         return this;
     }
 
     public ResponseBuilder AddError(string error)
     {
-        errors.Add(error);
+        this.errors.Add(error);
         return this;
     }
 
