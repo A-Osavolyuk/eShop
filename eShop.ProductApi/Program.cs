@@ -1,8 +1,3 @@
-using eShop.Application.Extensions;
-using eShop.ProductApi.Data;
-using eShop.ProductApi.Extensions;
-using eShop.ServiceDefaults;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();

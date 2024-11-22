@@ -11,13 +11,12 @@ var sqlServer = builder.AddSqlServer("eShopSqlServer", port: 25201)
 
 var authDb = sqlServer.AddDatabase("AuthDB");
 var reviewsDb = sqlServer.AddDatabase("ReviewsDB");
-var productsDb = sqlServer.AddDatabase("ProductsDB");
+var productDb = sqlServer.AddDatabase("ProductDB");
 
 var mongoServer = builder.AddMongoDB("eShopMongo", 25202)
     .WithMongoExpress();
 
 var cartDb = mongoServer.AddDatabase("CartDB");
-var productDb = mongoServer.AddDatabase("ProductDB");
 
 #endregion
 

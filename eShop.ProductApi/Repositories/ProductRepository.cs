@@ -1,9 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using eShop.Application.Mapping;
-using eShop.Domain.DTOs.Products;
-using eShop.ProductApi.Data;
-
-namespace eShop.ProductApi.Repositories;
+﻿namespace eShop.ProductApi.Repositories;
 
 public class ProductRepository(AppDbContext context) : IProductRepository
 {

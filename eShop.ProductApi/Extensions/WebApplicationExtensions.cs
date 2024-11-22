@@ -1,6 +1,4 @@
-﻿using MongoDB.Bson.Serialization;
-
-namespace eShop.ProductApi.Extensions;
+﻿namespace eShop.ProductApi.Extensions;
 
 public static class WebApplicationExtensions
 {

@@ -29,7 +29,7 @@ public static class ProductMapper
             Color = request.Color,
             Description = request.Description,
             Images = request.Images,
-            Size = request.Size.ToHashSet(),
+            Size = request.Size.ToList(),
         };
     }
     
@@ -54,7 +54,7 @@ public static class ProductMapper
             Color = request.Color,
             Description = request.Description,
             Images = request.Images,
-            Size = request.Size.ToHashSet(),
+            Size = request.Size.ToList(),
         };
     }
     

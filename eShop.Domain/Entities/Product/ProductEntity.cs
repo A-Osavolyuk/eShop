@@ -7,8 +7,7 @@ namespace eShop.Domain.Entities.Product;
 public class ProductEntity
 {
     public ProductEntity() => Article = GenerateArticle();
-
-    [BsonId, BsonRepresentation(BsonType.String)]
+    
     public Guid Id { get; set; } = Guid.NewGuid();
     public ProductTypes ProductType { get; set; } = ProductTypes.None;
     public string Article { get; set; }

@@ -1,15 +1,11 @@
-﻿using eShop.ProductApi.Commands.Products;
-using eShop.ProductApi.Queries.Products;
-
-namespace eShop.ProductApi.Controllers
+﻿namespace eShop.ProductApi.Controllers
 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     [ApiVersion("1.0")]
-    public class ProductsController(ISender sender, IMongoDatabase database) : ControllerBase
+    public class ProductsController(ISender sender) : ControllerBase
     {
         private readonly ISender sender = sender;
-        private readonly IMongoDatabase database = database;
         
         [HttpGet("get-products")]
         public async ValueTask<ActionResult<ResponseDto>> GetProductsAsync()

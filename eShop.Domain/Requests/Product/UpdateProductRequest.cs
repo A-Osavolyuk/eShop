@@ -17,6 +17,6 @@ public record UpdateProductRequest() : RequestBase
     public BrandDto Brand { get; set; } = new BrandDto();
     
     public ProductColor Color { get; set; } = ProductColor.None;
-    public HashSet<ProductSize> Size { get; set; } = new HashSet<ProductSize>();
+    public List<ProductSize> Size { get; set; } = new List<ProductSize>();
     public Audience Audience { get; set; } = Audience.None;
 }

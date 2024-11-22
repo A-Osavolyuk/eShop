@@ -16,7 +16,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="8.2.1" />
-		<PackageReference Include="Aspire.MongoDB.Driver" Version="8.2.2" />
 		<PackageReference Include="Azure.Storage.Blobs" Version="12.22.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
 			<PrivateAssets>all</PrivateAssets>

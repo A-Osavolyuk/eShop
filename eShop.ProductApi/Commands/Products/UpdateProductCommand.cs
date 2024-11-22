@@ -1,25 +1,19 @@
-﻿using eShop.Application.Mapping;
-
-namespace eShop.ProductApi.Commands.Products;
+﻿namespace eShop.ProductApi.Commands.Products;
 
 internal sealed record UpdateProductCommand(UpdateProductRequest Request) : IRequest<Result<UpdateProductResponse>>;
 
-internal sealed class UpdateProductCommandHandler(
-    IMongoDatabase database) : IRequestHandler<UpdateProductCommand, Result<UpdateProductResponse>>
+internal sealed class UpdateProductCommandHandler(AppDbContext context) : IRequestHandler<UpdateProductCommand, Result<UpdateProductResponse>>
 {
-    private readonly IMongoDatabase database = database;
+    private readonly AppDbContext context = context;
 
     public async Task<Result<UpdateProductResponse>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
+        var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
         try
         {
-            var collection = database.GetCollection<ProductEntity>("Products");
-            
-            var productEntity = await collection.Find(x => x.Id == request.Request.Id).FirstOrDefaultAsync(cancellationToken);
-
-            if (productEntity is null)
+            if (!await context.Products.AsNoTracking().AnyAsync(x => x.Id == request.Request.Id, cancellationToken))
             {
-                return new(new NotFoundException($"Cannot find product with ID {request.Request.Id}"));
+                return new Result<UpdateProductResponse>(new NotFoundException($"Cannot find product with ID {request.Request.Id}"));
             }
             
             var entity = request.Request.ProductType switch
@@ -29,16 +23,18 @@ internal sealed class UpdateProductCommandHandler(
                 _ or ProductTypes.None => ProductMapper.ToProductEntity(request.Request)
             };
             
-            await collection.ReplaceOneAsync(x => x.Id == entity.Id, entity, cancellationToken: cancellationToken);
-            
-            return new(new UpdateProductResponse
+            context.Products.Update(entity);
+            await context.SaveChangesAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
+            return new Result<UpdateProductResponse>(new UpdateProductResponse
             {
                 Message = "Product was updated successfully.",
             });
         }
         catch (Exception ex)
         {
-            return new(ex);
+            await transaction.RollbackAsync(cancellationToken);
+            return new Result<UpdateProductResponse>(ex);
         }
     }
 }

@@ -1,49 +1,41 @@
-﻿using eShop.Application.Mapping;
-using eShop.Domain.DTOs.Products;
-
-namespace eShop.ProductApi.Queries.Products;
+﻿namespace eShop.ProductApi.Queries.Products;
 
 internal sealed record GetProductByIdQuery(Guid ProductId) : IRequest<Result<ProductDto>>;
 
-internal sealed class GetProductByIdQueryHandler(
-    IMongoDatabase database) : IRequestHandler<GetProductByIdQuery, Result<ProductDto>>
+internal sealed class GetProductByIdQueryHandler(AppDbContext context) : IRequestHandler<GetProductByIdQuery, Result<ProductDto>>
 {
-    private readonly IMongoDatabase database = database;
+    private readonly AppDbContext context = context;
 
     public async Task<Result<ProductDto>> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
     {
         try
         {
-            var collection = database.GetCollection<ProductEntity>("Products");
-
-            ProductEntity entity;
-            
             if (request.ProductId != Guid.Empty)
             {
-                entity = await collection.Find(x => x.Id == request.ProductId).FirstOrDefaultAsync(cancellationToken);
+                var entity = await context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.Id == request.ProductId, cancellationToken);
 
                 if (entity is null)
                 {
-                    return new(new NotFoundException($"Cannot find product with ID {request.ProductId}"));
+                    return new Result<ProductDto>(new NotFoundException($"Cannot find product with ID {request.ProductId}"));
                 }
+                
+                var response = entity.ProductType switch
+                {
+                    ProductTypes.Shoes => ProductMapper.ToShoesDto((ShoesEntity)entity),
+                    ProductTypes.Clothing => ProductMapper.ToClothingDto((ClothingEntity)entity),
+                    _ or ProductTypes.None => ProductMapper.ToProductDto(entity),
+                };
+                
+                return new Result<ProductDto>(response);
             }
             else
             {
-                return new (new NotFoundException($"Cannot find product with ID, article or name"));
+                return new Result<ProductDto>(new NotFoundException($"Cannot find product with ID, article or name"));
             }
-
-            var response = entity.ProductType switch
-            {
-                ProductTypes.Shoes => ProductMapper.ToShoesDto((ShoesEntity)entity),
-                ProductTypes.Clothing => ProductMapper.ToClothingDto((ClothingEntity)entity),
-                _ or ProductTypes.None => ProductMapper.ToProductDto(entity),
-            };
-
-            return new(response);
         }
         catch (Exception ex)
         {
-            return new(ex);
+            return new Result<ProductDto>(ex);
         }
     }
 }

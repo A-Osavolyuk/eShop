@@ -2,26 +2,27 @@
 
 internal sealed record DeleteProductCommand(DeleteProductRequest Request) : IRequest<Result<DeleteProductResponse>>;
 
-internal sealed class DeleteProductCommandHandler(
-    IMongoDatabase database) : IRequestHandler<DeleteProductCommand, Result<DeleteProductResponse>>
+internal sealed class DeleteProductCommandHandler(AppDbContext context) : IRequestHandler<DeleteProductCommand, Result<DeleteProductResponse>>
 {
-    private readonly IMongoDatabase database = database;
+    private readonly AppDbContext context = context;
 
     public async Task<Result<DeleteProductResponse>> Handle(DeleteProductCommand request,
         CancellationToken cancellationToken)
     {
+        var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
         try
         {
-            var collection = database.GetCollection<ProductEntity>("Products");
-            var product = await collection
-                .FindOneAndDeleteAsync(x => x.Id == request.Request.ProductId, cancellationToken: cancellationToken);
+            var entity = await context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Id == request.Request.ProductId, cancellationToken);
 
-            if (product is null)
+            if (entity is null)
             {
-                return new(new NotFoundException($"Cannot find product with ID {request.Request.ProductId}"));
+                return new Result<DeleteProductResponse>(new NotFoundException($"Cannot find product with ID {request.Request.ProductId}"));
             }
-
-            return new(new DeleteProductResponse()
+            
+            context.Products.Remove(entity);
+            await context.SaveChangesAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
+            return new Result<DeleteProductResponse>(new DeleteProductResponse()
             {
                 Message = "Product was successfully deleted",
             });
@@ -29,7 +30,8 @@ internal sealed class DeleteProductCommandHandler(
         }
         catch (Exception ex)
         {
-            return new(ex);
+            await transaction.RollbackAsync(cancellationToken);
+            return new Result<DeleteProductResponse>(ex);
         }
     }
 }

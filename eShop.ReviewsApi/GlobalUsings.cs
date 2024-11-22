@@ -1,13 +1,8 @@
 ﻿global using Microsoft.EntityFrameworkCore;
-global using eShop.Application;
 global using eShop.ReviewsApi.Data;
-global using Microsoft.AspNetCore.Authentication.JwtBearer;
-global using Microsoft.OpenApi.Models;
 global using eShop.Domain.DTOs;
 global using LanguageExt.Common;
 global using MediatR;
-global using UnitM = MediatR.Unit;
-global using Unit = LanguageExt.Unit;
 global using Microsoft.AspNetCore.Mvc;
 global using eShop.Application.Utilities;
 global using Microsoft.AspNetCore.Authorization;
