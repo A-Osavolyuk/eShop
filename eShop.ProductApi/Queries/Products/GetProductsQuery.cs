@@ -1,5 +1,4 @@
-﻿using AutoMapper.QueryableExtensions;
-using eShop.Application.Mapping;
+﻿using eShop.Application.Mapping;
 using eShop.Domain.DTOs.Products;
 
 namespace eShop.ProductApi.Queries.Products;

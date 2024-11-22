@@ -1,5 +1,4 @@
-﻿global using AutoMapper;
-global using eShop.Application.Extensions;
+﻿global using eShop.Application.Extensions;
 global using eShop.AuthApi.Data;
 global using eShop.AuthApi.Services.Interfaces;
 global using eShop.Domain.Common;

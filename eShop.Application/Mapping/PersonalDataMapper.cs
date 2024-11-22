@@ -51,4 +51,15 @@ public static class PersonalDataMapper
             DateOfBirth = model.DateOfBirth
         };
     }
+
+    public static PersonalDataModel ToPersonalDataModel(ChangePersonalDataResponse response)
+    {
+        return new PersonalDataModel()
+        {
+            FirstName = response.FirstName,
+            LastName = response.LastName,
+            Gender = response.Gender,
+            DateOfBirth = response.DateOfBirth
+        };
+    }
 }

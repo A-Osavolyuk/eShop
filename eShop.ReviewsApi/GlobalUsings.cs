@@ -5,7 +5,6 @@ global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.OpenApi.Models;
 global using eShop.Domain.DTOs;
 global using LanguageExt.Common;
-global using AutoMapper;
 global using MediatR;
 global using UnitM = MediatR.Unit;
 global using Unit = LanguageExt.Unit;

@@ -1,4 +1,5 @@
-﻿@using eShop.Domain.Requests.Cart
+﻿@using eShop.Application.Mapping
+@using eShop.Domain.Requests.Cart
 @using eShop.Domain.Requests.Favorites
 @using eShop.Infrastructure.Services
 @using eShop.Infrastructure.StateContainers
@@ -21,7 +22,6 @@
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider authenticationState
 @inject IConfiguration Configuration
-@inject IMapper Mapper
 
 @using Cart = Domain.Models.CartModel
 
@@ -174,7 +174,7 @@
             if (response.IsSucceeded)
             {
                 var data = JsonConvert.DeserializeObject<CartDto>(response.Result!.ToString()!);
-                await LocalDataAccessor.CreateCartAsync(Mapper.Map<Cart>(data));
+                await LocalDataAccessor.CreateCartAsync(CartMapper.ToCartModel(data!));
             }
             else
             {
@@ -192,7 +192,7 @@
             if (response.IsSucceeded)
             {
                 var data = JsonConvert.DeserializeObject<FavoritesDto>(response.Result!.ToString()!);
-                await LocalDataAccessor.CreateFavoritesAsync(Mapper.Map<FavoritesModel>(data));
+                await LocalDataAccessor.CreateFavoritesAsync(FavoritesMapper.ToFavoritesModel(data!));
             }
             else
             {

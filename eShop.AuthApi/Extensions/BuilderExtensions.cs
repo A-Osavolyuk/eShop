@@ -17,7 +17,6 @@ namespace eShop.AuthApi.Extensions
         public static IHostApplicationBuilder AddApiServices(this IHostApplicationBuilder builder)
         {
             builder.AddVersioning();
-            builder.AddMapping();
             builder.AddValidation();
             builder.AddMessageBus();
             builder.AddSwaggerWithSecurity();

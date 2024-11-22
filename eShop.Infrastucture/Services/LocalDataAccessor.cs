@@ -127,14 +127,14 @@ namespace eShop.Infrastructure.Services
 
                 if (favorites is not null)
                 {
-                    favorites.Products.Add(item);
+                    favorites.Items.Add(item);
                     favorites.Count();
                     await localStorageService.SetItemAsync(key, favorites);
                 }
             }
             else
             {
-                var favorites = new FavoritesModel() { Products = new List<FavoritesItem> { item } };
+                var favorites = new FavoritesModel() { Items = new List<FavoritesItem> { item } };
                 favorites.Count();
                 await localStorageService.SetItemAsync(key, favorites);
             }
@@ -149,11 +149,11 @@ namespace eShop.Infrastructure.Services
 
                 if (favorites is not null)
                 {
-                    var model = favorites.Products.FirstOrDefault(x => x.ProductId == Guid.Parse(id));
+                    var model = favorites.Items.FirstOrDefault(x => x.ProductId == Guid.Parse(id));
 
                     if (model is not null)
                     {
-                        favorites.Products.Remove(model);
+                        favorites.Items.Remove(model);
                         favorites.Count();
                         await localStorageService.SetItemAsync(key, favorites);
                     }
@@ -170,7 +170,7 @@ namespace eShop.Infrastructure.Services
 
                 if (favorites is not null)
                 {
-                    return favorites.Products.Any(x => x.ProductId == Guid.Parse(id));
+                    return favorites.Items.Any(x => x.ProductId == Guid.Parse(id));
                 }
             }
 
@@ -188,9 +188,9 @@ namespace eShop.Infrastructure.Services
 
                 if (cart is not null)
                 {
-                    if (cart.Products.Any(x => x.ProductId == item.ProductId))
+                    if (cart.Items.Any(x => x.ProductId == item.ProductId))
                     {
-                        var oldItem = cart.Products.FirstOrDefault(x => x.ProductId == item.ProductId);
+                        var oldItem = cart.Items.FirstOrDefault(x => x.ProductId == item.ProductId);
 
                         if (oldItem is not null)
                         {
@@ -201,8 +201,8 @@ namespace eShop.Infrastructure.Services
                                 ProductArticle = oldItem.ProductArticle,
                                 ProductId = oldItem.ProductId
                             };
-                            cart.Products.Remove(oldItem);
-                            cart.Products.Add(newItem);
+                            cart.Items.Remove(oldItem);
+                            cart.Items.Add(newItem);
                             cart.Count();
 
                             await localStorageService.SetItemAsync(key, cart);
@@ -210,7 +210,7 @@ namespace eShop.Infrastructure.Services
                     }
                     else
                     {
-                        cart.Products.Add(item);
+                        cart.Items.Add(item);
                         cart.Count();
 
                         await localStorageService.SetItemAsync(key, cart);
@@ -219,7 +219,7 @@ namespace eShop.Infrastructure.Services
             }
             else
             {
-                cart!.Products.Add(item);
+                cart!.Items.Add(item);
                 cart.Count();
 
                 await localStorageService.SetItemAsync(key, cart);

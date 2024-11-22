@@ -18,12 +18,6 @@ public static class BuilderExtensions
         return builder;
     }
 
-    public static IHostApplicationBuilder AddMapping(this IHostApplicationBuilder builder)
-    {
-        builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-        return builder;
-    }
-
     public static IHostApplicationBuilder AddVersioning(this IHostApplicationBuilder builder)
     {
         builder.Services.AddApiVersioning(options =>

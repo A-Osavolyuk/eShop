@@ -1,5 +1,4 @@
-﻿global using AutoMapper;
-global using eShop.Application;
+﻿global using eShop.Application;
 global using eShop.Application.Behaviours;
 global using eShop.Application.Middlewares;
 global using eShop.Application.Utilities;

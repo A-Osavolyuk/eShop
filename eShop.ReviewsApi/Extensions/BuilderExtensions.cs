@@ -13,7 +13,6 @@ namespace eShop.ReviewsApi.Extensions
         {
             builder.AddJwtAuthentication();
             builder.AddVersioning();
-            builder.AddMapping();
             builder.AddSwaggerWithSecurity();
             builder.AddDependencyInjection();
             builder.AddMessageBus();

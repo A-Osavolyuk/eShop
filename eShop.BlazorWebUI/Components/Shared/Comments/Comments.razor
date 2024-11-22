@@ -1,10 +1,9 @@
-﻿@using AutoMapper.QueryableExtensions
+﻿@using eShop.Application.Mapping
 @using eShop.Domain.DTOs.Products
 @using Microsoft.EntityFrameworkCore
 @using Severity = MudBlazor.Severity
 @using eShop.Domain.Responses.Comments
 @inject ICommentService CommentService
-@inject IMapper Mapper
 @inject ISnackbar Snackbar
 
 @if (Model is not null)
@@ -58,7 +57,7 @@ else
                 var data = ResponseConverter.Deserialize<GetCommentsResponse>(response.Result!);
                 commentsList = await data.Comments
                     .AsQueryable()
-                    .ProjectTo<CommentModel>(Mapper.ConfigurationProvider)
+                    .Select(x => CommentMapper.ToCommentModel(x))
                     .ToListAsync();
             }
             else

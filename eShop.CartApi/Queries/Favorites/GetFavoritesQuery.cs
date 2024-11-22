@@ -1,4 +1,5 @@
-﻿using eShop.Domain.Entities.Cart;
+﻿using eShop.Application.Mapping;
+using eShop.Domain.Entities.Cart;
 using eShop.Domain.Requests.Favorites;
 using MongoDB.Driver;
 
@@ -7,11 +8,9 @@ namespace eShop.CartApi.Queries.Favorites;
 internal sealed record GetFavoritesQuery(Guid UserId) : IRequest<Result<FavoritesDto>>;
 
 internal sealed class GetFavoritesQueryHandler(
-    IMongoDatabase database,
-    IMapper mapper) : IRequestHandler<GetFavoritesQuery, Result<FavoritesDto>>
+    IMongoDatabase database) : IRequestHandler<GetFavoritesQuery, Result<FavoritesDto>>
 {
     private readonly IMongoDatabase database = database;
-    private readonly IMapper mapper = mapper;
 
     public async Task<Result<FavoritesDto>> Handle(GetFavoritesQuery request, CancellationToken cancellationToken)
     {
@@ -24,7 +23,7 @@ internal sealed class GetFavoritesQueryHandler(
             {
                 return new (new NotFoundException($"Cannot find favorites with user ID {request.UserId}"));
             }
-            return mapper.Map<FavoritesDto>(favorites);
+            return FavoritesMapper.ToFavoritesDto(favorites);
         }
         catch (Exception ex)
         {

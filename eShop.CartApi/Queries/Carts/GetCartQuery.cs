@@ -1,4 +1,5 @@
-﻿using eShop.Domain.Entities.Cart;
+﻿using eShop.Application.Mapping;
+using eShop.Domain.Entities.Cart;
 using eShop.Domain.Requests.Cart;
 using MongoDB.Driver;
 
@@ -8,11 +9,9 @@ internal sealed record GetCartQuery(Guid UserId) : IRequest<Result<CartDto>>;
 
 internal sealed class GetCartQueryHandler(
     IMongoDatabase database,
-    ILogger<GetCartQueryHandler> logger,
-    IMapper mapper) : IRequestHandler<GetCartQuery, Result<CartDto>>
+    ILogger<GetCartQueryHandler> logger) : IRequestHandler<GetCartQuery, Result<CartDto>>
 {
     private readonly ILogger<GetCartQueryHandler> logger = logger;
-    private readonly IMapper mapper = mapper;
 
     public async Task<Result<CartDto>> Handle(GetCartQuery request, CancellationToken cancellationToken)
     {
@@ -26,7 +25,7 @@ internal sealed class GetCartQueryHandler(
                 return new(new NotFoundException($"Cannot find cart with user ID {request.UserId}."));
             }
             
-            return mapper.Map<CartDto>(cart);
+            return CartMapper.ToCartDto(cart);
         }
         catch (Exception ex)
         {

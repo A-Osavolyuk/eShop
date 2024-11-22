@@ -1,4 +1,5 @@
-﻿using eShop.Domain.Entities;
+﻿using eShop.Application.Mapping;
+using eShop.Domain.Entities;
 using eShop.Domain.Requests.Comments;
 using eShop.Domain.Responses.Comments;
 using eShop.ReviewsApi.Data;
@@ -9,18 +10,16 @@ internal sealed record CreateCommentCommand(CreateCommentRequest Request) : IReq
 
 internal sealed class CreateCommentCommandHandler(
     ReviewDbContext context,
-    ILogger<CreateCommentCommandHandler> logger,
-    IMapper mapper) : IRequestHandler<CreateCommentCommand, Result<CreateCommentResponse>>
+    ILogger<CreateCommentCommandHandler> logger) : IRequestHandler<CreateCommentCommand, Result<CreateCommentResponse>>
 {
     private readonly ReviewDbContext context = context;
     private readonly ILogger<CreateCommentCommandHandler> logger = logger;
-    private readonly IMapper mapper = mapper;
 
     public async Task<Result<CreateCommentResponse>> Handle(CreateCommentCommand request, CancellationToken cancellationToken)
     {
         try
         { 
-            var comment = mapper.Map<CommentEntity>(request.Request);
+            var comment = CommentMapper.ToCommentEntity(request.Request);
             await context.Comments.AddAsync(comment, cancellationToken);
             await context.SaveChangesAsync(cancellationToken);
             

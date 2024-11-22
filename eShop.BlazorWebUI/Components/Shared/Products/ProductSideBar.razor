@@ -1,4 +1,5 @@
-﻿@using eShop.Domain.DTOs.Products
+﻿@using eShop.Application.Mapping
+@using eShop.Domain.DTOs.Products
 @using eShop.Domain.Entities.Cart
 @using eShop.Domain.Requests.Cart
 @using eShop.Domain.Requests.Favorites
@@ -11,7 +12,6 @@
 @inject INotificationService NotificationService
 @inject IFavoritesService FavoritesService
 @inject ICartService CartService
-@inject IMapper Mapper
 
 <MudGrid Spacing="1">
     <MudItem xs="12">
@@ -245,7 +245,7 @@
     private async Task UpdateCartAsync()
     {
         var cart = await LocalDataAccessor.ReadCartAsync();
-        var request = Mapper.Map<UpdateCartRequest>(cart);
+        var request = CartMapper.ToUpdateCartRequest(cart);
         var response = await CartService.UpdateCartAsync(request);
 
         if (!response.IsSucceeded)
@@ -256,8 +256,8 @@
     
     private async Task UpdateFavoritesAsync()
     {
-        var cart = await LocalDataAccessor.ReadFavoritesAsync();
-        var request = Mapper.Map<UpdateFavoritesRequest>(cart);
+        var favorites = await LocalDataAccessor.ReadFavoritesAsync();
+        var request = FavoritesMapper.ToUpdateFavoritesRequest(favorites);
         var response = await FavoritesService.UpdateFavoritesAsync(request);
 
         if (!response.IsSucceeded)

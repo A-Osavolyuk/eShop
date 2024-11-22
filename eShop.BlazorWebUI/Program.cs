@@ -17,7 +17,6 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.AddValidation();
-builder.AddMapping();
 builder.AddInfrastructureLayer();
 
 builder.Services.AddMudServices(config =>

@@ -7,7 +7,6 @@
 
 @inject IAuthenticationService AuthService
 @inject PersonalDataValidator Validator
-@inject IMapper Mapper
 
 <Title Text="Change personal data" />
 
@@ -71,7 +70,7 @@
         if (response.IsSucceeded)
         {
             var data = JsonConvert.DeserializeObject<ChangePersonalDataResponse>(response.Result!.ToString()!);
-            await LocalDataAccessor.WritePersonalDataAsync(Mapper.Map<PersonalDataModel>(data));
+            await LocalDataAccessor.WritePersonalDataAsync(PersonalDataMapper.ToPersonalDataModel(data!));
             NavigationManager.NavigateTo("/account/profile", true);
             Snackbar.Add(response.ResultMessage, MudBlazor.Severity.Success);
         }
