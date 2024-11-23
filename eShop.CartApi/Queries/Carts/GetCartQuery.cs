@@ -15,21 +15,14 @@ internal sealed class GetCartQueryHandler(
 
     public async Task<Result<CartDto>> Handle(GetCartQuery request, CancellationToken cancellationToken)
     {
-        try
-        {
-            var collection = database.GetCollection<CartEntity>("Carts");
-            var cart = await collection.Find(x => x.UserId == request.UserId).FirstOrDefaultAsync(cancellationToken);
+        var collection = database.GetCollection<CartEntity>("Carts");
+        var cart = await collection.Find(x => x.UserId == request.UserId).FirstOrDefaultAsync(cancellationToken);
 
-            if (cart is null)
-            {
-                return new(new NotFoundException($"Cannot find cart with user ID {request.UserId}."));
-            }
-            
-            return CartMapper.ToCartDto(cart);
-        }
-        catch (Exception ex)
+        if (cart is null)
         {
-            return new(ex);
+            return new(new NotFoundException($"Cannot find cart with user ID {request.UserId}."));
         }
+
+        return CartMapper.ToCartDto(cart);
     }
 }

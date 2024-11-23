@@ -25,7 +25,6 @@ namespace eShop.CartApi.Extensions
             {
                 x.RegisterServicesFromAssemblyContaining<IAssemblyMarker>();
                 x.AddOpenBehavior(typeof(LoggingBehaviour<,>), ServiceLifetime.Transient);
-                x.AddOpenBehavior(typeof(ValidationBehavior<,>), ServiceLifetime.Transient);
             });
             
             builder.Services.AddValidatorsFromAssemblyContaining(typeof(IAssemblyMarker));

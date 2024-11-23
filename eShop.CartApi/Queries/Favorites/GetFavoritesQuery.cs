@@ -14,20 +14,14 @@ internal sealed class GetFavoritesQueryHandler(
 
     public async Task<Result<FavoritesDto>> Handle(GetFavoritesQuery request, CancellationToken cancellationToken)
     {
-        try
-        {
-            var collection = database.GetCollection<FavoritesEntity>("Favorites");
-            var favorites = await collection.Find(x => x.UserId == request.UserId).FirstOrDefaultAsync(cancellationToken);
+        var collection = database.GetCollection<FavoritesEntity>("Favorites");
+        var favorites = await collection.Find(x => x.UserId == request.UserId).FirstOrDefaultAsync(cancellationToken);
 
-            if (favorites is null)
-            {
-                return new (new NotFoundException($"Cannot find favorites with user ID {request.UserId}"));
-            }
-            return FavoritesMapper.ToFavoritesDto(favorites);
-        }
-        catch (Exception ex)
+        if (favorites is null)
         {
-            return new (ex);
+            return new(new NotFoundException($"Cannot find favorites with user ID {request.UserId}"));
         }
+
+        return FavoritesMapper.ToFavoritesDto(favorites);
     }
 }

@@ -15,41 +15,34 @@ internal sealed class UpdatedCartCommandHandler(
     public async Task<Result<UpdateCartResponse>> Handle(UpdatedCartCommand request,
         CancellationToken cancellationToken)
     {
-        try
+        var cartCollection = database.GetCollection<CartEntity>("Carts");
+
+        var cart = await cartCollection.Find(x => x.CartId == request.Request.CartId)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (cart is null)
         {
-            var cartCollection = database.GetCollection<CartEntity>("Carts");
-
-            var cart = await cartCollection.Find(x => x.CartId == request.Request.CartId)
-                .FirstOrDefaultAsync(cancellationToken);
-
-            if (cart is null)
-            {
-                return new(new NotFoundException($"Cannot find cart with ID {request.Request.CartId}."));
-            }
-            else
-            {
-                var newCart = new CartEntity
-                {
-                    CartId = cart.CartId,
-                    UserId = cart.UserId,
-                    ItemsCount = request.Request.ItemsCount,
-                    UpdatedAt = DateTime.Now,
-                    CreatedAt = cart.CreatedAt,
-                    Items = request.Request.Items
-                };
-
-                await cartCollection.ReplaceOneAsync(x => x.CartId == request.Request.CartId, newCart,
-                    cancellationToken: cancellationToken);
-
-                return new UpdateCartResponse()
-                {
-                    Message = "Cart was successfully updated",
-                };
-            }
+            return new(new NotFoundException($"Cannot find cart with ID {request.Request.CartId}."));
         }
-        catch (Exception ex)
+        else
         {
-            return new(ex);
+            var newCart = new CartEntity
+            {
+                CartId = cart.CartId,
+                UserId = cart.UserId,
+                ItemsCount = request.Request.ItemsCount,
+                UpdatedAt = DateTime.Now,
+                CreatedAt = cart.CreatedAt,
+                Items = request.Request.Items
+            };
+
+            await cartCollection.ReplaceOneAsync(x => x.CartId == request.Request.CartId, newCart,
+                cancellationToken: cancellationToken);
+
+            return new UpdateCartResponse()
+            {
+                Message = "Cart was successfully updated",
+            };
         }
     }
 }
