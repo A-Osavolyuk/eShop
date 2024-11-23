@@ -7,20 +7,14 @@ internal sealed class DeleteUserAvatarCommandHandler(
 {
     private readonly IStoreService service = service;
 
-    public async Task<Result<DeleteUserAvatarResponse>> Handle(DeleteUserAvatarCommand request, CancellationToken cancellationToken)
+    public async Task<Result<DeleteUserAvatarResponse>> Handle(DeleteUserAvatarCommand request,
+        CancellationToken cancellationToken)
     {
-        try
-        {
-            await service.DeleteUserAvatarAsync(request.UserId);
+        await service.DeleteUserAvatarAsync(request.UserId);
 
-            return new(new DeleteUserAvatarResponse()
-            {
-                Message = "User avatar was deleted successfully"
-            });
-        }
-        catch (Exception ex)
+        return new(new DeleteUserAvatarResponse()
         {
-            return new(ex);
-        }
+            Message = "User avatar was deleted successfully"
+        });
     }
 }

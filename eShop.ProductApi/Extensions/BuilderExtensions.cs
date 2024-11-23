@@ -17,8 +17,8 @@
             builder.Services.AddMediatR(c =>
             {
                 c.RegisterServicesFromAssemblyContaining<IAssemblyMarker>();
-                c.AddOpenBehavior(typeof(LoggingBehaviour<,>));
-                c.AddOpenBehavior(typeof(TransactionBehaviour<,>));
+                c.AddOpenBehavior(typeof(LoggingBehaviour<,>), ServiceLifetime.Transient);
+                c.AddOpenBehavior(typeof(TransactionBehaviour<,>), ServiceLifetime.Transient);
             });
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
             builder.Services.AddProblemDetails();

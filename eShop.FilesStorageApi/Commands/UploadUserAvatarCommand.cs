@@ -9,26 +9,20 @@ internal sealed class UploadUserAvatarCommandHandler(
 {
     private readonly IStoreService service = service;
 
-    public async Task<Result<UploadAvatarResponse>> Handle(UploadUserAvatarCommand request, CancellationToken cancellationToken)
+    public async Task<Result<UploadAvatarResponse>> Handle(UploadUserAvatarCommand request,
+        CancellationToken cancellationToken)
     {
-        try
-        {
-            var response = await service.UploadUserAvatarAsync(request.File, request.UserId);
+        var response = await service.UploadUserAvatarAsync(request.File, request.UserId);
 
-            if (string.IsNullOrEmpty(response))
-            {
-                return new(new FailedOperationException($"Cannot upload avatar of user with ID {request.UserId}"));
-            }
-
-            return new(new UploadAvatarResponse()
-            {
-                Message = "User avatar was uploaded successfully",
-                Uri = response
-            });
-        }
-        catch (Exception ex)
+        if (string.IsNullOrEmpty(response))
         {
-            return new(ex);
+            return new(new FailedOperationException($"Cannot upload avatar of user with ID {request.UserId}"));
         }
+
+        return new(new UploadAvatarResponse()
+        {
+            Message = "User avatar was uploaded successfully",
+            Uri = response
+        });
     }
 }
