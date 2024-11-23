@@ -1,7 +1,4 @@
-﻿using eShop.Domain.DTOs;
-using eShop.Domain.Entities.Cart;
-using eShop.Domain.Models;
-using eShop.Domain.Requests.Cart;
+﻿using eShop.Domain.Requests.Cart;
 
 namespace eShop.Application.Mapping;
 

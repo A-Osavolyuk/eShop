@@ -1,8 +1,5 @@
-﻿using eShop.Domain.DTOs;
-using eShop.Domain.Exceptions;
-using Microsoft.AspNetCore.Diagnostics;
+﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 
 namespace eShop.Application.Middlewares;
 

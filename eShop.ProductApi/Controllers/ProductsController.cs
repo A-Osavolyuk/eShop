@@ -48,6 +48,7 @@
         }
         
         [HttpPost("create-product")]
+        [ValidationFilter]
         public async ValueTask<ActionResult<ResponseDto>> CreateProductAsync([FromBody] CreateProductRequest request)
         {
             var result = await sender.Send(new CreateProductCommand(request));
@@ -58,6 +59,7 @@
         }
         
         [HttpPut("update-product")]
+        [ValidationFilter]
         public async ValueTask<ActionResult<ResponseDto>> UpdateProductAsync([FromBody] UpdateProductRequest request)
         {
             var result = await sender.Send(new UpdateProductCommand(request));

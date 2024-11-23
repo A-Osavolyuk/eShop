@@ -1,7 +1,4 @@
-﻿using eShop.Domain.Requests.Comments;
-using FluentValidation;
-
-namespace eShop.Application.Validation.Comments;
+﻿namespace eShop.Application.Validation.Comments;
 
 public class UpdateCommentValidator : AbstractValidator<UpdateCommentRequest>
 {

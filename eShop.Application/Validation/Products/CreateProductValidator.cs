@@ -1,9 +1,4 @@
-﻿using eShop.Domain.Entities.Product;
-using eShop.Domain.Enums;
-using eShop.Domain.Requests.Product;
-using FluentValidation;
-
-namespace eShop.Application.Validation.Products;
+﻿namespace eShop.Application.Validation.Products;
 
 public class CreateProductValidator : AbstractValidator<CreateProductRequest>
 {

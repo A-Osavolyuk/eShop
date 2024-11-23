@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace eShop.Application.Validation
+﻿namespace eShop.Application.Validation
 {
     public static class FluentValidationExtensions
     {

@@ -2,43 +2,37 @@
 {
     public static class BuilderExtensions
     {
-        public static IHostApplicationBuilder AddApiServices(this IHostApplicationBuilder builder)
+        public static void AddApiServices(this IHostApplicationBuilder builder)
         {
+            builder.AddServiceDefaults();
             builder.AddJwtAuthentication();
             builder.AddDependencyInjection();
             builder.AddVersioning();
             builder.AddSwaggerWithSecurity();
             builder.AddMessageBus();
-
+            builder.AddValidation();
+            builder.AddSqlServerDbContext<AppDbContext>("SqlServer");
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.AddSqlServerDbContext<AppDbContext>("SqlServer");
-
             builder.Services.AddMediatR(c =>
             {
                 c.RegisterServicesFromAssemblyContaining<IAssemblyMarker>();
                 c.AddOpenBehavior(typeof(LoggingBehaviour<,>));
-                c.AddOpenBehavior(typeof(ValidationBehavior<,>));
+                c.AddOpenBehavior(typeof(TransactionBehaviour<,>));
             });
-            
-            builder.Services.AddValidatorsFromAssemblyContaining(typeof(IAssemblyMarker));
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
             builder.Services.AddProblemDetails();
-            
-            return builder;
         }
 
-        private static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
+        private static void AddDependencyInjection(this IHostApplicationBuilder builder)
         {
 
-            return builder;
         }
 
-        private static IHostApplicationBuilder AddMessageBus(this IHostApplicationBuilder builder)
+        private static void AddMessageBus(this IHostApplicationBuilder builder)
         {
             builder.Services.AddMassTransit(x =>
             {
-                x.AddRequestClient<DeleteCommentsRequest>();
                 x.UsingRabbitMq((context, cfg) =>
                 {
                     var uri = builder.Configuration["RabbitMQConfigurations:HostUri"]!;
@@ -52,8 +46,6 @@
                     });
                 });
             });
-
-            return builder;
         }
     }
 }

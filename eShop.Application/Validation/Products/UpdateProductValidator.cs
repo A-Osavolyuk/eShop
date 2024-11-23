@@ -1,8 +1,4 @@
-﻿using eShop.Domain.Enums;
-using eShop.Domain.Requests.Product;
-using FluentValidation;
-
-namespace eShop.Application.Validation.Products;
+﻿namespace eShop.Application.Validation.Products;
 
 public class UpdateProductValidator : AbstractValidator<UpdateProductRequest>
 {

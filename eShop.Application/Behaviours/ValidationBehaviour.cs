@@ -1,8 +1,4 @@
-﻿using eShop.Domain.Exceptions;
-using FluentValidation;
-using MediatR;
-
-namespace eShop.Application.Behaviours;
+﻿namespace eShop.Application.Behaviours;
 
 public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators)
     : IPipelineBehavior<TRequest, TResponse>

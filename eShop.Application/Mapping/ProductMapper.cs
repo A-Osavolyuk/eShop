@@ -1,6 +1,4 @@
 ﻿using eShop.Domain.DTOs.Products;
-using eShop.Domain.Entities.Product;
-using eShop.Domain.Requests.Product;
 
 namespace eShop.Application.Mapping;
 

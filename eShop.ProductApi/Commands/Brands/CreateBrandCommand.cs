@@ -7,25 +7,16 @@ internal sealed class CreateBrandCommandHandle(
 {
     private readonly AppDbContext context = context;
 
-    public async Task<Result<CreateBrandResponse>> Handle(CreateBrandCommand request, CancellationToken cancellationToken)
+    public async Task<Result<CreateBrandResponse>> Handle(CreateBrandCommand request,
+        CancellationToken cancellationToken)
     {
-        //var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
-        try
-        {
-            var entity = BrandMapper.ToBrandEntity(request.Request);
-            await context.Brands.AddAsync(entity, cancellationToken);
-            await context.SaveChangesAsync(cancellationToken);
-            //await transaction.CommitAsync(cancellationToken);
+        var entity = BrandMapper.ToBrandEntity(request.Request);
+        await context.Brands.AddAsync(entity, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
-            return new Result<CreateBrandResponse>(new CreateBrandResponse()
-            {
-                Message = "Successfully created brand"
-            });
-        }
-        catch (Exception ex)
+        return new Result<CreateBrandResponse>(new CreateBrandResponse()
         {
-            //await transaction.RollbackAsync(cancellationToken);
-            return new Result<CreateBrandResponse>(ex);
-        }
+            Message = "Successfully created brand"
+        });
     }
 }

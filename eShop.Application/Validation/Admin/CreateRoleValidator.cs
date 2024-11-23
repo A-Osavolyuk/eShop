@@ -1,5 +1,4 @@
 ﻿using eShop.Domain.Requests.Admin;
-using FluentValidation;
 
 namespace eShop.Application.Validation.Admin
 {

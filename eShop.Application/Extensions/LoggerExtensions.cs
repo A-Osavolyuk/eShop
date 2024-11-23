@@ -1,6 +1,5 @@
 ﻿using eShop.Domain.Common;
 using LanguageExt.Common;
-using Microsoft.Extensions.Logging;
 
 namespace eShop.Application.Extensions
 {

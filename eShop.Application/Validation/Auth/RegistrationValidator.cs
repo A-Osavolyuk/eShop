@@ -1,7 +1,4 @@
-﻿using eShop.Domain.Requests.Auth;
-using FluentValidation;
-
-namespace eShop.Application.Validation.Auth
+﻿namespace eShop.Application.Validation.Auth
 {
     public class RegistrationValidator : AbstractValidator<RegistrationRequest>
     {

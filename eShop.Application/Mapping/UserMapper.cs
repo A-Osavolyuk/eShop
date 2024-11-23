@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Entities.Admin;
-using eShop.Domain.Entities.Auth;
-using eShop.Domain.Requests.Auth;
+﻿using eShop.Domain.Entities.Auth;
 using eShop.Domain.Responses.Admin;
 
 namespace eShop.Application.Mapping;

@@ -1,7 +1,4 @@
-﻿using eShop.ProductApi.Commands.Brands;
-using eShop.ProductApi.Queries.Brands;
-
-namespace eShop.ProductApi.Controllers
+﻿namespace eShop.ProductApi.Controllers
 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
@@ -25,6 +22,7 @@ namespace eShop.ProductApi.Controllers
         }
 
         [HttpPost("create-brand")]
+        [ValidationFilter]
         public async ValueTask<ActionResult<ResponseDto>> CreateBrandAsync([FromBody] CreateBrandRequest request)
         {
             var response = await sender.Send(new CreateBrandCommand(request));
@@ -35,6 +33,7 @@ namespace eShop.ProductApi.Controllers
         }
         
         [HttpPut("update-brand")]
+        [ValidationFilter]
         public async ValueTask<ActionResult<ResponseDto>> UpdateBrandAsync([FromBody] UpdateBrandRequest request)
         {
             var response = await sender.Send(new UpdateBrandCommand(request));

@@ -1,7 +1,4 @@
-﻿using eShop.Domain.DTOs;
-using eShop.Domain.Entities;
-using eShop.Domain.Models;
-using eShop.Domain.Requests.Comments;
+﻿using eShop.Domain.Entities;
 
 namespace eShop.Application.Mapping;
 

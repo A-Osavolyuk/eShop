@@ -7,30 +7,22 @@ internal sealed class UpdateBrandCommandHandler(
 {
     private readonly AppDbContext context = context;
 
-    public async Task<Result<UpdateBrandResponse>> Handle(UpdateBrandCommand request, CancellationToken cancellationToken)
+    public async Task<Result<UpdateBrandResponse>> Handle(UpdateBrandCommand request,
+        CancellationToken cancellationToken)
     {
-        var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
-        try
+        if (!await context.Brands.AsNoTracking().AnyAsync(x => x.Id == request.Request.Id, cancellationToken))
         {
-            if (!await context.Brands.AsNoTracking().AnyAsync(x => x.Id == request.Request.Id, cancellationToken))
-            {
-                return new Result<UpdateBrandResponse>(new NotFoundException($"Cannot find brand with ID {request.Request.Id}"));
-            }
-            
-            var entity = BrandMapper.ToBrandEntity(request.Request);
-            context.Brands.Update(entity);
-            await context.SaveChangesAsync(cancellationToken);
-            await transaction.CommitAsync(cancellationToken);
+            return new Result<UpdateBrandResponse>(
+                new NotFoundException($"Cannot find brand with ID {request.Request.Id}"));
+        }
 
-            return new Result<UpdateBrandResponse>(new UpdateBrandResponse()
-            {
-                Message = "Brand was successfully updated"
-            });
-        }
-        catch (Exception ex)
+        var entity = BrandMapper.ToBrandEntity(request.Request);
+        context.Brands.Update(entity);
+        await context.SaveChangesAsync(cancellationToken);
+
+        return new Result<UpdateBrandResponse>(new UpdateBrandResponse()
         {
-            await transaction.RollbackAsync(cancellationToken);
-            return new Result<UpdateBrandResponse>(ex);
-        }
+            Message = "Brand was successfully updated"
+        });
     }
 }

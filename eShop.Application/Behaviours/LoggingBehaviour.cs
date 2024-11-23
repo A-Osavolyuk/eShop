@@ -1,10 +1,4 @@
-﻿using System.Reflection;
-using eShop.Domain.Exceptions;
-using eShop.Domain.Interfaces;
-using MediatR;
-using Microsoft.Extensions.Logging;
-
-namespace eShop.Application.Behaviours;
+﻿namespace eShop.Application.Behaviours;
 
 public class LoggingBehaviour<TRequest, TResponse>(ILogger<TRequest> logger)
     : IPipelineBehavior<TRequest, TResponse>

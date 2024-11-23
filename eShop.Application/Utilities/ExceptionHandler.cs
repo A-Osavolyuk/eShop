@@ -1,9 +1,4 @@
-﻿using eShop.Domain.DTOs;
-using eShop.Domain.Exceptions;
-using eShop.Domain.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-
-namespace eShop.Application.Utilities
+﻿namespace eShop.Application.Utilities
 {
     public static class ExceptionHandler
     {

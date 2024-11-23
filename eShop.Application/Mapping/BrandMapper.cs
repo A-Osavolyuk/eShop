@@ -1,8 +1,4 @@
-﻿using eShop.Domain.DTOs;
-using eShop.Domain.Entities.Product;
-using eShop.Domain.Requests.Brand;
-
-namespace eShop.Application.Mapping;
+﻿namespace eShop.Application.Mapping;
 
 public static class BrandMapper
 {
