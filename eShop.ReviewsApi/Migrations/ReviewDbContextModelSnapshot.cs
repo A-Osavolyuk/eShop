@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace eShop.ReviewsApi.Migrations
 {
-    [DbContext(typeof(ReviewDbContext))]
+    [DbContext(typeof(AppDbContext))]
     partial class ReviewDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

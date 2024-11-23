@@ -1,5 +1,3 @@
-using eShop.ServiceDefaults;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
@@ -13,7 +11,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    await app.ConfigureDatabaseAsync<ReviewDbContext>();
+    await app.ConfigureDatabaseAsync<AppDbContext>();
 }
 
 app.MapDefaultEndpoints();

@@ -1,8 +1,4 @@
-﻿using eShop.Domain.Requests.Comments;
-using eShop.ReviewsApi.Commands.Comments;
-using eShop.ReviewsApi.Queries.Comments;
-
-namespace eShop.ReviewsApi.Controllers
+﻿namespace eShop.ReviewsApi.Controllers
 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
@@ -22,6 +18,7 @@ namespace eShop.ReviewsApi.Controllers
         }
         
         [HttpPost("create-comment")]
+        [ValidationFilter]
         public async ValueTask<ActionResult<ResponseDto>> CreateCommentAsync([FromBody] CreateCommentRequest request)
         {
             var result = await sender.Send(new CreateCommentCommand(request));
@@ -32,6 +29,7 @@ namespace eShop.ReviewsApi.Controllers
         }
         
         [HttpPut("update-comment")]
+        [ValidationFilter]
         public async ValueTask<ActionResult<ResponseDto>> UpdateCommentAsync([FromBody] UpdateCommentRequest request)
         {
             var result = await sender.Send(new UpdateCommentCommand(request));

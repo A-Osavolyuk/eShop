@@ -1,11 +1,4 @@
-﻿using eShop.Application.Behaviours;
-using eShop.Application.Middlewares;
-using eShop.ReviewsApi.Data;
-using eShop.ReviewsApi.Receivers;
-using FluentValidation;
-using MassTransit;
-
-namespace eShop.ReviewsApi.Extensions
+﻿namespace eShop.ReviewsApi.Extensions
 {
     public static class BuilderExtensions
     {
@@ -13,34 +6,30 @@ namespace eShop.ReviewsApi.Extensions
         {
             builder.AddJwtAuthentication();
             builder.AddVersioning();
+            builder.AddValidation();
             builder.AddSwaggerWithSecurity();
             builder.AddDependencyInjection();
             builder.AddMessageBus();
-
-            builder.AddSqlServerDbContext<ReviewDbContext>("SqlServer");
-
+            builder.AddSqlServerDbContext<AppDbContext>("SqlServer");
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddMediatR(x =>
             {
                 x.RegisterServicesFromAssemblyContaining<IAssemblyMarker>();
+                x.AddOpenBehavior(typeof(LoggingBehaviour<,>));
+                x.AddOpenBehavior(typeof(TransactionBehaviour<,>));
             });
-            
-            builder.Services.AddValidatorsFromAssemblyContaining(typeof(IAssemblyMarker));
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
             builder.Services.AddProblemDetails();
 
             return builder;
         }
 
-        private static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
+        private static void AddDependencyInjection(this IHostApplicationBuilder builder)
         {
-            builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-            builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviour<,>));
-            return builder;
         }
 
-        private static IHostApplicationBuilder AddMessageBus(this IHostApplicationBuilder builder)
+        private static void AddMessageBus(this IHostApplicationBuilder builder)
         {
             builder.Services.AddMassTransit(x =>
             {
@@ -61,8 +50,6 @@ namespace eShop.ReviewsApi.Extensions
 
                 x.AddConsumer<ProductDeletedReceiver>();
             });
-
-            return builder;
         }
     }
 }

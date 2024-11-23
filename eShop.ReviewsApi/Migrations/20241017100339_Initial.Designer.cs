@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace eShop.ReviewsApi.Migrations
 {
-    [DbContext(typeof(ReviewDbContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20241017100339_Initial")]
     partial class Initial
     {

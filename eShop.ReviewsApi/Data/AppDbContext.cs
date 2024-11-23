@@ -1,8 +1,6 @@
-﻿using eShop.Domain.Entities;
-
-namespace eShop.ReviewsApi.Data
+﻿namespace eShop.ReviewsApi.Data
 {
-    public class ReviewDbContext(DbContextOptions<ReviewDbContext> options) : DbContext(options)
+    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {
         public DbSet<CommentEntity> Comments => Set<CommentEntity>();
 

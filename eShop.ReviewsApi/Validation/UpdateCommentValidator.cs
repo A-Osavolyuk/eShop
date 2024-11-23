@@ -1,7 +1,4 @@
-﻿using eShop.ReviewsApi.Commands.Comments;
-using FluentValidation;
-
-namespace eShop.ReviewsApi.Validation;
+﻿namespace eShop.ReviewsApi.Validation;
 
 internal sealed class UpdateCommentValidator : AbstractValidator<UpdateCommentCommand>
 {

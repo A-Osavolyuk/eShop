@@ -1,19 +1,14 @@
-﻿using eShop.Domain.Requests.Comments;
-using eShop.Domain.Responses.Comments;
-using eShop.ReviewsApi.Data;
-using MassTransit;
-
-namespace eShop.ReviewsApi.Receivers
+﻿namespace eShop.ReviewsApi.Receivers
 {
     public class ProductDeletedReceiver(
         ISender sender, 
         ILogger<ProductDeletedReceiver> logger,
-        ReviewDbContext dbContext)
+        AppDbContext dbContext)
         : IConsumer<DeleteCommentsRequest>
     {
         private readonly ISender sender = sender;
         private readonly ILogger<ProductDeletedReceiver> logger = logger;
-        private readonly ReviewDbContext dbContext = dbContext;
+        private readonly AppDbContext dbContext = dbContext;
 
         public async Task Consume(ConsumeContext<DeleteCommentsRequest> context)
         {
