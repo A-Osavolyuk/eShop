@@ -5,52 +5,14 @@ namespace eShop.Application.Extensions
 {
     public static class LoggerExtensions
     {
-        public static void LogInformation(this ILogger logger, string message, Guid RequestId)
+        public static void LogInformation(this ILogger logger, string message, Guid requestId)
         {
-            logger.LogInformation($"{message}. Request Id: {RequestId}");
+            logger.LogInformation($"{message}. Request Id: {requestId}");
         }
 
-        public static void LogError(this ILogger logger, string message, Guid RequestId)
+        public static void LogError(this ILogger logger, string message, Guid requestId)
         {
-            logger.LogError($"{message}. Request Id: {RequestId}");
-        }
-
-        public static Result<TResponse> LogErrorWithException<TResponse>(this ILogger logger, Exception exception, ActionMessage actionMessage, Guid requestId)
-        {
-            logger.LogError("Failed to {action}: {message}. Request ID {requestId}", string.Format(actionMessage.Message, actionMessage.Args), exception.Message, requestId);
-
-            return new(exception);
-        }
-
-        public static Result<TResponse> LogErrorWithException<TResponse>(this ILogger logger, Exception exception, ActionMessage actionMessage)
-        {
-            logger.LogError("Failed to {action}: {message}.", string.Format(actionMessage.Message, actionMessage.Args), exception.Message);
-
-            return new(exception);
-        }
-
-        public static void LogError(this ILogger logger, Exception exception, ActionMessage actionMessage, Guid requestId)
-        {
-            logger.LogError("Failed to {action}: {message}. Request ID {requestId}", string.Format(actionMessage.Message, actionMessage.Args), exception.Message, requestId);
-        }
-
-        public static void LogError(this ILogger logger, Exception exception, ActionMessage actionMessage)
-        {
-            logger.LogError("Failed to {action}: {message}.", string.Format(actionMessage.Message, actionMessage.Args), exception.Message);
-        }
-        
-        public static Result<TResponse> LogInformationWithException<TResponse>(this ILogger logger, Exception exception, ActionMessage actionMessage, Guid requestId)
-        {
-            logger.LogInformation("Failed to {action}: {message}. Request ID {requestId}", string.Format(actionMessage.Message, actionMessage.Args), exception.Message, requestId);
-
-            return new(exception);
-        }
-
-        public static Result<TResponse> LogInformationWithException<TResponse>(this ILogger logger, Exception exception, ActionMessage actionMessage)
-        {
-            logger.LogInformation("Failed to {action}: {message}.", string.Format(actionMessage.Message, actionMessage.Args), exception.Message);
-
-            return new(exception);
+            logger.LogError($"{message}. Request Id: {requestId}");
         }
     }
 }

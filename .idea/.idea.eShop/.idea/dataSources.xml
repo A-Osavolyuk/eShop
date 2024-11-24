@@ -60,5 +60,12 @@
       <jdbc-url>Server=127.0.0.1,25201;User ID=sa;Password=k47sUFZ4hx2x5wN9Wy2bDD;TrustServerCertificate=true;Database=ReviewsDB</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="AuthDB" uuid="600cdb87-f17d-42d7-870a-d5850bf6ab28">
+      <driver-ref>sqlserver.jb</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.jetbrains.jdbc.sqlserver.SqlServerDriver</jdbc-driver>
+      <jdbc-url>Server=127.0.0.1,25201;User ID=sa;Password=k47sUFZ4hx2x5wN9Wy2bDD;TrustServerCertificate=true;Database=AuthDB</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

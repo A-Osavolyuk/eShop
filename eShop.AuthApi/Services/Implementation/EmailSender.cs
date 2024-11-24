@@ -1,15 +1,9 @@
-﻿using eShop.AuthApi.Services.Interfaces;
-
-namespace eShop.AuthApi.Services.Implementation
+﻿namespace eShop.AuthApi.Services.Implementation
 {
-    internal sealed class EmailSender : IEmailSender
+    internal sealed class EmailSender(IBus bus) : IEmailSender
     {
-        private readonly IBus bus;
+        private readonly IBus bus = bus;
 
-        public EmailSender(IBus bus)
-        {
-            this.bus = bus;
-        }
         public async ValueTask SendAccountRegisteredMessage(AccountRegisteredMessage accountRegisteredMessage)
         {
             var queryName = "/account-registered";
@@ -54,14 +48,14 @@ namespace eShop.AuthApi.Services.Implementation
 
         private Uri CreateQueryUri(string queryName)
         {
-            const string UriBase = "rabbitmq://localhost/";
+            const string uriBase = "rabbitmq://localhost/";
 
-            var Uri = new Uri(
-                new StringBuilder(UriBase)
+            var uri = new Uri(
+                new StringBuilder(uriBase)
                 .Append(queryName)
                 .ToString());
 
-            return Uri;
+            return uri;
         }
 
         public async ValueTask SendChangeEmailMessage(ChangeEmailMessage changeEmailMessage)

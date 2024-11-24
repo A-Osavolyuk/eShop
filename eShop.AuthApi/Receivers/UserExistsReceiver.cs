@@ -1,7 +1,4 @@
-﻿using eShop.Domain.Requests.Auth;
-using eShop.Domain.Responses.Auth;
-
-namespace eShop.AuthApi.Receivers
+﻿namespace eShop.AuthApi.Receivers
 {
     public class UserExistsReceiver(UserManager<AppUser> userManager) : IConsumer<UserExistsRequest>
     {

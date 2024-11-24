@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-
-namespace eShop.AuthApi.Security.Authorization
+﻿namespace eShop.AuthApi.Security.Authorization
 {
     public class PermissionRequirement(string permissionName) : IAuthorizationRequirement
     {

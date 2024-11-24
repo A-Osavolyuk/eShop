@@ -1,26 +1,18 @@
-﻿using eShop.Application;
-using eShop.AuthApi.BackgroundServices;
-using eShop.AuthApi.Data;
-using eShop.AuthApi.Receivers;
-using eShop.AuthApi.Security.Authorization;
-using eShop.AuthApi.Services.Implementation;
-using eShop.AuthApi.Services.Interfaces;
-using eShop.Domain.Requests.Cart;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.OpenApi.Models;
-
-namespace eShop.AuthApi.Extensions
+﻿namespace eShop.AuthApi.Extensions
 {
     public static class BuilderExtensions
     {
-        public static IHostApplicationBuilder AddApiServices(this IHostApplicationBuilder builder)
+        public static void AddApiServices(this IHostApplicationBuilder builder)
         {
             builder.AddVersioning();
             builder.AddValidation();
             builder.AddMessageBus();
             builder.AddSwaggerWithSecurity();
-            builder.Services.AddMediatR(x => x.RegisterServicesFromAssemblyContaining<IAssemblyMarker>());
+            builder.Services.AddMediatR(x =>
+            {
+                x.RegisterServicesFromAssemblyContaining<IAssemblyMarker>();
+                x.AddOpenBehavior(typeof(LoggingBehaviour<,>));
+            });
             builder.Services.AddCors(o =>
             {
                 o.AddDefaultPolicy(p =>
@@ -40,11 +32,11 @@ namespace eShop.AuthApi.Extensions
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-
-            return builder;
+            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+            builder.Services.AddProblemDetails();
         }
 
-        private static IHostApplicationBuilder AddAuth(this IHostApplicationBuilder builder)
+        private static void AddAuth(this IHostApplicationBuilder builder)
         {
             builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
             {
@@ -91,11 +83,9 @@ namespace eShop.AuthApi.Extensions
                 cfg.AddPolicy("ManagePermissionsPolicy", policy => policy.Requirements.Add(new PermissionRequirement("Permission.Admin.ManagePermissions")));
                 cfg.AddPolicy("ManageAccountPolicy", policy => policy.Requirements.Add(new PermissionRequirement("Permission.Account.ManageAccount")));
             });
-
-            return builder;
         }
 
-        private static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
+        private static void AddDependencyInjection(this IHostApplicationBuilder builder)
         {
             builder.Services.AddScoped<ITokenHandler, TokenHandler>();
             builder.Services.AddScoped<IEmailSender, EmailSender>();
@@ -104,11 +94,9 @@ namespace eShop.AuthApi.Extensions
             builder.Services.AddHostedService<BackgroundTokenValidator>();
 
             builder.Services.AddScoped<AppManager>();
-
-            return builder;
         }
 
-        private static IHostApplicationBuilder AddMessageBus(this IHostApplicationBuilder builder)
+        private static void AddMessageBus(this IHostApplicationBuilder builder)
         {
             builder.Services.AddMassTransit(x =>
             {
@@ -130,8 +118,6 @@ namespace eShop.AuthApi.Extensions
 
                 x.AddConsumer<UserExistsReceiver>();
             });
-
-            return builder;
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Entities.Admin;
-
-namespace eShop.AuthApi.Extensions
+﻿namespace eShop.AuthApi.Extensions
 {
     public static class RoleManagerExtensions
     {

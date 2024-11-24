@@ -21,7 +21,7 @@ namespace eShop.Infrastructure.Services
 
         public async ValueTask<ResponseDto> ChangePersonalDataAsync(ChangePersonalDataRequest changePersonalDataRequestDto) => await clientService.SendAsync(
                     new RequestDto(Url: $"{configuration["Services:Gateway"]}/api/v1/Auth/change-personal-data",
-                        Method: HttpMethods.POST, Data: changePersonalDataRequestDto));
+                        Method: HttpMethods.PUT, Data: changePersonalDataRequestDto));
 
         public async ValueTask<ResponseDto> RequestResetPasswordAsync(ResetPasswordRequest request) => await clientService.SendAsync(
                     new RequestDto(Url: $"{configuration["Services:Gateway"]}/api/v1/Auth/request-reset-password",
@@ -29,7 +29,7 @@ namespace eShop.Infrastructure.Services
 
         public async ValueTask<ResponseDto> ConfirmResetPasswordAsync(ConfirmResetPasswordRequest confirmPasswordResetRequest) => await clientService.SendAsync(
                     new RequestDto(Url: $"{configuration["Services:Gateway"]}/api/v1/Auth/confirm-reset-password",
-                        Method: HttpMethods.POST, Data: confirmPasswordResetRequest));
+                        Method: HttpMethods.PUT, Data: confirmPasswordResetRequest));
 
         public async ValueTask<ResponseDto> ConfirmEmailAsync(ConfirmEmailRequest confirmEmailRequest) => await clientService.SendAsync(
                     new RequestDto(Url: $"{configuration["Services:Gateway"]}/api/v1/Auth/confirm-email",
@@ -47,7 +47,7 @@ namespace eShop.Infrastructure.Services
 
         public async ValueTask<ResponseDto> RequestChangeEmailAsync(ChangeEmailRequest changeEmailRequest) => await clientService.SendAsync(
                     new RequestDto(Url: $"{configuration["Services:Gateway"]}/api/v1/Auth/request-change-email",
-                        Method: HttpMethods.POST, Data: changeEmailRequest));
+                        Method: HttpMethods.PUT, Data: changeEmailRequest));
 
         public async ValueTask<ResponseDto> ConfirmChangeEmailAsync(ConfirmChangeEmailRequest changeEmailRequest) => await clientService.SendAsync(
                     new RequestDto(Url: $"{configuration["Services:Gateway"]}/api/v1/Auth/confirm-change-email",
@@ -55,11 +55,11 @@ namespace eShop.Infrastructure.Services
 
         public async ValueTask<ResponseDto> ChangePasswordAsync(ChangePasswordRequest changePasswordRequest) => await clientService.SendAsync(
                     new RequestDto(Url: $"{configuration["Services:Gateway"]}/api/v1/Auth/change-password",
-                        Method: HttpMethods.POST, Data: changePasswordRequest));
+                        Method: HttpMethods.PUT, Data: changePasswordRequest));
 
         public async ValueTask<ResponseDto> ChangeUserNameAsync(ChangeUserNameRequest changeUserNameRequest) => await clientService.SendAsync(
                     new RequestDto(Url: $"{configuration["Services:Gateway"]}/api/v1/Auth/change-user-name",
-                        Method: HttpMethods.POST, Data: changeUserNameRequest));
+                        Method: HttpMethods.PUT, Data: changeUserNameRequest));
 
         public async ValueTask<ResponseDto> ChangeTwoFactorAuthenticationStateAsync(ChangeTwoFactorAuthenticationRequest request) => await clientService.SendAsync(
                     new RequestDto(Url: $"{configuration["Services:Gateway"]}/api/v1/Auth/change-2fa-state", Method: HttpMethods.POST, Data: request));
@@ -74,7 +74,7 @@ namespace eShop.Infrastructure.Services
 
         public async ValueTask<ResponseDto> RequestChangePhoneNumberAsync(ChangePhoneNumberRequest changePhoneNumberRequest) => await clientService.SendAsync(
                     new RequestDto(Url: $"{configuration["Services:Gateway"]}/api/v1/Auth/request-change-phone-number",
-                        Method: HttpMethods.POST, Data: changePhoneNumberRequest));
+                        Method: HttpMethods.PUT, Data: changePhoneNumberRequest));
         public async ValueTask<ResponseDto> ConfirmChangePhoneNumberAsync(ConfirmChangePhoneNumberRequest changePhoneNumberRequest) => await clientService.SendAsync(
                     new RequestDto(Url: $"{configuration["Services:Gateway"]}/api/v1/Auth/confirm-change-phone-number",
                         Method: HttpMethods.POST, Data: changePhoneNumberRequest));

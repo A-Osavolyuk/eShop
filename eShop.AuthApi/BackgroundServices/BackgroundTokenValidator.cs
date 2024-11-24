@@ -1,6 +1,4 @@
 ﻿
-using eShop.AuthApi.Data;
-
 namespace eShop.AuthApi.BackgroundServices
 {
     public class BackgroundTokenValidator(

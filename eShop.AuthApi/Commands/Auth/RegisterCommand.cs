@@ -1,55 +1,29 @@
-﻿using eShop.Application.Mapping;
-using eShop.AuthApi.Services.Interfaces;
-using eShop.AuthApi.Utilities;
-using eShop.Domain.Requests.Auth;
-using eShop.Domain.Responses.Auth;
-
-namespace eShop.AuthApi.Commands.Auth
+﻿namespace eShop.AuthApi.Commands.Auth
 {
     internal sealed record RegisterCommand(RegistrationRequest Request) : IRequest<Result<RegistrationResponse>>;
 
     internal sealed class RegisterCommandHandler(
-        IValidator<RegistrationRequest> validator,
         AppManager appManager,
-        ILogger<RegisterCommandHandler> logger,
         IEmailSender emailSender,
         IConfiguration configuration) : IRequestHandler<RegisterCommand, Result<RegistrationResponse>>
     {
-        private readonly IValidator<RegistrationRequest> validator = validator;
         private readonly AppManager appManager = appManager;
-        private readonly ILogger<RegisterCommandHandler> logger = logger;
         private readonly IEmailSender emailSender = emailSender;
         private readonly IConfiguration configuration = configuration;
         private readonly string frontendUri = configuration["GeneralSettings:FrontendBaseUri"]!;
-        private readonly string defaultRole = configuration["DefaultValues:DeafultRole"]!;
+        private readonly string defaultRole = configuration["DefaultValues:DefaultRole"]!;
 
         private readonly List<string> defaultPermissions =
-            configuration.GetValue<List<string>>("DefaultValues:DeafultPermissions")!;
+            configuration.GetValue<List<string>>("DefaultValues:DefaultPermissions")!;
 
         public async Task<Result<RegistrationResponse>> Handle(RegisterCommand request,
             CancellationToken cancellationToken)
         {
-            var actionMessage = new ActionMessage("register account with email {0}", request.Request.Email);
-            try
-            {
-                logger.LogInformation("Attempting to register account with email {email}. Request ID {requestId}",
-                    request.Request.Email, request.Request.RequestId);
-                var validationResult = await validator.ValidateAsync(request.Request, cancellationToken);
-
-                if (!validationResult.IsValid)
-                {
-                    return logger.LogInformationWithException<RegistrationResponse>(
-                        new FailedValidationException(validationResult.Errors),
-                        actionMessage, request.Request.RequestId);
-                }
-
                 var user = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
 
                 if (user is not null)
                 {
-                    return logger.LogInformationWithException<RegistrationResponse>(
-                        new BadRequestException("User already exists"),
-                        actionMessage, request.Request.RequestId);
+                    return new(new BadRequestException("User already exists"));
                 }
 
                 var newUser = UserMapper.ToAppUser(request.Request);
@@ -57,25 +31,17 @@ namespace eShop.AuthApi.Commands.Auth
 
                 if (!registrationResult.Succeeded)
                 {
-                    return logger.LogErrorWithException<RegistrationResponse>(
-                        new FailedOperationException(
-                            $"Cannot create user due to server error: {registrationResult.Errors.First().Description}"),
-                        actionMessage, request.Request.RequestId);
+                    return new(new FailedOperationException(
+                        $"Cannot create user due to server error: {registrationResult.Errors.First().Description}"));
                 }
-
-                logger.LogInformation(
-                    "Successfully created account with email {email}, waiting for email confirmation. Request ID {requestId}",
-                    request.Request.Email, request.Request.RequestId);
 
                 var assignDefaultRoleResult = await appManager.UserManager.AddToRoleAsync(newUser, defaultRole);
 
                 if (!assignDefaultRoleResult.Succeeded)
                 {
-                    return logger.LogErrorWithException<RegistrationResponse>(
-                        new FailedOperationException(
-                            $"Cannot assign role {defaultRole} to user with email {newUser.Email} " +
-                            $"due to server errors: {assignDefaultRoleResult.Errors.First().Description}"),
-                        new("assign default role for user with email {0}", request.Request.Email));
+                    return new(new FailedOperationException(
+                        $"Cannot assign role {defaultRole} to user with email {newUser.Email} " +
+                        $"due to server errors: {assignDefaultRoleResult.Errors.First().Description}"));
                 }
 
                 var issuingPermissionsResult =
@@ -83,11 +49,9 @@ namespace eShop.AuthApi.Commands.Auth
 
                 if (!issuingPermissionsResult.Succeeded)
                 {
-                    return logger.LogErrorWithException<RegistrationResponse>(
-                        new FailedOperationException(
-                            $"Cannot issue permissions for user with email {request.Request.Email} " +
-                            $"due to server errors: {issuingPermissionsResult.Errors.First().Description}"),
-                        new("issue default permissions for user with email {0}", newUser.Email));
+                    return new(new FailedOperationException(
+                        $"Cannot issue permissions for user with email {request.Request.Email} " +
+                        $"due to server errors: {issuingPermissionsResult.Errors.First().Description}"));
                 }
 
                 var emailConfirmationToken = await appManager.UserManager.GenerateEmailConfirmationTokenAsync(newUser);
@@ -103,9 +67,6 @@ namespace eShop.AuthApi.Commands.Auth
                     UserName = newUser.UserName!
                 });
 
-                logger.LogInformation(
-                    "Successfully sent an email with email address confirmation to email {email}. Request ID {requestId}",
-                    request.Request.Email, request.Request.RequestId);
 
                 return new(new RegistrationResponse()
                 {
@@ -113,11 +74,6 @@ namespace eShop.AuthApi.Commands.Auth
                               $"Now you have to confirm you email address to log in. " +
                               $"We have sent an email with instructions to your email address."
                 });
-            }
-            catch (Exception ex)
-            {
-                return logger.LogErrorWithException<RegistrationResponse>(ex, actionMessage, request.Request.RequestId);
-            }
         }
     }
 }

@@ -16,6 +16,7 @@ namespace eShop.CartApi.Extensions
             builder.AddSwaggerWithSecurity();
             builder.AddDependencyInjection();
             builder.AddMessageBus();
+            builder.AddValidation();
 
             builder.AddMongoDBClient("MongoDB");
 
@@ -27,7 +28,6 @@ namespace eShop.CartApi.Extensions
                 x.AddOpenBehavior(typeof(LoggingBehaviour<,>), ServiceLifetime.Transient);
             });
             
-            builder.Services.AddValidatorsFromAssemblyContaining(typeof(IAssemblyMarker));
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
             builder.Services.AddProblemDetails();
 

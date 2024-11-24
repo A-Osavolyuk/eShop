@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Responses.Auth;
-
-namespace eShop.AuthApi.Services.Interfaces
+﻿namespace eShop.AuthApi.Services.Interfaces
 {
     internal interface ITokenHandler
     {

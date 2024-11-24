@@ -1,101 +1,83 @@
-﻿using eShop.Application.Mapping;
-using eShop.AuthApi.Data;
-using eShop.Domain.Entities.Admin;
-
-namespace eShop.AuthApi.Queries.Admin
+﻿namespace eShop.AuthApi.Queries.Admin
 {
     internal sealed record GetUsersListQuery() : IRequest<Result<IEnumerable<UserData>>>;
 
     internal sealed class GetUsersListQueryHandler(
         AppManager appManager,
-        ILogger<GetUsersListQueryHandler> logger,
         AuthDbContext context) : IRequestHandler<GetUsersListQuery, Result<IEnumerable<UserData>>>
     {
         private readonly AppManager appManager = appManager;
-        private readonly ILogger<GetUsersListQueryHandler> logger = logger;
         private readonly AuthDbContext context = context;
 
         public async Task<Result<IEnumerable<UserData>>> Handle(GetUsersListQuery request,
             CancellationToken cancellationToken)
         {
-            var actionMessage = new ActionMessage("get all users list");
-            try
+            var usersList = await appManager.UserManager.Users.AsNoTracking()
+                .ToListAsync(cancellationToken: cancellationToken);
+
+            if (!usersList.Any())
             {
-                logger.LogInformation("Attempting to get all users list.");
+                return new(new List<UserData>());
+            }
 
-                var usersList = await appManager.UserManager.Users.AsNoTracking().ToListAsync(cancellationToken: cancellationToken);
+            var users = new List<UserData>();
 
-                if (!usersList.Any())
+            foreach (var user in usersList)
+            {
+                var accountData = UserMapper.ToAccountData(user);
+                var personalData = await context.PersonalData.AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
+                var rolesList = await appManager.UserManager.GetRolesAsync(user);
+
+                if (!rolesList.Any())
                 {
-                    logger.LogInformation("Successfully got list of all users.");
-                    return new(new List<UserData>());
+                    return new(new NotFoundException($"Cannot find roles for user with ID {user.Id}."));
                 }
 
-                var users = new List<UserData>();
+                var rolesData = (await appManager.RoleManager.GetRolesInfoAsync(rolesList) ?? Array.Empty<RoleInfo>())
+                    .ToList();
+                var permissions = await appManager.PermissionManager.GetUserPermisisonsAsync(user);
+                var roleInfos = rolesData.ToList();
 
-                foreach (var user in usersList)
+                if (!roleInfos.Any())
                 {
-                    var accountData = UserMapper.ToAccountData(user);
-                    var personalData = await context.PersonalData.AsNoTracking()
-                        .FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
-                    var rolesList = await appManager.UserManager.GetRolesAsync(user);
+                    return new(new NotFoundException("Cannot find roles data."));
+                }
 
-                    if (!rolesList.Any())
+                var permissionsList = new List<Permission>();
+
+                foreach (var permission in permissions)
+                {
+                    var permissionInfo = await context.Permissions.AsNoTracking()
+                        .SingleOrDefaultAsync(x => x.Name == permission, cancellationToken: cancellationToken);
+
+                    if (permissionInfo is null)
                     {
-                        return logger.LogInformationWithException<IEnumerable<UserData>>(
-                            new NotFoundException($"Cannot find roles for user with ID {user.Id}."), actionMessage);
+                        return new(new NotFoundException($"Cannot find permission {permission}."));
                     }
 
-                    var rolesData = await appManager.RoleManager.GetRolesInfoAsync(rolesList);
-                    var permissions = await appManager.PermissionManager.GetUserPermisisonsAsync(user);
-
-                    if (rolesData is null || !rolesData.Any())
+                    permissionsList.Add(new Permission()
                     {
-                        return logger.LogInformationWithException<IEnumerable<UserData>>(
-                            new NotFoundException("Cannot find roles data."), actionMessage);
-                    }
-
-                    var permissionsList = new List<Permission>();
-
-                    foreach (var permission in permissions)
-                    {
-                        var permissionInfo = await context.Permissions.AsNoTracking()
-                            .SingleOrDefaultAsync(x => x.Name == permission, cancellationToken: cancellationToken);
-
-                        if (permissionInfo is null)
-                        {
-                            return logger.LogInformationWithException<IEnumerable<UserData>>(
-                                new NotFoundException($"Cannot find permission {permission}."), actionMessage);
-                        }
-
-                        permissionsList.Add(new Permission()
-                        {
-                            Id = permissionInfo.Id,
-                            Name = permissionInfo.Name,
-                        });
-                    }
-
-                    var permissionData = new PermissionsData()
-                    {
-                        Roles = rolesData.ToList(),
-                        Permissions = permissionsList
-                    };
-
-                    users.Add(new UserData()
-                    {
-                        PermissionsData = permissionData,
-                        PersonalDataEntity = personalData ?? new(),
-                        AccountData = accountData
+                        Id = permissionInfo.Id,
+                        Name = permissionInfo.Name,
                     });
                 }
 
-                logger.LogInformation("Successfully got list of all users.");
-                return users;
+                var permissionData = new PermissionsData()
+                {
+                    Roles = roleInfos.ToList(),
+                    Permissions = permissionsList
+                };
+
+                users.Add(new UserData()
+                {
+                    PermissionsData = permissionData,
+                    PersonalDataEntity = personalData ?? new(),
+                    AccountData = accountData
+                });
             }
-            catch (Exception ex)
-            {
-                return logger.LogErrorWithException<IEnumerable<UserData>>(ex, actionMessage);
-            }
+
+            return users;
         }
     }
 }

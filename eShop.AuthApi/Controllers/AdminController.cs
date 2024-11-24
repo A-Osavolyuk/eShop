@@ -1,8 +1,4 @@
-﻿using eShop.AuthApi.Commands.Admin;
-using eShop.AuthApi.Queries.Admin;
-using Microsoft.AspNetCore.Authorization;
-
-namespace eShop.AuthApi.Controllers
+﻿namespace eShop.AuthApi.Controllers
 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
@@ -111,6 +107,7 @@ namespace eShop.AuthApi.Controllers
 
         [Authorize(Policy = "ManageRolesPolicy")]
         [HttpPost("create-role")]
+        [ValidationFilter]
         public async ValueTask<ActionResult<ResponseDto>> CreateRoleAsync([FromBody] CreateRoleRequest request)
         {
             var result = await sender.Send(new CreateRoleCommand(request));
