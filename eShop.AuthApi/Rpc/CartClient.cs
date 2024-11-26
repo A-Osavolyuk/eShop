@@ -1,9 +1,20 @@
-﻿namespace eShop.AuthApi.Rpc;
+﻿using Grpc.Net.Client;
 
-public class CartClient(CartService.CartServiceClient client, ILogger<CartClient> logger)
+namespace eShop.AuthApi.Rpc;
+
+public class CartClient
 {
-    private readonly CartService.CartServiceClient client = client;
-    private readonly ILogger<CartClient> logger = logger;
+    public CartClient(ILogger<CartClient> logger, IConfiguration configuration)
+    {
+        this.logger = logger;
+        var uri = configuration["Configuration:Grpc:Servers:CartServer:Uri"] ??
+                  throw new NullReferenceException("Not specified RPC server uri");
+        var channel = GrpcChannel.ForAddress(uri);
+        this.client = new CartService.CartServiceClient(channel);
+    }
+    
+    private readonly ILogger<CartClient> logger;
+    private readonly CartService.CartServiceClient client;
 
     public async ValueTask<InitiateUserResponse> InitiateUserAsync(InitiateUserRequest request)
     {

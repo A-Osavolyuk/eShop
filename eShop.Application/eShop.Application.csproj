@@ -41,6 +41,7 @@
 
   <ItemGroup>
     <Protobuf Include="Protos\cart.proto" GrpcServices="None" />
+    <Protobuf Include="Protos\auth.proto" GrpcServices="None" />
   </ItemGroup>
 
 </Project>

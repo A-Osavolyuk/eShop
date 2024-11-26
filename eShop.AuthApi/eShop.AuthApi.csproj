@@ -30,7 +30,7 @@
         </PackageReference>
         <PackageReference Include="Microsoft.Extensions.Azure" Version="1.7.6"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.8.1"/>
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.1.2"/>
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.1.2"/> 
         <PackageReference Include="Grpc.Tools" Version="2.67.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -45,5 +45,6 @@
     
     <ItemGroup>
         <Protobuf Include="..\eShop.Application\Protos\cart.proto" GrpcServices="Client" />
+        <Protobuf Include="..\eShop.Application\Protos\auth.proto" GrpcServices="Server" />
     </ItemGroup>
 </Project>

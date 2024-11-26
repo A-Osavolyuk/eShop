@@ -1,4 +1,4 @@
-﻿using eShop.AuthApi.Rpc;
+﻿using TokenHandler = eShop.AuthApi.Services.Implementation.TokenHandler;
 
 namespace eShop.AuthApi.Extensions
 {
@@ -14,11 +14,9 @@ namespace eShop.AuthApi.Extensions
             builder.AddAuth();
             builder.AddDependencyInjection();
             builder.AddSqlServerDbContext<AuthDbContext>("SqlServer");
-            builder.Services.AddGrpcClient<CartClient>(options =>
+            builder.Services.AddGrpc(options =>
             {
-                var uri = builder.Configuration["Configuration:Grpc:Servers:CartServer:Uri"] ??
-                          throw new NullReferenceException("Not specified RPC server uri");
-                options.Address = new Uri(uri);
+                options.EnableDetailedErrors = true;
             });
             builder.Services.AddMediatR(x =>
             {
@@ -105,6 +103,7 @@ namespace eShop.AuthApi.Extensions
             builder.Services.AddHostedService<BackgroundTokenValidator>();
 
             builder.Services.AddScoped<AppManager>();
+            builder.Services.AddScoped<CartClient>();
         }
 
         private static void AddMessageBus(this IHostApplicationBuilder builder)
@@ -123,11 +122,7 @@ namespace eShop.AuthApi.Extensions
                         h.Username(username);
                         h.Password(password);
                     });
-
-                    cfg.ReceiveEndpoint("user-exists", e => e.ConfigureConsumer<UserExistsReceiver>(context));
                 });
-
-                x.AddConsumer<UserExistsReceiver>();
             });
         }
     }

@@ -1,4 +1,6 @@
-﻿namespace eShop.AuthApi.Queries.Admin
+﻿using UserData = eShop.Domain.Entities.Admin.UserData;
+
+namespace eShop.AuthApi.Queries.Admin
 {
     internal sealed record GetUsersListQuery() : IRequest<Result<IEnumerable<UserData>>>;
 

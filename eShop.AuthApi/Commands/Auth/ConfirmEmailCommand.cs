@@ -1,6 +1,4 @@
-﻿using eShop.AuthApi.Rpc;
-
-namespace eShop.AuthApi.Commands.Auth
+﻿namespace eShop.AuthApi.Commands.Auth
 {
     internal sealed record ConfirmEmailCommand(ConfirmEmailRequest Request) : IRequest<Result<ConfirmEmailResponse>>;
 
