@@ -1,7 +1,4 @@
-﻿using eShop.Domain.Entities.Cart;
-using MongoDB.Driver;
-
-namespace eShop.CartApi.Extensions;
+﻿namespace eShop.CartApi.Extensions;
 
 public static class WebApplicationExtensions
 {

@@ -1,15 +1,8 @@
-﻿using eShop.Application;
-using eShop.Application.Behaviours;
-using eShop.Application.Middlewares;
-using FluentValidation;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.OpenApi.Models;
-
-namespace eShop.CartApi.Extensions
+﻿namespace eShop.CartApi.Extensions
 {
     public static class BuilderExtensions
     {
-        public static IHostApplicationBuilder AddApiServices(this IHostApplicationBuilder builder)
+        public static void AddApiServices(this IHostApplicationBuilder builder)
         {
             builder.AddJwtAuthentication();
             builder.AddVersioning();
@@ -17,29 +10,25 @@ namespace eShop.CartApi.Extensions
             builder.AddDependencyInjection();
             builder.AddMessageBus();
             builder.AddValidation();
-
             builder.AddMongoDBClient("MongoDB");
-
+            builder.AddServiceDefaults();
+            builder.Services.AddGrpc();
             builder.Services.AddControllers();
-            
             builder.Services.AddMediatR(x =>
             {
                 x.RegisterServicesFromAssemblyContaining<IAssemblyMarker>();
                 x.AddOpenBehavior(typeof(LoggingBehaviour<,>), ServiceLifetime.Transient);
             });
-            
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
             builder.Services.AddProblemDetails();
-
-            return builder;
         }
 
-        private static IHostApplicationBuilder AddDependencyInjection(this IHostApplicationBuilder builder)
+        private static void AddDependencyInjection(this IHostApplicationBuilder builder)
         {
-            return builder;
+            
         }
 
-        private static IHostApplicationBuilder AddMessageBus(this IHostApplicationBuilder builder)
+        private static void AddMessageBus(this IHostApplicationBuilder builder)
         {
             builder.Services.AddMassTransit(x =>
             {
@@ -55,10 +44,7 @@ namespace eShop.CartApi.Extensions
                         h.Password(password);
                     });
                 });
-
             });
-
-            return builder;
         }
     }
 }

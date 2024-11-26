@@ -23,7 +23,7 @@ public class GlobalExceptionHandler(
                     .WithErrors(failedValidationException.Errors.ToList())
                     .Build(), cancellationToken);
         }
-
+        
         return true;
     }
 }

@@ -1,0 +1,18 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "eShop.Application";
+
+package cart;
+
+service CartService {
+  rpc InitiateUser(InitiateUserRequest) returns (InitiateUserResponse);
+}
+
+message InitiateUserRequest {
+  string userId = 1;
+}
+
+message InitiateUserResponse {
+  string message = 1;
+  bool isSucceeded = 2;
+}

@@ -1,10 +1,4 @@
-﻿using eShop.Domain.Common;
-using eShop.Domain.Entities.Cart;
-using eShop.Domain.Requests.Favorites;
-using eShop.Domain.Responses.Cart;
-using MongoDB.Driver;
-
-namespace eShop.CartApi.Commands.Favorites;
+﻿namespace eShop.CartApi.Commands.Favorites;
 
 internal sealed record UpdateFavoritesCommand(UpdateFavoritesRequest Request)
     : IRequest<Result<UpdateFavoritesResponse>>;

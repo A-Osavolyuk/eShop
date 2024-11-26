@@ -1,9 +1,4 @@
-﻿using eShop.Domain.Entities.Cart;
-using eShop.Domain.Requests.Cart;
-using eShop.Domain.Responses.Cart;
-using MongoDB.Driver;
-
-namespace eShop.CartApi.Commands.Carts;
+﻿namespace eShop.CartApi.Commands.Carts;
 
 internal sealed record UpdatedCartCommand(UpdateCartRequest Request) : IRequest<Result<UpdateCartResponse>>;
 

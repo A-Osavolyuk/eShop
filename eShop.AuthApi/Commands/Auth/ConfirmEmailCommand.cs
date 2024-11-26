@@ -1,15 +1,17 @@
-﻿namespace eShop.AuthApi.Commands.Auth
+﻿using eShop.AuthApi.Rpc;
+
+namespace eShop.AuthApi.Commands.Auth
 {
     internal sealed record ConfirmEmailCommand(ConfirmEmailRequest Request) : IRequest<Result<ConfirmEmailResponse>>;
 
     internal sealed class ConfirmEmailCommandHandler(
         AppManager appManager,
-        IRequestClient<CreateCartRequest> cartRequestClient,
-        IEmailSender emailSender) : IRequestHandler<ConfirmEmailCommand, Result<ConfirmEmailResponse>>
+        IEmailSender emailSender,
+        CartClient client) : IRequestHandler<ConfirmEmailCommand, Result<ConfirmEmailResponse>>
     {
         private readonly AppManager appManager = appManager;
-        private readonly IRequestClient<CreateCartRequest> requestClient = cartRequestClient;
         private readonly IEmailSender emailSender = emailSender;
+        private readonly CartClient client = client;
 
         public async Task<Result<ConfirmEmailResponse>> Handle(ConfirmEmailCommand request,
             CancellationToken cancellationToken)
@@ -38,12 +40,11 @@
                 UserName = user.UserName!
             });
 
-            var handler = requestClient.Create(new CreateCartRequest() { UserId = Guid.Parse(user.Id) });
-            var response = await handler.GetResponse<ResponseDto>();
+            var response = await client.InitiateUserAsync(new InitiateUserRequest() { UserId = user.Id });
 
-            if (!response.Message.IsSucceeded)
+            if (!response.IsSucceeded)
             {
-                return new(new FailedRpcException(response.Message.ErrorMessage));
+                return new(new FailedRpcException(response.Message));
             }
 
             return new(new ConfirmEmailResponse() { Message = "Your email address was successfully confirmed." });

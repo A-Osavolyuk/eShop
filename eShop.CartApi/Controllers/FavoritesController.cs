@@ -1,8 +1,4 @@
-﻿using eShop.CartApi.Commands.Favorites;
-using eShop.CartApi.Queries.Favorites;
-using eShop.Domain.Requests.Favorites;
-
-namespace eShop.CartApi.Controllers;
+﻿namespace eShop.CartApi.Controllers;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]

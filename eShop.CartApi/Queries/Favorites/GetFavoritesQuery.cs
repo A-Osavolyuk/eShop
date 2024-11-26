@@ -1,9 +1,4 @@
-﻿using eShop.Application.Mapping;
-using eShop.Domain.Entities.Cart;
-using eShop.Domain.Requests.Favorites;
-using MongoDB.Driver;
-
-namespace eShop.CartApi.Queries.Favorites;
+﻿namespace eShop.CartApi.Queries.Favorites;
 
 internal sealed record GetFavoritesQuery(Guid UserId) : IRequest<Result<FavoritesDto>>;
 

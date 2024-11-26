@@ -1,8 +1,4 @@
-﻿using eShop.CartApi.Commands.Carts;
-using eShop.CartApi.Queries.Carts;
-using eShop.Domain.Requests.Cart;
-
-namespace eShop.CartApi.Controllers
+﻿namespace eShop.CartApi.Controllers
 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]

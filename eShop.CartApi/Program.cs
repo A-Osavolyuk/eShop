@@ -1,8 +1,7 @@
-using eShop.ServiceDefaults;
+using eShop.CartApi.Rpc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddServiceDefaults();
 builder.AddApiServices();
 
 var app = builder.Build();
@@ -20,5 +19,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 app.UseExceptionHandler();
+app.MapGrpcService<CartServer>();
 
 app.Run();

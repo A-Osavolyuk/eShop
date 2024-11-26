@@ -1,9 +1,4 @@
-﻿using eShop.Application.Mapping;
-using eShop.Domain.Entities.Cart;
-using eShop.Domain.Requests.Cart;
-using MongoDB.Driver;
-
-namespace eShop.CartApi.Queries.Carts;
+﻿namespace eShop.CartApi.Queries.Carts;
 
 internal sealed record GetCartQuery(Guid UserId) : IRequest<Result<CartDto>>;
 
