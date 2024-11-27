@@ -11,5 +11,6 @@
         public Currency Currency { get; set; }
         public List<string> Images { get; set; } = new List<string>();
         public BrandDto Brand { get; set; } = new BrandDto();
+        public SellerDto Seller { get; set; } = new SellerDto();
     }
 }

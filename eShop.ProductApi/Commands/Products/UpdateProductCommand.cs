@@ -15,6 +15,16 @@ internal sealed class UpdateProductCommandHandler(AppDbContext context)
             return new Result<UpdateProductResponse>(
                 new NotFoundException($"Cannot find product with ID {request.Request.Id}"));
         }
+        
+        if (!await context.Brands.AsNoTracking().AnyAsync(x => x.Id == request.Request.Brand.Id, cancellationToken))
+        {
+            return new Result<UpdateProductResponse>(new NotFoundException($"Cannot find brand with ID {request.Request.Brand.Id}"));
+        }
+        
+        if (!await context.Sellers.AsNoTracking().AnyAsync(x => x.Id == request.Request.Seller.Id, cancellationToken))
+        {
+            return new Result<UpdateProductResponse>(new NotFoundException($"Cannot find seller with ID {request.Request.Seller.Id}"));
+        }
 
         var entity = request.Request.ProductType switch
         {

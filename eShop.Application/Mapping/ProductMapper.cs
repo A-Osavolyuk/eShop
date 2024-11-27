@@ -18,12 +18,8 @@ public static class ProductMapper
             Audience = request.Audience,
             ProductType = request.ProductType,
             Article = request.Article,
-            Brand = new()
-            {
-                Name = request.Brand.Name,
-                Country = request.Brand.Country,
-                Id = request.Brand.Id,
-            },
+            Brand = BrandMapper.ToBrandEntity(request.Brand),
+            Seller = SellerMapper.ToSellerDto(request.Seller),
             Color = request.Color,
             Description = request.Description,
             Images = request.Images,
@@ -43,12 +39,8 @@ public static class ProductMapper
             Audience = request.Audience,
             ProductType = request.ProductType,
             Article = request.Article,
-            Brand = new()
-            {
-                Name = request.Brand.Name,
-                Country = request.Brand.Country,
-                Id = request.Brand.Id,
-            },
+            Brand = BrandMapper.ToBrandEntity(request.Brand),
+            Seller = SellerMapper.ToSellerDto(request.Seller),
             Color = request.Color,
             Description = request.Description,
             Images = request.Images,
@@ -67,12 +59,8 @@ public static class ProductMapper
             Currency = request.Currency,
             ProductType = request.ProductType,
             Article = request.Article,
-            Brand = new()
-            {
-                Name = request.Brand.Name,
-                Country = request.Brand.Country,
-                Id = request.Brand.Id,
-            },
+            Brand = BrandMapper.ToBrandEntity(request.Brand), 
+            Seller = SellerMapper.ToSellerDto(request.Seller),
             Description = request.Description,
             Images = request.Images,
         };
@@ -93,12 +81,8 @@ public static class ProductMapper
             Audience = request.Audience,
             ProductType = request.ProductType,
             Article = request.Article,
-            Brand = new()
-            {
-                Name = request.Brand.Name,
-                Country = request.Brand.Country,
-                Id = request.Brand.Id,
-            },
+            Brand = BrandMapper.ToBrandEntity(request.Brand),
+            Seller = SellerMapper.ToSellerDto(request.Seller),
             Color = request.Color,
             Description = request.Description,
             Images = request.Images,
@@ -117,12 +101,8 @@ public static class ProductMapper
             Audience = request.Audience,
             ProductType = request.ProductType,
             Article = request.Article,
-            Brand = new()
-            {
-                Name = request.Brand.Name,
-                Country = request.Brand.Country,
-                Id = request.Brand.Id,
-            },
+            Brand = BrandMapper.ToBrandEntity(request.Brand),
+            Seller = SellerMapper.ToSellerDto(request.Seller),
             Color = request.Color,
             Description = request.Description,
             Images = request.Images,
@@ -140,12 +120,8 @@ public static class ProductMapper
             Currency = request.Currency,
             ProductType = request.ProductType,
             Article = request.Article,
-            Brand = new()
-            {
-                Name = request.Brand.Name,
-                Country = request.Brand.Country,
-                Id = request.Brand.Id,
-            },
+            Brand = BrandMapper.ToBrandEntity(request.Brand),
+            Seller = SellerMapper.ToSellerDto(request.Seller),
             Description = request.Description,
             Images = request.Images,
         };
@@ -161,12 +137,8 @@ public static class ProductMapper
         {
             Id = entity.Id,
             Article = entity.Article,
-            Brand = new()
-            {
-                Name = entity.Brand.Name,
-                Country = entity.Brand.Country,
-                Id = entity.Brand.Id,
-            },
+            Brand = BrandMapper.ToBrandDto(entity.Brand),
+            Seller = SellerMapper.ToSellerDto(entity.Seller),
             Description = entity.Description,
             Images = entity.Images,
             ProductType = entity.ProductType,
@@ -182,12 +154,8 @@ public static class ProductMapper
         {
             Id = entity.Id,
             Article = entity.Article,
-            Brand = new()
-            {
-                Name = entity.Brand.Name,
-                Country = entity.Brand.Country,
-                Id = entity.Brand.Id,
-            },
+            Brand = BrandMapper.ToBrandDto(entity.Brand),
+            Seller = SellerMapper.ToSellerDto(entity.Seller),
             Description = entity.Description,
             Images = entity.Images,
             ProductType = entity.ProductType,
@@ -206,12 +174,8 @@ public static class ProductMapper
         {
             Id = entity.Id,
             Article = entity.Article,
-            Brand = new()
-            {
-                Name = entity.Brand.Name,
-                Country = entity.Brand.Country,
-                Id = entity.Brand.Id,
-            },
+            Brand = BrandMapper.ToBrandDto(entity.Brand),
+            Seller = SellerMapper.ToSellerDto(entity.Seller),
             Description = entity.Description,
             Images = entity.Images,
             ProductType = entity.ProductType,

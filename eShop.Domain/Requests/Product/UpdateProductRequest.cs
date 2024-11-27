@@ -11,6 +11,7 @@ public record UpdateProductRequest() : RequestBase
     public Currency Currency { get; set; }
     public List<string> Images { get; set; } = new List<string>();
     public BrandDto Brand { get; set; } = new BrandDto();
+    public SellerDto Seller { get; set; } = new SellerDto();
     
     public ProductColor Color { get; set; } = ProductColor.None;
     public List<ProductSize> Size { get; set; } = new List<ProductSize>();

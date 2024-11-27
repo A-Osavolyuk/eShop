@@ -29,4 +29,14 @@ public static class BrandMapper
             Country = entity.Country,
         };
     }
+    
+    public static BrandEntity ToBrandEntity(BrandDto dto)
+    {
+        return new()
+        {
+            Id = dto.Id,
+            Name = dto.Name,
+            Country = dto.Country,
+        };
+    }
 }

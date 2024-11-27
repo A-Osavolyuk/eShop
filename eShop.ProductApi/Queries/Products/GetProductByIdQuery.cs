@@ -11,7 +11,10 @@ internal sealed class GetProductByIdQueryHandler(AppDbContext context)
     {
         if (request.ProductId != Guid.Empty)
         {
-            var entity = await context.Products.AsNoTracking()
+            var entity = await context.Products
+                .AsNoTracking()
+                .Include(p => p.Seller)
+                .Include(p => p.Brand)
                 .FirstOrDefaultAsync(p => p.Id == request.ProductId, cancellationToken);
 
             if (entity is null)
@@ -22,8 +25,8 @@ internal sealed class GetProductByIdQueryHandler(AppDbContext context)
 
             var response = entity.ProductType switch
             {
-                ProductTypes.Shoes => ProductMapper.ToShoesDto((ShoesEntity)entity),
-                ProductTypes.Clothing => ProductMapper.ToClothingDto((ClothingEntity)entity),
+                ProductTypes.Shoes => ProductMapper.ToShoesDto(await FindOfType<ShoesEntity>(entity)),
+                ProductTypes.Clothing => ProductMapper.ToClothingDto(await FindOfType<ClothingEntity>(entity)),
                 _ or ProductTypes.None => ProductMapper.ToProductDto(entity),
             };
 
@@ -33,5 +36,12 @@ internal sealed class GetProductByIdQueryHandler(AppDbContext context)
         {
             return new Result<ProductDto>(new NotFoundException($"Cannot find product with ID, article or name"));
         }
+    }
+    
+    private async Task<TEntity> FindOfType<TEntity>(ProductEntity entity) where TEntity : ProductEntity
+    {
+        var response = await context.Products.AsNoTracking().OfType<TEntity>()
+            .FirstOrDefaultAsync(x => x.Article == entity.Article);
+        return response!;
     }
 }

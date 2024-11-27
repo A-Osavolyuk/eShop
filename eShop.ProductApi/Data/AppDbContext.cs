@@ -11,8 +11,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     {
         modelBuilder.Entity<ProductEntity>(x =>
         {
-            x.HasKey(entity => entity.Id);
             x.UseTptMappingStrategy();
+            x.HasKey(entity => entity.Id);
+            x.HasOne(entity => entity.Seller).WithOne().HasForeignKey<ProductEntity>(entity => entity.SellerId);
+            x.HasOne(entity => entity.Brand).WithOne().HasForeignKey<ProductEntity>(entity => entity.BrandId);
         });
         
         modelBuilder.Entity<ClothingEntity>().ToTable("Clothing");

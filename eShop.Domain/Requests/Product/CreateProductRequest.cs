@@ -12,6 +12,7 @@ public record CreateProductRequest : RequestBase
     public Currency Currency { get; set; }
     public List<string> Images { get; set; } = new List<string>();
     public BrandDto Brand { get; set; } = new BrandDto();
+    public SellerDto Seller { get; set; } = new SellerDto();
     public ProductColor Color { get; set; } = ProductColor.None;
     public IEnumerable<ProductSize> Size { get; set; } = Enumerable.Empty<ProductSize>();
     public Audience Audience { get; set; } = Audience.None;

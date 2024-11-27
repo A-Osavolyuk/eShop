@@ -10,6 +10,16 @@ internal sealed class CreateProductCommandHandler(
     public async Task<Result<CreateProductResponse>> Handle(CreateProductCommand request,
         CancellationToken cancellationToken)
     {
+        if (!await context.Brands.AsNoTracking().AnyAsync(x => x.Id == request.Request.Brand.Id, cancellationToken))
+        {
+            return new Result<CreateProductResponse>(new NotFoundException($"Cannot find brand with ID {request.Request.Brand.Id}"));
+        }
+        
+        if (!await context.Sellers.AsNoTracking().AnyAsync(x => x.Id == request.Request.Seller.Id, cancellationToken))
+        {
+            return new Result<CreateProductResponse>(new NotFoundException($"Cannot find seller with ID {request.Request.Seller.Id}"));
+        }
+        
         var entity = request.Request.ProductType switch
         {
             ProductTypes.Clothing => ProductMapper.ToClothingEntity(request.Request),
@@ -20,7 +30,7 @@ internal sealed class CreateProductCommandHandler(
         await context.Products.AddAsync(entity, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
 
-        return new(new CreateProductResponse()
+        return new Result<CreateProductResponse>(new CreateProductResponse()
         {
             Message = "Product created successfully"
         });

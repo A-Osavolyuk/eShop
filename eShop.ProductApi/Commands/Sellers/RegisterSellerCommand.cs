@@ -15,14 +15,14 @@ internal sealed class RegisterSellerCommandHandler(
 
         if (!userResponse.IsSucceeded)
         {
-            return new(new NotFoundException(userResponse.Message));
+            return new Result<RegisterSellerResponse>(new NotFoundException(userResponse.Message));
         }
         
         var initiateSellerResponse = await client.InitiateSellerAsync(request.Request.UserId);
 
         if (!initiateSellerResponse.IsSucceeded)
         {
-            return new(new FailedRpcException(initiateSellerResponse.Message));
+            return new Result<RegisterSellerResponse>(new FailedRpcException(initiateSellerResponse.Message));
         }
 
         var entity = new SellerEntity()

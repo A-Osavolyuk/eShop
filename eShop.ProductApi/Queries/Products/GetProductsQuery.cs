@@ -9,7 +9,11 @@ internal sealed class GetProductsQueryHandler(AppDbContext context)
 
     public async Task<Result<List<ProductDto>>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
     {
-        var products = await context.Products.AsNoTracking().ToListAsync(cancellationToken);
+        var products = await context.Products
+            .AsNoTracking()
+            .Include(p => p.Seller)
+            .Include(p => p.Brand)
+            .ToListAsync(cancellationToken);
         if (products.Any())
         {
             var response = products
