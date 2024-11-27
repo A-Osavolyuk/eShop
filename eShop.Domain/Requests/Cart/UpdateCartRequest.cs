@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Entities.Cart;
-
-namespace eShop.Domain.Requests.Cart;
+﻿namespace eShop.Domain.Requests.Cart;
 
 public record UpdateCartRequest : RequestBase
 {

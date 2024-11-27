@@ -1,7 +1,4 @@
-﻿using eShop.Domain.Interfaces;
-using FluentValidation.Results;
-
-namespace eShop.Domain.Exceptions
+﻿namespace eShop.Domain.Exceptions
 {
     public class FailedValidationException : Exception, IFailedValidationException
     {

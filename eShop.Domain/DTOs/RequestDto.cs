@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Enums;
-
-namespace eShop.Domain.DTOs
+﻿namespace eShop.Domain.DTOs
 {
     public record RequestDto(
         string Url,

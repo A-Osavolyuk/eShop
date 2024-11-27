@@ -1,7 +1,4 @@
-﻿using eShop.Domain.Enums;
-using Microsoft.AspNetCore.Components.Forms;
-
-namespace eShop.Domain.DTOs;
+﻿namespace eShop.Domain.DTOs;
 
 public record FileRequestDto(
     FileData Data,

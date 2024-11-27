@@ -1,5 +1,4 @@
-﻿using eShop.Domain.Entities.Cart;
-using eShop.Domain.Models;
+﻿using UserData = eShop.Domain.Models.UserData;
 
 namespace eShop.Domain.Interfaces
 {

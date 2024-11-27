@@ -1,8 +1,4 @@
-﻿using eShop.Domain.DTOs;
-using eShop.Domain.Enums;
-using eShop.Domain.Interfaces;
-using eShop.Domain.Requests.Cart;
-using Microsoft.Extensions.Configuration;
+﻿using HttpMethods = eShop.Domain.Enums.HttpMethods;
 
 namespace eShop.Infrastructure.Services
 {

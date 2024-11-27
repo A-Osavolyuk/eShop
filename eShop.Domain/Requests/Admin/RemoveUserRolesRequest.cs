@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Entities.Auth;
-
-namespace eShop.Domain.Requests.Admin
+﻿namespace eShop.Domain.Requests.Admin
 {
     public record class RemoveUserRolesRequest : RequestBase
     {

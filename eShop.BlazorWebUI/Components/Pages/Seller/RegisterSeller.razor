@@ -1,0 +1,33 @@
+﻿@page "/seller/register"
+@using Severity = MudBlazor.Severity
+@inherits PageBase
+@inject ISellerService SellerService
+
+<Title Text="Register seller"></Title>
+
+@code {
+    private RegisterSellerRequest Model { get; set; } = new();
+    private UserData user = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            user = await LocalDataAccessor.ReadUserDataAsync();
+        }
+    }
+
+    private async Task OnSubmit()
+    {
+        var response = await SellerService.RegisterSellerAsync(Model);
+
+        if (response.IsSucceeded)
+        {
+            Snackbar.Add(response.ResultMessage, Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add(response.ErrorMessage, Severity.Error);
+        }
+    }
+}

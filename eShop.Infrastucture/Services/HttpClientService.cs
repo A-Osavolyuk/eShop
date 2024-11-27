@@ -1,11 +1,4 @@
-﻿using eShop.Domain.DTOs;
-using eShop.Domain.Enums;
-using eShop.Domain.Interfaces;
-using eShop.Infrastructure.Account;
-using Newtonsoft.Json;
-using System.Net;
-using System.Net.Http.Headers;
-using System.Text;
+﻿using HttpMethods = eShop.Domain.Enums.HttpMethods;
 
 namespace eShop.Infrastructure.Services
 {

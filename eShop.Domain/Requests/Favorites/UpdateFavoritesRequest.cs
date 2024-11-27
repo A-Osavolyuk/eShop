@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Entities.Cart;
-
-namespace eShop.Domain.Requests.Favorites;
+﻿namespace eShop.Domain.Requests.Favorites;
 
 public record UpdateFavoritesRequest : RequestBase
 {

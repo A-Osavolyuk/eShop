@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
-
-namespace eShop.Infrastructure.StateContainers;
+﻿namespace eShop.Infrastructure.StateContainers;
 
 public class InputImagesStateContainer
 {

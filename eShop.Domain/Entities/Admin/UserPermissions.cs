@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Entities.Auth;
-
-namespace eShop.Domain.Entities.Admin
+﻿namespace eShop.Domain.Entities.Admin
 {
     public class UserPermissions
     {

@@ -1,7 +1,4 @@
-﻿using eShop.Domain.DTOs;
-using Microsoft.AspNetCore.Components.Forms;
-
-namespace eShop.Domain.Interfaces
+﻿namespace eShop.Domain.Interfaces
 {
     public interface IStoreService
     {

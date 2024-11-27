@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace eShop.Domain.Entities.Admin
+﻿namespace eShop.Domain.Entities.Admin
 {
     public class Permission
     {

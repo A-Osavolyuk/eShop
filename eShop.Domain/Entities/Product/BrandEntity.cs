@@ -1,7 +1,4 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-
-namespace eShop.Domain.Entities.Product;
+﻿namespace eShop.Domain.Entities.Product;
 
 public class BrandEntity
 {

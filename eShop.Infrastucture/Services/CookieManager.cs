@@ -1,9 +1,4 @@
-﻿using eShop.Domain.Interfaces;
-using Microsoft.AspNetCore.Http;
-using Microsoft.JSInterop;
-using Newtonsoft.Json;
-
-namespace eShop.Infrastructure.Services
+﻿namespace eShop.Infrastructure.Services
 {
     public class CookieManager(IHttpContextAccessor contextAccessor, IJSRuntime js) : ICookieManager
     {

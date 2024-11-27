@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Enums;
-
-namespace eShop.Domain.DTOs.Products;
+﻿namespace eShop.Domain.DTOs.Products;
 
 public record ShoesDto() : ProductDto
 {

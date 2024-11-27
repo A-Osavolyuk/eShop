@@ -1,14 +1,6 @@
-﻿using Blazored.LocalStorage;
-using eShop.Domain.Interfaces;
-using eShop.Infrastructure.Account;
-using eShop.Infrastructure.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using eShop.Infrastructure.StateContainers;
 
 namespace eShop.Infrastructure
 {
@@ -64,6 +56,7 @@ namespace eShop.Infrastructure
             builder.Services.AddHttpClient<ICartService, CartService>();
             builder.Services.AddHttpClient<IFavoritesService, FavoritesService>();
             builder.Services.AddHttpClient<IStoreService, StoreService>();
+            builder.Services.AddHttpClient<ISellerService, SellerService>();
 
             builder.Services.AddScoped<IHttpClientService, HttpClientService>();
             builder.Services.AddScoped<ITokenProvider, TokenProvider>();
@@ -76,6 +69,7 @@ namespace eShop.Infrastructure
             builder.Services.AddScoped<ICartService, CartService>();
             builder.Services.AddScoped<IFavoritesService, FavoritesService>();
             builder.Services.AddScoped<ICookieManager, CookieManager>();
+            builder.Services.AddScoped<ISellerService, SellerService>();
 
             builder.Services.AddScoped<INotificationService, NotificationService>();
             builder.Services.AddSingleton<InputImagesStateContainer>();

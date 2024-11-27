@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Entities.Cart;
-
-namespace eShop.Domain.DTOs;
+﻿namespace eShop.Domain.DTOs;
 
 public class FavoritesDto
 {

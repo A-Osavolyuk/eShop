@@ -1,9 +1,5 @@
 ﻿using Azure.Storage.Blobs;
-using eShop.Domain.DTOs;
-using eShop.Domain.Enums;
-using eShop.Domain.Interfaces;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.Extensions.Configuration;
+using HttpMethods = eShop.Domain.Enums.HttpMethods;
 
 namespace eShop.Infrastructure.Services
 {

@@ -1,8 +1,4 @@
-﻿using Blazored.LocalStorage;
-using eShop.Domain.Interfaces;
-using eShop.Infrastructure.StateContainers;
-
-namespace eShop.Infrastructure.Services
+﻿namespace eShop.Infrastructure.Services
 {
     public class NotificationService(
         ILocalStorageService storageService, 

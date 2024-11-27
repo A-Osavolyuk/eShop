@@ -1,7 +1,4 @@
-﻿using eShop.Domain.DTOs;
-using eShop.Domain.Interfaces;
-using Microsoft.Extensions.Configuration;
-using eShop.Domain.Enums;
+﻿using HttpMethods = eShop.Domain.Enums.HttpMethods;
 
 namespace eShop.Infrastructure.Services
 {

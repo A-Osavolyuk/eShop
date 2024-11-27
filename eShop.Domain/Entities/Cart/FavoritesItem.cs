@@ -1,7 +1,4 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-
-namespace eShop.Domain.Entities.Cart;
+﻿namespace eShop.Domain.Entities.Cart;
 
 public class FavoritesItem
 {

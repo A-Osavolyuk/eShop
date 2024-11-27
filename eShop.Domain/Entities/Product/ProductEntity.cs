@@ -1,8 +1,4 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using eShop.Domain.Enums;
-
-namespace eShop.Domain.Entities.Product;
+﻿namespace eShop.Domain.Entities.Product;
 
 public class ProductEntity
 {

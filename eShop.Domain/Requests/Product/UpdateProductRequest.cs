@@ -1,8 +1,4 @@
-﻿using eShop.Domain.DTOs;
-using eShop.Domain.Entities.Product;
-using eShop.Domain.Enums;
-
-namespace eShop.Domain.Requests.Product;
+﻿namespace eShop.Domain.Requests.Product;
 
 public record UpdateProductRequest() : RequestBase
 {

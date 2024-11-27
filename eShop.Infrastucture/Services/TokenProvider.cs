@@ -1,7 +1,4 @@
-﻿using Blazored.LocalStorage;
-using eShop.Domain.Interfaces;
-
-namespace eShop.Infrastructure.Services
+﻿namespace eShop.Infrastructure.Services
 {
     public class TokenProvider : ITokenProvider
     {

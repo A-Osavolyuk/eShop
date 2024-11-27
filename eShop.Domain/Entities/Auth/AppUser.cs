@@ -1,7 +1,4 @@
-﻿using eShop.Domain.Entities.Admin;
-using Microsoft.AspNetCore.Identity;
-
-namespace eShop.Domain.Entities.Auth
+﻿namespace eShop.Domain.Entities.Auth
 {
     public class AppUser : IdentityUser
     {

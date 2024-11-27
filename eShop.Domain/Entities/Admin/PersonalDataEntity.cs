@@ -1,7 +1,4 @@
-﻿using System.Text.Json.Serialization;
-using eShop.Domain.Entities.Auth;
-
-namespace eShop.Domain.Entities.Admin
+﻿namespace eShop.Domain.Entities.Admin
 {
     public record class PersonalDataEntity
     {

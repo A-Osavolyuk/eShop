@@ -1,16 +1,4 @@
-﻿using eShop.Domain.Common;
-using eShop.Domain.Interfaces;
-using eShop.Domain.Models;
-using eShop.Infrastructure.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Components.Authorization;
-using Newtonsoft.Json;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using eShop.Domain.Requests.Auth;
-using eShop.Domain.Responses.Auth;
-
-namespace eShop.Infrastructure.Account
+﻿namespace eShop.Infrastructure.Account
 {
     public class ApplicationAuthenticationStateProvider(
         ITokenProvider tokenProvider,

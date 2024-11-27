@@ -1,9 +1,4 @@
-﻿using Blazored.LocalStorage;
-using eShop.Domain.Entities.Cart;
-using eShop.Domain.Interfaces;
-using eShop.Domain.Models;
-
-namespace eShop.Infrastructure.Services
+﻿namespace eShop.Infrastructure.Services
 {
     public class LocalDataAccessor(ILocalStorageService localStorageService) : ILocalDataAccessor
     {

@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Entities.Cart;
-
-namespace eShop.Domain.Models
+﻿namespace eShop.Domain.Models
 {
     public class FavoritesModel
     {
