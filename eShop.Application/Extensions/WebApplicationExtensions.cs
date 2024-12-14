@@ -11,8 +11,10 @@ namespace eShop.Application.Extensions
         {
             using var score = app.Services.CreateScope();
             var context = score.ServiceProvider.GetRequiredService<TDbContext>();
-            await EnsureDatabaseAsync(context);
-            await RunMigrationsAsync(context);
+            await context.Database.EnsureDeletedAsync();
+            await context.Database.EnsureCreatedAsync();
+            // await EnsureDatabaseAsync(context);
+            // await RunMigrationsAsync(context);
         }
 
         private static async Task EnsureDatabaseAsync(DbContext context)

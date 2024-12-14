@@ -1,15 +1,16 @@
-﻿namespace eShop.CartApi.Queries.Favorites;
+﻿using eShop.CartApi.Data;
+
+namespace eShop.CartApi.Queries.Favorites;
 
 internal sealed record GetFavoritesQuery(Guid UserId) : IRequest<Result<FavoritesDto>>;
 
-internal sealed class GetFavoritesQueryHandler(
-    IMongoDatabase database) : IRequestHandler<GetFavoritesQuery, Result<FavoritesDto>>
+internal sealed class GetFavoritesQueryHandler(DbClient client) : IRequestHandler<GetFavoritesQuery, Result<FavoritesDto>>
 {
-    private readonly IMongoDatabase database = database;
+    private readonly DbClient client = client;
 
     public async Task<Result<FavoritesDto>> Handle(GetFavoritesQuery request, CancellationToken cancellationToken)
     {
-        var collection = database.GetCollection<FavoritesEntity>("Favorites");
+        var collection = client.GetCollection<FavoritesEntity>("Favorites");
         var favorites = await collection.Find(x => x.UserId == request.UserId).FirstOrDefaultAsync(cancellationToken);
 
         if (favorites is null)

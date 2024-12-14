@@ -1,7 +1,10 @@
-﻿namespace eShop.CartApi.Extensions
+﻿using eShop.CartApi.Data;
+
+namespace eShop.CartApi.Extensions
 {
     public static class BuilderExtensions
     {
+        [Obsolete("Obsolete")]
         public static void AddApiServices(this IHostApplicationBuilder builder)
         {
             builder.AddJwtAuthentication();
@@ -10,7 +13,6 @@
             builder.AddDependencyInjection();
             builder.AddMessageBus();
             builder.AddValidation();
-            builder.AddMongoDBClient("MongoDB");
             builder.AddServiceDefaults();
             builder.Services.AddGrpc();
             builder.Services.AddControllers();
@@ -25,7 +27,8 @@
 
         private static void AddDependencyInjection(this IHostApplicationBuilder builder)
         {
-            
+            builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
+            builder.Services.AddSingleton<DbClient>();
         }
 
         private static void AddMessageBus(this IHostApplicationBuilder builder)

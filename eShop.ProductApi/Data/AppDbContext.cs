@@ -5,7 +5,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<BrandEntity> Brands { get; set; }
     public DbSet<SellerEntity> Sellers { get; set; }
     public DbSet<ProductEntity> Products { get; set; }
-    public DbSet<SellerProductsEntity> SellerProducts { get; set; }
+    //public DbSet<SellerProductsEntity> SellerProducts { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -33,8 +33,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         modelBuilder.Entity<SellerProductsEntity>(x =>
         {
             x.HasKey(entity => new { entity.SellerId, entity.ProductId });
-            x.HasOne(entity => entity.Seller).WithOne().HasForeignKey<SellerProductsEntity>(entity => entity.SellerId);
-            x.HasOne(entity => entity.Product).WithOne().HasForeignKey<SellerProductsEntity>(entity => entity.ProductId);
+            // x.HasOne(entity => entity.Seller).WithOne().HasForeignKey<SellerProductsEntity>(entity => entity.SellerId);
+            // x.HasOne(entity => entity.Product).WithOne().HasForeignKey<SellerProductsEntity>(entity => entity.ProductId);
         });
     }
 }

@@ -1,17 +1,18 @@
-﻿namespace eShop.CartApi.Commands.Favorites;
+﻿using eShop.CartApi.Data;
+
+namespace eShop.CartApi.Commands.Favorites;
 
 internal sealed record UpdateFavoritesCommand(UpdateFavoritesRequest Request)
     : IRequest<Result<UpdateFavoritesResponse>>;
 
-internal sealed class UpdateFavoritesCommandHandler(
-    IMongoDatabase database) : IRequestHandler<UpdateFavoritesCommand, Result<UpdateFavoritesResponse>>
+internal sealed class UpdateFavoritesCommandHandler(DbClient client) : IRequestHandler<UpdateFavoritesCommand, Result<UpdateFavoritesResponse>>
 {
-    private readonly IMongoDatabase database = database;
+    private readonly DbClient client = client;
 
     public async Task<Result<UpdateFavoritesResponse>> Handle(UpdateFavoritesCommand request,
         CancellationToken cancellationToken)
     {
-        var collection = database.GetCollection<FavoritesEntity>("Favorites");
+        var collection = client.GetCollection<FavoritesEntity>("Favorites");
         var favorites = await collection.Find(x => x.FavoritesId == request.Request.FavoritesId)
             .FirstOrDefaultAsync(cancellationToken);
 

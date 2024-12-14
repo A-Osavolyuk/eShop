@@ -1,13 +1,15 @@
-﻿namespace eShop.CartApi.Extensions;
+﻿using eShop.CartApi.Data;
+
+namespace eShop.CartApi.Extensions;
 
 public static class WebApplicationExtensions
 {
     public static async Task SeedDataAsync(this WebApplication app)
     {
         using var scope = app.Services.CreateScope();
-        var database = scope.ServiceProvider.GetRequiredService<IMongoDatabase>();
-        var cartCollection = database.GetCollection<CartEntity>("Carts");
-        var favoritesCollection = database.GetCollection<FavoritesEntity>("Favorites");
+        var client = scope.ServiceProvider.GetRequiredService<DbClient>();
+        var cartCollection = client.GetCollection<CartEntity>("Carts");
+        var favoritesCollection = client.GetCollection<FavoritesEntity>("Favorites");
         
         await cartCollection.InsertOneAsync(new CartEntity()
         {

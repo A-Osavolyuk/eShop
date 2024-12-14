@@ -1,16 +1,17 @@
-﻿namespace eShop.CartApi.Commands.Carts;
+﻿using eShop.CartApi.Data;
+
+namespace eShop.CartApi.Commands.Carts;
 
 internal sealed record UpdatedCartCommand(UpdateCartRequest Request) : IRequest<Result<UpdateCartResponse>>;
 
-internal sealed class UpdatedCartCommandHandler(
-    IMongoDatabase database) : IRequestHandler<UpdatedCartCommand, Result<UpdateCartResponse>>
+internal sealed class UpdatedCartCommandHandler(DbClient client) : IRequestHandler<UpdatedCartCommand, Result<UpdateCartResponse>>
 {
-    private readonly IMongoDatabase database = database;
+    private readonly DbClient client = client;
 
     public async Task<Result<UpdateCartResponse>> Handle(UpdatedCartCommand request,
         CancellationToken cancellationToken)
     {
-        var cartCollection = database.GetCollection<CartEntity>("Carts");
+        var cartCollection = client.GetCollection<CartEntity>("Carts");
 
         var cart = await cartCollection.Find(x => x.CartId == request.Request.CartId)
             .FirstOrDefaultAsync(cancellationToken);

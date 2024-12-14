@@ -1,31 +1,39 @@
-using eShop.AppHost;
+using eShop.AppHost.Extensions.Mongo;
+using eShop.AppHost.Extensions.RabbitMq;
+using eShop.AppHost.Extensions.Sql;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
 #region DataLayer
 
-var redisCache = builder.AddRedis("eShopRedis", 25101);
+var redisCache = builder.AddRedis("eShopRedis", 39010);
 
-var sqlServer = builder.AddSqlServer("eShopSqlServer", port: 25201)
-    .WithEnvironment(EnvironmentVariables.MssqlSaPassword, "Password_1234");
+var sqlServer = builder.AddSqlServer("eShopSqlServer", port: 39020)
+    .WithAuthentication("Password_1234");
 
 var authDb = sqlServer.AddDatabase("AuthDB");
 var reviewsDb = sqlServer.AddDatabase("ReviewsDB");
 var productDb = sqlServer.AddDatabase("ProductDB");
 
-var mongoServer = builder.AddMongoDB("eShopMongo", 25202)
-    .WithMongoExpress();
+var mongo = builder.AddMongoDB("eShopMongo")
+    .WithAuthentication("admin", "Password_1234")
+    .WithMongoExpress(cfg =>
+    {
+        cfg.WithAuthentication();
+        cfg.WithMongoCredentials("admin", "Password_1234");
+        cfg.WithMongoServer("eShopMongo");
+        cfg.WithMongoServer("mongodb://eShopMongo:27017");
+    }, "eShopMongoExpress");
 
-var cartDb = mongoServer.AddDatabase("CartDB");
+var cartDb = mongo.AddDatabase("CartDB");
 
 #endregion
 
 #region ServicesLayer
 
 var rabbitMq = builder.AddRabbitMQ("eShopRabbitMQ", port: 25001)
-    .WithManagementPlugin()
-    .WithEnvironment(EnvironmentVariables.RabbitmqDefaultUser, "user")
-    .WithEnvironment(EnvironmentVariables.RabbitmqDefaultPass, "b2ce482e-9678-43b9-82e3-3b5ec7148355");
+    .WithAuthentication("user", "b2ce482e-9678-43b9-82e3-3b5ec7148355")
+    .WithManagementPlugin();
 
 var emailService = builder.AddProject<Projects.eShop_EmailSenderApi>("eshop-email-sender-api")
     .WithReference(rabbitMq);

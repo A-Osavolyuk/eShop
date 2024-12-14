@@ -1,16 +1,16 @@
-﻿namespace eShop.CartApi.Queries.Carts;
+﻿using eShop.CartApi.Data;
+
+namespace eShop.CartApi.Queries.Carts;
 
 internal sealed record GetCartQuery(Guid UserId) : IRequest<Result<CartDto>>;
 
-internal sealed class GetCartQueryHandler(
-    IMongoDatabase database,
-    ILogger<GetCartQueryHandler> logger) : IRequestHandler<GetCartQuery, Result<CartDto>>
+internal sealed class GetCartQueryHandler(DbClient client) : IRequestHandler<GetCartQuery, Result<CartDto>>
 {
-    private readonly ILogger<GetCartQueryHandler> logger = logger;
+    private readonly DbClient client = client;
 
     public async Task<Result<CartDto>> Handle(GetCartQuery request, CancellationToken cancellationToken)
     {
-        var collection = database.GetCollection<CartEntity>("Carts");
+        var collection = client.GetCollection<CartEntity>("Carts");
         var cart = await collection.Find(x => x.UserId == request.UserId).FirstOrDefaultAsync(cancellationToken);
 
         if (cart is null)

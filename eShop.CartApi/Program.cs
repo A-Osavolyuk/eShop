@@ -1,5 +1,3 @@
-using eShop.CartApi.Rpc;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddApiServices();
