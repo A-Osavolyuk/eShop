@@ -97,11 +97,6 @@ namespace eShop.Infrastructure.Services
                     content.Add(fileContent, "file", request.Data.File.Name);
                 }
 
-                if (!string.IsNullOrEmpty(request.Data.StringData) && !string.IsNullOrEmpty(request.Data.DataName))
-                {
-                    content.Add(new StringContent(request.Data.StringData), request.Data.DataName);
-                }
-
                 message.Content = content;
 
                 var httpResponse = await httpClient.SendAsync(message);

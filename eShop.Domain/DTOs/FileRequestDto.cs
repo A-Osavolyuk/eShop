@@ -9,20 +9,14 @@ public class FileData
 {
     public IBrowserFile File { get; init; }
     public IReadOnlyList<IBrowserFile> Files { get; init; }
-    public string StringData { get; init; }
-    public string DataName { get; }
 
-    public FileData(IReadOnlyList<IBrowserFile> files, string stringData, string dataName)
+    public FileData(IReadOnlyList<IBrowserFile> files)
     {
         Files = files;
-        StringData = stringData;
-        DataName = dataName;
     }
 
-    public FileData(IBrowserFile file, string stringData, string dataName)
+    public FileData(IBrowserFile file)
     {
         File = file;
-        StringData = stringData;
-        DataName = dataName;
     }
 }

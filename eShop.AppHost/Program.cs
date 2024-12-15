@@ -6,9 +6,9 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 #region DataLayer
 
-var redisCache = builder.AddRedis("eShopRedis", 39010);
+var redisCache = builder.AddRedis("eShopRedis", 60001);
 
-var sqlServer = builder.AddSqlServer("eShopSqlServer", port: 39020)
+var sqlServer = builder.AddSqlServer("eShopSqlServer", port: 60002)
     .WithAuthentication("Password_1234");
 
 var authDb = sqlServer.AddDatabase("AuthDB");
@@ -22,7 +22,7 @@ var mongo = builder.AddMongoDB("eShopMongo")
         cfg.WithAuthentication();
         cfg.WithMongoCredentials("admin", "Password_1234");
         cfg.WithMongoServer("eShopMongo");
-        cfg.WithMongoServer("mongodb://eShopMongo:27017");
+        cfg.WithMongoUrl("mongodb://eShopMongo:27017");
     }, "eShopMongoExpress");
 
 var cartDb = mongo.AddDatabase("CartDB");
@@ -31,7 +31,7 @@ var cartDb = mongo.AddDatabase("CartDB");
 
 #region ServicesLayer
 
-var rabbitMq = builder.AddRabbitMQ("eShopRabbitMQ", port: 25001)
+var rabbitMq = builder.AddRabbitMQ("eShopRabbitMQ", port: 60003)
     .WithAuthentication("user", "b2ce482e-9678-43b9-82e3-3b5ec7148355")
     .WithManagementPlugin();
 
@@ -71,7 +71,7 @@ var angularClient = builder.AddNpmApp("eshop-angular-webui",
         "../eShop.AngularWebUI")
     .WithReference(authApi)
     .WithReference(gateway)
-    .WithHttpEndpoint(port: 5103, targetPort: 4200, env: "PORT")
+    .WithHttpEndpoint(port: 60502, targetPort: 4200, env: "PORT")
     .WithExternalHttpEndpoints()
     .PublishAsDockerFile();
 

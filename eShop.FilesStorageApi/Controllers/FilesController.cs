@@ -33,8 +33,8 @@ public class FilesController(IStoreService storeService,
             ExceptionHandler.HandleException);
     }
     
-    [HttpPost("upload-product-images")]
-    public async ValueTask<ActionResult<ResponseDto>> UploadProductImagesAsync([FromForm] IFormFileCollection files, [FromForm] Guid productId)
+    [HttpPost("upload-product-images/{productId:guid}")]
+    public async ValueTask<ActionResult<ResponseDto>> UploadProductImagesAsync(IFormFileCollection files, Guid productId)
     {
         var response = await sender.Send(new UploadProductImagesCommand(files, productId));
         return response.Match(
@@ -42,8 +42,8 @@ public class FilesController(IStoreService storeService,
             ExceptionHandler.HandleException);
     }
     
-    [HttpPost("upload-user-avatar")]
-    public async ValueTask<ActionResult<ResponseDto>> UploadUserAvatarAsync([FromForm] IFormFile file, [FromForm] Guid userId)
+    [HttpPost("upload-user-avatar/{userId:guid}")]
+    public async ValueTask<ActionResult<ResponseDto>> UploadUserAvatarAsync(IFormFile file, Guid userId)
     {
         var response = await sender.Send(new UploadUserAvatarCommand(file, userId));
         return response.Match(

@@ -16,8 +16,8 @@ namespace eShop.Infrastructure.Services
         public async ValueTask<ResponseDto>
             UploadProductImagesAsync(IReadOnlyList<IBrowserFile> files, Guid productId) =>
             await clientService.SendFilesAsync(
-                new FileRequestDto(new FileData(files, productId.ToString(), "productId"), HttpMethods.POST,
-                    $"{configuration["Services:Gateway"]}/api/v1/Files/upload-product-images"));
+                new FileRequestDto(new FileData(files), HttpMethods.POST,
+                    $"{configuration["Services:Gateway"]}/api/v1/Files/upload-product-images/{productId}"));
 
         public async ValueTask<ResponseDto> RemoveUserAvatarAsync(string userId) =>
             await clientService.SendAsync(
@@ -26,8 +26,8 @@ namespace eShop.Infrastructure.Services
 
         public async ValueTask<ResponseDto> UploadUserAvatarAsync(string userId, IBrowserFile file) =>
             await clientService.SendFilesAsync(
-                new FileRequestDto(new FileData(file, userId, "userId"), HttpMethods.POST,
-                    $"{configuration["Services:Gateway"]}/api/v1/Files/upload-user-avatar"));
+                new FileRequestDto(new FileData(file), HttpMethods.POST,
+                    $"{configuration["Services:Gateway"]}/api/v1/Files/upload-user-avatar/{userId}"));
 
         private BlobContainerClient GetContainerClient(string containerName)
         {
