@@ -1,80 +1,75 @@
+using eShop.AppHost.Extensions;
 using eShop.AppHost.Extensions.Mongo;
-using eShop.AppHost.Extensions.RabbitMq;
-using eShop.AppHost.Extensions.Sql;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-#region DataLayer
+var password = builder.AddParameter("password", "atpDWGvDb4jR5pE7rT59c7");
+var userName = builder.AddParameter("admin", "admin");
 
-var redisCache = builder.AddRedis("eShopRedis", 60001);
+var redisCache = builder.AddRedis("redis", 60001)
+    .WithLifetime(ContainerLifetime.Persistent)
+    .WithDataVolume()
+    .WithRedisInsight(containerName: "redis-insights");
 
-var sqlServer = builder.AddSqlServer("eShopSqlServer", port: 60002)
-    .WithAuthentication("Password_1234");
+var sqlServer = builder.AddSqlServer("mssql-server", port: 60002, password: password)
+    .WithLifetime(ContainerLifetime.Persistent)
+    .WithDataVolume();
 
-var authDb = sqlServer.AddDatabase("AuthDB");
-var reviewsDb = sqlServer.AddDatabase("ReviewsDB");
-var productDb = sqlServer.AddDatabase("ProductDB");
-
-var mongo = builder.AddMongoDB("eShopMongo")
-    .WithAuthentication("admin", "Password_1234")
+var mongo = builder.AddMongoDB("mongo", userName: userName, password: password)
+    .WithLifetime(ContainerLifetime.Persistent)
+    .WithDataVolume()
     .WithMongoExpress(cfg =>
     {
         cfg.WithAuthentication();
-        cfg.WithMongoCredentials("admin", "Password_1234");
-        cfg.WithMongoServer("eShopMongo");
-        cfg.WithMongoUrl("mongodb://eShopMongo:27017");
-    }, "eShopMongoExpress");
+        cfg.WithMongoCredentials("admin", "atpDWGvDb4jR5pE7rT59c7");
+        cfg.WithMongoServer("mongo");
+        cfg.WithMongoUrl("mongodb://mongo:27017");
+    }, "mongo-express");
 
-var cartDb = mongo.AddDatabase("CartDB");
+var cartDb = mongo.AddDatabase("cart-db", "CartDB");
+var authDb = sqlServer.AddDatabase("auth-db", "AuthDB");
+var reviewsDb = sqlServer.AddDatabase("reviews-db", "ReviewsDB");
+var productDb = sqlServer.AddDatabase("product-db", "ProductDB");
 
-#endregion
+var rabbitMq = builder.AddRabbitMQ("rabbit-mq", port: 60003, userName: userName, password: password)
+    .WithLifetime(ContainerLifetime.Persistent)
+    .WithManagementPlugin()
+    .WithDataVolume();
 
-#region ServicesLayer
-
-var rabbitMq = builder.AddRabbitMQ("eShopRabbitMQ", port: 60003)
-    .WithAuthentication("user", "b2ce482e-9678-43b9-82e3-3b5ec7148355")
-    .WithManagementPlugin();
-
-var emailService = builder.AddProject<Projects.eShop_EmailSenderApi>("eshop-email-sender-api")
+var emailService = builder.AddProject<Projects.eShop_EmailSenderApi>("email-sender-api")
     .WithReference(rabbitMq);
 
-var authApi = builder.AddProject<Projects.eShop_AuthApi>("eshop-auth-api")
-    .WithReference(authDb)
-    .WithReference(emailService);
+var authApi = builder.AddProject<Projects.eShop_AuthApi>("auth-api")
+    .WaitForReference(sqlServer)
+    .WaitForReference(emailService);
 
-var productApi = builder.AddProject<Projects.eShop_ProductApi>("eshop-product-api")
-    .WithReference(authApi)
-    .WithReference(productDb);
+var productApi = builder.AddProject<Projects.eShop_ProductApi>("product-api")
+    .WaitForReference(sqlServer)
+    .WaitForReference(authApi);
 
-var reviewsApi = builder.AddProject<Projects.eShop_ReviewsApi>("eshop-reviews-api")
-    .WithReference(authApi)
-    .WithReference(reviewsDb);
+var reviewsApi = builder.AddProject<Projects.eShop_ReviewsApi>("reviews-api")
+    .WaitForReference(sqlServer)
+    .WaitForReference(authApi);
 
-var cartApi = builder.AddProject<Projects.eShop_CartApi>("eshop-cart-api")
-    .WithReference(cartDb)
-    .WithReference(authApi);
+var cartApi = builder.AddProject<Projects.eShop_CartApi>("cart-api")
+    .WaitForReference(sqlServer)
+    .WaitForReference(authApi);
 
-var filesStorageApi = builder.AddProject<Projects.eShop_FilesStorageApi>("eshop-file-store-api")
-    .WithReference(authApi);
+var filesStorageApi = builder.AddProject<Projects.eShop_FilesStorageApi>("file-store-api")
+    .WaitForReference(authApi);
 
-var gateway = builder.AddProject<Projects.eShop_Gateway>("eshop-gateway");
+var gateway = builder.AddProject<Projects.eShop_Gateway>("gateway");
 
-#endregion
+var blazorClient = builder.AddProject<Projects.eShop_BlazorWebUI>("blazor-webui")
+    .WaitForReference(gateway)
+    .WaitForReference(authApi);
 
-#region PresentationLayer
-
-var blazorClient = builder.AddProject<Projects.eShop_BlazorWebUI>("eshop-blazor-webui")
-    .WithReference(authApi)
-    .WithReference(gateway);
-
-var angularClient = builder.AddNpmApp("eshop-angular-webui",
+var angularClient = builder.AddNpmApp("angular-webui",
         "../eShop.AngularWebUI")
-    .WithReference(authApi)
-    .WithReference(gateway)
+    .WaitForReference(gateway)
+    .WaitForReference(authApi)
     .WithHttpEndpoint(port: 60502, targetPort: 4200, env: "PORT")
     .WithExternalHttpEndpoints()
     .PublishAsDockerFile();
-
-#endregion
 
 builder.Build().Run();
