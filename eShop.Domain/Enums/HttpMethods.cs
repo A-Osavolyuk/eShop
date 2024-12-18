@@ -1,7 +1,6 @@
-﻿namespace eShop.Domain.Enums
+﻿namespace eShop.Domain.Enums;
+
+public enum HttpMethods
 {
-    public enum HttpMethods
-    {
-        GET, POST, PUT, DELETE,
-    }
+    GET, POST, PUT, DELETE,
 }

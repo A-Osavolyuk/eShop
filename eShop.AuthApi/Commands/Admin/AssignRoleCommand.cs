@@ -1,37 +1,39 @@
-﻿namespace eShop.AuthApi.Commands.Admin
+﻿using eShop.Domain.Requests.AuthApi.Admin;
+using eShop.Domain.Responses.AuthApi.Admin;
+
+namespace eShop.AuthApi.Commands.Admin;
+
+internal sealed record AssignRoleCommand(AssignRoleRequest Request) : IRequest<Result<AssignRoleResponse>>;
+internal sealed class AssignRoleCommandHandler(
+    AppManager appManager,
+    ILogger<AssignRoleCommandHandler> logger) : IRequestHandler<AssignRoleCommand, Result<AssignRoleResponse>>
 {
-    internal sealed record AssignRoleCommand(AssignRoleRequest Request) : IRequest<Result<AssignRoleResponse>>;
-    internal sealed class AssignRoleCommandHandler(
-        AppManager appManager,
-        ILogger<AssignRoleCommandHandler> logger) : IRequestHandler<AssignRoleCommand, Result<AssignRoleResponse>>
+    private readonly AppManager appManager = appManager;
+    private readonly ILogger<AssignRoleCommandHandler> logger = logger;
+
+    public async Task<Result<AssignRoleResponse>> Handle(AssignRoleCommand request, CancellationToken cancellationToken)
     {
-        private readonly AppManager appManager = appManager;
-        private readonly ILogger<AssignRoleCommandHandler> logger = logger;
+        var role = await appManager.RoleManager.FindByNameAsync(request.Request.RoleName);
+        var user = await appManager.UserManager.FindByIdAsync(request.Request.UserId.ToString());
 
-        public async Task<Result<AssignRoleResponse>> Handle(AssignRoleCommand request, CancellationToken cancellationToken)
+        if (role is null)
         {
-                var role = await appManager.RoleManager.FindByNameAsync(request.Request.RoleName);
-                var user = await appManager.UserManager.FindByIdAsync(request.Request.UserId.ToString());
-
-                if (role is null)
-                {
-                    return new(new NotFoundException($"Cannot find role with name {request.Request.RoleName}."));
-                }
-
-                if (user is null)
-                {
-                    return new(new NotFoundException($"Cannot find user with ID {request.Request.UserId}."));
-                }
-
-                var result = await appManager.UserManager.AddToRoleAsync(user, role.Name!);
-
-                if (!result.Succeeded)
-                {
-                    return new(new FailedOperationException(
-                        $"Cannot assign role due to server error: {result.Errors.First().Description}"));
-                }
-                
-                return new(new AssignRoleResponse() { Succeeded = true, Message = "Role was successfully assigned" });
+            return new(new NotFoundException($"Cannot find role with name {request.Request.RoleName}."));
         }
+
+        if (user is null)
+        {
+            return new(new NotFoundException($"Cannot find user with ID {request.Request.UserId}."));
+        }
+
+        var result = await appManager.UserManager.AddToRoleAsync(user, role.Name!);
+
+        if (!result.Succeeded)
+        {
+            return new(new FailedOperationException(
+                $"Cannot assign role due to server error: {result.Errors.First().Description}"));
+        }
+                
+        return new(new AssignRoleResponse() { Succeeded = true, Message = "Role was successfully assigned" });
     }
 }

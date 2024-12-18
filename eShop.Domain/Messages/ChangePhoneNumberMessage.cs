@@ -1,8 +1,7 @@
-﻿namespace eShop.Domain.Messages
+﻿namespace eShop.Domain.Messages;
+
+public class ChangePhoneNumberMessage : MessageBase
 {
-    public class ChangePhoneNumberMessage : MessageBase
-    {
-        public string Link { get; set; } = string.Empty;
-        public string PhoneNumber { get; set; } = string.Empty;
-    }
+    public string Link { get; set; } = string.Empty;
+    public string PhoneNumber { get; set; } = string.Empty;
 }

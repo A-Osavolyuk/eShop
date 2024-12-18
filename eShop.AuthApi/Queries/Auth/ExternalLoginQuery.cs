@@ -1,32 +1,33 @@
 ﻿
-namespace eShop.AuthApi.Queries.Auth
+using eShop.Domain.Responses.AuthApi.Auth;
+
+namespace eShop.AuthApi.Queries.Auth;
+
+internal sealed record ExternalLoginQuery(string Provider, string? ReturnUri) : IRequest<Result<ExternalLoginResponse>>;
+
+internal sealed class ExternalLoginQueryHandler(
+    AppManager appManager) : IRequestHandler<ExternalLoginQuery, Result<ExternalLoginResponse>>
 {
-    internal sealed record ExternalLoginQuery(string Provider, string? ReturnUri) : IRequest<Result<ExternalLoginResponse>>;
+    private readonly AppManager appManager = appManager;
 
-    internal sealed class ExternalLoginQueryHandler(
-        AppManager appManager) : IRequestHandler<ExternalLoginQuery, Result<ExternalLoginResponse>>
+    public async Task<Result<ExternalLoginResponse>> Handle(ExternalLoginQuery request, CancellationToken cancellationToken)
     {
-        private readonly AppManager appManager = appManager;
+        var providers = await appManager.SignInManager.GetExternalAuthenticationSchemesAsync();
 
-        public async Task<Result<ExternalLoginResponse>> Handle(ExternalLoginQuery request, CancellationToken cancellationToken)
+        var validProvider = providers.Any(x => x.DisplayName == request.Provider);
+
+        if (!validProvider)
         {
-                var providers = await appManager.SignInManager.GetExternalAuthenticationSchemesAsync();
-
-                var validProvider = providers.Any(x => x.DisplayName == request.Provider);
-
-                if (!validProvider)
-                {
-                    return new(new BadRequestException($"Invalid external provider {request.Provider}."));
-                }
-
-                var handlerUri = UrlGenerator.Action("handle-external-login-response", "Auth", new { ReturnUri = request.ReturnUri ?? "/" });
-                var properties = appManager.SignInManager.ConfigureExternalAuthenticationProperties(request.Provider, handlerUri);
-                
-                return new(new ExternalLoginResponse()
-                {
-                    Provider = request.Provider,
-                    AuthenticationProperties = properties
-                });
+            return new(new BadRequestException($"Invalid external provider {request.Provider}."));
         }
+
+        var handlerUri = UrlGenerator.Action("handle-external-login-response", "Auth", new { ReturnUri = request.ReturnUri ?? "/" });
+        var properties = appManager.SignInManager.ConfigureExternalAuthenticationProperties(request.Provider, handlerUri);
+                
+        return new(new ExternalLoginResponse()
+        {
+            Provider = request.Provider,
+            AuthenticationProperties = properties
+        });
     }
 }

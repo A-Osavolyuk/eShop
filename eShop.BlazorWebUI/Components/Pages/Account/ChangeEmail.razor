@@ -1,10 +1,10 @@
 ﻿@page "/account/change-email/"
-@using eShop.Domain.Requests.Auth
+@using eShop.Domain.Requests.AuthApi.Auth
 
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
-@inject AuthenticationStateProvider authenticationState
-@inject ITokenProvider tokenProvider
+@inject AuthenticationStateProvider AuthenticationState
+@inject ITokenProvider TokenProvider
 @inject ISnackbar Snackbar
 
 @code {
@@ -27,7 +27,7 @@
 
         if (result.Success)
         {
-            await (authenticationState as ApplicationAuthenticationStateProvider)!.LogOutAsync();
+            await (AuthenticationState as ApplicationAuthenticationStateProvider)!.LogOutAsync();
             Snackbar.Add(result.Message, MudBlazor.Severity.Success);
             NavigationManager.NavigateTo("/account/login");
         }

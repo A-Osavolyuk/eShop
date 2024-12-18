@@ -1,4 +1,3 @@
-﻿namespace eShop.Domain.Exceptions
-{
-    public interface INotFoundException;
-}
+﻿namespace eShop.Domain.Exceptions;
+
+public interface INotFoundException;

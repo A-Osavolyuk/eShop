@@ -13,8 +13,6 @@ global using eShop.Application.Mapping;
 global using eShop.Application.Middlewares;
 global using eShop.Domain.Entities;
 global using eShop.Domain.Exceptions;
-global using eShop.Domain.Requests.Comments;
-global using eShop.Domain.Responses.Comments;
 global using eShop.ReviewsApi.Behaviours;
 global using eShop.ReviewsApi.Commands.Comments;
 global using eShop.ReviewsApi.Extensions;

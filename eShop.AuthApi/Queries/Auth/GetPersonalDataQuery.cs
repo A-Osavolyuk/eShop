@@ -1,34 +1,35 @@
-﻿namespace eShop.AuthApi.Queries.Auth
+﻿using eShop.Domain.Responses.AuthApi.Auth;
+
+namespace eShop.AuthApi.Queries.Auth;
+
+internal sealed record GetPersonalDataQuery(string Email) : IRequest<Result<PersonalDataResponse>>;
+
+internal sealed class GetPersonalDataQueryHandler(
+    AppManager appManager,
+    AuthDbContext context) : IRequestHandler<GetPersonalDataQuery, Result<PersonalDataResponse>>
 {
-    internal sealed record GetPersonalDataQuery(string Email) : IRequest<Result<PersonalDataResponse>>;
+    private readonly AppManager appManager = appManager;
+    private readonly AuthDbContext context = context;
 
-    internal sealed class GetPersonalDataQueryHandler(
-        AppManager appManager,
-        AuthDbContext context) : IRequestHandler<GetPersonalDataQuery, Result<PersonalDataResponse>>
+    public async Task<Result<PersonalDataResponse>> Handle(GetPersonalDataQuery request,
+        CancellationToken cancellationToken)
     {
-        private readonly AppManager appManager = appManager;
-        private readonly AuthDbContext context = context;
+        var user = await appManager.UserManager.FindByEmailAsync(request.Email);
 
-        public async Task<Result<PersonalDataResponse>> Handle(GetPersonalDataQuery request,
-            CancellationToken cancellationToken)
+        if (user is null)
         {
-            var user = await appManager.UserManager.FindByEmailAsync(request.Email);
-
-            if (user is null)
-            {
-                return new(new NotFoundException($"Cannot find user with email {request.Email}."));
-            }
-
-            var personalData = await context.PersonalData.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
-
-            if (personalData is null)
-            {
-                return new(new NotFoundException(
-                    $"Cannot find or user with email {user.Email} has no personal data."));
-            }
-
-            return new(PersonalDataMapper.ToPersonalDataResponse(personalData));
+            return new(new NotFoundException($"Cannot find user with email {request.Email}."));
         }
+
+        var personalData = await context.PersonalData.AsNoTracking()
+            .FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
+
+        if (personalData is null)
+        {
+            return new(new NotFoundException(
+                $"Cannot find or user with email {user.Email} has no personal data."));
+        }
+
+        return new(PersonalDataMapper.ToPersonalDataResponse(personalData));
     }
 }

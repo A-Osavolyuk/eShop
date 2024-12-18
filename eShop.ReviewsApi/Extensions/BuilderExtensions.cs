@@ -1,55 +1,54 @@
-﻿namespace eShop.ReviewsApi.Extensions
+﻿namespace eShop.ReviewsApi.Extensions;
+
+public static class BuilderExtensions
 {
-    public static class BuilderExtensions
+    public static IHostApplicationBuilder AddApiServices(this IHostApplicationBuilder builder)
     {
-        public static IHostApplicationBuilder AddApiServices(this IHostApplicationBuilder builder)
+        builder.AddJwtAuthentication();
+        builder.AddVersioning();
+        builder.AddValidation();
+        builder.AddSwaggerWithSecurity();
+        builder.AddDependencyInjection();
+        builder.AddMessageBus();
+        builder.AddSqlServerDbContext<AppDbContext>("SqlServer");
+        builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddMediatR(x =>
         {
-            builder.AddJwtAuthentication();
-            builder.AddVersioning();
-            builder.AddValidation();
-            builder.AddSwaggerWithSecurity();
-            builder.AddDependencyInjection();
-            builder.AddMessageBus();
-            builder.AddSqlServerDbContext<AppDbContext>("SqlServer");
-            builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddMediatR(x =>
+            x.RegisterServicesFromAssemblyContaining<IAssemblyMarker>();
+            x.AddOpenBehavior(typeof(LoggingBehaviour<,>), ServiceLifetime.Transient);
+            x.AddOpenBehavior(typeof(TransactionBehaviour<,>), ServiceLifetime.Transient);
+        });
+        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+        builder.Services.AddProblemDetails();
+
+        return builder;
+    }
+
+    private static void AddDependencyInjection(this IHostApplicationBuilder builder)
+    {
+    }
+
+    private static void AddMessageBus(this IHostApplicationBuilder builder)
+    {
+        builder.Services.AddMassTransit(x =>
+        {
+            x.UsingRabbitMq((context, cfg) =>
             {
-                x.RegisterServicesFromAssemblyContaining<IAssemblyMarker>();
-                x.AddOpenBehavior(typeof(LoggingBehaviour<,>), ServiceLifetime.Transient);
-                x.AddOpenBehavior(typeof(TransactionBehaviour<,>), ServiceLifetime.Transient);
-            });
-            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-            builder.Services.AddProblemDetails();
+                var uri = builder.Configuration["RabbitMQConfigurations:HostUri"]!;
+                var username = builder.Configuration["RabbitMQConfigurations:UserName"]!;
+                var password = builder.Configuration["RabbitMQConfigurations:Password"]!;
 
-            return builder;
-        }
-
-        private static void AddDependencyInjection(this IHostApplicationBuilder builder)
-        {
-        }
-
-        private static void AddMessageBus(this IHostApplicationBuilder builder)
-        {
-            builder.Services.AddMassTransit(x =>
-            {
-                x.UsingRabbitMq((context, cfg) =>
+                cfg.Host(new Uri(uri), h =>
                 {
-                    var uri = builder.Configuration["RabbitMQConfigurations:HostUri"]!;
-                    var username = builder.Configuration["RabbitMQConfigurations:UserName"]!;
-                    var password = builder.Configuration["RabbitMQConfigurations:Password"]!;
-
-                    cfg.Host(new Uri(uri), h =>
-                    {
-                        h.Username(username);
-                        h.Password(password);
-                    });
-
-                    cfg.ReceiveEndpoint("product-deleted", e => e.ConfigureConsumer<ProductDeletedReceiver>(context));
+                    h.Username(username);
+                    h.Password(password);
                 });
 
-                x.AddConsumer<ProductDeletedReceiver>();
+                cfg.ReceiveEndpoint("product-deleted", e => e.ConfigureConsumer<ProductDeletedReceiver>(context));
             });
-        }
+
+            x.AddConsumer<ProductDeletedReceiver>();
+        });
     }
 }

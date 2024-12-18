@@ -1,15 +1,16 @@
-﻿namespace eShop.ReviewsApi.Data
-{
-    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
-    {
-        public DbSet<CommentEntity> Comments => Set<CommentEntity>();
+﻿using eShop.Domain.Entities.ReviewApi;
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+namespace eShop.ReviewsApi.Data;
+
+public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+{
+    public DbSet<CommentEntity> Comments => Set<CommentEntity>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<CommentEntity>(x =>
         {
-            modelBuilder.Entity<CommentEntity>(x =>
-            {
-                x.HasKey(p => p.CommentId);
-            });
-        }
+            x.HasKey(p => p.CommentId);
+        });
     }
 }

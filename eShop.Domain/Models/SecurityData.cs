@@ -1,8 +1,7 @@
-﻿namespace eShop.Domain.Models
+﻿namespace eShop.Domain.Models;
+
+public class SecurityData
 {
-    public class SecurityData
-    {
-        public bool TwoFactorAuthenticationState { get; set; }
-        public DateTime PasswordUpdatedDate { get; set; }
-    }
+    public bool TwoFactorAuthenticationState { get; set; }
+    public DateTime PasswordUpdatedDate { get; set; }
 }

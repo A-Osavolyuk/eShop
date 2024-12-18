@@ -1,4 +1,3 @@
-﻿namespace eShop.CartApi
-{
-    public interface IAssemblyMarker;
-}
+﻿namespace eShop.CartApi;
+
+public interface IAssemblyMarker;

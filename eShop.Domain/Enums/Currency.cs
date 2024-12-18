@@ -1,10 +1,9 @@
-﻿namespace eShop.Domain.Enums
+﻿namespace eShop.Domain.Enums;
+
+public enum Currency
 {
-    public enum Currency
-    {
-        None,
-        Dollar,
-        Euro,
-        Pound,
-    }
+    None,
+    Dollar,
+    Euro,
+    Pound,
 }

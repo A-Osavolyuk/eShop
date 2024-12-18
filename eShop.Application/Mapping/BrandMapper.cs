@@ -1,4 +1,8 @@
-﻿namespace eShop.Application.Mapping;
+﻿using eShop.Domain.DTOs.ProductApi;
+using eShop.Domain.Entities.ProductApi;
+using eShop.Domain.Requests.ProductApi.Brand;
+
+namespace eShop.Application.Mapping;
 
 public static class BrandMapper
 {

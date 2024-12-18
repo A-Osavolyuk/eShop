@@ -1,4 +1,3 @@
-﻿namespace eShop.AuthApi
-{
-    public interface IAssemblyMarker;
-}
+﻿namespace eShop.AuthApi;
+
+public interface IAssemblyMarker;

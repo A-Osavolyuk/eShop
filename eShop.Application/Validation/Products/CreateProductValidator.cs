@@ -1,4 +1,6 @@
-﻿namespace eShop.Application.Validation.Products;
+﻿using eShop.Domain.Requests.ProductApi.Product;
+
+namespace eShop.Application.Validation.Products;
 
 public class CreateProductValidator : AbstractValidator<CreateProductRequest>
 {

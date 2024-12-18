@@ -1,9 +1,8 @@
-﻿namespace eShop.Domain.Interfaces
+﻿namespace eShop.Domain.Interfaces;
+
+public interface ICookieManager
 {
-    public interface ICookieManager
-    {
-        public Task SetCookie<T>(string name, T value, int days);
-        public Task<T> GetCookie<T>(string name);
-        public Task DeleteCookie(string name);
-    }
+    public Task SetCookie<T>(string name, T value, int days);
+    public Task<T> GetCookie<T>(string name);
+    public Task DeleteCookie(string name);
 }

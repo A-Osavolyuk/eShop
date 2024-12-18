@@ -1,4 +1,7 @@
-﻿namespace eShop.ReviewsApi.Commands.Comments;
+﻿using eShop.Domain.Requests.ReviewApi.Comments;
+using eShop.Domain.Responses.CartApi.Comments;
+
+namespace eShop.ReviewsApi.Commands.Comments;
 
 internal sealed record CreateCommentCommand(CreateCommentRequest Request) : IRequest<Result<CreateCommentResponse>>;
 

@@ -1,4 +1,7 @@
-﻿namespace eShop.ProductApi.Queries.Products;
+﻿using eShop.Domain.DTOs.ProductApi;
+using eShop.Domain.Entities.ProductApi;
+
+namespace eShop.ProductApi.Queries.Products;
 
 internal sealed record GetProductByArticleQuery(string ProductArticle) : IRequest<Result<ProductDto>>;
 

@@ -1,85 +1,85 @@
-﻿using UserData = eShop.Domain.Entities.Admin.UserData;
+﻿using eShop.Domain.Entities.AuthApi;
+using UserData = eShop.Domain.Entities.AuthApi.UserData;
 
-namespace eShop.AuthApi.Queries.Admin
+namespace eShop.AuthApi.Queries.Admin;
+
+internal sealed record GetUsersListQuery() : IRequest<Result<IEnumerable<UserData>>>;
+
+internal sealed class GetUsersListQueryHandler(
+    AppManager appManager,
+    AuthDbContext context) : IRequestHandler<GetUsersListQuery, Result<IEnumerable<UserData>>>
 {
-    internal sealed record GetUsersListQuery() : IRequest<Result<IEnumerable<UserData>>>;
+    private readonly AppManager appManager = appManager;
+    private readonly AuthDbContext context = context;
 
-    internal sealed class GetUsersListQueryHandler(
-        AppManager appManager,
-        AuthDbContext context) : IRequestHandler<GetUsersListQuery, Result<IEnumerable<UserData>>>
+    public async Task<Result<IEnumerable<UserData>>> Handle(GetUsersListQuery request,
+        CancellationToken cancellationToken)
     {
-        private readonly AppManager appManager = appManager;
-        private readonly AuthDbContext context = context;
+        var usersList = await appManager.UserManager.Users.AsNoTracking()
+            .ToListAsync(cancellationToken: cancellationToken);
 
-        public async Task<Result<IEnumerable<UserData>>> Handle(GetUsersListQuery request,
-            CancellationToken cancellationToken)
+        if (!usersList.Any())
         {
-            var usersList = await appManager.UserManager.Users.AsNoTracking()
-                .ToListAsync(cancellationToken: cancellationToken);
+            return new(new List<UserData>());
+        }
 
-            if (!usersList.Any())
+        var users = new List<UserData>();
+
+        foreach (var user in usersList)
+        {
+            var accountData = UserMapper.ToAccountData(user);
+            var personalData = await context.PersonalData.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
+            var rolesList = await appManager.UserManager.GetRolesAsync(user);
+
+            if (!rolesList.Any())
             {
-                return new(new List<UserData>());
+                return new(new NotFoundException($"Cannot find roles for user with ID {user.Id}."));
             }
 
-            var users = new List<UserData>();
+            var rolesData = (await appManager.RoleManager.GetRolesInfoAsync(rolesList) ?? Array.Empty<RoleInfo>())
+                .ToList();
+            var permissions = await appManager.PermissionManager.GetUserPermisisonsAsync(user);
+            var roleInfos = rolesData.ToList();
 
-            foreach (var user in usersList)
+            if (!roleInfos.Any())
             {
-                var accountData = UserMapper.ToAccountData(user);
-                var personalData = await context.PersonalData.AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
-                var rolesList = await appManager.UserManager.GetRolesAsync(user);
+                return new(new NotFoundException("Cannot find roles data."));
+            }
 
-                if (!rolesList.Any())
+            var permissionsList = new List<Permission>();
+
+            foreach (var permission in permissions)
+            {
+                var permissionInfo = await context.Permissions.AsNoTracking()
+                    .SingleOrDefaultAsync(x => x.Name == permission, cancellationToken: cancellationToken);
+
+                if (permissionInfo is null)
                 {
-                    return new(new NotFoundException($"Cannot find roles for user with ID {user.Id}."));
+                    return new(new NotFoundException($"Cannot find permission {permission}."));
                 }
 
-                var rolesData = (await appManager.RoleManager.GetRolesInfoAsync(rolesList) ?? Array.Empty<RoleInfo>())
-                    .ToList();
-                var permissions = await appManager.PermissionManager.GetUserPermisisonsAsync(user);
-                var roleInfos = rolesData.ToList();
-
-                if (!roleInfos.Any())
+                permissionsList.Add(new Permission()
                 {
-                    return new(new NotFoundException("Cannot find roles data."));
-                }
-
-                var permissionsList = new List<Permission>();
-
-                foreach (var permission in permissions)
-                {
-                    var permissionInfo = await context.Permissions.AsNoTracking()
-                        .SingleOrDefaultAsync(x => x.Name == permission, cancellationToken: cancellationToken);
-
-                    if (permissionInfo is null)
-                    {
-                        return new(new NotFoundException($"Cannot find permission {permission}."));
-                    }
-
-                    permissionsList.Add(new Permission()
-                    {
-                        Id = permissionInfo.Id,
-                        Name = permissionInfo.Name,
-                    });
-                }
-
-                var permissionData = new PermissionsData()
-                {
-                    Roles = roleInfos.ToList(),
-                    Permissions = permissionsList
-                };
-
-                users.Add(new UserData()
-                {
-                    PermissionsData = permissionData,
-                    PersonalDataEntity = personalData ?? new(),
-                    AccountData = accountData
+                    Id = permissionInfo.Id,
+                    Name = permissionInfo.Name,
                 });
             }
 
-            return users;
+            var permissionData = new PermissionsData()
+            {
+                Roles = roleInfos.ToList(),
+                Permissions = permissionsList
+            };
+
+            users.Add(new UserData()
+            {
+                PermissionsData = permissionData,
+                PersonalDataEntity = personalData ?? new(),
+                AccountData = accountData
+            });
         }
+
+        return users;
     }
 }

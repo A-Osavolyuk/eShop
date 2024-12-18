@@ -1,55 +1,57 @@
-﻿namespace eShop.AuthApi.Commands.Admin
+﻿using eShop.Domain.Requests.AuthApi.Admin;
+using eShop.Domain.Responses.AuthApi.Admin;
+
+namespace eShop.AuthApi.Commands.Admin;
+
+internal sealed record UnlockUserCommand(UnlockUserRequest Request) : IRequest<Result<UnlockUserResponse>>;
+
+internal sealed class UnlockUserCommandHandler(
+    AppManager appManager) : IRequestHandler<UnlockUserCommand, Result<UnlockUserResponse>>
 {
-    internal sealed record UnlockUserCommand(UnlockUserRequest Request) : IRequest<Result<UnlockUserResponse>>;
+    private readonly AppManager appManager = appManager;
 
-    internal sealed class UnlockUserCommandHandler(
-        AppManager appManager) : IRequestHandler<UnlockUserCommand, Result<UnlockUserResponse>>
+    public async Task<Result<UnlockUserResponse>> Handle(UnlockUserCommand request,
+        CancellationToken cancellationToken)
     {
-        private readonly AppManager appManager = appManager;
+        var user = await appManager.UserManager.FindByIdAsync(request.Request.UserId);
 
-        public async Task<Result<UnlockUserResponse>> Handle(UnlockUserCommand request,
-            CancellationToken cancellationToken)
+        if (user is null)
         {
-            var user = await appManager.UserManager.FindByIdAsync(request.Request.UserId);
+            return new(new NotFoundException($"Cannot find user with ID {request.Request.UserId}."));
+        }
 
-            if (user is null)
+        var lockoutStatus = await appManager.UserManager.GetLockoutStatusAsync(user);
+
+        if (lockoutStatus is null)
+        {
+            return new(new NotFoundException(
+                $"Cannot find lockout status for user with ID {request.Request.UserId}."));
+        }
+
+        if (lockoutStatus.LockoutEnabled)
+        {
+            var result = await appManager.UserManager.UnlockUserAsync(user);
+
+            if (!result.Succeeded)
             {
-                return new(new NotFoundException($"Cannot find user with ID {request.Request.UserId}."));
+                return new(new FailedOperationException(
+                    $"Cannot unlock user with ID {request.Request.UserId} " +
+                    $"due to server error: {result.Errors.First().Description}."));
             }
 
-            var lockoutStatus = await appManager.UserManager.GetLockoutStatusAsync(user);
-
-            if (lockoutStatus is null)
+            return new(new UnlockUserResponse()
             {
-                return new(new NotFoundException(
-                    $"Cannot find lockout status for user with ID {request.Request.UserId}."));
-            }
-
-            if (lockoutStatus.LockoutEnabled)
+                Succeeded = true,
+                Message = "User account was successfully unlocked."
+            });
+        }
+        else
+        {
+            return new(new UnlockUserResponse()
             {
-                var result = await appManager.UserManager.UnlockUserAsync(user);
-
-                if (!result.Succeeded)
-                {
-                    return new(new FailedOperationException(
-                        $"Cannot unlock user with ID {request.Request.UserId} " +
-                        $"due to server error: {result.Errors.First().Description}."));
-                }
-
-                return new(new UnlockUserResponse()
-                {
-                    Succeeded = true,
-                    Message = "User account was successfully unlocked."
-                });
-            }
-            else
-            {
-                return new(new UnlockUserResponse()
-                {
-                    Succeeded = true,
-                    Message = "User account was not locked out."
-                });
-            }
+                Succeeded = true,
+                Message = "User account was not locked out."
+            });
         }
     }
 }

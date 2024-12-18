@@ -1,8 +1,7 @@
-﻿namespace eShop.Domain.Messages
+﻿namespace eShop.Domain.Messages;
+
+public class AccountRegisteredOnExternalLoginMessage : MessageBase
 {
-    public class AccountRegisteredOnExternalLoginMessage : MessageBase
-    {
-        public string TempPassword { get; set; } = string.Empty;
-        public string ProviderName { get; set; } = string.Empty;
-    }
+    public string TempPassword { get; set; } = string.Empty;
+    public string ProviderName { get; set; } = string.Empty;
 }

@@ -1,6 +1,5 @@
-﻿namespace eShop.Domain.Messages
+﻿namespace eShop.Domain.Messages;
+
+public class AccountRegisteredMessage : MessageBase
 {
-    public class AccountRegisteredMessage : MessageBase
-    {
-    }
 }

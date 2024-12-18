@@ -1,91 +1,94 @@
-﻿namespace eShop.AuthApi.Commands.Auth
+﻿using eShop.Domain.DTOs.AuthApi;
+using eShop.Domain.Requests.AuthApi.Auth;
+using eShop.Domain.Responses.AuthApi.Auth;
+
+namespace eShop.AuthApi.Commands.Auth;
+
+internal sealed record LoginCommand(LoginRequest Request) : IRequest<Result<LoginResponse>>;
+
+internal sealed class LoginCommandHandler(
+    AppManager appManager,
+    IEmailSender emailSender,
+    ITokenHandler tokenHandler,
+    AuthDbContext context) : IRequestHandler<LoginCommand, Result<LoginResponse>>
 {
-    internal sealed record LoginCommand(LoginRequest Request) : IRequest<Result<LoginResponse>>;
+    private readonly AppManager appManager = appManager;
+    private readonly IEmailSender emailSender = emailSender;
+    private readonly ITokenHandler tokenHandler = tokenHandler;
+    private readonly AuthDbContext context = context;
 
-    internal sealed class LoginCommandHandler(
-        AppManager appManager,
-        IEmailSender emailSender,
-        ITokenHandler tokenHandler,
-        AuthDbContext context) : IRequestHandler<LoginCommand, Result<LoginResponse>>
+    public async Task<Result<LoginResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
-        private readonly AppManager appManager = appManager;
-        private readonly IEmailSender emailSender = emailSender;
-        private readonly ITokenHandler tokenHandler = tokenHandler;
-        private readonly AuthDbContext context = context;
+        var user = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
 
-        public async Task<Result<LoginResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
+        if (user is null)
         {
-            var user = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
+            return new(new NotFoundException($"Cannot find user with email {request.Request.Email}."));
+        }
 
-            if (user is null)
+        if (!user.EmailConfirmed)
+        {
+            return new(new BadRequestException("The email address is not confirmed."));
+        }
+
+        var isValidPassword = await appManager.UserManager.CheckPasswordAsync(user, request.Request.Password);
+
+        if (!isValidPassword)
+        {
+            return new(new BadRequestException("The password is not valid."));
+        }
+
+        var userDto = new UserDto(user.Email!, user.UserName!, user.Id);
+        var securityToken = await context.UserAuthenticationTokens.AsNoTracking()
+            .SingleOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
+
+        if (securityToken is not null)
+        {
+            var tokens = tokenHandler.ReuseToken(securityToken.Token);
+
+            return new(new LoginResponse()
             {
-                return new(new NotFoundException($"Cannot find user with email {request.Request.Email}."));
-            }
-
-            if (!user.EmailConfirmed)
+                User = userDto,
+                AccessToken = tokens!.AccessToken,
+                RefreshToken = tokens.RefreshToken,
+                Message = "Successfully logged in.",
+                HasTwoFactorAuthentication = false
+            });
+        }
+        else
+        {
+            if (user.TwoFactorEnabled)
             {
-                return new(new BadRequestException("The email address is not confirmed."));
-            }
+                var loginCode = await appManager.UserManager.GenerateTwoFactorTokenAsync(user, "Email");
 
-            var isValidPassword = await appManager.UserManager.CheckPasswordAsync(user, request.Request.Password);
-
-            if (!isValidPassword)
-            {
-                return new(new BadRequestException("The password is not valid."));
-            }
-
-            var userDto = new UserDto(user.Email!, user.UserName!, user.Id);
-            var securityToken = await context.UserAuthenticationTokens.AsNoTracking()
-                .SingleOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
-
-            if (securityToken is not null)
-            {
-                var tokens = tokenHandler.ReuseToken(securityToken.Token);
+                await emailSender.SendTwoFactorAuthenticationCodeMessage(new TwoFactorAuthenticationCodeMessage()
+                {
+                    To = user.Email!,
+                    Subject = "Login with 2FA code",
+                    UserName = user.UserName!,
+                    Code = loginCode
+                });
 
                 return new(new LoginResponse()
                 {
                     User = userDto,
-                    AccessToken = tokens!.AccessToken,
-                    RefreshToken = tokens.RefreshToken,
-                    Message = "Successfully logged in.",
-                    HasTwoFactorAuthentication = false
+                    Message = "We have sent an email with 2FA code at your email address.",
+                    HasTwoFactorAuthentication = true
                 });
             }
-            else
+
+            var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
+            var permissions = (await appManager.PermissionManager.GetUserPermisisonsAsync(user)).ToList();
+            var tokens = await tokenHandler.GenerateTokenAsync(user, roles, permissions);
+
+            return new(new LoginResponse()
             {
-                if (user.TwoFactorEnabled)
-                {
-                    var loginCode = await appManager.UserManager.GenerateTwoFactorTokenAsync(user, "Email");
-
-                    await emailSender.SendTwoFactorAuthenticationCodeMessage(new TwoFactorAuthenticationCodeMessage()
-                    {
-                        To = user.Email!,
-                        Subject = "Login with 2FA code",
-                        UserName = user.UserName!,
-                        Code = loginCode
-                    });
-
-                    return new(new LoginResponse()
-                    {
-                        User = userDto,
-                        Message = "We have sent an email with 2FA code at your email address.",
-                        HasTwoFactorAuthentication = true
-                    });
-                }
-
-                var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
-                var permissions = (await appManager.PermissionManager.GetUserPermisisonsAsync(user)).ToList();
-                var tokens = await tokenHandler.GenerateTokenAsync(user, roles, permissions);
-
-                return new(new LoginResponse()
-                {
-                    User = userDto,
-                    AccessToken = tokens.AccessToken,
-                    RefreshToken = tokens.RefreshToken,
-                    Message = "Successfully logged in.",
-                    HasTwoFactorAuthentication = false
-                });
-            }
+                User = userDto,
+                AccessToken = tokens.AccessToken,
+                RefreshToken = tokens.RefreshToken,
+                Message = "Successfully logged in.",
+                HasTwoFactorAuthentication = false
+            });
         }
     }
 }

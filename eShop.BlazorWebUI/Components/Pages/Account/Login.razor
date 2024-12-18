@@ -1,7 +1,8 @@
 ﻿@page "/account/login"
 
-@using eShop.Domain.Requests.Auth
-@using eShop.Domain.Responses.Auth
+@using eShop.Domain.DTOs.AuthApi
+@using eShop.Domain.Requests.AuthApi.Auth
+@using eShop.Domain.Responses.AuthApi.Auth
 @inherits PageBase
 
 @inject IAuthenticationService authenticationService

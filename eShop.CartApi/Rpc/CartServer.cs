@@ -1,4 +1,6 @@
-﻿namespace eShop.CartApi.Rpc;
+﻿using eShop.Domain.Entities.CartApi;
+
+namespace eShop.CartApi.Rpc;
 
 public class CartServer(IMongoDatabase database, ILogger<CartServer> logger) : CartService.CartServiceBase
 {

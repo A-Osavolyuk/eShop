@@ -1,4 +1,6 @@
-﻿namespace eShop.Application.Validation.Comments;
+﻿using eShop.Domain.Requests.ReviewApi.Comments;
+
+namespace eShop.Application.Validation.Comments;
 
 public class UpdateCommentValidator : AbstractValidator<UpdateCommentRequest>
 {

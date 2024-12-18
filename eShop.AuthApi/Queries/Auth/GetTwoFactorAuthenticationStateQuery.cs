@@ -1,28 +1,29 @@
-﻿namespace eShop.AuthApi.Queries.Auth
+﻿using eShop.Domain.Responses.AuthApi.Auth;
+
+namespace eShop.AuthApi.Queries.Auth;
+
+internal sealed record GetTwoFactorAuthenticationStateQuery(string Email)
+    : IRequest<Result<TwoFactorAuthenticationStateResponse>>;
+
+internal sealed class GetTwoFactorAuthenticationStateQueryHandler(
+    AppManager appManager)
+    : IRequestHandler<GetTwoFactorAuthenticationStateQuery, Result<TwoFactorAuthenticationStateResponse>>
 {
-    internal sealed record GetTwoFactorAuthenticationStateQuery(string Email)
-        : IRequest<Result<TwoFactorAuthenticationStateResponse>>;
+    private readonly AppManager appManager = appManager;
 
-    internal sealed class GetTwoFactorAuthenticationStateQueryHandler(
-        AppManager appManager)
-        : IRequestHandler<GetTwoFactorAuthenticationStateQuery, Result<TwoFactorAuthenticationStateResponse>>
+    public async Task<Result<TwoFactorAuthenticationStateResponse>> Handle(
+        GetTwoFactorAuthenticationStateQuery request, CancellationToken cancellationToken)
     {
-        private readonly AppManager appManager = appManager;
+        var user = await appManager.UserManager.FindByEmailAsync(request.Email);
 
-        public async Task<Result<TwoFactorAuthenticationStateResponse>> Handle(
-            GetTwoFactorAuthenticationStateQuery request, CancellationToken cancellationToken)
+        if (user is null)
         {
-            var user = await appManager.UserManager.FindByEmailAsync(request.Email);
-
-            if (user is null)
-            {
-                return new(new NotFoundException($"Cannot find user with email {request.Email}."));
-            }
-
-            return new(new TwoFactorAuthenticationStateResponse()
-            {
-                TwoFactorAuthenticationState = user.TwoFactorEnabled
-            });
+            return new(new NotFoundException($"Cannot find user with email {request.Email}."));
         }
+
+        return new(new TwoFactorAuthenticationStateResponse()
+        {
+            TwoFactorAuthenticationState = user.TwoFactorEnabled
+        });
     }
 }

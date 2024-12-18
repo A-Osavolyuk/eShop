@@ -1,4 +1,8 @@
-﻿namespace eShop.ProductApi.Repositories;
+﻿using eShop.Domain.DTOs.ProductApi;
+using eShop.Domain.Entities.ProductApi;
+using eShop.Domain.Requests.ProductApi.Product;
+
+namespace eShop.ProductApi.Repositories;
 
 public class ProductRepository(AppDbContext context) : IProductRepository
 {

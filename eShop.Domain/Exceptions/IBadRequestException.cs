@@ -1,4 +1,3 @@
-﻿namespace eShop.Domain.Exceptions
-{
-    public interface IBadRequestException;
-}
+﻿namespace eShop.Domain.Exceptions;
+
+public interface IBadRequestException;

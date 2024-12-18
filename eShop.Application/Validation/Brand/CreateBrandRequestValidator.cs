@@ -1,4 +1,6 @@
-﻿namespace eShop.Application.Validation.Brand;
+﻿using eShop.Domain.Requests.ProductApi.Brand;
+
+namespace eShop.Application.Validation.Brand;
 
 public class CreateBrandRequestValidator : AbstractValidator<CreateBrandRequest>
 {

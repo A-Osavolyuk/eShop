@@ -1,4 +1,7 @@
-﻿namespace eShop.ProductApi.Commands.Products;
+﻿using eShop.Domain.Requests.ProductApi.Product;
+using eShop.Domain.Responses.ProductApi.Products;
+
+namespace eShop.ProductApi.Commands.Products;
 
 internal sealed record UpdateProductCommand(UpdateProductRequest Request) : IRequest<Result<UpdateProductResponse>>;
 

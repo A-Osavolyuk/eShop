@@ -1,59 +1,62 @@
-﻿namespace eShop.AuthApi.Commands.Admin
+﻿using eShop.Domain.Entities.AuthApi;
+using eShop.Domain.Requests.AuthApi.Admin;
+using eShop.Domain.Responses.AuthApi.Admin;
+
+namespace eShop.AuthApi.Commands.Admin;
+
+internal sealed record IssuePermissionCommand(IssuePermissionRequest Request)
+    : IRequest<Result<IssuePermissionsResponse>>;
+
+internal sealed class IssuePermissionCommandHandler(
+    AppManager appManager,
+    AuthDbContext context) : IRequestHandler<IssuePermissionCommand, Result<IssuePermissionsResponse>>
 {
-    internal sealed record IssuePermissionCommand(IssuePermissionRequest Request)
-        : IRequest<Result<IssuePermissionsResponse>>;
+    private readonly AppManager appManager = appManager;
+    private readonly AuthDbContext context = context;
 
-    internal sealed class IssuePermissionCommandHandler(
-        AppManager appManager,
-        AuthDbContext context) : IRequestHandler<IssuePermissionCommand, Result<IssuePermissionsResponse>>
+    public async Task<Result<IssuePermissionsResponse>> Handle(IssuePermissionCommand request,
+        CancellationToken cancellationToken)
     {
-        private readonly AppManager appManager = appManager;
-        private readonly AuthDbContext context = context;
+        var user = await appManager.UserManager.FindByIdAsync(request.Request.UserId);
 
-        public async Task<Result<IssuePermissionsResponse>> Handle(IssuePermissionCommand request,
-            CancellationToken cancellationToken)
+        if (user is null)
         {
-            var user = await appManager.UserManager.FindByIdAsync(request.Request.UserId);
-
-            if (user is null)
-            {
-                return new(new NotFoundException($"Cannot find user with ID {request.Request.UserId}."));
-            }
-
-            var permissions = new List<Permission>();
-
-            foreach (var p in request.Request.Permissions)
-            {
-                var permission = await context.Permissions.AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.Name == p, cancellationToken: cancellationToken);
-
-                if (permission is null)
-                {
-                    return new(new NotFoundException($"Cannot find permission {p}."));
-                }
-
-                permissions.Add(permission);
-            }
-
-            foreach (var permission in permissions)
-            {
-                var alreadyHasPermission = await context.UserPermissions.AsNoTracking()
-                    .AnyAsync(x => x.UserId == user.Id && x.PermissionId == permission.Id,
-                        cancellationToken: cancellationToken);
-
-                if (!alreadyHasPermission)
-                {
-                    await context.UserPermissions.AddAsync(
-                        new UserPermissions() { PermissionId = permission.Id, UserId = user.Id }, cancellationToken);
-                }
-
-                continue;
-            }
-
-            await context.SaveChangesAsync(cancellationToken);
-
-            return new(new IssuePermissionsResponse()
-                { Succeeded = true, Message = "Successfully issued permissions." });
+            return new(new NotFoundException($"Cannot find user with ID {request.Request.UserId}."));
         }
+
+        var permissions = new List<Permission>();
+
+        foreach (var p in request.Request.Permissions)
+        {
+            var permission = await context.Permissions.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Name == p, cancellationToken: cancellationToken);
+
+            if (permission is null)
+            {
+                return new(new NotFoundException($"Cannot find permission {p}."));
+            }
+
+            permissions.Add(permission);
+        }
+
+        foreach (var permission in permissions)
+        {
+            var alreadyHasPermission = await context.UserPermissions.AsNoTracking()
+                .AnyAsync(x => x.UserId == user.Id && x.PermissionId == permission.Id,
+                    cancellationToken: cancellationToken);
+
+            if (!alreadyHasPermission)
+            {
+                await context.UserPermissions.AddAsync(
+                    new UserPermissions() { PermissionId = permission.Id, UserId = user.Id }, cancellationToken);
+            }
+
+            continue;
+        }
+
+        await context.SaveChangesAsync(cancellationToken);
+
+        return new(new IssuePermissionsResponse()
+            { Succeeded = true, Message = "Successfully issued permissions." });
     }
 }

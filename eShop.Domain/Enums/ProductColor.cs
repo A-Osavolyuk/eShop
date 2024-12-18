@@ -1,5 +1,4 @@
-﻿namespace eShop.Domain.Enums
-{
+﻿namespace eShop.Domain.Enums;
     public enum ProductColor
     {
         None,
@@ -25,7 +24,6 @@
         DarkRed,
         LightBlue,
         LightGreen,
-        LightGrey,
-        LightYellow
-    }
+    LightGrey,
+    LightYellow
 }

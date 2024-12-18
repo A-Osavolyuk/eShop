@@ -1,60 +1,62 @@
-namespace eShop.AuthApi.Commands.Admin
+using eShop.Domain.Requests.AuthApi.Admin;
+using eShop.Domain.Responses.AuthApi.Admin;
+
+namespace eShop.AuthApi.Commands.Admin;
+
+internal sealed record RemoveUserFromPermissionCommand(RemoveUserFromPermissionRequest Request)
+    : IRequest<Result<RemoveUserFromPermissionResponse>>;
+
+internal sealed class RemoveUserFromPermissionCommandHandler(
+    AppManager appManager)
+    : IRequestHandler<RemoveUserFromPermissionCommand, Result<RemoveUserFromPermissionResponse>>
 {
-    internal sealed record RemoveUserFromPermissionCommand(RemoveUserFromPermissionRequest Request)
-        : IRequest<Result<RemoveUserFromPermissionResponse>>;
+    private readonly AppManager appManager = appManager;
 
-    internal sealed class RemoveUserFromPermissionCommandHandler(
-        AppManager appManager)
-        : IRequestHandler<RemoveUserFromPermissionCommand, Result<RemoveUserFromPermissionResponse>>
+    public async Task<Result<RemoveUserFromPermissionResponse>> Handle(RemoveUserFromPermissionCommand request,
+        CancellationToken cancellationToken)
     {
-        private readonly AppManager appManager = appManager;
+        var user = await appManager.UserManager.FindByIdAsync(request.Request.UserId);
 
-        public async Task<Result<RemoveUserFromPermissionResponse>> Handle(RemoveUserFromPermissionCommand request,
-            CancellationToken cancellationToken)
+        if (user is null)
         {
-            var user = await appManager.UserManager.FindByIdAsync(request.Request.UserId);
+            return new(new NotFoundException($"Cannot find user with ID {request.Request.UserId}."));
+        }
 
-            if (user is null)
+        var permission = await appManager.PermissionManager.FindPermissionAsync(request.Request.PermissionName);
+
+        if (permission is null)
+        {
+            return new(new NotFoundException($"Cannot find permission {request.Request.PermissionName}."));
+        }
+
+        var hasUserPermission =
+            await appManager.PermissionManager.UserHasPermissionAsync(user, permission.Name);
+
+        if (!hasUserPermission)
+        {
+            return new(new RemoveUserFromPermissionResponse()
             {
-                return new(new NotFoundException($"Cannot find user with ID {request.Request.UserId}."));
+                Succeeded = true,
+                Message = "User does not have the permission."
+            });
+        }
+        else
+        {
+            var permissionResult =
+                await appManager.PermissionManager.RemoveUserFromPermissionAsync(user, permission);
+
+            if (!permissionResult.Succeeded)
+            {
+                return new(new FailedOperationException(
+                    $"Cannot remove user from permission {permission.Name} " +
+                    $"due to server error: {permissionResult.Errors.First().Description}."));
             }
 
-            var permission = await appManager.PermissionManager.FindPermissionAsync(request.Request.PermissionName);
-
-            if (permission is null)
+            return new(new RemoveUserFromPermissionResponse()
             {
-                return new(new NotFoundException($"Cannot find permission {request.Request.PermissionName}."));
-            }
-
-            var hasUserPermission =
-                await appManager.PermissionManager.UserHasPermissionAsync(user, permission.Name);
-
-            if (!hasUserPermission)
-            {
-                return new(new RemoveUserFromPermissionResponse()
-                {
-                    Succeeded = true,
-                    Message = "User does not have the permission."
-                });
-            }
-            else
-            {
-                var permissionResult =
-                    await appManager.PermissionManager.RemoveUserFromPermissionAsync(user, permission);
-
-                if (!permissionResult.Succeeded)
-                {
-                    return new(new FailedOperationException(
-                        $"Cannot remove user from permission {permission.Name} " +
-                        $"due to server error: {permissionResult.Errors.First().Description}."));
-                }
-
-                return new(new RemoveUserFromPermissionResponse()
-                {
-                    Succeeded = true,
-                    Message = "Successfully removed user form permission."
-                });
-            }
+                Succeeded = true,
+                Message = "Successfully removed user form permission."
+            });
         }
     }
 }

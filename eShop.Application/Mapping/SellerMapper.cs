@@ -1,4 +1,7 @@
-﻿namespace eShop.Application.Mapping;
+﻿using eShop.Domain.DTOs.ProductApi;
+using eShop.Domain.Entities.ProductApi;
+
+namespace eShop.Application.Mapping;
 
 public static class SellerMapper
 {

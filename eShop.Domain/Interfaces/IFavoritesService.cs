@@ -1,4 +1,5 @@
 ﻿using eShop.Domain.Common.Api;
+using eShop.Domain.Requests.CartApi.Favorites;
 
 namespace eShop.Domain.Interfaces;
 

@@ -1,7 +1,6 @@
-﻿namespace eShop.Domain.Messages
+﻿namespace eShop.Domain.Messages;
+
+public class TwoFactorAuthenticationCodeMessage : MessageBase
 {
-    public class TwoFactorAuthenticationCodeMessage : MessageBase
-    {
-        public string Code { get; set; } = string.Empty;
-    }
+    public string Code { get; set; } = string.Empty;
 }

@@ -1,12 +1,13 @@
-﻿namespace eShop.Application.Validation.Auth
+﻿using eShop.Domain.Requests.AuthApi.Auth;
+
+namespace eShop.Application.Validation.Auth;
+
+public class ChangeEmailValidator : AbstractValidator<ChangeEmailRequest>
 {
-    public class ChangeEmailValidator : AbstractValidator<ChangeEmailRequest>
+    public ChangeEmailValidator()
     {
-        public ChangeEmailValidator()
-        {
-            RuleFor(x => x.NewEmail)
-                .NotEmpty().WithMessage("New email is must!")
-                .EmailAddress().WithMessage("Invalid email address format.");
-        }
+        RuleFor(x => x.NewEmail)
+            .NotEmpty().WithMessage("New email is must!")
+            .EmailAddress().WithMessage("Invalid email address format.");
     }
 }

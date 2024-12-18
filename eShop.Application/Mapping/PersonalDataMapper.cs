@@ -1,4 +1,6 @@
-﻿using eShop.Domain.Responses.Auth;
+﻿using eShop.Domain.Entities.AuthApi;
+using eShop.Domain.Requests.AuthApi.Auth;
+using eShop.Domain.Responses.AuthApi.Auth;
 
 namespace eShop.Application.Mapping;
 

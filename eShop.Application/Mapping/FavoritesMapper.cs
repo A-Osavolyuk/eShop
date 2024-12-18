@@ -1,4 +1,6 @@
-﻿using eShop.Domain.Requests.Favorites;
+﻿using eShop.Domain.DTOs.CartApi;
+using eShop.Domain.Entities.CartApi;
+using eShop.Domain.Requests.CartApi.Favorites;
 
 namespace eShop.Application.Mapping;
 

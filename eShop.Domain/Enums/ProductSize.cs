@@ -1,17 +1,16 @@
-﻿namespace eShop.Domain.Enums
+﻿namespace eShop.Domain.Enums;
+
+public enum ProductSize
 {
-    public enum ProductSize
-    {
-        None,
-        XXS,
-        XS,
-        S,
-        M,
-        L,
-        XL,
-        XXL,
-        XXXL,
-        XXXXL,
-        XXXXXL
-    }
+    None,
+    XXS,
+    XS,
+    S,
+    M,
+    L,
+    XL,
+    XXL,
+    XXXL,
+    XXXXL,
+    XXXXXL
 }

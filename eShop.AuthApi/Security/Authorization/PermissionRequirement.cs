@@ -1,22 +1,21 @@
 ﻿using eShop.Domain.Common.Security;
 
-namespace eShop.AuthApi.Security.Authorization
+namespace eShop.AuthApi.Security.Authorization;
+
+public class PermissionRequirement(string permissionName) : IAuthorizationRequirement
 {
-    public class PermissionRequirement(string permissionName) : IAuthorizationRequirement
-    {
-        public string PermissionName { get; } = permissionName;
-    }
+    public string PermissionName { get; } = permissionName;
+}
 
-    public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
+public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
+{
+    protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)
     {
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)
-        {
-            if (context.User.HasClaim(c => c.Type == CustomClaimTypes.Permission && c.Value == requirement.PermissionName) || context.User.IsInRole("Admin")) 
-            { 
-                context.Succeed(requirement);
-            }
-
-            return Task.CompletedTask;
+        if (context.User.HasClaim(c => c.Type == CustomClaimTypes.Permission && c.Value == requirement.PermissionName) || context.User.IsInRole("Admin")) 
+        { 
+            context.Succeed(requirement);
         }
+
+        return Task.CompletedTask;
     }
 }

@@ -5,37 +5,37 @@ using MassTransit;
 using Microsoft.Extensions.Options;
 using MimeKit;
 
-namespace eShop.EmailSenderApi.Receivers
+namespace eShop.EmailSenderApi.Receivers;
+
+public class ChangePhoneNumberReceiver(IOptions<EmailOptions> _options) : IConsumer<ChangePhoneNumberMessage>
 {
-    public class ChangePhoneNumberReceiver(IOptions<EmailOptions> _options) : IConsumer<ChangePhoneNumberMessage>
+    private readonly EmailOptions options = _options.Value;
+
+    public async Task Consume(ConsumeContext<ChangePhoneNumberMessage> context)
     {
-        private readonly EmailOptions options = _options.Value;
+        var emailMessage = new MimeMessage();
 
-        public async Task Consume(ConsumeContext<ChangePhoneNumberMessage> context)
+        emailMessage.From.Add(new MailboxAddress(options.DisplayName, options.Email));
+        emailMessage.To.Add(new MailboxAddress(context.Message.To, context.Message.To));
+        emailMessage.Subject = context.Message.Subject;
+
+        var builder = new BodyBuilder();
+        builder.HtmlBody = GetEmailBody(context.Message.To, context.Message.Link, context.Message.PhoneNumber);
+
+        emailMessage.Body = builder.ToMessageBody();
+
+        using (var client = new SmtpClient())
         {
-            var emailMessage = new MimeMessage();
-
-            emailMessage.From.Add(new MailboxAddress(options.DisplayName, options.Email));
-            emailMessage.To.Add(new MailboxAddress(context.Message.To, context.Message.To));
-            emailMessage.Subject = context.Message.Subject;
-
-            var builder = new BodyBuilder();
-            builder.HtmlBody = GetEmailBody(context.Message.To, context.Message.Link, context.Message.PhoneNumber);
-
-            emailMessage.Body = builder.ToMessageBody();
-
-            using (var client = new SmtpClient())
-            {
-                await client.ConnectAsync(options.Host, options.Port, false);
-                await client.AuthenticateAsync(options.Email, options.Password);
-                await client.SendAsync(emailMessage);
-                await client.DisconnectAsync(true);
-            }
+            await client.ConnectAsync(options.Host, options.Port, false);
+            await client.AuthenticateAsync(options.Email, options.Password);
+            await client.SendAsync(emailMessage);
+            await client.DisconnectAsync(true);
         }
+    }
 
-        private string GetEmailBody(string userName, string resetLink, string newPhoneNumber)
-        {
-            string body = @$"
+    private string GetEmailBody(string userName, string resetLink, string newPhoneNumber)
+    {
+        string body = @$"
             <!DOCTYPE html>
             <html>
             <head>
@@ -51,7 +51,6 @@ namespace eShop.EmailSenderApi.Receivers
             </body>
             </html>";
 
-            return body;
-        }
+        return body;
     }
 }

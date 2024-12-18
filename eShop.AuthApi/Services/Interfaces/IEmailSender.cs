@@ -1,13 +1,12 @@
-﻿namespace eShop.AuthApi.Services.Interfaces
+﻿namespace eShop.AuthApi.Services.Interfaces;
+
+internal interface IEmailSender
 {
-    internal interface IEmailSender
-    {
-        public ValueTask SendResetPasswordMessage(ResetPasswordMessage resetPasswordMessage);
-        public ValueTask SendConfirmEmailMessage(ConfirmEmailMessage confirmEmailMessage);
-        public ValueTask SendAccountRegisteredMessage(AccountRegisteredMessage accountRegisteredMessage);
-        public ValueTask SendTwoFactorAuthenticationCodeMessage(TwoFactorAuthenticationCodeMessage twoFactorAuthenticationCodeMessage);
-        public ValueTask SendAccountRegisteredOnExternalLoginMessage(AccountRegisteredOnExternalLoginMessage accountRegisteredOnExternalLoginMessage);
-        public ValueTask SendChangeEmailMessage(ChangeEmailMessage changeEmailMessage);
-        public ValueTask SendChangePhoneNumberMessage(ChangePhoneNumberMessage changePhoneNumberMessage);
-    }
+    public ValueTask SendResetPasswordMessage(ResetPasswordMessage resetPasswordMessage);
+    public ValueTask SendConfirmEmailMessage(ConfirmEmailMessage confirmEmailMessage);
+    public ValueTask SendAccountRegisteredMessage(AccountRegisteredMessage accountRegisteredMessage);
+    public ValueTask SendTwoFactorAuthenticationCodeMessage(TwoFactorAuthenticationCodeMessage twoFactorAuthenticationCodeMessage);
+    public ValueTask SendAccountRegisteredOnExternalLoginMessage(AccountRegisteredOnExternalLoginMessage accountRegisteredOnExternalLoginMessage);
+    public ValueTask SendChangeEmailMessage(ChangeEmailMessage changeEmailMessage);
+    public ValueTask SendChangePhoneNumberMessage(ChangePhoneNumberMessage changePhoneNumberMessage);
 }

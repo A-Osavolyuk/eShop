@@ -1,49 +1,48 @@
 ﻿
-namespace eShop.AuthApi.BackgroundServices
+namespace eShop.AuthApi.BackgroundServices;
+
+public class BackgroundTokenValidator(
+    IServiceScopeFactory scopeFactory,
+    ILogger<BackgroundTokenValidator> logger) : IHostedService, IDisposable
 {
-    public class BackgroundTokenValidator(
-        IServiceScopeFactory scopeFactory,
-        ILogger<BackgroundTokenValidator> logger) : IHostedService, IDisposable
+    private Timer? timer;
+    private readonly IServiceScopeFactory scopeFactory = scopeFactory;
+    private readonly ILogger<BackgroundTokenValidator> logger = logger;
+
+    public Task StartAsync(CancellationToken cancellationToken)
     {
-        private Timer? timer;
-        private readonly IServiceScopeFactory scopeFactory = scopeFactory;
-        private readonly ILogger<BackgroundTokenValidator> logger = logger;
+        timer = new Timer(async state => await ValidateTokensAsync(), null, TimeSpan.FromMinutes(5), TimeSpan.FromHours(12));
+        return Task.CompletedTask;
+    }
 
-        public Task StartAsync(CancellationToken cancellationToken)
+    public Task StopAsync(CancellationToken cancellationToken)
+    {
+        timer?.Change(Timeout.Infinite, 0);
+        return Task.CompletedTask;
+    }
+
+    private async Task ValidateTokensAsync()
+    {
+        using (var scope = scopeFactory.CreateScope())
         {
-            timer = new Timer(async state => await ValidateTokensAsync(), null, TimeSpan.FromMinutes(5), TimeSpan.FromHours(12));
-            return Task.CompletedTask;
-        }
+            var context = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
 
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            timer?.Change(Timeout.Infinite, 0);
-            return Task.CompletedTask;
-        }
+            var userTokens = await context.UserAuthenticationTokens.AsNoTracking().ToListAsync();
 
-        private async Task ValidateTokensAsync()
-        {
-            using (var scope = scopeFactory.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
-
-                var userTokens = await context.UserAuthenticationTokens.AsNoTracking().ToListAsync();
-
-                foreach (var userToken in userTokens) 
-                { 
-                    if(userToken.ExpiredAt >= DateTime.UtcNow)
-                    {
-                        context.UserAuthenticationTokens.Remove(userToken);
-                    }
+            foreach (var userToken in userTokens) 
+            { 
+                if(userToken.ExpiredAt >= DateTime.UtcNow)
+                {
+                    context.UserAuthenticationTokens.Remove(userToken);
                 }
-
-                await context.SaveChangesAsync();
             }
-        }
 
-        public void Dispose()
-        {
-            timer?.Dispose();
+            await context.SaveChangesAsync();
         }
+    }
+
+    public void Dispose()
+    {
+        timer?.Dispose();
     }
 }

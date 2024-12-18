@@ -1,44 +1,45 @@
-﻿namespace eShop.AuthApi.Queries.Admin
+﻿using eShop.Domain.DTOs.AuthApi;
+
+namespace eShop.AuthApi.Queries.Admin;
+
+internal sealed record GetRolesListQuery() : IRequest<Result<IEnumerable<RoleDto>>>;
+
+internal sealed class GetRolesListQueryHandler(
+    AppManager appManager) : IRequestHandler<GetRolesListQuery, Result<IEnumerable<RoleDto>>>
 {
-    internal sealed record GetRolesListQuery() : IRequest<Result<IEnumerable<RoleDto>>>;
+    private readonly AppManager appManager = appManager;
 
-    internal sealed class GetRolesListQueryHandler(
-        AppManager appManager) : IRequestHandler<GetRolesListQuery, Result<IEnumerable<RoleDto>>>
+    public async Task<Result<IEnumerable<RoleDto>>> Handle(GetRolesListQuery request,
+        CancellationToken cancellationToken)
     {
-        private readonly AppManager appManager = appManager;
+        var roles = await appManager.RoleManager.Roles.ToListAsync(cancellationToken);
 
-        public async Task<Result<IEnumerable<RoleDto>>> Handle(GetRolesListQuery request,
-            CancellationToken cancellationToken)
+        if (roles.Count == 0)
         {
-            var roles = await appManager.RoleManager.Roles.ToListAsync(cancellationToken);
-
-            if (roles.Count == 0)
-            {
-                return new(new NotFoundException("Cannot find roles."));
-            }
-
-            var response = new List<RoleDto>();
-            foreach (var role in roles)
-            {
-                if (role is null)
-                {
-                    return new(new NullReferenceException("Role from role list is null"));
-                }
-
-                var memberCount = await appManager.RoleManager.Roles
-                    .Where(x => x.Id == role.Id)
-                    .CountAsync(cancellationToken: cancellationToken);
-
-                response.Add(new()
-                {
-                    Id = Guid.Parse(role!.Id),
-                    Name = role.Name!,
-                    NormalizedName = role.NormalizedName!,
-                    MembersCount = memberCount,
-                });
-            }
-
-            return new(response);
+            return new(new NotFoundException("Cannot find roles."));
         }
+
+        var response = new List<RoleDto>();
+        foreach (var role in roles)
+        {
+            if (role is null)
+            {
+                return new(new NullReferenceException("Role from role list is null"));
+            }
+
+            var memberCount = await appManager.RoleManager.Roles
+                .Where(x => x.Id == role.Id)
+                .CountAsync(cancellationToken: cancellationToken);
+
+            response.Add(new()
+            {
+                Id = Guid.Parse(role!.Id),
+                Name = role.Name!,
+                NormalizedName = role.NormalizedName!,
+                MembersCount = memberCount,
+            });
+        }
+
+        return new(response);
     }
 }

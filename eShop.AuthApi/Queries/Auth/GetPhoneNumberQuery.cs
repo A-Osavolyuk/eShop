@@ -1,26 +1,27 @@
-﻿namespace eShop.AuthApi.Queries.Auth
+﻿using eShop.Domain.Responses.AuthApi.Auth;
+
+namespace eShop.AuthApi.Queries.Auth;
+
+internal sealed record GetPhoneNumberQuery(string Email) : IRequest<Result<GetPhoneNumberResponse>>;
+
+internal sealed class GetPhoneNumberQueryHandler(
+    AppManager appManager) : IRequestHandler<GetPhoneNumberQuery, Result<GetPhoneNumberResponse>>
 {
-    internal sealed record GetPhoneNumberQuery(string Email) : IRequest<Result<GetPhoneNumberResponse>>;
+    private readonly AppManager appManager = appManager;
 
-    internal sealed class GetPhoneNumberQueryHandler(
-        AppManager appManager) : IRequestHandler<GetPhoneNumberQuery, Result<GetPhoneNumberResponse>>
+    public async Task<Result<GetPhoneNumberResponse>> Handle(GetPhoneNumberQuery request,
+        CancellationToken cancellationToken)
     {
-        private readonly AppManager appManager = appManager;
+        var user = await appManager.UserManager.FindByEmailAsync(request.Email);
 
-        public async Task<Result<GetPhoneNumberResponse>> Handle(GetPhoneNumberQuery request,
-            CancellationToken cancellationToken)
+        if (user is null)
         {
-            var user = await appManager.UserManager.FindByEmailAsync(request.Email);
-
-            if (user is null)
-            {
-                return new(new NotFoundException($"Cannot find user with email {request.Email}."));
-            }
-
-            return new(new GetPhoneNumberResponse()
-            {
-                PhoneNumber = user.PhoneNumber!
-            });
+            return new(new NotFoundException($"Cannot find user with email {request.Email}."));
         }
+
+        return new(new GetPhoneNumberResponse()
+        {
+            PhoneNumber = user.PhoneNumber!
+        });
     }
 }

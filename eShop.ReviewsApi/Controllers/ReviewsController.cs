@@ -1,11 +1,10 @@
-﻿namespace eShop.ReviewsApi.Controllers
+﻿namespace eShop.ReviewsApi.Controllers;
+
+[Route("api/v{version:apiVersion}/[controller]")]
+[ApiController]
+[ApiVersion("1.0")]
+[Authorize]
+public class ReviewsController(ISender sender) : ControllerBase
 {
-    [Route("api/v{version:apiVersion}/[controller]")]
-    [ApiController]
-    [ApiVersion("1.0")]
-    [Authorize]
-    public class ReviewsController(ISender sender) : ControllerBase
-    {
-        private readonly ISender sender = sender;
-    }
+    private readonly ISender sender = sender;
 }

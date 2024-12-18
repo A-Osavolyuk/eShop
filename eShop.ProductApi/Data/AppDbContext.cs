@@ -1,4 +1,6 @@
-﻿namespace eShop.ProductApi.Data;
+﻿using eShop.Domain.Entities.ProductApi;
+
+namespace eShop.ProductApi.Data;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {

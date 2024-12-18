@@ -1,7 +1,6 @@
-﻿namespace eShop.Infrastructure.Account
+﻿namespace eShop.Infrastructure.Account;
+
+public static class AuthenticationHandler
 {
-    public static class AuthenticationHandler
-    {
-        public static string Token { get; set; } = string.Empty;
-    }
+    public static string Token { get; set; } = string.Empty;
 }
