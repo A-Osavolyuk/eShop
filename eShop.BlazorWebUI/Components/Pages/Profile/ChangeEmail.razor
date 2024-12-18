@@ -59,14 +59,14 @@
     {
         var response = await AuthService.RequestChangeEmailAsync(Request);
 
-        if (response.IsSucceeded)
+        if (response.Success)
         {
             var data = JsonConvert.DeserializeObject<ChangeEmailResponse>(response.Result!.ToString()!);
             Snackbar.Add(data!.Message, MudBlazor.Severity.Success);
         }
         else
         {
-            Snackbar.Add(response.ErrorMessage, MudBlazor.Severity.Error);
+            Snackbar.Add(response.Message, MudBlazor.Severity.Error);
         }
     }
 }

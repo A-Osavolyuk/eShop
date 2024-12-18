@@ -1,4 +1,6 @@
-﻿namespace eShop.Application.Utilities
+﻿using eShop.Domain.Common.Api;
+
+namespace eShop.Application.Utilities
 {
     public static class ExceptionHandler
     {
@@ -8,23 +10,22 @@
             {
                 INotFoundException => new NotFoundObjectResult(new ResponseBuilder()
                     .Failed()
-                    .WithErrorMessage(exception.Message)
+                    .WithMessage(exception.Message)
                     .Build()),
 
                 IBadRequestException => new BadRequestObjectResult(new ResponseBuilder()
                     .Failed()
-                    .WithErrorMessage(exception.Message)
+                    .WithMessage(exception.Message)
                     .Build()),
 
                 IFailedValidationException => new BadRequestObjectResult(new ResponseBuilder()
                     .Failed()
-                    .WithErrorMessage(exception.Message)
-                    .WithErrors((exception as FailedValidationException)!.Errors.ToList())
+                    .WithMessage(exception.Message)
                     .Build()),
 
                 _ => new ObjectResult(new ResponseBuilder()
                     .Failed()
-                    .WithErrorMessage(exception.Message)
+                    .WithMessage(exception.Message)
                     .Build())
                 { StatusCode = 500 }
             };

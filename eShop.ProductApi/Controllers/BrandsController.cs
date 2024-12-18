@@ -1,4 +1,7 @@
-﻿namespace eShop.ProductApi.Controllers
+﻿using eShop.Domain.Common.Api;
+using Response = eShop.Domain.Common.Api.Response;
+
+namespace eShop.ProductApi.Controllers
 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
@@ -8,7 +11,7 @@
         private readonly ISender sender = sender;
         
         [HttpGet("get-brands")]
-        public async ValueTask<ActionResult<ResponseDto>> GetBrandAsync()
+        public async ValueTask<ActionResult<Response>> GetBrandAsync()
         {
             var response = await sender.Send(new GetBrandsQuery());
             
@@ -23,33 +26,33 @@
 
         [HttpPost("create-brand")]
         [ValidationFilter]
-        public async ValueTask<ActionResult<ResponseDto>> CreateBrandAsync([FromBody] CreateBrandRequest request)
+        public async ValueTask<ActionResult<Response>> CreateBrandAsync([FromBody] CreateBrandRequest request)
         {
             var response = await sender.Send(new CreateBrandCommand(request));
             
             return response.Match(
-                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
+                s => Ok(new ResponseBuilder().Succeeded().WithMessage(s.Message).Build()),
                 ExceptionHandler.HandleException);
         }
         
         [HttpPut("update-brand")]
         [ValidationFilter]
-        public async ValueTask<ActionResult<ResponseDto>> UpdateBrandAsync([FromBody] UpdateBrandRequest request)
+        public async ValueTask<ActionResult<Response>> UpdateBrandAsync([FromBody] UpdateBrandRequest request)
         {
             var response = await sender.Send(new UpdateBrandCommand(request));
             
             return response.Match(
-                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
+                s => Ok(new ResponseBuilder().Succeeded().WithMessage(s.Message).Build()),
                 ExceptionHandler.HandleException);
         }
         
         [HttpDelete("delete-brand")]
-        public async ValueTask<ActionResult<ResponseDto>> DeleteBrandAsync([FromBody] DeleteBrandRequest request)
+        public async ValueTask<ActionResult<Response>> DeleteBrandAsync([FromBody] DeleteBrandRequest request)
         {
             var response = await sender.Send(new DeleteBrandCommand(request));
             
             return response.Match(
-                s => Ok(new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
+                s => Ok(new ResponseBuilder().Succeeded().WithMessage(s.Message).Build()),
                 ExceptionHandler.HandleException);
         }
     }

@@ -58,14 +58,14 @@
     {
         var response = await AuthService.RequestChangePhoneNumberAsync(Request);
 
-        if (response.IsSucceeded)
+        if (response.Success)
         {
             var data = JsonConvert.DeserializeObject<ChangeUserNameResponse>(response.Result!.ToString()!);
             Snackbar.Add(data!.Message, MudBlazor.Severity.Success);
         }
         else
         {
-            Snackbar.Add(response.ErrorMessage, MudBlazor.Severity.Error);
+            Snackbar.Add(response.Message, MudBlazor.Severity.Error);
         }
     }
 }

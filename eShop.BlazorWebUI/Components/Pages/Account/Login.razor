@@ -99,30 +99,30 @@
     {
         var result = await authenticationService.LoginAsync(loginRequest);
 
-        if (result.IsSucceeded)
+        if (result.Success)
         {
             var data = JsonConvert.DeserializeObject<LoginResponse>(result.Result!.ToString()!);
 
             if (data!.HasTwoFactorAuthentication)
             {
-                Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
+                Snackbar.Add(result.Message, MudBlazor.Severity.Success);
                 NavigationManager.NavigateTo($"/account/login-2fa/{loginRequest.Email}");
             }
             else
             {
                 await (authenticationStateProvider as ApplicationAuthenticationStateProvider)!.LoginAsync(data!.AccessToken, data.RefreshToken);
                 NavigationManager.NavigateTo((string.IsNullOrEmpty(ReturnUri) ? "products" : ReturnUri));
-                Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
+                Snackbar.Add(result.Message, MudBlazor.Severity.Success);
                 loginRequest = new();
             }
         }
         else
-            Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
+            Snackbar.Add(result.Message, MudBlazor.Severity.Error);
     }
 
-    private void ExternalLogin(string ProviderName)
+    private void ExternalLogin(string providerName)
     {
-        var authUrl = $"{Configuration["Services:Gateway"]!}/api/v1/Auth/external-login/{ProviderName}";
+        var authUrl = $"{Configuration["Services:Gateway"]!}/api/v1/Auth/external-login/{providerName}";
         NavigationManager.NavigateTo(authUrl);
     }
 }

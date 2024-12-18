@@ -1,4 +1,7 @@
-﻿namespace eShop.CartApi.Controllers;
+﻿using eShop.Domain.Common.Api;
+using Response = eShop.Domain.Common.Api.Response;
+
+namespace eShop.CartApi.Controllers;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
@@ -8,7 +11,7 @@ public class FavoritesController(ISender sender) : ControllerBase
     private readonly ISender sender = sender;
     
     [HttpPut("update-favorites")]
-    public async ValueTask<ActionResult<ResponseDto>> UpdateCartAsync([FromBody] UpdateFavoritesRequest request)
+    public async ValueTask<ActionResult<Response>> UpdateCartAsync([FromBody] UpdateFavoritesRequest request)
     {
         var response = await sender.Send(new UpdateFavoritesCommand(request));
 
@@ -18,7 +21,7 @@ public class FavoritesController(ISender sender) : ControllerBase
     }
     
     [HttpGet("get-favorites/{userId:guid}")]
-    public async ValueTask<ActionResult<ResponseDto>> GetCartAsync(Guid userId)
+    public async ValueTask<ActionResult<Response>> GetCartAsync(Guid userId)
     {
         var response = await sender.Send(new GetFavoritesQuery(userId));
 

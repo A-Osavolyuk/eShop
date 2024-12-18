@@ -1,4 +1,6 @@
-﻿using eShop.ProductApi.Commands.Sellers;
+﻿using eShop.Domain.Common.Api;
+using eShop.ProductApi.Commands.Sellers;
+using Response = eShop.Domain.Common.Api.Response;
 
 namespace eShop.ProductApi.Controllers;
 
@@ -10,12 +12,12 @@ public class SellerController(ISender sender) : ControllerBase
     private readonly ISender sender = sender;
 
     [HttpPost("register-seller")]
-    public async ValueTask<ActionResult<ResponseDto>> RegisterSeller([FromBody] RegisterSellerRequest request)
+    public async ValueTask<ActionResult<Response>> RegisterSeller([FromBody] RegisterSellerRequest request)
     {
         var response = await sender.Send(new RegisterSellerCommand(request));
        
         return response.Match(
-            s => StatusCode(201, new ResponseBuilder().Succeeded().WithResultMessage(s.Message).Build()),
+            s => StatusCode(201, new ResponseBuilder().Succeeded().WithMessage(s.Message).Build()),
             ExceptionHandler.HandleException);
     }
 }

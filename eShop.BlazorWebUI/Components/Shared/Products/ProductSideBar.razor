@@ -248,9 +248,9 @@
         var request = CartMapper.ToUpdateCartRequest(cart);
         var response = await CartService.UpdateCartAsync(request);
 
-        if (!response.IsSucceeded)
+        if (!response.Success)
         {
-            Snackbar.Add(response.ErrorMessage, Severity.Error);
+            Snackbar.Add(response.Message, Severity.Error);
         }
     }
     
@@ -260,9 +260,9 @@
         var request = FavoritesMapper.ToUpdateFavoritesRequest(favorites);
         var response = await FavoritesService.UpdateFavoritesAsync(request);
 
-        if (!response.IsSucceeded)
+        if (!response.Success)
         {
-            Snackbar.Add(response.ErrorMessage, Severity.Error);
+            Snackbar.Add(response.Message, Severity.Error);
         }
     }
 }

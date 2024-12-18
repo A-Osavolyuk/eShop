@@ -131,7 +131,7 @@
         {
             var response = await AuthService.GetPersonalDataAsync(userData!.Email);
 
-            if (response.IsSucceeded)
+            if (response.Success)
             {
                 var data = JsonConvert.DeserializeObject<PersonalDataResponse>(response.Result!.ToString()!);
 
@@ -147,7 +147,7 @@
             }
             else
             {
-                Snackbar.Add(response.ErrorMessage, MudBlazor.Severity.Error);
+                Snackbar.Add(response.Message, MudBlazor.Severity.Error);
             }
         }
     }
@@ -160,7 +160,7 @@
         {
             var response = await AuthService.GetTwoFactorStateAsync(userData.Email);
 
-            if (response.IsSucceeded)
+            if (response.Success)
             {
                 var data = JsonConvert.DeserializeObject<TwoFactorAuthenticationStateResponse>(response.Result!.ToString()!);
 
@@ -174,7 +174,7 @@
             }
             else
             {
-                Snackbar.Add(response.ErrorMessage, MudBlazor.Severity.Error);
+                Snackbar.Add(response.Message, MudBlazor.Severity.Error);
             }
         }
     }
@@ -187,13 +187,13 @@
         {
             var response = await StoreService.GetUserAvatarAsync(userData.UserId);
 
-            if (response.IsSucceeded)
+            if (response.Success)
             {
                 avatarUri = response!.Result?.ToString() ?? Configuration["DefaultAvatar"]!;
             }
             else
             {
-                Snackbar.Add(response.ErrorMessage, Severity.Error);
+                Snackbar.Add(response.Message, Severity.Error);
                 avatarUri = Configuration["DefaultAvatar"]!;
             }
         }
@@ -203,7 +203,7 @@
     {
         var response = await AuthService.ChangeTwoFactorAuthenticationStateAsync(new() { Email = userData.Email });
 
-        if (response.IsSucceeded)
+        if (response.Success)
         {
             var data = JsonConvert.DeserializeObject<ChangeTwoFactorAuthenticationResponse>(response.Result!.ToString()!);
             securityData.TwoFactorAuthenticationState = data!.TwoFactorAuthenticationState;
@@ -212,7 +212,7 @@
         }
         else
         {
-            Snackbar.Add(response.ErrorMessage, MudBlazor.Severity.Error);
+            Snackbar.Add(response.Message, MudBlazor.Severity.Error);
         }
     }
 

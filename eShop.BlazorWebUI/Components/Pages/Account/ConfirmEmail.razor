@@ -1,4 +1,5 @@
 ﻿@page "/account/confirm-email/"
+@using eShop.Domain.Common.Api
 @using eShop.Domain.Requests.Auth
 
 @inject NavigationManager NavigationManager
@@ -6,25 +7,23 @@
 @inject ISnackbar SnackBar
 
 @code {
-    private ResponseDto Result { get; set; } = new();
-
     [SupplyParameterFromQuery(Name = "token")] public string Token { get; set; } = string.Empty;
     [SupplyParameterFromQuery(Name = "email")] public string Email { get; set; } = string.Empty;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        Result = await AuthenticationService.ConfirmEmailAsync(new ConfirmEmailRequest() { Token = Token, Email = Email });
+        var response = await AuthenticationService.ConfirmEmailAsync(new ConfirmEmailRequest() { Token = Token, Email = Email });
 
-        if (Result.IsSucceeded)
+        if (response.Success)
         {
             NavigationManager.NavigateTo("/account/login");
-            SnackBar.Add(Result.ResultMessage, MudBlazor.Severity.Success);
+            SnackBar.Add(response.Message, MudBlazor.Severity.Success);
 
         }
         else
         {
             NavigationManager.NavigateTo("/account/failed-email-confirmation");
-            SnackBar.Add(Result.ResultMessage, MudBlazor.Severity.Error);
+            SnackBar.Add(response.Message, MudBlazor.Severity.Error);
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿namespace eShop.CartApi.Controllers
+﻿using eShop.Domain.Common.Api;
+using Response = eShop.Domain.Common.Api.Response;
+
+namespace eShop.CartApi.Controllers
 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
@@ -8,7 +11,7 @@
         private readonly ISender sender = sender;
 
         [HttpPut("update-cart")]
-        public async ValueTask<ActionResult<ResponseDto>> UpdateCartAsync([FromBody] UpdateCartRequest request)
+        public async ValueTask<ActionResult<Response>> UpdateCartAsync([FromBody] UpdateCartRequest request)
         {
             var response = await sender.Send(new UpdatedCartCommand(request));
 
@@ -18,7 +21,7 @@
         }
         
         [HttpGet("get-cart/{userId:guid}")]
-        public async ValueTask<ActionResult<ResponseDto>> GetCartAsync(Guid userId)
+        public async ValueTask<ActionResult<Response>> GetCartAsync(Guid userId)
         {
             var response = await sender.Send(new GetCartQuery(userId));
 

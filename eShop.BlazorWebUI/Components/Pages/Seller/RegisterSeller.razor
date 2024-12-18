@@ -21,13 +21,13 @@
     {
         var response = await SellerService.RegisterSellerAsync(Model);
 
-        if (response.IsSucceeded)
+        if (response.Success)
         {
-            Snackbar.Add(response.ResultMessage, Severity.Success);
+            Snackbar.Add(response.Message, Severity.Success);
         }
         else
         {
-            Snackbar.Add(response.ErrorMessage, Severity.Error);
+            Snackbar.Add(response.Message, Severity.Error);
         }
     }
 }

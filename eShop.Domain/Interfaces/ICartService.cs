@@ -1,8 +1,10 @@
-﻿namespace eShop.Domain.Interfaces
+﻿using eShop.Domain.Common.Api;
+
+namespace eShop.Domain.Interfaces
 {
     public interface ICartService
     {
-        public ValueTask<ResponseDto> GetCartAsync(Guid userId);
-        public ValueTask<ResponseDto> UpdateCartAsync(UpdateCartRequest request);
+        public ValueTask<Response> GetCartAsync(Guid userId);
+        public ValueTask<Response> UpdateCartAsync(UpdateCartRequest request);
     }
 }

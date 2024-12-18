@@ -25,15 +25,15 @@
 
         var result = await AuthenticationService.ConfirmChangeEmailAsync(Request);
 
-        if (result.IsSucceeded)
+        if (result.Success)
         {
             await (authenticationState as ApplicationAuthenticationStateProvider)!.LogOutAsync();
-            Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
+            Snackbar.Add(result.Message, MudBlazor.Severity.Success);
             NavigationManager.NavigateTo("/account/login");
         }
         else
         {
-            Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
+            Snackbar.Add(result.Message, MudBlazor.Severity.Error);
             NavigationManager.NavigateTo("/profile");
         }
     }

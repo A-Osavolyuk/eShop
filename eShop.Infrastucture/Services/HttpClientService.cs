@@ -1,4 +1,5 @@
-﻿using HttpMethods = eShop.Domain.Enums.HttpMethods;
+﻿using eShop.Domain.Common.Api;
+using HttpMethods = eShop.Domain.Enums.HttpMethods;
 
 namespace eShop.Infrastructure.Services
 {
@@ -13,7 +14,7 @@ namespace eShop.Infrastructure.Services
             this.tokenProvider = tokenProvider;
         }
 
-        public async ValueTask<ResponseDto> SendAsync(RequestDto request, bool withBearer = true)
+        public async ValueTask<Response> SendAsync(RequestDto request, bool withBearer = true)
         {
             try
             {
@@ -51,12 +52,12 @@ namespace eShop.Infrastructure.Services
             {
                 return new ResponseBuilder()
                     .Failed()
-                    .WithErrorMessage(ex.Message)
+                    .WithMessage(ex.Message)
                     .Build();
             }
         }
 
-        public async ValueTask<ResponseDto> SendFilesAsync(FileRequestDto request, bool withBearer = true)
+        public async ValueTask<Response> SendFilesAsync(FileRequestDto request, bool withBearer = true)
         {
             try
             {
@@ -107,29 +108,25 @@ namespace eShop.Infrastructure.Services
             {
                 return new ResponseBuilder()
                     .Failed()
-                    .WithErrorMessage(ex.Message)
+                    .WithMessage(ex.Message)
                     .Build();
             }
         }
 
-        private async ValueTask<ResponseDto> HandleStatusCode(HttpResponseMessage httpResponse)
+        private async ValueTask<Response> HandleStatusCode(HttpResponseMessage httpResponse)
         {
             var json = await httpResponse.Content.ReadAsStringAsync();
-            var response = JsonConvert.DeserializeObject<ResponseDto>(json);
+            var response = JsonConvert.DeserializeObject<Response>(json);
 
             return httpResponse.StatusCode switch
             {
                 HttpStatusCode.InternalServerError => new ResponseBuilder().Failed()
-                    .WithErrorMessage(response!.ErrorMessage).Build(),
-                HttpStatusCode.NotFound => new ResponseBuilder().Failed().WithErrorMessage(response!.ErrorMessage)
-                    .Build(),
-                HttpStatusCode.Forbidden => new ResponseBuilder().Failed().WithErrorMessage("Forbidden").Build(),
-                HttpStatusCode.Unauthorized => new ResponseBuilder().Failed().WithErrorMessage($"Unauthorized").Build(),
-                HttpStatusCode.BadRequest => response.Errors.Any()
-                    ? new ResponseBuilder().Failed().WithErrorMessage(response!.ErrorMessage + " " + string.Join(';', response.Errors))
-                        .WithErrors(response.Errors).Build()
-                    : new ResponseBuilder().Failed().WithErrorMessage(response!.ErrorMessage).Build(),
-                _ => response
+                    .WithMessage(response!.Message).Build(),
+                HttpStatusCode.NotFound => new ResponseBuilder().Failed().WithMessage(response!.Message).Build(),
+                HttpStatusCode.Forbidden => new ResponseBuilder().Failed().WithMessage("Forbidden").Build(),
+                HttpStatusCode.Unauthorized => new ResponseBuilder().Failed().WithMessage("Unauthorized").Build(),
+                HttpStatusCode.BadRequest => new ResponseBuilder().Failed().WithMessage("Bad Request").Build(),
+                _ => response!
             };
         }
     }

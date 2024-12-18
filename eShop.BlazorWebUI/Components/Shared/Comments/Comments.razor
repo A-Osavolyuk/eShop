@@ -52,7 +52,7 @@ else
         {
             var response = await CommentService.GetCommentsAsync(Model.Id);
 
-            if (response.IsSucceeded)
+            if (response.Success)
             {
                 var data = ResponseConverter.Deserialize<GetCommentsResponse>(response.Result!);
                 commentsList = await data.Comments
@@ -62,7 +62,7 @@ else
             }
             else
             {
-                Snackbar.Add(response.ErrorMessage, Severity.Error);
+                Snackbar.Add(response.Message, Severity.Error);
             }
         }
     }

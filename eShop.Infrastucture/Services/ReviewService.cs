@@ -1,4 +1,5 @@
-﻿using eShop.Domain.Requests.Review;
+﻿using eShop.Domain.Common.Api;
+using eShop.Domain.Requests.Review;
 using HttpMethods = eShop.Domain.Enums.HttpMethods;
 
 namespace eShop.Infrastructure.Services
@@ -8,16 +9,16 @@ namespace eShop.Infrastructure.Services
         private readonly IHttpClientService httpClient = httpClient;
         private readonly IConfiguration configuration = configuration;
 
-        public async Task<ResponseDto> CreateReviewAsync(CreateReviewRequest request) => await httpClient.SendAsync(new RequestDto(
+        public async Task<Response> CreateReviewAsync(CreateReviewRequest request) => await httpClient.SendAsync(new RequestDto(
             Url: $"{configuration["Services:Gateway"]}/api/v1/Reviews/create-review", Method: HttpMethods.POST, Data: request));
 
-        public async Task<ResponseDto> DeleteReviewsWithProductIdAsync(Guid Id) => await httpClient.SendAsync(new RequestDto(
+        public async Task<Response> DeleteReviewsWithProductIdAsync(Guid Id) => await httpClient.SendAsync(new RequestDto(
             Url: $"{configuration["Services:Gateway"]}/api/v1/Reviews/delete-reviews-with-product-id/{Id}", Method: HttpMethods.DELETE));
 
-        public async Task<ResponseDto> GetReviewListByProductIdAsync(Guid Id) => await httpClient.SendAsync(new RequestDto(
+        public async Task<Response> GetReviewListByProductIdAsync(Guid Id) => await httpClient.SendAsync(new RequestDto(
             Url: $"{configuration["Services:Gateway"]}/api/v1/Reviews/get-reviews-by-product-id/{Id}", Method: HttpMethods.GET));
 
-        public async Task<ResponseDto> UpdateReviewAsync(UpdateReviewRequest request) => await httpClient.SendAsync(new RequestDto(
+        public async Task<Response> UpdateReviewAsync(UpdateReviewRequest request) => await httpClient.SendAsync(new RequestDto(
             Url: $"{configuration["Services:Gateway"]}/api/v1/Reviews/update-review", Method: HttpMethods.PUT, Data: request));
     }
 }

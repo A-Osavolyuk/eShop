@@ -43,14 +43,14 @@
     {
         var result = await AuthenticationService.LoginWithTwoFactorAuthenticationAsync(Model with { Email = Email });
 
-        if (result.IsSucceeded)
+        if (result.Success)
         {
             var data = JsonConvert.DeserializeObject<LoginResponse>(result.Result!.ToString()!);
             await (authenticationStateProvider as ApplicationAuthenticationStateProvider)!.LoginAsync(data!.AccessToken, data.RefreshToken);
             NavigationManager.NavigateTo("/products");
-            Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
+            Snackbar.Add(result.Message, MudBlazor.Severity.Success);
         }
         else
-            Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
+            Snackbar.Add(result.Message, MudBlazor.Severity.Error);
     }
 }

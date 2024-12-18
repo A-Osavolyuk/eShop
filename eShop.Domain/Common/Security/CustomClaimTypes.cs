@@ -1,4 +1,6 @@
-﻿namespace eShop.Domain.Common
+﻿using eShop.Domain.Common.Api;
+
+namespace eShop.Domain.Common.Security
 {
     public static class CustomClaimTypes
     {

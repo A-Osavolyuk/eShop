@@ -55,14 +55,14 @@
     {
         var response = await ProductService.GetProductsAsync();
 
-        if (response.IsSucceeded)
+        if (response.Success)
         {
             var data = ResponseConverter.Deserialize<List<ProductDto>>(response.Result!);
             ProductsList = data;
         }
         else
         {
-            Snackbar.Add(response.ErrorMessage, Severity.Error);
+            Snackbar.Add(response.Message, Severity.Error);
         }
     }
 

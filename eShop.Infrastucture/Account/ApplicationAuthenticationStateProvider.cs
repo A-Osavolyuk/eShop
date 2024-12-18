@@ -1,4 +1,6 @@
-﻿namespace eShop.Infrastructure.Account
+﻿using eShop.Domain.Common.Security;
+
+namespace eShop.Infrastructure.Account
 {
     public class ApplicationAuthenticationStateProvider(
         ITokenProvider tokenProvider,
@@ -183,7 +185,7 @@
         {
             var result = await authenticationService.RefreshToken(new RefreshTokenRequest() { Token = expiredToken });
 
-            if (result.IsSucceeded)
+            if (result.Success)
             {
                 var response = JsonConvert.DeserializeObject<RefreshTokenResponse>(result.Result!.ToString()!)!;
                 var newToken = response.Token;

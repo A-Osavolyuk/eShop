@@ -1,4 +1,5 @@
-﻿using HttpMethods = eShop.Domain.Enums.HttpMethods;
+﻿using eShop.Domain.Common.Api;
+using HttpMethods = eShop.Domain.Enums.HttpMethods;
 
 namespace eShop.Infrastructure.Services
 {
@@ -8,7 +9,7 @@ namespace eShop.Infrastructure.Services
     {
         private readonly IHttpClientService clientService = clientService;
         private readonly IConfiguration configuration = configuration;
-        public async ValueTask<ResponseDto> GetBrandsListAsync() => await clientService.SendAsync(
+        public async ValueTask<Response> GetBrandsListAsync() => await clientService.SendAsync(
             new RequestDto(Url: $"{configuration["Services:Gateway"]}/api/v1/Brands", Method: HttpMethods.GET));
     }
 }

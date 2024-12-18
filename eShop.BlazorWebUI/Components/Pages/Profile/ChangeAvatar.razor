@@ -96,7 +96,7 @@
         var userData = await LocalDataAccessor.ReadUserDataAsync();
         var response = await StoreService.UploadUserAvatarAsync(userData.UserId, file!);
 
-        if (response.IsSucceeded)
+        if (response.Success)
         {
             var data = ResponseConverter.Deserialize<UploadAvatarResponse>(response.Result!);
             await LocalDataAccessor.WriteAvatarLinkAsync(data.Uri);
@@ -104,7 +104,7 @@
         }
         else
         {
-            Snackbar.Add(response.ErrorMessage, Severity.Error);
+            Snackbar.Add(response.Message, Severity.Error);
         }
     }
 }

@@ -1,6 +1,8 @@
-﻿namespace eShop.Domain.Interfaces;
+﻿using eShop.Domain.Common.Api;
+
+namespace eShop.Domain.Interfaces;
 
 public interface ISellerService
 {
-    public ValueTask<ResponseDto> RegisterSellerAsync(RegisterSellerRequest request);
+    public ValueTask<Response> RegisterSellerAsync(RegisterSellerRequest request);
 }

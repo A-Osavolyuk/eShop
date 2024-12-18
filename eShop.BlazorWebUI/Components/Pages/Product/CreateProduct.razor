@@ -204,14 +204,14 @@
     {
         var response = await StoreService.UploadProductImagesAsync(files, id);
 
-        if (response.IsSucceeded)
+        if (response.Success)
         {
             var data = ResponseConverter.Deserialize<UploadProductImagesResponse>(response.Result!);
             return data.Images;
         }
         else
         {
-            Snackbar.Add(response.ErrorMessage, Severity.Error);
+            Snackbar.Add(response.Message, Severity.Error);
             return new();
         }
     }
@@ -220,7 +220,7 @@
     {
         var response = await ProductService.CreateProductAsync(request);
 
-        if (response.IsSucceeded)
+        if (response.Success)
         {
             var data = ResponseConverter.Deserialize<CreateProductResponse>(response.Result!);
             Snackbar.Add(data.Message, Severity.Success);
@@ -228,7 +228,7 @@
         }
         else
         {
-            Snackbar.Add(response.ErrorMessage, Severity.Error);
+            Snackbar.Add(response.Message, Severity.Error);
         }
     }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+﻿using eShop.Domain.Common.Api;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 
 namespace eShop.Application.Middlewares;
@@ -19,8 +20,7 @@ public class GlobalExceptionHandler(
             await httpContext.Response.WriteAsJsonAsync(
                 new ResponseBuilder()
                     .Failed()
-                    .WithErrorMessage(failedValidationException.Message)
-                    .WithErrors(failedValidationException.Errors.ToList())
+                    .WithMessage(failedValidationException.Message)
                     .Build(), cancellationToken);
         }
         

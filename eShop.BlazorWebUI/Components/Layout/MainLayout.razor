@@ -171,14 +171,14 @@
             var userData = await LocalDataAccessor.ReadUserDataAsync();
             var response = await CartService.GetCartAsync(Guid.Parse(user.UserId));
 
-            if (response.IsSucceeded)
+            if (response.Success)
             {
                 var data = JsonConvert.DeserializeObject<CartDto>(response.Result!.ToString()!);
                 await LocalDataAccessor.CreateCartAsync(CartMapper.ToCartModel(data!));
             }
             else
             {
-                Snackbar.Add(response.ErrorMessage, Severity.Error);
+                Snackbar.Add(response.Message, Severity.Error);
             }
         }
     }
@@ -189,14 +189,14 @@
         {
             var userData = await LocalDataAccessor.ReadUserDataAsync();
             var response = await FavoritesService.GetFavoritesAsync(Guid.Parse(userData.UserId));
-            if (response.IsSucceeded)
+            if (response.Success)
             {
                 var data = JsonConvert.DeserializeObject<FavoritesDto>(response.Result!.ToString()!);
                 await LocalDataAccessor.CreateFavoritesAsync(FavoritesMapper.ToFavoritesModel(data!));
             }
             else
             {
-                Snackbar.Add(response.ErrorMessage, Severity.Error);
+                Snackbar.Add(response.Message, Severity.Error);
             }
         }
     }
@@ -213,13 +213,13 @@
             {
                 var response = await StoreService.GetUserAvatarAsync(user.UserId);
 
-                if (response.IsSucceeded)
+                if (response.Success)
                 {
                     avatarUri = response!.Result?.ToString() ?? Configuration["DefaultAvatar"]!;
                 }
                 else
                 {
-                    Snackbar.Add(response.ErrorMessage, Severity.Error);
+                    Snackbar.Add(response.Message, Severity.Error);
                     avatarUri = Configuration["DefaultAvatar"]!;
                 }
             }

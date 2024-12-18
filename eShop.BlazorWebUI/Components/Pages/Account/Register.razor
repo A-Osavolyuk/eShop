@@ -44,7 +44,7 @@
 @code {
     [SupplyParameterFromForm] private RegistrationRequest registrationRequest { get; set; } = new();
 
-    protected async override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         var user = await LocalDataAccessor.ReadUserDataAsync();
 
@@ -58,13 +58,13 @@
     {
         var result = await authenticationService.RegisterAsync(registrationRequest);
 
-        if (result.IsSucceeded)
+        if (result.Success)
         {
-            Snackbar.Add(result.ResultMessage, MudBlazor.Severity.Success);
+            Snackbar.Add(result.Message, MudBlazor.Severity.Success);
             NavigationManager.NavigateTo("/account/login");
         }
         else
-            Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
+            Snackbar.Add(result.Message, MudBlazor.Severity.Error);
 
         registrationRequest = new();
     }
