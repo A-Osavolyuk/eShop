@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.Requests.Admin
 {
-    public record class CreateUserAccountRequest : RequestBase
+    public record class CreateUserAccountRequest
     {
         public string Email { get; set; } = string.Empty;
         public string UserName { get; set; } = string.Empty;

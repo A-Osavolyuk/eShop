@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.Requests.Comments;
 
-public record CreateCommentRequest() : RequestBase
+public record CreateCommentRequest()
 {
     public Guid ProductId { get; set; }
     public Guid UserId { get; set; }

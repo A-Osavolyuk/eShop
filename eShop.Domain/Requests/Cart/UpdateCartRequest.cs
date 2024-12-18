@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.Requests.Cart;
 
-public record UpdateCartRequest : RequestBase
+public record UpdateCartRequest
 {
     public Guid CartId { get; set; }
     public int ItemsCount { get; set; }

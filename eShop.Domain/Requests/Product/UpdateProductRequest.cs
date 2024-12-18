@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.Requests.Product;
 
-public record UpdateProductRequest() : RequestBase
+public record UpdateProductRequest()
 {
     public Guid Id { get; set; }
     public ProductTypes ProductType { get; set; } = ProductTypes.None;

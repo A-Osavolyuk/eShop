@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.Requests.Brand
 {
-    public record UpdateBrandRequest : RequestBase
+    public record UpdateBrandRequest
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;

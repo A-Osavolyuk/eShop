@@ -12,8 +12,8 @@
 
         public async Task Consume(ConsumeContext<DeleteCommentsRequest> context)
         {
-            logger.LogInformation("Got message with command to delete comments with product ID: {id}. Request ID {requestId}",
-                context.Message.ProductId, context.Message.RequestId);
+            logger.LogInformation("Got message with command to delete comments with product ID: {id}.",
+                context.Message.ProductId);
             
                 var comments = await dbContext.Comments
                     .AsNoTracking()
@@ -31,7 +31,7 @@
                     Message = "Comments were successfully deleted.",
                 });
             
-            logger.LogInformation($"Response was successfully sent.", context.Message.RequestId);
+            logger.LogInformation($"Response was successfully sent.");
         }
     }
 }

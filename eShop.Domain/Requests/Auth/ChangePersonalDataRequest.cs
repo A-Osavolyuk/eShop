@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.Requests.Auth
 {
-    public record class ChangePersonalDataRequest : RequestBase
+    public record class ChangePersonalDataRequest
     {
         public string Email { get; set; } = string.Empty;
         public string FirstName { get; set; } = string.Empty;

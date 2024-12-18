@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.Requests.Admin
 {
-    public record LockoutUserRequest : RequestBase
+    public record LockoutUserRequest
     {
         public Guid UserId { get; set; }
         public DateTimeOffset LockoutEnd { get; set; }

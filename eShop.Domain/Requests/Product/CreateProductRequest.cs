@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.Requests.Product;
 
-public record CreateProductRequest : RequestBase
+public record CreateProductRequest
 {
     public CreateProductRequest() => Article = ProductEntity.GenerateArticle();
     public Guid Id { get; set; } = Guid.NewGuid();

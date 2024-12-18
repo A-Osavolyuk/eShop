@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.Requests.Favorites;
 
-public record UpdateFavoritesRequest : RequestBase
+public record UpdateFavoritesRequest
 {
     public Guid FavoritesId { get; set; }
     public int ItemsCount { get; set; }

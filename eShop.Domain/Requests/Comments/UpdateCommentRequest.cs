@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.Requests.Comments;
 
-public record UpdateCommentRequest() : RequestBase
+public record UpdateCommentRequest()
 {
     public Guid CommentId { get; set; }
     public Guid ProductId { get; set; }
