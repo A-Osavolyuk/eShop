@@ -1,6 +1,6 @@
 ﻿using Aspire.Hosting.MongoDB;
 
-namespace eShop.AppHost.Extensions.Mongo;
+namespace eShop.AppHost.Extensions;
 
 public static class MongoExpressExtensions
 {

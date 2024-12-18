@@ -1,21 +1,20 @@
 using eShop.AppHost.Extensions;
-using eShop.AppHost.Extensions.Mongo;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-var password = builder.AddParameter("password", "atpDWGvDb4jR5pE7rT59c7");
-var userName = builder.AddParameter("admin", "admin");
+var defaultPassword = builder.AddParameter("password", "atpDWGvDb4jR5pE7rT59c7");
+var defaultUser = builder.AddParameter("admin", "admin");
 
 var redisCache = builder.AddRedis("redis", 60001)
     .WithLifetime(ContainerLifetime.Persistent)
     .WithDataVolume()
     .WithRedisInsight(containerName: "redis-insights");
 
-var sqlServer = builder.AddSqlServer("mssql-server", port: 60002, password: password)
+var sqlServer = builder.AddSqlServer("mssql-server", port: 60002, password: defaultPassword)
     .WithLifetime(ContainerLifetime.Persistent)
     .WithDataVolume();
 
-var mongo = builder.AddMongoDB("mongo", userName: userName, password: password)
+var mongo = builder.AddMongoDB("mongo", userName: defaultUser, password: defaultPassword)
     .WithLifetime(ContainerLifetime.Persistent)
     .WithDataVolume()
     .WithMongoExpress(cfg =>
@@ -31,7 +30,7 @@ var authDb = sqlServer.AddDatabase("auth-db", "AuthDB");
 var reviewsDb = sqlServer.AddDatabase("reviews-db", "ReviewsDB");
 var productDb = sqlServer.AddDatabase("product-db", "ProductDB");
 
-var rabbitMq = builder.AddRabbitMQ("rabbit-mq", port: 60003, userName: userName, password: password)
+var rabbitMq = builder.AddRabbitMQ("rabbit-mq", port: 60003, userName: defaultUser, password: defaultPassword)
     .WithLifetime(ContainerLifetime.Persistent)
     .WithManagementPlugin()
     .WithDataVolume();
