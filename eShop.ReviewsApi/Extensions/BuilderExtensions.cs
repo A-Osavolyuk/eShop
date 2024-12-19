@@ -10,6 +10,7 @@ public static class BuilderExtensions
         builder.AddSwaggerWithSecurity();
         builder.AddDependencyInjection();
         builder.AddMessageBus();
+        builder.AddRedisCache();
         builder.Services.AddDbContext<AppDbContext>(cfg =>
         {
             cfg.UseSqlServer(builder.Configuration["Configuration:Storage:Databases:SQL:MSSQL:ConnectionString"]!);

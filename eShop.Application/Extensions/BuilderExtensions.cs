@@ -91,4 +91,15 @@ public static class BuilderExtensions
 
         return builder;
     }
+
+    public static IHostApplicationBuilder AddRedisCache(this IHostApplicationBuilder builder)
+    {
+        builder.Services.AddStackExchangeRedisCache(cfg =>
+        {
+            cfg.Configuration = builder.Configuration["Configuration:Services:Cache:Redis:ConnectionString"];
+            cfg.InstanceName = builder.Configuration["Configuration:Services:Cache:Redis:InstanceName"];
+        });
+        
+        return builder;
+    }
 }
