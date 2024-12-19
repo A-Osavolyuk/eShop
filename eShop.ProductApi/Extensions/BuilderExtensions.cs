@@ -39,9 +39,9 @@ public static class BuilderExtensions
         {
             x.UsingRabbitMq((context, cfg) =>
             {
-                var uri = builder.Configuration["Configuration:Services:MessageBust:RabbitMq:HostUri"]!;
-                var username = builder.Configuration["Configuration:Services:MessageBust:RabbitMq:UserName"]!;
-                var password = builder.Configuration["Configuration:Services:MessageBust:RabbitMq:Password"]!;
+                var uri = builder.Configuration["Configuration:Services:MessageBus:RabbitMq:HostUri"]!;
+                var username = builder.Configuration["Configuration:Services:MessageBus:RabbitMq:UserName"]!;
+                var password = builder.Configuration["Configuration:Services:MessageBus:RabbitMq:Password"]!;
 
                 cfg.Host(new Uri(uri), h =>
                 {

@@ -60,7 +60,7 @@
       <jdbc-url>Server=127.0.0.1,25201;User ID=sa;Password=k47sUFZ4hx2x5wN9Wy2bDD;TrustServerCertificate=true;Database=ReviewsDB</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="mssql-server" uuid="e355ff56-86fd-49a3-b9da-a51cf4ff0cf6">
+    <data-source source="LOCAL" name="mssql-server" uuid="dfaf0f4a-4770-463c-93f7-fe949e35d075">
       <driver-ref>sqlserver.jb</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.jetbrains.jdbc.sqlserver.SqlServerDriver</jdbc-driver>
