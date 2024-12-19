@@ -13,6 +13,7 @@ public static class BuilderExtensions
         builder.AddMessageBus();
         builder.AddValidation();
         builder.AddServiceDefaults();
+        builder.AddRedisCache();
         builder.Services.AddGrpc();
         builder.Services.AddControllers();
         builder.Services.AddMediatR(x =>

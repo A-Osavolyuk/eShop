@@ -15,6 +15,7 @@ public static class BuilderExtensions
         builder.AddServiceDefaults();
         builder.AddAuth();
         builder.AddDependencyInjection();
+        builder.AddRedisCache();
         builder.Services.AddDbContext<AuthDbContext>(cfg =>
         {
             cfg.UseSqlServer(builder.Configuration["Configuration:Storage:Databases:SQL:MSSQL:ConnectionString"]!);

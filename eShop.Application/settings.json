@@ -51,7 +51,8 @@
         "Services": {
             "Cache": {
                 "Redis": {
-                    "ConnectionString": "https://127.0.0.1:60001"
+                    "ConnectionString": "https://127.0.0.1:60001",
+                    "InstanceName": "eShopCache"
                 }
             },
             "MessageBus": {
