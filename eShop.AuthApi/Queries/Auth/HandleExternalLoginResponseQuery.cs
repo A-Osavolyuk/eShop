@@ -20,11 +20,11 @@ internal sealed class HandleExternalLoginResponseQueryHandler(
     private readonly IConfiguration configuration = configuration;
     private readonly IEmailSender emailSender = emailSender;
     private readonly AuthDbContext context = context;
-    private readonly string frontendUri = configuration["GeneralSettings:FrontendBaseUri"]!;
-    private readonly string defaultRole = configuration["DefaultValues:DefaultRole"]!;
+    private readonly string frontendUri = configuration["Configuration:General:Frontend:Clients:BlazorServer:Uri"]!;
+    private readonly string defaultRole = configuration["Configuration:General:DefaultValues:DefaultRole"]!;
 
     private readonly List<string> defaultPermissions =
-        configuration.GetValue<List<string>>("DefaultValues:DefaultPermissions")!;
+        configuration.GetValue<List<string>>("Configuration:General:DefaultValues:DefaultPermissions")!;
 
     public async Task<Result<string>> Handle(HandleExternalLoginResponseQuery request,
         CancellationToken cancellationToken)

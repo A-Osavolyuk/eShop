@@ -10,7 +10,10 @@ public static class BuilderExtensions
         builder.AddSwaggerWithSecurity();
         builder.AddDependencyInjection();
         builder.AddMessageBus();
-        builder.AddSqlServerDbContext<AppDbContext>("SqlServer");
+        builder.Services.AddDbContext<AppDbContext>(cfg =>
+        {
+            cfg.UseSqlServer(builder.Configuration["Configuration:Storage:Databases:SQL:MSSQL:ConnectionString"]!);
+        });
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddMediatR(x =>
@@ -35,9 +38,9 @@ public static class BuilderExtensions
         {
             x.UsingRabbitMq((context, cfg) =>
             {
-                var uri = builder.Configuration["RabbitMQConfigurations:HostUri"]!;
-                var username = builder.Configuration["RabbitMQConfigurations:UserName"]!;
-                var password = builder.Configuration["RabbitMQConfigurations:Password"]!;
+                var uri = builder.Configuration["Configuration:Services:MessageBust:RabbitMq:HostUri"]!;
+                var username = builder.Configuration["Configuration:Services:MessageBust:RabbitMq:UserName"]!;
+                var password = builder.Configuration["Configuration:Services:MessageBust:RabbitMq:Password"]!;
 
                 cfg.Host(new Uri(uri), h =>
                 {

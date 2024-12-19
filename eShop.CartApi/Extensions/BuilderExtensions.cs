@@ -4,7 +4,6 @@ namespace eShop.CartApi.Extensions;
 
 public static class BuilderExtensions
 {
-    [Obsolete("Obsolete")]
     public static void AddApiServices(this IHostApplicationBuilder builder)
     {
         builder.AddJwtAuthentication();
@@ -27,7 +26,7 @@ public static class BuilderExtensions
 
     private static void AddDependencyInjection(this IHostApplicationBuilder builder)
     {
-        builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
+        builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("Configuration:Storage:Databases:NoSQL:Mongo"));
         builder.Services.AddSingleton<DbClient>();
     }
 
@@ -37,9 +36,9 @@ public static class BuilderExtensions
         {
             x.UsingRabbitMq((context, cfg) =>
             {
-                var uri = builder.Configuration["RabbitMQConfigurations:HostUri"]!;
-                var username = builder.Configuration["RabbitMQConfigurations:UserName"]!;
-                var password = builder.Configuration["RabbitMQConfigurations:Password"]!;
+                var uri = builder.Configuration["Configuration:Services:MessageBust:RabbitMq:HostUri"]!;
+                var username = builder.Configuration["Configuration:Services:MessageBust:RabbitMq:UserName"]!;
+                var password = builder.Configuration["Configuration:Services:MessageBust:RabbitMq:Password"]!;
 
                 cfg.Host(new Uri(uri), h =>
                 {

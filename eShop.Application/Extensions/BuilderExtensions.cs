@@ -82,9 +82,10 @@ public static class BuilderExtensions
                 ValidateIssuer = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidAudience = builder.Configuration["JwtOptions:Audience"],
-                ValidIssuer = builder.Configuration["JwtOptions:Issuer"],
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtOptions:Key"]!))
+                ValidAudience = builder.Configuration["Configuration:Security:Authentication:JWT:Audience"],
+                ValidIssuer = builder.Configuration["Configuration:Security:Authentication:JWT:Issuer"],
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(builder.Configuration["Configuration:Security:Authentication:JWT:Key"]!))
             };
         });
 

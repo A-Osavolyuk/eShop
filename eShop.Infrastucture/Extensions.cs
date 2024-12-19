@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using eShop.Application.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 
@@ -11,33 +12,9 @@ public static class Extensions
         builder.AddDependencyInjection();
         builder.AddJwtAuthentication();
 
+        builder.Services.AddAuthorization();
         builder.Services.AddBlazoredLocalStorage();
         builder.Services.AddHttpContextAccessor();
-        return builder;
-    }
-
-    public static IHostApplicationBuilder AddJwtAuthentication(this IHostApplicationBuilder builder)
-    {
-        builder.Services.AddAuthorization();
-        builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters()
-                {
-                    ValidateAudience = true,
-                    ValidateIssuer = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidAudience = builder.Configuration["JwtOptions:Audience"],
-                    ValidIssuer = builder.Configuration["JwtOptions:Issuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtOptions:Key"]!))
-                };
-            });
-
         return builder;
     }
 

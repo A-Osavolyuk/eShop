@@ -15,7 +15,10 @@ public static class BuilderExtensions
         builder.AddServiceDefaults();
         builder.AddAuth();
         builder.AddDependencyInjection();
-        builder.AddSqlServerDbContext<AuthDbContext>("SqlServer");
+        builder.Services.AddDbContext<AuthDbContext>(cfg =>
+        {
+            cfg.UseSqlServer(builder.Configuration["Configuration:Storage:Databases:SQL:MSSQL:ConnectionString"]!);
+        });
         builder.Services.AddGrpc(options =>
         {
             options.EnableDetailedErrors = true;
@@ -34,7 +37,7 @@ public static class BuilderExtensions
                 p.AllowAnyOrigin();
             });
         });
-        builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOptions"));
+        builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Configuration:Security:Authentication:JWT"));
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -52,13 +55,13 @@ public static class BuilderExtensions
         builder.Services.AddAuthentication()
             .AddGoogle(options =>
             {
-                options.ClientId = builder.Configuration["Authentication:Google:ClientId"] ?? "";
-                options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"] ?? "";
+                options.ClientId = builder.Configuration["Configuration:Security:Authentication:Providers:Google:ClientId"] ?? "";
+                options.ClientSecret = builder.Configuration["Configuration:Security:Authentication:Providers:Google:ClientSecret"] ?? "";
             })
             .AddFacebook(options =>
             {
-                options.ClientId = builder.Configuration["Authentication:Facebook:ClientId"] ?? "";
-                options.ClientSecret = builder.Configuration["Authentication:Facebook:ClientSecret"] ?? "";
+                options.ClientId = builder.Configuration["Configuration:Security:Authentication:Providers:Facebook:ClientId"] ?? "";
+                options.ClientSecret = builder.Configuration["Configuration:Security:Authentication:Providers:Facebook:ClientSecret"] ?? "";
             });
 
         builder.Services.AddAuthentication(options =>
@@ -74,10 +77,10 @@ public static class BuilderExtensions
                     ValidateIssuer = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidAudience = builder.Configuration["JwtOptions:Audience"],
-                    ValidIssuer = builder.Configuration["JwtOptions:Issuer"],
+                    ValidAudience = builder.Configuration["Configuration:Security:Authentication:JWT:Audience"],
+                    ValidIssuer = builder.Configuration["Configuration:Security:Authentication:JWT:Issuer"],
                     IssuerSigningKey =
-                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtOptions:Key"]!))
+                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Configuration:Security:Authentication:JWT:Key"]!))
                 };
             });
 
@@ -115,9 +118,9 @@ public static class BuilderExtensions
             x.AddRequestClient<CreateCartRequest>();
             x.UsingRabbitMq((context, cfg) =>
             {
-                var uri = builder.Configuration["RabbitMQConfigurations:HostUri"]!;
-                var username = builder.Configuration["RabbitMQConfigurations:UserName"]!;
-                var password = builder.Configuration["RabbitMQConfigurations:Password"]!;
+                var uri = builder.Configuration["Configuration:Services:MessageBust:RabbitMq:HostUri"]!;
+                var username = builder.Configuration["Configuration:Services:MessageBust:RabbitMq:UserName"]!;
+                var password = builder.Configuration["Configuration:Services:MessageBust:RabbitMq:Password"]!;
 
                 cfg.Host(new Uri(uri), h =>
                 {

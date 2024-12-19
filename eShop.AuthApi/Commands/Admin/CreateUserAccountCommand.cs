@@ -14,9 +14,9 @@ internal sealed class CreateUserAccountCommandHandler(
 {
     private readonly AppManager appManager = appManager;
     private readonly AuthDbContext context = context;
-    private readonly string defaultRole = configuration["DefaultValues:DefaultRole"]!;
+    private readonly string defaultRole = configuration["Configuration:General:DefaultValues:DefaultRole"]!;
     private readonly List<string> defaultPermissions =
-        configuration.GetValue<List<string>>("DefaultValues:DefaultPermissions")!;
+        configuration.GetValue<List<string>>("Configuration:General:DefaultValues:DefaultPermissions")!;
 
     public async Task<Result<CreateUserAccountResponse>> Handle(CreateUserAccountCommand request,
         CancellationToken cancellationToken)

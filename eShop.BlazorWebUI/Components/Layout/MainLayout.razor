@@ -214,12 +214,12 @@
 
                 if (response.Success)
                 {
-                    avatarUri = response!.Result?.ToString() ?? Configuration["DefaultAvatar"]!;
+                    avatarUri = response!.Result?.ToString() ?? Configuration["Configuration:General:DefaultValues:DefaultAvatar"]!;
                 }
                 else
                 {
                     Snackbar.Add(response.Message, Severity.Error);
-                    avatarUri = Configuration["DefaultAvatar"]!;
+                    avatarUri = Configuration["Configuration:General:DefaultValues:DefaultAvatar"]!;
                 }
             }
         }

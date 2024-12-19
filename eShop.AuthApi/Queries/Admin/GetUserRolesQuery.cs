@@ -6,11 +6,9 @@ namespace eShop.AuthApi.Queries.Admin;
 internal sealed record GetUserRolesQuery(Guid Id) : IRequest<Result<UserRolesResponse>>;
 
 internal sealed class GetUserRolesQueryHandler(
-    AppManager appManager,
-    ILogger<GetUserRolesQueryHandler> logger) : IRequestHandler<GetUserRolesQuery, Result<UserRolesResponse>>
+    AppManager appManager) : IRequestHandler<GetUserRolesQuery, Result<UserRolesResponse>>
 {
     private readonly AppManager appManager = appManager;
-    private readonly ILogger<GetUserRolesQueryHandler> logger = logger;
 
     public async Task<Result<UserRolesResponse>> Handle(GetUserRolesQuery request,
         CancellationToken cancellationToken)
@@ -47,8 +45,7 @@ internal sealed class GetUserRolesQueryHandler(
                 NormalizedName = roleInfo.NormalizedName!
             });
         }
-
-        logger.LogInformation("Successfully got roles of user with ID {id}.", request.Id);
+        
         return result;
     }
 }

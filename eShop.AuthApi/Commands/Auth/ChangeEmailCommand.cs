@@ -13,7 +13,7 @@ internal sealed class RequestChangeEmailCommandHandler(
     private readonly AppManager appManager = appManager;
     private readonly IEmailSender emailSender = emailSender;
     private readonly IConfiguration configuration = configuration;
-    private readonly string frontendUri = configuration["GeneralSettings:FrontendBaseUri"]!;
+    private readonly string frontendUri = configuration["Configuration:General:Frontend:Clients:BlazorServer:Uri"]!;
 
     public async Task<Result<ChangeEmailResponse>> Handle(ChangeEmailCommand request,
         CancellationToken cancellationToken)
