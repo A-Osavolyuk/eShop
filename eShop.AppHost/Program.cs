@@ -14,7 +14,7 @@ var sqlServer = builder.AddSqlServer("mssql-server", port: 60002, password: defa
     .WithLifetime(ContainerLifetime.Persistent)
     .WithDataVolume();
 
-var mongo = builder.AddMongoDB("mongo", userName: defaultUser, password: defaultPassword)
+var mongo = builder.AddMongoDB("mongo", port:60004,  userName: defaultUser, password: defaultPassword)
     .WithLifetime(ContainerLifetime.Persistent)
     .WithDataVolume()
     .WithMongoExpress(cfg =>
@@ -22,7 +22,7 @@ var mongo = builder.AddMongoDB("mongo", userName: defaultUser, password: default
         cfg.WithAuthentication();
         cfg.WithMongoCredentials("admin", "atpDWGvDb4jR5pE7rT59c7");
         cfg.WithMongoServer("mongo");
-        cfg.WithMongoUrl("mongodb://mongo:27017");
+        cfg.WithMongoUrl("mongodb://mongo:60004");
     }, "mongo-express");
 
 var cartDb = mongo.AddDatabase("cart-db", "CartDB");
