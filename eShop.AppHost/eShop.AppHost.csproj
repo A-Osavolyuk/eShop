@@ -39,6 +39,7 @@
     <ProjectReference Include="..\eShop.Gateway\eShop.Gateway.csproj" />
     <ProjectReference Include="..\eShop.ProductApi\eShop.ProductApi.csproj" />
     <ProjectReference Include="..\eShop.ReviewsApi\eShop.ReviewsApi.csproj" />
+    <ProjectReference Include="..\eShop.SmsSenderApi\eShop.SmsSenderApi.csproj" />
   </ItemGroup>
 
 </Project>

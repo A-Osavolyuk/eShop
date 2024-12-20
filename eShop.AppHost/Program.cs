@@ -59,6 +59,9 @@ var filesStorageApi = builder.AddProject<Projects.eShop_FilesStorageApi>("file-s
 
 var gateway = builder.AddProject<Projects.eShop_Gateway>("gateway");
 
+var smsService = builder.AddProject<Projects.eShop_SmsSenderApi>("sms-service-api")
+    .WaitForReference(rabbitMq);
+
 var blazorClient = builder.AddProject<Projects.eShop_BlazorWebUI>("blazor-webui")
     .WaitForReference(gateway)
     .WaitForReference(authApi);
