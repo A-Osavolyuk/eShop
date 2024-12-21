@@ -38,14 +38,9 @@ public static class UserManagerExtensions
 
         return sb.ToString();
     }
-
+    
     public static async Task<IdentityResult> RemoveFromRolesAsync(this UserManager<AppUser> userManager, AppUser user)
     {
-        if (user is null)
-        {
-            return IdentityResult.Failed(new IdentityError() { Code = "400", Description = "User is null." });
-        }
-
         var roles = await userManager.GetRolesAsync(user);
 
         if (roles.Any())

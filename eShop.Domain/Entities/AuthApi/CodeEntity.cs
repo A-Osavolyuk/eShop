@@ -3,6 +3,7 @@
 public class CodeEntity
 {
     public Guid Id { get; init; } = Guid.CreateVersion7();
+    public Guid SessionId { get; init; }
     public string UserId { get; init; } = string.Empty;
     public int Code { get; init; }
     public CodeType CodeType { get; init; }

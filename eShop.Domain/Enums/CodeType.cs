@@ -2,7 +2,9 @@
 
 public enum CodeType
 {
-    PhoneNumber,
-    Email,
-    Password
+    VerifyPhoneNumber,
+    VerifyEmail,
+    ResetPassword,
+    ChangeEmail,
+    ChangePhoneNumber
 }
