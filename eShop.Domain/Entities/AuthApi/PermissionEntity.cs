@@ -1,10 +1,10 @@
 ﻿namespace eShop.Domain.Entities.AuthApi;
 
-public class Permission
+public class PermissionEntity
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
 
     [JsonIgnore]
-    public ICollection<UserPermissions> Permissions { get; set; } = null!;
+    public ICollection<UserPermissionsEntity> Permissions { get; set; } = null!;
 }

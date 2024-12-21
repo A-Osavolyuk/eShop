@@ -6,7 +6,7 @@ internal sealed class PermissionManager(AuthDbContext context) : IPermissionMana
 {
     private readonly AuthDbContext context = context;
 
-    public async ValueTask<Permission?> FindPermissionAsync(string name)
+    public async ValueTask<PermissionEntity?> FindPermissionAsync(string name)
     {
         var permission = await context.Permissions.AsNoTracking().SingleOrDefaultAsync(x => x.Name == name);
 
@@ -17,7 +17,7 @@ internal sealed class PermissionManager(AuthDbContext context) : IPermissionMana
         return permission;
     }
 
-    public async ValueTask<IList<Permission>> GetPermissionsAsync()
+    public async ValueTask<IList<PermissionEntity>> GetPermissionsAsync()
     {
         var permissions = await context.Permissions.AsNoTracking().ToListAsync();
         return permissions;
@@ -67,14 +67,14 @@ internal sealed class PermissionManager(AuthDbContext context) : IPermissionMana
         return IdentityResult.Success;
     }
 
-    public async ValueTask<IdentityResult> RemoveUserFromPermissionAsync(AppUser user, Permission permission)
+    public async ValueTask<IdentityResult> RemoveUserFromPermissionAsync(AppUser user, PermissionEntity permissionEntity)
     {
-        var userPermission = await context.UserPermissions.AsNoTracking().SingleOrDefaultAsync(x => x.UserId == user.Id && x.PermissionId == permission.Id);
+        var userPermission = await context.UserPermissions.AsNoTracking().SingleOrDefaultAsync(x => x.UserId == user.Id && x.PermissionId == permissionEntity.Id);
 
         if (userPermission is null)
         {
             return IdentityResult.Failed(
-                new IdentityError() { Code = "404", Description = string.Format("Cannot find permission {0} for user with ID {1}", permission.Name, user.Id) });
+                new IdentityError() { Code = "404", Description = string.Format("Cannot find permission {0} for user with ID {1}", permissionEntity.Name, user.Id) });
         }
 
         context.UserPermissions.Remove(userPermission);

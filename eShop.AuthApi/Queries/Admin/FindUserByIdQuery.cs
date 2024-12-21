@@ -63,7 +63,7 @@ internal sealed class FindUserByIdQueryHandler(
                 return new(new NotFoundException($"Cannot find permission {permission}."));
             }
 
-            permissionData.Permissions.Add(new Permission()
+            permissionData.Permissions.Add(new PermissionEntity()
             {
                 Id = permissionInfo.Id,
                 Name = permissionInfo.Name,

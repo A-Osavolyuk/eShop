@@ -24,7 +24,7 @@ internal sealed class IssuePermissionCommandHandler(
             return new(new NotFoundException($"Cannot find user with ID {request.Request.UserId}."));
         }
 
-        var permissions = new List<Permission>();
+        var permissions = new List<PermissionEntity>();
 
         foreach (var p in request.Request.Permissions)
         {
@@ -48,7 +48,7 @@ internal sealed class IssuePermissionCommandHandler(
             if (!alreadyHasPermission)
             {
                 await context.UserPermissions.AddAsync(
-                    new UserPermissions() { PermissionId = permission.Id, UserId = user.Id }, cancellationToken);
+                    new UserPermissionsEntity() { PermissionId = permission.Id, UserId = user.Id }, cancellationToken);
             }
 
             continue;

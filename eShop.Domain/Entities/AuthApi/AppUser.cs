@@ -3,6 +3,6 @@
 public class AppUser : IdentityUser
 {
     public PersonalDataEntity? PersonalData { get; set; }
-    public UserAuthenticationToken? AuthenticationToken { get; set; }
-    public ICollection<UserPermissions> Permissions { get; set; } = null!;
+    public UserAuthenticationTokenEntity? AuthenticationToken { get; set; }
+    public ICollection<UserPermissionsEntity> Permissions { get; set; } = null!;
 }
