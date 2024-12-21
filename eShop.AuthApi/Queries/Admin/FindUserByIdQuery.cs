@@ -1,7 +1,4 @@
-﻿using eShop.Domain.Entities.AuthApi;
-using eShop.Domain.Responses.AuthApi.Admin;
-
-namespace eShop.AuthApi.Queries.Admin;
+﻿namespace eShop.AuthApi.Queries.Admin;
 
 internal sealed record FindUserByIdQuery(Guid UserId) : IRequest<Result<FindUserResponse>>;
 

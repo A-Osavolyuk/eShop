@@ -1,8 +1,4 @@
-﻿using eShop.Domain.Common.Security;
-using eShop.Domain.Entities.AuthApi;
-using eShop.Domain.Responses.AuthApi.Auth;
-
-namespace eShop.AuthApi.Services.Implementation;
+﻿namespace eShop.AuthApi.Services.Implementation;
 
 internal sealed class TokenHandler : ITokenHandler
 {

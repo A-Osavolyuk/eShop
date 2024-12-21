@@ -1,8 +1,4 @@
-﻿using eShop.Domain.DTOs.AuthApi;
-using eShop.Domain.Requests.AuthApi.Auth;
-using eShop.Domain.Responses.AuthApi.Auth;
-
-namespace eShop.AuthApi.Commands.Auth;
+﻿namespace eShop.AuthApi.Commands.Auth;
 
 internal sealed record LoginCommand(LoginRequest Request) : IRequest<Result<LoginResponse>>;
 

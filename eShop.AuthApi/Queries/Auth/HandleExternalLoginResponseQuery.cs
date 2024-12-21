@@ -1,7 +1,4 @@
-﻿using eShop.Domain.DTOs.AuthApi;
-using eShop.Domain.Entities.AuthApi;
-
-namespace eShop.AuthApi.Queries.Auth;
+﻿namespace eShop.AuthApi.Queries.Auth;
 
 internal sealed record HandleExternalLoginResponseQuery(
     ExternalLoginInfo ExternalLoginInfo,

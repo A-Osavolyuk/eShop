@@ -1,8 +1,4 @@
-﻿using eShop.Domain.Entities.AuthApi;
-using eShop.Domain.Requests.CartApi.Cart;
-using TokenHandler = eShop.AuthApi.Services.Implementation.TokenHandler;
-
-namespace eShop.AuthApi.Extensions;
+﻿namespace eShop.AuthApi.Extensions;
 
 public static class BuilderExtensions
 {

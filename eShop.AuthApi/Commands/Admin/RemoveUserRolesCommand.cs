@@ -1,7 +1,4 @@
-﻿using eShop.Domain.Requests.AuthApi.Admin;
-using eShop.Domain.Responses.AuthApi.Admin;
-
-namespace eShop.AuthApi.Commands.Admin;
+﻿namespace eShop.AuthApi.Commands.Admin;
 
 internal sealed record RemoveUserRolesCommand(RemoveUserRolesRequest Request)
     : IRequest<Result<RemoveUserRolesResponse>>;

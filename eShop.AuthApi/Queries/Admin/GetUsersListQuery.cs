@@ -1,18 +1,15 @@
-﻿using eShop.Domain.Entities.AuthApi;
-using UserData = eShop.Domain.Entities.AuthApi.UserData;
+﻿namespace eShop.AuthApi.Queries.Admin;
 
-namespace eShop.AuthApi.Queries.Admin;
-
-internal sealed record GetUsersListQuery() : IRequest<Result<IEnumerable<UserData>>>;
+internal sealed record GetUsersListQuery() : IRequest<Result<IEnumerable<UserData_>>>;
 
 internal sealed class GetUsersListQueryHandler(
     AppManager appManager,
-    AuthDbContext context) : IRequestHandler<GetUsersListQuery, Result<IEnumerable<UserData>>>
+    AuthDbContext context) : IRequestHandler<GetUsersListQuery, Result<IEnumerable<UserData_>>>
 {
     private readonly AppManager appManager = appManager;
     private readonly AuthDbContext context = context;
 
-    public async Task<Result<IEnumerable<UserData>>> Handle(GetUsersListQuery request,
+    public async Task<Result<IEnumerable<UserData_>>> Handle(GetUsersListQuery request,
         CancellationToken cancellationToken)
     {
         var usersList = await appManager.UserManager.Users.AsNoTracking()
@@ -20,10 +17,10 @@ internal sealed class GetUsersListQueryHandler(
 
         if (!usersList.Any())
         {
-            return new(new List<UserData>());
+            return new(new List<UserData_>());
         }
 
-        var users = new List<UserData>();
+        var users = new List<UserData_>();
 
         foreach (var user in usersList)
         {
@@ -72,7 +69,7 @@ internal sealed class GetUsersListQueryHandler(
                 Permissions = permissionsList
             };
 
-            users.Add(new UserData()
+            users.Add(new UserData_()
             {
                 PermissionsData = permissionData,
                 PersonalDataEntity = personalData ?? new(),

@@ -1,6 +1,4 @@
-﻿using UserData = eShop.Application.UserData;
-
-namespace eShop.AuthApi.Rpc;
+﻿namespace eShop.AuthApi.Rpc;
 
 internal sealed class AuthServer(AppManager manager, ILogger<AuthServer> logger) : AuthService.AuthServiceBase
 {

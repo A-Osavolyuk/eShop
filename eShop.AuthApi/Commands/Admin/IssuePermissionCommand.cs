@@ -1,8 +1,4 @@
-﻿using eShop.Domain.Entities.AuthApi;
-using eShop.Domain.Requests.AuthApi.Admin;
-using eShop.Domain.Responses.AuthApi.Admin;
-
-namespace eShop.AuthApi.Commands.Admin;
+﻿namespace eShop.AuthApi.Commands.Admin;
 
 internal sealed record IssuePermissionCommand(IssuePermissionRequest Request)
     : IRequest<Result<IssuePermissionsResponse>>;

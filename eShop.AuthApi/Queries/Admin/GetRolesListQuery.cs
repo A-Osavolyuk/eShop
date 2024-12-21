@@ -1,6 +1,4 @@
-﻿using eShop.Domain.DTOs.AuthApi;
-
-namespace eShop.AuthApi.Queries.Admin;
+﻿namespace eShop.AuthApi.Queries.Admin;
 
 internal sealed record GetRolesListQuery() : IRequest<Result<IEnumerable<RoleDto>>>;
 

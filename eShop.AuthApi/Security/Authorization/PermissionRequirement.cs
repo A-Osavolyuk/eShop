@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Common.Security;
-
-namespace eShop.AuthApi.Security.Authorization;
+﻿namespace eShop.AuthApi.Security.Authorization;
 
 public class PermissionRequirement(string permissionName) : IAuthorizationRequirement
 {
