@@ -33,6 +33,7 @@ global using eShop.Domain.Options;
 global using eShop.Domain.Requests.AuthApi.Admin;
 global using eShop.Domain.Requests.AuthApi.Auth;
 global using eShop.Domain.Requests.CartApi.Cart;
+global using eShop.Domain.Requests.SmsApi;
 global using eShop.Domain.Responses.AuthApi.Admin;
 global using eShop.Domain.Responses.AuthApi.Auth;
 global using eShop.ServiceDefaults;

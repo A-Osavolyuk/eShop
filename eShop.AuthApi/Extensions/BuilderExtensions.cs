@@ -112,6 +112,7 @@ public static class BuilderExtensions
     {
         builder.Services.AddMassTransit(x =>
         {
+            x.AddRequestClient<SingleMessageRequest>();
             x.AddRequestClient<CreateCartRequest>();
             x.UsingRabbitMq((context, cfg) =>
             {
