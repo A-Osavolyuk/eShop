@@ -7,7 +7,7 @@ using MimeKit;
 
 namespace eShop.EmailSenderApi.Receivers;
 
-public class AccountRegisteredReceiver(IOptions<EmailOptions> options) : IConsumer<AccountRegisteredMessage>
+public class AccountRegisteredConsumer(IOptions<EmailOptions> options) : IConsumer<AccountRegisteredMessage>
 {
     private readonly EmailOptions options = options.Value;
     public async Task Consume(ConsumeContext<AccountRegisteredMessage> context)
@@ -42,9 +42,9 @@ public class AccountRegisteredReceiver(IOptions<EmailOptions> options) : IConsum
                          </head>
                          <body>
                          <div style="border: 1px solid rgb(190, 189, 189); width: 800px; margin: auto; padding: 1px;">
-                             <div style="display: flex; justify-content: center; justify-items: center;">
-                                 <p style="font: bold 24px Arial, sans-serif; color: rgb(141, 66, 212);">eShop Team</p>
-                             </div>
+                            <div>
+                                <p style="font: bold 24px Arial, sans-serif; color: rgb(141, 66, 212); margin: 30px; text-align: center;">eShop Team</p>
+                            </div>
                              <div style="border: 1px solid rgb(190, 189, 189); width: 100%;"></div>
                              <div style="padding: 50px 100px; margin: auto;">
                                  <h1 style="font: bold 24px Arial, sans-serif; margin: 0; margin-bottom: 40px;">Welcome to eShop!</h1>

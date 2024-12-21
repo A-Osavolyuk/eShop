@@ -101,6 +101,7 @@ public static class BuilderExtensions
         builder.Services.AddScoped<ITokenHandler, TokenHandler>();
         builder.Services.AddScoped<IEmailSender, EmailSender>();
         builder.Services.AddScoped<IPermissionManager, PermissionManager>();
+        builder.Services.AddScoped<ISecurityManager, SecurityManager>();
         builder.Services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
         builder.Services.AddHostedService<BackgroundTokenValidator>();
 

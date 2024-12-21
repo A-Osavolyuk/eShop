@@ -16,7 +16,7 @@ internal sealed class RequestChangeEmailCommandHandler(
         CancellationToken cancellationToken)
     {
         var user = await appManager.UserManager.FindByEmailAsync(request.Request.CurrentEmail);
-
+        
         if (user is null)
         {
             return new(new NotFoundException($"Cannot find user with email {request.Request.CurrentEmail}"));

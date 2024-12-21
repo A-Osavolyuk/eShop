@@ -7,11 +7,11 @@ using MimeKit;
 
 namespace eShop.EmailSenderApi.Receivers;
 
-public class TwoFactorAuthenticationCodeReceiver(IOptions<EmailOptions> _options) : IConsumer<TwoFactorAuthenticationCodeMessage>
+public class ChangePhoneNumberConsumer(IOptions<EmailOptions> _options) : IConsumer<ChangePhoneNumberMessage>
 {
     private readonly EmailOptions options = _options.Value;
 
-    public async Task Consume(ConsumeContext<TwoFactorAuthenticationCodeMessage> context)
+    public async Task Consume(ConsumeContext<ChangePhoneNumberMessage> context)
     {
         var emailMessage = new MimeMessage();
 
@@ -20,7 +20,7 @@ public class TwoFactorAuthenticationCodeReceiver(IOptions<EmailOptions> _options
         emailMessage.Subject = context.Message.Subject;
 
         var builder = new BodyBuilder();
-        builder.HtmlBody = GetEmailBody(context.Message.To, context.Message.Code);
+        builder.HtmlBody = GetEmailBody(context.Message.To, context.Message.Link, context.Message.PhoneNumber);
 
         emailMessage.Body = builder.ToMessageBody();
 
@@ -33,19 +33,19 @@ public class TwoFactorAuthenticationCodeReceiver(IOptions<EmailOptions> _options
         }
     }
 
-    private string GetEmailBody(string userName, string code)
+    private string GetEmailBody(string userName, string resetLink, string newPhoneNumber)
     {
-        string body = @"
+        string body = @$"
             <!DOCTYPE html>
             <html>
             <head>
-                <title>Log in with 2FA code</title>
+                <title>Change Phone Number Request</title>
             </head>
             <body>
-                <p>Hello " + userName + @",</p>
-                <p>We received a request to log in with 2FA code.</p>
-                <p>Your 2FA code:" + code + @"</p>
-                <p>If you didn't request 2FA code, you can ignore this email.</p>
+                <p>Hello {userName},</p>
+                <p>We received a request to change your phone number to {newPhoneNumber}. Please click the link below to change your phone number:</p>
+                <p><a href='{resetLink}'>Change Phone Number</a></p>
+                <p>If you didn't request a phone number change, you can ignore this email.</p>
                 <p>Thank you,</p>
                 <p>Your Website Team</p>
             </body>

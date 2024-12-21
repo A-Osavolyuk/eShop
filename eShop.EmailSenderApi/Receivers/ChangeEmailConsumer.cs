@@ -7,7 +7,7 @@ using MimeKit;
 
 namespace eShop.EmailSenderApi.Receivers;
 
-public class ChangeEmailReceiver(IOptions<EmailOptions> _options) : IConsumer<ChangeEmailMessage>
+public class ChangeEmailConsumer(IOptions<EmailOptions> _options) : IConsumer<ChangeEmailMessage>
 {
     private readonly EmailOptions options = _options.Value;
 

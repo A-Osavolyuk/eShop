@@ -13,7 +13,9 @@ internal sealed class RegisterCommandHandler(
     private readonly string defaultRole = configuration["Configuration:General:DefaultValues:DefaultRole"]!;
 
     private readonly List<string> defaultPermissions =
-        configuration.GetValue<List<string>>("Configuration:General:DefaultValues:DefaultPermissions")!;
+    [
+        "Permission.Account.ManageAccount"
+    ];
 
     public async Task<Result<RegistrationResponse>> Handle(RegisterCommand request,
         CancellationToken cancellationToken)
@@ -53,16 +55,16 @@ internal sealed class RegisterCommandHandler(
                 $"due to server errors: {issuingPermissionsResult.Errors.First().Description}"));
         }
 
-        var emailConfirmationToken = await appManager.UserManager.GenerateEmailConfirmationTokenAsync(newUser);
-        var encodedToken = Uri.EscapeDataString(emailConfirmationToken);
-        var link = UrlGenerator.ActionLink("/account/confirm-email", frontendUri,
-            new { Email = request.Request.Email, Token = encodedToken });
+        //var emailConfirmationToken = await appManager.UserManager.GenerateEmailConfirmationTokenAsync(newUser);
+        var emailVerificationCode = await appManager.SecurityManager.GenerateVerifyEmailCodeAsync(newUser.Email!);
+        //var encodedToken = Uri.EscapeDataString(emailConfirmationToken);
+        //var link = UrlGenerator.ActionLink("/account/confirm-email", frontendUri, new { Email = request.Request.Email, Token = encodedToken });
 
         await emailSender.SendConfirmEmailMessage(new ConfirmEmailMessage()
         {
             To = request.Request.Email,
             Subject = "Email Confirmation",
-            Link = link,
+            Code = emailVerificationCode,
             UserName = newUser.UserName!
         });
 

@@ -7,7 +7,7 @@ using MimeKit;
 
 namespace eShop.EmailSenderApi.Receivers;
 
-public class AccountRegisteredOnExternalLoginReceiver(IOptions<EmailOptions> options)
+public class ExternalLoginConsumer(IOptions<EmailOptions> options)
     : IConsumer<AccountRegisteredOnExternalLoginMessage>
 {
     private readonly EmailOptions options = options.Value;
@@ -46,8 +46,8 @@ public class AccountRegisteredOnExternalLoginReceiver(IOptions<EmailOptions> opt
                             </head>
                             <body>
                             <div style="border: 1px solid rgb(190, 189, 189); width: 800px; margin: auto; padding: 1px;">
-                                <div style="display: flex; justify-content: center; justify-items: center;">
-                                    <p style="font: bold 24px Arial, sans-serif; color: rgb(141, 66, 212);">eShop Team</p>
+                                <div>
+                                    <p style="font: bold 24px Arial, sans-serif; color: rgb(141, 66, 212); margin: 30px; text-align: center;">eShop Team</p>
                                 </div>
                                 <div style="border: 1px solid rgb(190, 189, 189); width: 100%;"></div>
                                 <div style="padding: 50px 100px; margin: auto;">

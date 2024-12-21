@@ -7,11 +7,11 @@ using MimeKit;
 
 namespace eShop.EmailSenderApi.Receivers;
 
-public class ConfirmEmailReceiver(IOptions<EmailOptions> _options) : IConsumer<ConfirmEmailMessage>
+public class TwoFactorAuthenticationCodeConsumer(IOptions<EmailOptions> _options) : IConsumer<TwoFactorAuthenticationCodeMessage>
 {
     private readonly EmailOptions options = _options.Value;
 
-    public async Task Consume(ConsumeContext<ConfirmEmailMessage> context)
+    public async Task Consume(ConsumeContext<TwoFactorAuthenticationCodeMessage> context)
     {
         var emailMessage = new MimeMessage();
 
@@ -20,7 +20,7 @@ public class ConfirmEmailReceiver(IOptions<EmailOptions> _options) : IConsumer<C
         emailMessage.Subject = context.Message.Subject;
 
         var builder = new BodyBuilder();
-        builder.HtmlBody = GetEmailBody(context.Message.To, context.Message.Link);
+        builder.HtmlBody = GetEmailBody(context.Message.To, context.Message.Code);
 
         emailMessage.Body = builder.ToMessageBody();
 
@@ -33,19 +33,19 @@ public class ConfirmEmailReceiver(IOptions<EmailOptions> _options) : IConsumer<C
         }
     }
 
-    private string GetEmailBody(string userName, string resetLink)
+    private string GetEmailBody(string userName, string code)
     {
         string body = @"
             <!DOCTYPE html>
             <html>
             <head>
-                <title>Confirm Your Email Address</title>
+                <title>Log in with 2FA code</title>
             </head>
             <body>
                 <p>Hello " + userName + @",</p>
-                <p>We received a request to confirm your email address. Please click the link below to confirm your email address:</p>
-                <p><a href='" + resetLink + @"'>Confirm Email Address</a></p>
-                <p>If you didn't request an email address confirmation, you can ignore this email.</p>
+                <p>We received a request to log in with 2FA code.</p>
+                <p>Your 2FA code:" + code + @"</p>
+                <p>If you didn't request 2FA code, you can ignore this email.</p>
                 <p>Thank you,</p>
                 <p>Your Website Team</p>
             </body>

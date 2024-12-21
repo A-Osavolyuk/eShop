@@ -15,7 +15,6 @@ internal sealed class AuthDbContext(DbContextOptions<AuthDbContext> options) : I
         builder.Entity<CodeEntity>(e =>
         {
             e.HasKey(x => x.Id);
-            e.HasOne<AppUser>().WithOne().HasForeignKey<CodeEntity>(x => x.UserId);
         });
         
         builder.Entity<IdentityRole>().HasData(

@@ -2,5 +2,5 @@
 
 public class ConfirmEmailMessage : MessageBase
 {
-    public string Link { get; set; } = string.Empty;
+    public int Code { get; init; }
 }

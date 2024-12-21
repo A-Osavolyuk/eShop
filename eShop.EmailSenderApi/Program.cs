@@ -23,22 +23,22 @@ builder.Services.AddMassTransit(x =>
             h.Password(password);
         });
 
-        cfg.ReceiveEndpoint("reset-password", e => e.ConfigureConsumer<ResetPasswordEmailReceiver>(context));
-        cfg.ReceiveEndpoint("change-email", e => e.ConfigureConsumer<ChangeEmailReceiver>(context));
-        cfg.ReceiveEndpoint("change-phone-number", e => e.ConfigureConsumer<ChangePhoneNumberReceiver>(context));
-        cfg.ReceiveEndpoint("confirm-email", e => e.ConfigureConsumer<ConfirmEmailReceiver>(context));
-        cfg.ReceiveEndpoint("account-registered", e => e.ConfigureConsumer<AccountRegisteredReceiver>(context));
-        cfg.ReceiveEndpoint("2fa-code", e => e.ConfigureConsumer<TwoFactorAuthenticationCodeReceiver>(context));
-        cfg.ReceiveEndpoint("registered-on-external-login", e => e.ConfigureConsumer<AccountRegisteredOnExternalLoginReceiver>(context));
+        cfg.ReceiveEndpoint("reset-password", e => e.ConfigureConsumer<ResetPasswordEmailConsumer>(context));
+        cfg.ReceiveEndpoint("change-email", e => e.ConfigureConsumer<ChangeEmailConsumer>(context));
+        cfg.ReceiveEndpoint("change-phone-number", e => e.ConfigureConsumer<ChangePhoneNumberConsumer>(context));
+        cfg.ReceiveEndpoint("confirm-email", e => e.ConfigureConsumer<ConfirmEmailConsumer>(context));
+        cfg.ReceiveEndpoint("account-registered", e => e.ConfigureConsumer<AccountRegisteredConsumer>(context));
+        cfg.ReceiveEndpoint("2fa-code", e => e.ConfigureConsumer<TwoFactorAuthenticationCodeConsumer>(context));
+        cfg.ReceiveEndpoint("registered-on-external-login", e => e.ConfigureConsumer<ExternalLoginConsumer>(context));
     });
 
-    x.AddConsumer<ResetPasswordEmailReceiver>();
-    x.AddConsumer<ChangeEmailReceiver>();
-    x.AddConsumer<ChangePhoneNumberReceiver>();
-    x.AddConsumer<ConfirmEmailReceiver>();
-    x.AddConsumer<AccountRegisteredReceiver>();
-    x.AddConsumer<TwoFactorAuthenticationCodeReceiver>();
-    x.AddConsumer<AccountRegisteredOnExternalLoginReceiver>();
+    x.AddConsumer<ResetPasswordEmailConsumer>();
+    x.AddConsumer<ChangeEmailConsumer>();
+    x.AddConsumer<ChangePhoneNumberConsumer>();
+    x.AddConsumer<ConfirmEmailConsumer>();
+    x.AddConsumer<AccountRegisteredConsumer>();
+    x.AddConsumer<TwoFactorAuthenticationCodeConsumer>();
+    x.AddConsumer<ExternalLoginConsumer>();
 });
 
 var app = builder.Build();
