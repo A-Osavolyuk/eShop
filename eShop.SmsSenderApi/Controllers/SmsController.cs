@@ -1,14 +1,19 @@
-﻿using Amazon.SimpleNotificationService;
-using Amazon.SimpleNotificationService.Model;
-using Microsoft.AspNetCore.Mvc;
-
-namespace eShop.SmsSenderApi.Controllers;
+﻿namespace eShop.SmsSenderApi.Controllers;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
 [ApiVersion("1.0")]
-public class SmsController(IAmazonSimpleNotificationService snsClient) : ControllerBase
+public class SmsController(ISmsService smsService) : ControllerBase
 {
-    private readonly IAmazonSimpleNotificationService snsClient = snsClient;
+    private readonly ISmsService smsService = smsService;
 
+    [HttpPost("send-single-sms")]
+    public async Task<ActionResult<Response>> SendSingleMessageAsync([FromBody] SingleMessageRequest request)
+    {
+        var response = await smsService.SendSingleMessage(request);
+
+        return response.IsSucceeded ? 
+            Ok(new ResponseBuilder().Succeeded().WithMessage(response.Message).Build()) : 
+            StatusCode((int)response.StatusCode, new ResponseBuilder().Failed().WithMessage(response.Message).Build());
+    }
 }

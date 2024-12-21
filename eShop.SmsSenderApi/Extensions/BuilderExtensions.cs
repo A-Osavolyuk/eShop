@@ -1,7 +1,4 @@
-﻿using Amazon;
-using Amazon.SimpleNotificationService;
-
-namespace eShop.SmsSenderApi.Extensions;
+﻿namespace eShop.SmsSenderApi.Extensions;
 
 public static class BuilderExtensions
 {
@@ -12,7 +9,7 @@ public static class BuilderExtensions
         builder.AddValidation();
         builder.AddSwaggerWithSecurity();
         builder.AddDependencyInjection();
-        //builder.AddMessageBus();
+        builder.AddMessageBus();
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddMediatR(x =>
@@ -23,14 +20,13 @@ public static class BuilderExtensions
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
         builder.Services.AddProblemDetails();
         
-        builder.Services.AddSingleton<IAmazonSimpleNotificationService>(sp => new AmazonSimpleNotificationServiceClient(RegionEndpoint.EUNorth1));
-
         return builder;
     }
 
     private static void AddDependencyInjection(this IHostApplicationBuilder builder)
     {
-        
+        builder.Services.AddScoped<ISmsService, SmsService>();
+        builder.Services.AddSingleton<IAmazonSimpleNotificationService>(sp => new AmazonSimpleNotificationServiceClient(RegionEndpoint.EUNorth1));
     }
 
     private static void AddMessageBus(this IHostApplicationBuilder builder)
@@ -48,8 +44,12 @@ public static class BuilderExtensions
                     h.Username(username);
                     h.Password(password);
                 });
+                
+                cfg.ReceiveEndpoint("sms-phone-number-verification-code", 
+                    e => e.ConfigureConsumer<VerifyPhoneNumberConsumer>(context));
             });
             
+            x.AddConsumer<VerifyPhoneNumberConsumer>();
         });
     }
 }

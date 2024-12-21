@@ -38,9 +38,13 @@ var rabbitMq = builder.AddRabbitMQ("rabbit-mq", port: 60003, userName: defaultUs
 var emailService = builder.AddProject<Projects.eShop_EmailSenderApi>("email-sender-api")
     .WithReference(rabbitMq);
 
+var smsService = builder.AddProject<Projects.eShop_SmsSenderApi>("sms-service-api")
+    .WaitForReference(rabbitMq);
+
 var authApi = builder.AddProject<Projects.eShop_AuthApi>("auth-api")
     .WaitForReference(sqlServer)
-    .WaitForReference(emailService);
+    .WaitForReference(emailService)
+    .WaitForReference(smsService);
 
 var productApi = builder.AddProject<Projects.eShop_ProductApi>("product-api")
     .WaitForReference(sqlServer)
@@ -58,9 +62,6 @@ var filesStorageApi = builder.AddProject<Projects.eShop_FilesStorageApi>("file-s
     .WaitForReference(authApi);
 
 var gateway = builder.AddProject<Projects.eShop_Gateway>("gateway");
-
-var smsService = builder.AddProject<Projects.eShop_SmsSenderApi>("sms-service-api")
-    .WaitForReference(rabbitMq);
 
 var blazorClient = builder.AddProject<Projects.eShop_BlazorWebUI>("blazor-webui")
     .WaitForReference(gateway)
