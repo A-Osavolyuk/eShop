@@ -2,5 +2,5 @@
 
 public class ConfirmEmailMessage : MessageBase
 {
-    public int Code { get; init; }
+    public string Code { get; init; }
 }

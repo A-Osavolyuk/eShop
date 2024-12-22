@@ -11,7 +11,7 @@ public interface IAuthenticationService
     public ValueTask<Response> GetPersonalDataAsync(string Email);
     public ValueTask<Response> RequestResetPasswordAsync(ResetPasswordRequest request);
     public ValueTask<Response> ConfirmResetPasswordAsync(ConfirmResetPasswordRequest confirmPasswordResetRequest);
-    public ValueTask<Response> ConfirmEmailAsync(ConfirmEmailRequest confirmEmailRequest);
+    public ValueTask<Response> VerifyEmailAsync(VerifyEmailRequest verifyEmailRequest);
     public ValueTask<Response> GetExternalProvidersAsync();
     public ValueTask<Response> LoginWithTwoFactorAuthenticationAsync(TwoFactorAuthenticationLoginRequest twoFactorAuthenticationLoginRequest);
     public ValueTask<Response> RequestChangeEmailAsync(ChangeEmailRequest changeEmailRequest);

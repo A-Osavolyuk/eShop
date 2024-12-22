@@ -1,0 +1,57 @@
+﻿@page "/account/verify-email"
+
+@using eShop.Domain.Requests.AuthApi.Auth
+@inherits PageBase
+
+@inject IAuthenticationService AuthenticationService
+@inject IValidator<VerifyEmailRequest> Validator
+
+<Title Text="Verify email"/>
+
+<MudGrid Justify="Justify.Center">
+    <MudItem xs="4">
+        <MudPaper Outlined Style="margin-top: 30%;" Class="pa-3">
+                <MudText Typo="Typo.subtitle2" Style="text-align: center; font-size: 24px;">
+                    Please, check your email
+                </MudText>
+                
+                <MudText Typo="Typo.subtitle2" Style="text-align: center; font-size: 18px;">
+                    We have sent code to email: <strong>@Email</strong>
+                </MudText>
+
+                <MudText Typo="Typo.caption" Style="opacity:.5">
+                     Enter 6-digit code from mail we sent you
+                </MudText>
+
+                <MudGrid Justify="Justify.Center">
+                    <MudItem xs="8">
+                        <MudButton ButtonType="ButtonType.Submit" StartIcon="@Icons.Material.Filled.Verified"
+                                   Variant="Variant.Filled" Color="Color.Primary" Class="mt-3" FullWidth>
+                            Verify
+                        </MudButton>
+                    </MudItem>
+                </MudGrid>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    [SupplyParameterFromForm] private VerifyEmailRequest VerifyEmailRequest { get; set; } = new();
+    [SupplyParameterFromQuery(Name = "email")] private string Email { get; set; } = string.Empty;
+
+    private string[] codeElements = new string[6];
+    
+    private async Task VerifyEmailAsync()
+    {
+        VerifyEmailRequest.Email = Email;
+        var result = await AuthenticationService.VerifyEmailAsync(VerifyEmailRequest);
+
+        if (result.Success)
+        {
+            Snackbar.Add(result.Message, MudBlazor.Severity.Success);
+            NavigationManager.NavigateTo("/account/login");
+        }
+        else
+            Snackbar.Add(result.Message, MudBlazor.Severity.Error);
+    }
+}

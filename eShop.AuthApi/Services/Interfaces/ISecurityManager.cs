@@ -2,5 +2,6 @@
 
 public interface ISecurityManager
 {
-    public ValueTask<int> GenerateVerifyEmailCodeAsync(string email);
+    public ValueTask<string> GenerateVerifyEmailCodeAsync(string email);
+    public ValueTask<IdentityResult> VerifyEmailAsync(string email, string verificationCode);
 }

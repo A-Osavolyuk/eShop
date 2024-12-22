@@ -29,9 +29,9 @@ public class AuthenticationService(
         new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/confirm-reset-password",
             Method: HttpMethods.PUT, Data: confirmPasswordResetRequest));
 
-    public async ValueTask<Response> ConfirmEmailAsync(ConfirmEmailRequest confirmEmailRequest) => await clientService.SendAsync(
-        new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/confirm-email",
-            Method: HttpMethods.POST, Data: confirmEmailRequest));
+    public async ValueTask<Response> VerifyEmailAsync(VerifyEmailRequest verifyEmailRequest) => await clientService.SendAsync(
+        new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/verify-email",
+            Method: HttpMethods.POST, Data: verifyEmailRequest));
 
     public async ValueTask<Response> GetPersonalDataAsync(string email) => await clientService.SendAsync(
         new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/get-personal-data/{email}", Method: HttpMethods.GET));

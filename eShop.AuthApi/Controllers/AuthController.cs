@@ -127,11 +127,11 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
         
 
     [AllowAnonymous]
-    [HttpPost("confirm-email")]
+    [HttpPost("verify-email")]
     public async ValueTask<ActionResult<Response>> ConfirmEmail(
-        [FromBody] ConfirmEmailRequest confirmEmailRequest)
+        [FromBody] VerifyEmailRequest verifyEmailRequest)
     {
-        var result = await sender.Send(new ConfirmEmailCommand(confirmEmailRequest));
+        var result = await sender.Send(new ConfirmEmailCommand(verifyEmailRequest));
 
         return result.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithMessage(s.Message).Build()),

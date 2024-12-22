@@ -2,25 +2,27 @@
 @using eShop.Domain.Requests.AuthApi.Auth
 @inherits PageBase
 
-@inject IAuthenticationService authenticationService
-@inject IValidator<RegistrationRequest> validator
-@inject ILocalDataAccessor LocalDataAccessor
+@inject IAuthenticationService AuthenticationService
+@inject IValidator<RegistrationRequest> RegistrationValidator
 
-<Title Text="Register" />
+<Title Text="Register"/>
 
 <MudGrid Justify="Justify.Center">
     <MudItem xs="4">
         <MudPaper Outlined Style="margin-top: 30%;" Class="pa-3">
-            <EditForm FormName="register-form" Model="registrationRequest" OnValidSubmit="RegisterUser">
-                <FluentValidationValidator Validator="validator" />
+            <EditForm FormName="register-form" Model="RegistrationRequest"
+                      OnValidSubmit="async () => await RegisterUserAsync()">
+                <FluentValidationValidator Validator="RegistrationValidator"/>
 
                 <MudText Align="Align.Center" Typo="Typo.h4">Register</MudText>
-                <MudTextField @bind-Value="registrationRequest.Email" For="(() => registrationRequest.Email)"
-                              InputType="InputType.Email" Label="Email" Immediate Variant="Variant.Outlined" />
-                <MudTextField @bind-Value="registrationRequest.Password" For="(() => registrationRequest.Password)"
-                              Label="Password" InputType="InputType.Password" Immediate Variant="Variant.Outlined" />
-                <MudTextField @bind-Value="registrationRequest.ConfirmPassword" For="(() => registrationRequest.ConfirmPassword)"
-                              Label="Confirm Password" InputType="InputType.Password" Immediate Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="RegistrationRequest.Email" For="(() => RegistrationRequest.Email)"
+                              InputType="InputType.Email" Label="Email" Immediate Variant="Variant.Outlined"/>
+                <MudTextField @bind-Value="RegistrationRequest.Password" For="(() => RegistrationRequest.Password)"
+                              Label="Password" InputType="InputType.Password" Immediate Variant="Variant.Outlined"/>
+                <MudTextField @bind-Value="RegistrationRequest.ConfirmPassword"
+                              For="(() => RegistrationRequest.ConfirmPassword)"
+                              Label="Confirm Password" InputType="InputType.Password" Immediate
+                              Variant="Variant.Outlined"/>
 
                 <MudGrid Justify="Justify.Center">
                     <MudItem xs="8">
@@ -33,38 +35,32 @@
             </EditForm>
         </MudPaper>
         <MudPaper Outlined Class="mt-3 pa-3">
-            <MudText Align="Align.Center">Already have an account? 
+            <MudText Align="Align.Center">Already have an account?
                 <MudLink Href="account/login">Log In</MudLink>
-                </MudText>
+            </MudText>
         </MudPaper>
     </MudItem>
 </MudGrid>
 
 @code {
-    [SupplyParameterFromForm] private RegistrationRequest registrationRequest { get; set; } = new();
+    [SupplyParameterFromForm] private RegistrationRequest RegistrationRequest { get; set; } = new();
+    
 
-    protected override async Task OnInitializedAsync()
+    private async Task RegisterUserAsync()
     {
-        var user = await LocalDataAccessor.ReadUserDataAsync();
-
-        if (user is not null)
-        {
-            NavigationManager.NavigateTo("products");
-        }
-    }
-
-    private async Task RegisterUser()
-    {
-        var result = await authenticationService.RegisterAsync(registrationRequest);
+        var result = await AuthenticationService.RegisterAsync(RegistrationRequest);
 
         if (result.Success)
         {
             Snackbar.Add(result.Message, MudBlazor.Severity.Success);
-            NavigationManager.NavigateTo("/account/login");
+            NavigationManager.NavigateTo("/account/verify-email");
         }
         else
             Snackbar.Add(result.Message, MudBlazor.Severity.Error);
 
-        registrationRequest = new();
+        RegistrationRequest = new();
     }
+
+    
+
 }

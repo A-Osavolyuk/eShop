@@ -1,6 +1,6 @@
 ﻿namespace eShop.AuthApi.Commands.Auth;
 
-internal sealed record ConfirmEmailCommand(ConfirmEmailRequest Request) : IRequest<Result<ConfirmEmailResponse>>;
+internal sealed record ConfirmEmailCommand(VerifyEmailRequest Request) : IRequest<Result<ConfirmEmailResponse>>;
 
 internal sealed class ConfirmEmailCommandHandler(
     AppManager appManager,
@@ -21,8 +21,7 @@ internal sealed class ConfirmEmailCommandHandler(
             return new(new NotFoundException($"Cannot find user with email {request.Request.Email}."));
         }
 
-        var token = Uri.UnescapeDataString(request.Request.Token);
-        var confirmResult = await appManager.UserManager.ConfirmEmailAsync(user, token);
+        var confirmResult = await appManager.SecurityManager.VerifyEmailAsync(request.Request.Email, request.Request.Code);
 
         if (!confirmResult.Succeeded)
         {

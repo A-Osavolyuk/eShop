@@ -33,7 +33,7 @@ public class ConfirmEmailConsumer(IOptions<EmailOptions> options) : IConsumer<Co
         await client.DisconnectAsync(true);
     }
 
-    private string GetEmailBody(string userName, int code)
+    private string GetEmailBody(string userName, string code)
     {
         string body = $"""
                             <!DOCTYPE html>
