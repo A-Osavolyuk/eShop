@@ -1,6 +1,7 @@
 ﻿@implements IDisposable
+@inject IDialogService DialogService
 
-<MudDialog>
+<MudDialog @bind-Visible="visible">
     <DialogContent>
         <MudGrid Justify="Justify.FlexStart">
             <MudItem xs="12" Class="d-flex justify-content-center align-content-center">
@@ -49,23 +50,23 @@
             Color="Color.Error"
             Variant="Variant.Filled"
             ButtonType="ButtonType.Button"
-            OnClick="() => OnClose()">
+            OnClick="() => Close()">
             Close
         </MudButton>
     </DialogActions>
 </MudDialog>
 
 @code {
-    [CascadingParameter] MudDialogInstance? Instance { get; set; }
     [Parameter] public List<string> Images { get; set; } = default!;
+    
     private Timer? timer;
-
     private string? currentImage = string.Empty;
+    private bool visible = true;
 
     protected override async Task OnInitializedAsync()
     {
         currentImage = Images?.FirstOrDefault();
-        timer = new(async callback => await OnTimerElapsed(), currentImage, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5));
+        timer = new(async void (callback) => await OnTimerElapsed(), currentImage, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5));
     }
 
     #region Private Methods
@@ -97,12 +98,12 @@
         }
     }
 
-    private void OnClose() => Instance?.Close();
-
+    private void Close() => visible = false;
+    
     public void Dispose()
     {
         timer?.Dispose();
-        Instance?.Dispose();
+        Dispose();
     }
 
     private async Task OnTimerElapsed()

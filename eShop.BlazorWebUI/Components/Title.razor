@@ -2,7 +2,7 @@
 
 @code {
     [Parameter] public string Text { get; set; } = string.Empty;
-
+    
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await JS.InvokeVoidAsync("setTitle", Text);

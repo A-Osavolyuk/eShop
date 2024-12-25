@@ -5,7 +5,9 @@ using eShop.BlazorWebUI.Components;
 using eShop.Infrastructure;
 using eShop.ServiceDefaults;
 using MudBlazor;
+using MudBlazor.Extensions;
 using MudBlazor.Services;
+using MudExtensions.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,7 @@ builder.Services.AddRazorComponents()
 
 builder.AddValidation();
 builder.AddInfrastructureLayer();
+builder.Services.AddMudExtensions();
 
 builder.Services.AddMudServices(config =>
 {

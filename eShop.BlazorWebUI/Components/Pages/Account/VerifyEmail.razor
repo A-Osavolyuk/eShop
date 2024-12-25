@@ -1,46 +1,67 @@
 ﻿@page "/account/verify-email"
 
 @using eShop.Domain.Requests.AuthApi.Auth
+@using MudExtensions;
 @inherits PageBase
 
 @inject IAuthenticationService AuthenticationService
-@inject IValidator<VerifyEmailRequest> Validator
 
-<Title Text="Verify email"/>
+<Title Text="Verify email"></Title>
 
-<MudGrid Justify="Justify.Center">
-    <MudItem xs="4">
-        <MudPaper Outlined Style="margin-top: 30%;" Class="pa-3">
-                <MudText Typo="Typo.subtitle2" Style="text-align: center; font-size: 24px;">
-                    Please, check your email
+<MudGrid Justify="Justify.Center" Spacing="1" Style="height: 80vh">
+    <MudItem xs="4" Style="margin: auto">
+        <MudPaper Outlined Class="pa-3" Style="margin-bottom: 10px">
+            <MudText Align="Align.Center" Typo="Typo.h4">
+                Email verification
+            </MudText>
+        </MudPaper>
+        <MudPaper Outlined Class="pa-3">
+            <MudGrid Spacing="2" Justify="Justify.Center">
+                <MudItem xs="12">
+                    <MudText Typo="Typo.h6" Align="Align.Center">
+                        Please, check your email
+                    </MudText>
+                </MudItem>
+
+                <MudItem xs="12" Style="display: flex; justify-content: center">
+                    <MudText Typo="Typo.caption" Align="Align.Center">
+                        We have sent code to email: <strong>@Email</strong>
+                    </MudText>
+                </MudItem>
+
+                <MudItem xs="12" sm="8" Style="margin: 15px 0"
+                         Class="d-flex flex-column gap-8 align-center justify-center">
+                    <MudCodeInput Variant="Variant.Outlined" Spacing="2" Margin="Margin.None" Count="6"
+                                  @bind-Value="VerifyEmailRequest.Code"/>
+                </MudItem>
+
+                <MudItem xs="8">
+                    <MudButton ButtonType="ButtonType.Button"
+                               Variant="Variant.Filled" Color="Color.Primary" Class="mt-3" FullWidth
+                               Disabled="@(VerifyEmailRequest.Code.Length <= 5)"
+                               OnClick="async () => await VerifyEmailAsync()">
+                        Verify
+                    </MudButton>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+        <MudPaper Outlined Class="pa-3" Style="margin-top: 10px">
+            <MudItem xs="12" Style="margin: 10px 0">
+                <MudText Align="Align.Center">Didn't received an email?
+                    <strong @onclick="async () => await ResendCodeAsync()" class="cursor-pointer">Resend</strong>
                 </MudText>
-                
-                <MudText Typo="Typo.subtitle2" Style="text-align: center; font-size: 18px;">
-                    We have sent code to email: <strong>@Email</strong>
-                </MudText>
-
-                <MudText Typo="Typo.caption" Style="opacity:.5">
-                     Enter 6-digit code from mail we sent you
-                </MudText>
-
-                <MudGrid Justify="Justify.Center">
-                    <MudItem xs="8">
-                        <MudButton ButtonType="ButtonType.Submit" StartIcon="@Icons.Material.Filled.Verified"
-                                   Variant="Variant.Filled" Color="Color.Primary" Class="mt-3" FullWidth>
-                            Verify
-                        </MudButton>
-                    </MudItem>
-                </MudGrid>
+            </MudItem>
         </MudPaper>
     </MudItem>
 </MudGrid>
 
 @code {
     [SupplyParameterFromForm] private VerifyEmailRequest VerifyEmailRequest { get; set; } = new();
-    [SupplyParameterFromQuery(Name = "email")] private string Email { get; set; } = string.Empty;
 
-    private string[] codeElements = new string[6];
-    
+    [SupplyParameterFromQuery(Name = "email")]
+
+    private string Email { get; set; } = string.Empty;
+
     private async Task VerifyEmailAsync()
     {
         VerifyEmailRequest.Email = Email;
@@ -54,4 +75,9 @@
         else
             Snackbar.Add(result.Message, MudBlazor.Severity.Error);
     }
+
+    private async Task ResendCodeAsync()
+    {
+    }
+
 }
