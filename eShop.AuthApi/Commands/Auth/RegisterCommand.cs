@@ -60,10 +60,10 @@ internal sealed class RegisterCommandHandler(
         //var encodedToken = Uri.EscapeDataString(emailConfirmationToken);
         //var link = UrlGenerator.ActionLink("/account/confirm-email", frontendUri, new { Email = request.Request.Email, Token = encodedToken });
 
-        await emailSender.SendConfirmEmailMessage(new ConfirmEmailMessage()
+        await emailSender.SendEmailVerificationMessage(new EmailVerificationMessage()
         {
             To = request.Request.Email,
-            Subject = "Email Confirmation",
+            Subject = "Email verification",
             Code = emailVerificationCode,
             UserName = newUser.UserName!
         });

@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.Messages;
 
-public class ConfirmEmailMessage : MessageBase
+public class EmailVerificationMessage : MessageBase
 {
     public string Code { get; init; }
 }

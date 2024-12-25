@@ -1,17 +1,17 @@
 ﻿namespace eShop.AuthApi.Commands.Auth;
 
-internal sealed record ConfirmEmailCommand(VerifyEmailRequest Request) : IRequest<Result<ConfirmEmailResponse>>;
+internal sealed record VerifyEmailCommand(VerifyEmailRequest Request) : IRequest<Result<VerifyEmailResponse>>;
 
-internal sealed class ConfirmEmailCommandHandler(
+internal sealed class VerifyEmailCommandHandler(
     AppManager appManager,
     IEmailSender emailSender,
-    CartClient client) : IRequestHandler<ConfirmEmailCommand, Result<ConfirmEmailResponse>>
+    CartClient client) : IRequestHandler<VerifyEmailCommand, Result<VerifyEmailResponse>>
 {
     private readonly AppManager appManager = appManager;
     private readonly IEmailSender emailSender = emailSender;
     private readonly CartClient client = client;
 
-    public async Task<Result<ConfirmEmailResponse>> Handle(ConfirmEmailCommand request,
+    public async Task<Result<VerifyEmailResponse>> Handle(VerifyEmailCommand request,
         CancellationToken cancellationToken)
     {
         var user = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
@@ -44,6 +44,6 @@ internal sealed class ConfirmEmailCommandHandler(
             return new(new FailedRpcException(response.Message));
         }
 
-        return new(new ConfirmEmailResponse() { Message = "Your email address was successfully confirmed." });
+        return new(new VerifyEmailResponse() { Message = "Your email address was successfully confirmed." });
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.Responses.AuthApi.Auth;
 
-public class ConfirmEmailResponse
+public class VerifyEmailResponse
 {
     public string Message { get; set; } = string.Empty;
 }

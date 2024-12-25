@@ -11,27 +11,29 @@ public class AuthenticationService(
     private readonly IHttpClientService clientService = clientService;
     private readonly IConfiguration configuration = configuration;
 
-    public async ValueTask<Response> LoginAsync(LoginRequest loginRequestDto) => await clientService.SendAsync(
-        new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/login", Method: HttpMethods.POST, Data: loginRequestDto));
+    public async ValueTask<Response> LoginAsync(LoginRequest request) => await clientService.SendAsync(
+        new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/login", Method: HttpMethods.POST, Data: request));
+    public async ValueTask<Response> ResendVerificationCodeAsync(ResendEmailVerificationCodeRequest request) => await clientService.SendAsync(
+        new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/resend-verification-code", Method: HttpMethods.POST, Data: request));
 
-    public async ValueTask<Response> RegisterAsync(RegistrationRequest registrationRequest) => await clientService.SendAsync(
-        new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/register", Method: HttpMethods.POST, Data: registrationRequest));
+    public async ValueTask<Response> RegisterAsync(RegistrationRequest request) => await clientService.SendAsync(
+        new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/register", Method: HttpMethods.POST, Data: request));
 
-    public async ValueTask<Response> ChangePersonalDataAsync(ChangePersonalDataRequest changePersonalDataRequestDto) => await clientService.SendAsync(
+    public async ValueTask<Response> ChangePersonalDataAsync(ChangePersonalDataRequest request) => await clientService.SendAsync(
         new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/change-personal-data",
-            Method: HttpMethods.PUT, Data: changePersonalDataRequestDto));
+            Method: HttpMethods.PUT, Data: request));
 
     public async ValueTask<Response> RequestResetPasswordAsync(ResetPasswordRequest request) => await clientService.SendAsync(
         new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/request-reset-password",
             Method: HttpMethods.POST, Data: request));
 
-    public async ValueTask<Response> ConfirmResetPasswordAsync(ConfirmResetPasswordRequest confirmPasswordResetRequest) => await clientService.SendAsync(
+    public async ValueTask<Response> ConfirmResetPasswordAsync(ConfirmResetPasswordRequest request) => await clientService.SendAsync(
         new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/confirm-reset-password",
-            Method: HttpMethods.PUT, Data: confirmPasswordResetRequest));
+            Method: HttpMethods.PUT, Data: request));
 
-    public async ValueTask<Response> VerifyEmailAsync(VerifyEmailRequest verifyEmailRequest) => await clientService.SendAsync(
+    public async ValueTask<Response> VerifyEmailAsync(VerifyEmailRequest request) => await clientService.SendAsync(
         new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/verify-email",
-            Method: HttpMethods.POST, Data: verifyEmailRequest));
+            Method: HttpMethods.POST, Data: request));
 
     public async ValueTask<Response> GetPersonalDataAsync(string email) => await clientService.SendAsync(
         new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/get-personal-data/{email}", Method: HttpMethods.GET));
@@ -39,25 +41,25 @@ public class AuthenticationService(
     public async ValueTask<Response> GetExternalProvidersAsync() => await clientService.SendAsync(
         new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/get-external-providers", Method: HttpMethods.GET));
 
-    public async ValueTask<Response> LoginWithTwoFactorAuthenticationAsync(TwoFactorAuthenticationLoginRequest twoFactorAuthenticationLoginRequest) => 
+    public async ValueTask<Response> LoginWithTwoFactorAuthenticationAsync(TwoFactorAuthenticationLoginRequest request) => 
         await clientService.SendAsync(new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/2fa-login",Method: HttpMethods.POST, 
-            Data: twoFactorAuthenticationLoginRequest));
+            Data: request));
 
-    public async ValueTask<Response> RequestChangeEmailAsync(ChangeEmailRequest changeEmailRequest) => await clientService.SendAsync(
+    public async ValueTask<Response> RequestChangeEmailAsync(ChangeEmailRequest request) => await clientService.SendAsync(
         new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/request-change-email",
-            Method: HttpMethods.PUT, Data: changeEmailRequest));
+            Method: HttpMethods.PUT, Data: request));
 
-    public async ValueTask<Response> ConfirmChangeEmailAsync(ConfirmChangeEmailRequest changeEmailRequest) => await clientService.SendAsync(
+    public async ValueTask<Response> ConfirmChangeEmailAsync(ConfirmChangeEmailRequest request) => await clientService.SendAsync(
         new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/confirm-change-email",
-            Method: HttpMethods.POST, Data: changeEmailRequest));
+            Method: HttpMethods.POST, Data: request));
 
-    public async ValueTask<Response> ChangePasswordAsync(ChangePasswordRequest changePasswordRequest) => await clientService.SendAsync(
+    public async ValueTask<Response> ChangePasswordAsync(ChangePasswordRequest request) => await clientService.SendAsync(
         new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/change-password",
-            Method: HttpMethods.PUT, Data: changePasswordRequest));
+            Method: HttpMethods.PUT, Data: request));
 
-    public async ValueTask<Response> ChangeUserNameAsync(ChangeUserNameRequest changeUserNameRequest) => await clientService.SendAsync(
+    public async ValueTask<Response> ChangeUserNameAsync(ChangeUserNameRequest request) => await clientService.SendAsync(
         new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/change-user-name",
-            Method: HttpMethods.PUT, Data: changeUserNameRequest));
+            Method: HttpMethods.PUT, Data: request));
 
     public async ValueTask<Response> ChangeTwoFactorAuthenticationStateAsync(ChangeTwoFactorAuthenticationRequest request) => await clientService.SendAsync(
         new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/change-2fa-state", Method: HttpMethods.POST, Data: request));
@@ -66,16 +68,16 @@ public class AuthenticationService(
         new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/get-2fa-state/{email}",
             Method: HttpMethods.GET));
 
-    public async ValueTask<Response> RefreshToken(RefreshTokenRequest refreshTokenRequest) => await clientService.SendAsync(
+    public async ValueTask<Response> RefreshToken(RefreshTokenRequest request) => await clientService.SendAsync(
         new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/refresh-token",
-            Method: HttpMethods.POST, Data: refreshTokenRequest));
+            Method: HttpMethods.POST, Data: request));
 
-    public async ValueTask<Response> RequestChangePhoneNumberAsync(ChangePhoneNumberRequest changePhoneNumberRequest) => await clientService.SendAsync(
+    public async ValueTask<Response> RequestChangePhoneNumberAsync(ChangePhoneNumberRequest request) => await clientService.SendAsync(
         new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/request-change-phone-number",
-            Method: HttpMethods.PUT, Data: changePhoneNumberRequest));
-    public async ValueTask<Response> ConfirmChangePhoneNumberAsync(ConfirmChangePhoneNumberRequest changePhoneNumberRequest) => await clientService.SendAsync(
+            Method: HttpMethods.PUT, Data: request));
+    public async ValueTask<Response> ConfirmChangePhoneNumberAsync(ConfirmChangePhoneNumberRequest request) => await clientService.SendAsync(
         new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/confirm-change-phone-number",
-            Method: HttpMethods.POST, Data: changePhoneNumberRequest));
+            Method: HttpMethods.POST, Data: request));
 
     public async ValueTask<Response> GetPhoneNumber(string email) => await clientService.SendAsync(
         new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/get-phone-number/{email}",

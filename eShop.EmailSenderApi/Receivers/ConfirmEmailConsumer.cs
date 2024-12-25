@@ -7,11 +7,11 @@ using MimeKit;
 
 namespace eShop.EmailSenderApi.Receivers;
 
-public class ConfirmEmailConsumer(IOptions<EmailOptions> options) : IConsumer<ConfirmEmailMessage>
+public class ConfirmEmailConsumer(IOptions<EmailOptions> options) : IConsumer<EmailVerificationMessage>
 {
     private readonly EmailOptions options = options.Value;
 
-    public async Task Consume(ConsumeContext<ConfirmEmailMessage> context)
+    public async Task Consume(ConsumeContext<EmailVerificationMessage> context)
     {
         var emailMessage = new MimeMessage();
 

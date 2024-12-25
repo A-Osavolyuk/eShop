@@ -11,11 +11,11 @@ internal sealed class EmailSender(IBus bus) : IEmailSender
         await endpoint.Send(accountRegisteredMessage);
     }
 
-    public async ValueTask SendConfirmEmailMessage(ConfirmEmailMessage confirmEmailMessage)
+    public async ValueTask SendEmailVerificationMessage(EmailVerificationMessage emailVerificationMessage)
     {
         var queryName = "/confirm-email";
         var endpoint = await bus.GetSendEndpoint(CreateQueryUri(queryName));
-        await endpoint.Send(confirmEmailMessage);
+        await endpoint.Send(emailVerificationMessage);
     }
 
     public async ValueTask SendResetPasswordMessage(ResetPasswordMessage resetPasswordMessage)

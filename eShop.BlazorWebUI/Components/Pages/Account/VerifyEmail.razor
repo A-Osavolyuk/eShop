@@ -1,6 +1,8 @@
 ﻿@page "/account/verify-email"
 
 @using eShop.Domain.Requests.AuthApi.Auth
+@using eShop.Domain.Responses.AuthApi.Auth
+@using Severity = MudBlazor.Severity
 @using MudExtensions;
 @inherits PageBase
 
@@ -57,10 +59,7 @@
 
 @code {
     [SupplyParameterFromForm] private VerifyEmailRequest VerifyEmailRequest { get; set; } = new();
-
-    [SupplyParameterFromQuery(Name = "email")]
-
-    private string Email { get; set; } = string.Empty;
+    [SupplyParameterFromQuery(Name = "email")] private string Email { get; set; } = string.Empty;
 
     private async Task VerifyEmailAsync()
     {
@@ -78,6 +77,16 @@
 
     private async Task ResendCodeAsync()
     {
+        var response = await AuthenticationService.ResendVerificationCodeAsync(new () { Email = Email });
+
+        if (response.Success)
+        {
+            Snackbar.Add(response.Message, Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add(response.Message, Severity.Error);
+        }
     }
 
 }

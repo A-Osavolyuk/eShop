@@ -91,11 +91,23 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
     #region Post methods
 
     [AllowAnonymous]
+    [HttpPost("resend-verification-code")]
+    public async ValueTask<ActionResult<Response>> ResendVerificationCode(
+        [FromBody] ResendEmailVerificationCodeRequest request)
+    {
+        var result = await sender.Send(new ResendEmailVerificationCodeCommand(request));
+
+        return result.Match(
+            succ => Ok(new ResponseBuilder().Succeeded().WithMessage(succ.Message).Build()),
+            ExceptionHandler.HandleException);
+    }
+    
+    [AllowAnonymous]
     [HttpPost("register")]
     [ValidationFilter]
-    public async ValueTask<ActionResult<Response>> Register([FromBody] RegistrationRequest registrationRequest)
+    public async ValueTask<ActionResult<Response>> Register([FromBody] RegistrationRequest request)
     {
-        var result = await sender.Send(new RegisterCommand(registrationRequest));
+        var result = await sender.Send(new RegisterCommand(request));
 
         return result.Match(
             succ => Ok(new ResponseBuilder().Succeeded().WithMessage(succ.Message).Build()),
@@ -105,9 +117,9 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
     [AllowAnonymous]
     [HttpPost("login")]
     [ValidationFilter]
-    public async ValueTask<ActionResult<Response>> Login([FromBody] LoginRequest loginRequest)
+    public async ValueTask<ActionResult<Response>> Login([FromBody] LoginRequest request)
     {
-        var result = await sender.Send(new LoginCommand(loginRequest));
+        var result = await sender.Send(new LoginCommand(request));
 
         return result.Match(
             succ => Ok(new ResponseBuilder().Succeeded().WithResult(succ).WithMessage(succ.Message).Build()),
@@ -129,9 +141,9 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
     [AllowAnonymous]
     [HttpPost("verify-email")]
     public async ValueTask<ActionResult<Response>> ConfirmEmail(
-        [FromBody] VerifyEmailRequest verifyEmailRequest)
+        [FromBody] VerifyEmailRequest request)
     {
-        var result = await sender.Send(new ConfirmEmailCommand(verifyEmailRequest));
+        var result = await sender.Send(new VerifyEmailCommand(request));
 
         return result.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithMessage(s.Message).Build()),
@@ -153,10 +165,10 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
     [AllowAnonymous]
     [HttpPost("2fa-login")]
     public async ValueTask<ActionResult<Response>> LoginWithTwoFactorAuthenticationCode(
-        [FromBody] TwoFactorAuthenticationLoginRequest twoFactorAuthenticationLoginRequest)
+        [FromBody] TwoFactorAuthenticationLoginRequest request)
     {
         var result =
-            await sender.Send(new TwoFactorAuthenticationLoginCommand(twoFactorAuthenticationLoginRequest));
+            await sender.Send(new TwoFactorAuthenticationLoginCommand(request));
 
         return result.Match(
             succ => Ok(new ResponseBuilder().Succeeded().WithResult(succ).WithMessage(succ.Message).Build()),
@@ -166,9 +178,9 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
     [Authorize(Policy = "ManageAccountPolicy")]
     [HttpPost("confirm-change-email")]
     public async ValueTask<ActionResult<Response>> ConfirmChangeEmail(
-        [FromBody] ConfirmChangeEmailRequest confirmChangeEmailRequest)
+        [FromBody] ConfirmChangeEmailRequest request)
     {
-        var result = await sender.Send(new ConfirmChangeEmailCommand(confirmChangeEmailRequest));
+        var result = await sender.Send(new ConfirmChangeEmailCommand(request));
 
         return result.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithMessage(s.Message).Build()),
@@ -178,9 +190,9 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
     [Authorize(Policy = "ManageAccountPolicy")]
     [HttpPost("confirm-change-phone-number")]
     public async ValueTask<ActionResult<Response>> ConfirmChangePhoneNumber(
-        [FromBody] ConfirmChangePhoneNumberRequest confirmChangePhoneNumberRequest)
+        [FromBody] ConfirmChangePhoneNumberRequest request)
     {
-        var result = await sender.Send(new ConfirmChangePhoneNumberCommand(confirmChangePhoneNumberRequest));
+        var result = await sender.Send(new ConfirmChangePhoneNumberCommand(request));
 
         return result.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithMessage(s.Message).WithResult(s).Build()),
