@@ -7,6 +7,12 @@ public static class UserManagerExtensions
         var user = await userManager.FindByIdAsync(id.ToString());
         return user;
     }
+    
+    public static async Task<AppUser?> FindByPhoneNumberAsync(this UserManager<AppUser> userManager, string phoneNumber)
+    {
+        var user = await userManager.Users.FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber);
+        return user;
+    }
 
     public static async Task<LockoutStatus> GetLockoutStatusAsync(this UserManager<AppUser> userManager, AppUser user)
     {

@@ -56,7 +56,7 @@ internal sealed class RegisterCommandHandler(
         }
 
         //var emailConfirmationToken = await appManager.UserManager.GenerateEmailConfirmationTokenAsync(newUser);
-        var emailVerificationCode = await appManager.SecurityManager.GenerateVerifyEmailCodeAsync(newUser.Email!);
+        var emailVerificationCode = await appManager.SecurityManager.GenerateVerificationCodeAsync(newUser.Email!, CodeType.VerifyEmail);
         //var encodedToken = Uri.EscapeDataString(emailConfirmationToken);
         //var link = UrlGenerator.ActionLink("/account/confirm-email", frontendUri, new { Email = request.Request.Email, Token = encodedToken });
 

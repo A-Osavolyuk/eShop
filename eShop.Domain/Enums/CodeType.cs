@@ -3,5 +3,8 @@
 public enum CodeType
 {
     VerifyEmail,
-    ChangeEmail
+    VerifyPhoneNumber,
+    ChangeEmail,
+    ChangePhoneNumber,
+    ResetPassword
 }

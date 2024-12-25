@@ -2,7 +2,8 @@
 
 public interface ISecurityManager
 {
-    public ValueTask<string> GenerateVerifyEmailCodeAsync(string email);
-    public ValueTask<string> ResendEmailVerificationCodeAsync(string email);
-    public ValueTask<IdentityResult> VerifyEmailAsync(string email, string verificationCode);
+    public ValueTask<string> GenerateVerificationCodeAsync(string sentTo, CodeType codeType);
+    public ValueTask<IdentityResult> VerifyEmailAsync(AppUser user, string code);
+    public ValueTask<IdentityResult> VerifyPhoneNumberAsync(AppUser user, string code);
+    public ValueTask<IdentityResult> ResetPasswordAsync(AppUser user, string code, string password);
 }
