@@ -39,7 +39,7 @@ internal sealed class HandleExternalLoginResponseQueryHandler(
         if (user is not null)
         {
             var userDto = new UserDto(user.Email!, user.UserName!, user.Id);
-            var securityToken = await context.UserAuthenticationTokens.AsNoTracking()
+            var securityToken = await context.SecurityTokens.AsNoTracking()
                 .SingleOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
 
             if (securityToken is not null)

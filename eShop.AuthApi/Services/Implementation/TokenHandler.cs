@@ -35,7 +35,7 @@ internal sealed class TokenHandler : ITokenHandler
                 expires: DateTime.Now.AddSeconds(jwtOptions.ExpirationSeconds),
                 signingCredentials: signingCredentials));
 
-            await context.UserAuthenticationTokens.AddAsync(new() { UserId = user.Id, Token = refreshToken });
+            await context.SecurityTokens.AddAsync(new() { UserId = user.Id, Token = refreshToken });
             await context.SaveChangesAsync();
 
             return new TokenResponse()

@@ -2,7 +2,7 @@
 @using eShop.Domain.DTOs.CartApi
 @using eShop.Infrastructure.Services
 @using eShop.Infrastructure.StateContainers
-@using Severity = MudBlazor.Severity
+@using Cart = Domain.Models.CartModel
 @inherits LayoutComponentBase
 
 @implements IDisposable
@@ -22,7 +22,7 @@
 @inject AuthenticationStateProvider authenticationState
 @inject IConfiguration Configuration
 
-@using Cart = Domain.Models.CartModel
+@using Severity = MudBlazor.Severity
 
 <MudThemeProvider IsDarkMode/>
 <MudDialogProvider/>

@@ -11,7 +11,6 @@ global using eShop.Domain.Common.Api;
 global using eShop.Domain.Requests.SmsApi;
 global using eShop.Domain.Responses.SmsApi;
 global using eShop.ServiceDefaults;
-global using eShop.SmsSenderApi;
 global using eShop.SmsSenderApi.Consumers;
 global using eShop.SmsSenderApi.Extensions;
 global using eShop.SmsSenderApi.Services;

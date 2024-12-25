@@ -53,6 +53,22 @@ namespace eShop.AuthApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Codes",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SentTo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CodeType = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExpiresAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Codes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Permissions",
                 columns: table => new
                 {
@@ -193,7 +209,7 @@ namespace eShop.AuthApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserAuthenticationTokens",
+                name: "SecurityTokens",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -203,9 +219,9 @@ namespace eShop.AuthApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserAuthenticationTokens", x => x.Id);
+                    table.PrimaryKey("PK_SecurityTokens", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserAuthenticationTokens_AspNetUsers_UserId",
+                        name: "FK_SecurityTokens_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -249,7 +265,7 @@ namespace eShop.AuthApi.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "abb9d2ed-c3d2-4df9-ba88-eab018b95bc3", 0, "f090ddde-f3a5-4f07-98eb-f3706ecb0624", "sasha.osavolll111@gmail.com", true, false, null, "SASHA.OSAVOLLL111@GMAIL.COM", "SASHA.OSAVOLLL111@GMAIL.COM", "AQAAAAIAAYagAAAAEHeZ7iJce/rkJIBOAFdarWHCG1NUYQ1y67q5EyVGG9ttMlkXR2wxOMAQRsg+HtNtCg==", "380686100242", true, "4e91e37b-a543-47cc-afb3-e18a43451fa6", false, "sasha.osavolll111@gmail.com" });
+                values: new object[] { "abb9d2ed-c3d2-4df9-ba88-eab018b95bc3", 0, "8dfd37e5-4c2f-43ef-8e91-f5a760f74b79", "sasha.osavolll111@gmail.com", true, false, null, "SASHA.OSAVOLLL111@GMAIL.COM", "SASHA.OSAVOLLL111@GMAIL.COM", "AQAAAAIAAYagAAAAEHeZ7iJce/rkJIBOAFdarWHCG1NUYQ1y67q5EyVGG9ttMlkXR2wxOMAQRsg+HtNtCg==", "380686100242", true, "a0fd769e-323c-43ba-9846-44353b5122bc", false, "sasha.osavolll111@gmail.com" });
 
             migrationBuilder.InsertData(
                 table: "Permissions",
@@ -280,7 +296,7 @@ namespace eShop.AuthApi.Migrations
             migrationBuilder.InsertData(
                 table: "PersonalData",
                 columns: new[] { "Id", "DateOfBirth", "FirstName", "Gender", "LastName", "UserId" },
-                values: new object[] { new Guid("99be06c5-8f0a-4915-90ea-2d84b16e83a8"), new DateTime(2004, 2, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "Alexander", "Male", "Osavolyuk", "abb9d2ed-c3d2-4df9-ba88-eab018b95bc3" });
+                values: new object[] { new Guid("21b647c4-9e29-4cc3-9d03-565e315e70bf"), new DateTime(2004, 2, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "Alexander", "Male", "Osavolyuk", "abb9d2ed-c3d2-4df9-ba88-eab018b95bc3" });
 
             migrationBuilder.InsertData(
                 table: "UserPermissions",
@@ -340,8 +356,8 @@ namespace eShop.AuthApi.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserAuthenticationTokens_UserId",
-                table: "UserAuthenticationTokens",
+                name: "IX_SecurityTokens_UserId",
+                table: "SecurityTokens",
                 column: "UserId",
                 unique: true);
 
@@ -370,10 +386,13 @@ namespace eShop.AuthApi.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Codes");
+
+            migrationBuilder.DropTable(
                 name: "PersonalData");
 
             migrationBuilder.DropTable(
-                name: "UserAuthenticationTokens");
+                name: "SecurityTokens");
 
             migrationBuilder.DropTable(
                 name: "UserPermissions");

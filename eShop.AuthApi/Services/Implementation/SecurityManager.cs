@@ -28,7 +28,9 @@ internal sealed class SecurityManager(
 
     public async ValueTask<string> ResendEmailVerificationCodeAsync(string email)
     {
-        var entity = await context.Codes.AsNoTracking().FirstOrDefaultAsync(x => x.SentTo == email);
+        var entity = await context.Codes
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.SentTo == email && x.CodeType == CodeType.VerifyEmail);
 
         if (entity is null || entity.ExpiresAt < DateTime.UtcNow)
         {
@@ -42,8 +44,9 @@ internal sealed class SecurityManager(
 
     public async ValueTask<IdentityResult> VerifyEmailAsync(string email, string verificationCode)
     {
-        var code = await context.Codes.AsNoTracking()
-            .FirstOrDefaultAsync(c => c.Code == verificationCode && c.SentTo == email);
+        var code = await context.Codes
+            .AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Code == verificationCode && c.SentTo == email && c.CodeType == CodeType.VerifyEmail);
         
         if (code is null)
         {

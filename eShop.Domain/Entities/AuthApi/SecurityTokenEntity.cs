@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.Entities.AuthApi;
 
-public class UserAuthenticationTokenEntity
+public class SecurityTokenEntity
 {
     public Guid Id { get; set; }
     public string UserId { get; set; } = string.Empty;

@@ -5,7 +5,7 @@ internal sealed class AuthDbContext(DbContextOptions<AuthDbContext> options) : I
     public DbSet<PersonalDataEntity> PersonalData => Set<PersonalDataEntity>();
     public DbSet<PermissionEntity> Permissions => Set<PermissionEntity>();
     public DbSet<UserPermissionsEntity> UserPermissions => Set<UserPermissionsEntity>();
-    public DbSet<UserAuthenticationTokenEntity> UserAuthenticationTokens => Set<UserAuthenticationTokenEntity>();
+    public DbSet<SecurityTokenEntity> SecurityTokens => Set<SecurityTokenEntity>();
     public DbSet<CodeEntity> Codes => Set<CodeEntity>();
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -97,11 +97,11 @@ internal sealed class AuthDbContext(DbContextOptions<AuthDbContext> options) : I
                 new UserPermissionsEntity() { UserId = "abb9d2ed-c3d2-4df9-ba88-eab018b95bc3", PermissionId = Guid.Parse("dba6e723-ac0f-42a3-91fd-e40bdb08e26b") });
         });
 
-        builder.Entity<UserAuthenticationTokenEntity>(x =>
+        builder.Entity<SecurityTokenEntity>(x =>
         {
             x.HasKey(k => k.Id);
             x.Property(x => x.Token).HasColumnType("VARCHAR(MAX)");
-            x.HasOne(x => x.User).WithOne(x => x.AuthenticationToken).HasForeignKey<UserAuthenticationTokenEntity>(x => x.UserId);
+            x.HasOne(x => x.User).WithOne(x => x.AuthenticationToken).HasForeignKey<SecurityTokenEntity>(x => x.UserId);
         });
     }
 }

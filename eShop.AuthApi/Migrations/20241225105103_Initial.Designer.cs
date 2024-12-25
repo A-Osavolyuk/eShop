@@ -12,8 +12,8 @@ using eShop.AuthApi.Data;
 namespace eShop.AuthApi.Migrations
 {
     [DbContext(typeof(AuthDbContext))]
-    [Migration("20241221113640_AddedField")]
-    partial class AddedField
+    [Migration("20241225105103_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -264,7 +264,7 @@ namespace eShop.AuthApi.Migrations
                         {
                             Id = "abb9d2ed-c3d2-4df9-ba88-eab018b95bc3",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "9265b0f3-4994-45f9-9d16-7b924b55bc26",
+                            ConcurrencyStamp = "8dfd37e5-4c2f-43ef-8e91-f5a760f74b79",
                             Email = "sasha.osavolll111@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
@@ -273,7 +273,7 @@ namespace eShop.AuthApi.Migrations
                             PasswordHash = "AQAAAAIAAYagAAAAEHeZ7iJce/rkJIBOAFdarWHCG1NUYQ1y67q5EyVGG9ttMlkXR2wxOMAQRsg+HtNtCg==",
                             PhoneNumber = "380686100242",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "2d4b336b-a3b6-4690-b442-7e4eeb35d390",
+                            SecurityStamp = "a0fd769e-323c-43ba-9846-44353b5122bc",
                             TwoFactorEnabled = false,
                             UserName = "sasha.osavolll111@gmail.com"
                         });
@@ -285,8 +285,9 @@ namespace eShop.AuthApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Code")
-                        .HasColumnType("int");
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CodeType")
                         .HasColumnType("int");
@@ -297,17 +298,11 @@ namespace eShop.AuthApi.Migrations
                     b.Property<DateTime>("ExpiresAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("SessionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UserId")
+                    b.Property<string>("SentTo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
 
                     b.ToTable("Codes");
                 });
@@ -409,7 +404,7 @@ namespace eShop.AuthApi.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("2425850c-691c-4057-95fe-f0cc4986ee56"),
+                            Id = new Guid("21b647c4-9e29-4cc3-9d03-565e315e70bf"),
                             DateOfBirth = new DateTime(2004, 2, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FirstName = "Alexander",
                             Gender = "Male",
@@ -418,7 +413,7 @@ namespace eShop.AuthApi.Migrations
                         });
                 });
 
-            modelBuilder.Entity("eShop.Domain.Entities.AuthApi.UserAuthenticationTokenEntity", b =>
+            modelBuilder.Entity("eShop.Domain.Entities.AuthApi.SecurityTokenEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -440,7 +435,7 @@ namespace eShop.AuthApi.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("UserAuthenticationTokens");
+                    b.ToTable("SecurityTokens");
                 });
 
             modelBuilder.Entity("eShop.Domain.Entities.AuthApi.UserPermissionsEntity", b =>
@@ -536,15 +531,6 @@ namespace eShop.AuthApi.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("eShop.Domain.Entities.AuthApi.CodeEntity", b =>
-                {
-                    b.HasOne("eShop.Domain.Entities.AuthApi.AppUser", null)
-                        .WithOne()
-                        .HasForeignKey("eShop.Domain.Entities.AuthApi.CodeEntity", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("eShop.Domain.Entities.AuthApi.PersonalDataEntity", b =>
                 {
                     b.HasOne("eShop.Domain.Entities.AuthApi.AppUser", "User")
@@ -556,11 +542,11 @@ namespace eShop.AuthApi.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("eShop.Domain.Entities.AuthApi.UserAuthenticationTokenEntity", b =>
+            modelBuilder.Entity("eShop.Domain.Entities.AuthApi.SecurityTokenEntity", b =>
                 {
                     b.HasOne("eShop.Domain.Entities.AuthApi.AppUser", "User")
                         .WithOne("AuthenticationToken")
-                        .HasForeignKey("eShop.Domain.Entities.AuthApi.UserAuthenticationTokenEntity", "UserId")
+                        .HasForeignKey("eShop.Domain.Entities.AuthApi.SecurityTokenEntity", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

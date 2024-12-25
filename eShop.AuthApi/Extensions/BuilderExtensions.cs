@@ -1,4 +1,6 @@
-﻿namespace eShop.AuthApi.Extensions;
+﻿using eShop.AuthApi.HostedServices;
+
+namespace eShop.AuthApi.Extensions;
 
 public static class BuilderExtensions
 {
@@ -103,7 +105,9 @@ public static class BuilderExtensions
         builder.Services.AddScoped<IPermissionManager, PermissionManager>();
         builder.Services.AddScoped<ISecurityManager, SecurityManager>();
         builder.Services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
-        builder.Services.AddHostedService<BackgroundTokenValidator>();
+        
+        builder.Services.AddHostedService<HostedTokenValidator>();
+        builder.Services.AddHostedService<HostedCodeValidator>();
 
         builder.Services.AddScoped<AppManager>();
         builder.Services.AddScoped<CartClient>();

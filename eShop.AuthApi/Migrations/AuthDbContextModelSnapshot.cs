@@ -261,7 +261,7 @@ namespace eShop.AuthApi.Migrations
                         {
                             Id = "abb9d2ed-c3d2-4df9-ba88-eab018b95bc3",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5f8552b0-d1f0-404c-85fe-dc3cf056f3db",
+                            ConcurrencyStamp = "8dfd37e5-4c2f-43ef-8e91-f5a760f74b79",
                             Email = "sasha.osavolll111@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
@@ -270,7 +270,7 @@ namespace eShop.AuthApi.Migrations
                             PasswordHash = "AQAAAAIAAYagAAAAEHeZ7iJce/rkJIBOAFdarWHCG1NUYQ1y67q5EyVGG9ttMlkXR2wxOMAQRsg+HtNtCg==",
                             PhoneNumber = "380686100242",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "44b1337e-57b7-440e-8228-3ca66bc3a65e",
+                            SecurityStamp = "a0fd769e-323c-43ba-9846-44353b5122bc",
                             TwoFactorEnabled = false,
                             UserName = "sasha.osavolll111@gmail.com"
                         });
@@ -401,7 +401,7 @@ namespace eShop.AuthApi.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("35b057dd-e5e1-4d5b-881f-65f2425e89e0"),
+                            Id = new Guid("21b647c4-9e29-4cc3-9d03-565e315e70bf"),
                             DateOfBirth = new DateTime(2004, 2, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FirstName = "Alexander",
                             Gender = "Male",
@@ -410,7 +410,7 @@ namespace eShop.AuthApi.Migrations
                         });
                 });
 
-            modelBuilder.Entity("eShop.Domain.Entities.AuthApi.UserAuthenticationTokenEntity", b =>
+            modelBuilder.Entity("eShop.Domain.Entities.AuthApi.SecurityTokenEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -432,7 +432,7 @@ namespace eShop.AuthApi.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("UserAuthenticationTokens");
+                    b.ToTable("SecurityTokens");
                 });
 
             modelBuilder.Entity("eShop.Domain.Entities.AuthApi.UserPermissionsEntity", b =>
@@ -539,11 +539,11 @@ namespace eShop.AuthApi.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("eShop.Domain.Entities.AuthApi.UserAuthenticationTokenEntity", b =>
+            modelBuilder.Entity("eShop.Domain.Entities.AuthApi.SecurityTokenEntity", b =>
                 {
                     b.HasOne("eShop.Domain.Entities.AuthApi.AppUser", "User")
                         .WithOne("AuthenticationToken")
-                        .HasForeignKey("eShop.Domain.Entities.AuthApi.UserAuthenticationTokenEntity", "UserId")
+                        .HasForeignKey("eShop.Domain.Entities.AuthApi.SecurityTokenEntity", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

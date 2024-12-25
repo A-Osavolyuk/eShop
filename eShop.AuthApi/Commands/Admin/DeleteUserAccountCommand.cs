@@ -48,12 +48,12 @@ internal sealed class DeleteUserAccountCommandHandler(
             await context.SaveChangesAsync(cancellationToken);
         }
 
-        var userTokens = await context.UserAuthenticationTokens.AsNoTracking()
+        var userTokens = await context.SecurityTokens.AsNoTracking()
             .SingleOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
 
         if (userTokens is not null)
         {
-            context.UserAuthenticationTokens.Remove(userTokens);
+            context.SecurityTokens.Remove(userTokens);
             await context.SaveChangesAsync(cancellationToken);
         }
 
