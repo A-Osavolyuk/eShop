@@ -29,21 +29,6 @@ public static class UserManagerExtensions
 
         return IdentityResult.Success;
     }
-
-    public static string GenerateRandomPassword(this UserManager<AppUser> userManager, int length)
-    {
-        const string validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()-_=+";
-        StringBuilder sb = new StringBuilder();
-        Random random = new Random();
-
-        for (int i = 0; i < length; i++)
-        {
-            int randomIndex = random.Next(validChars.Length);
-            sb.Append(validChars[randomIndex]);
-        }
-
-        return sb.ToString();
-    }
     
     public static async Task<IdentityResult> RemoveFromRolesAsync(this UserManager<AppUser> userManager, AppUser user)
     {
@@ -60,5 +45,41 @@ public static class UserManagerExtensions
         }
 
         return IdentityResult.Success;
+    }
+
+    public static async Task<IdentityResult> ResetPasswordAsync(this UserManager<AppUser> userManager, AppUser user, string password)
+    {
+        var token = await userManager.GeneratePasswordResetTokenAsync(user);
+        var result = await userManager.ResetPasswordAsync(user, token, password);
+        return result;
+    }
+
+    public static async Task<IdentityResult> ConfirmEmailAsync(this UserManager<AppUser> userManager, AppUser user)
+    {
+        var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+        var result = await userManager.ConfirmEmailAsync(user, token);
+        return result;
+    }
+
+    public static async Task<IdentityResult> ConfirmPhoneNumberAsync(this UserManager<AppUser> userManager, AppUser user)
+    {
+        user.PhoneNumberConfirmed = true;
+        await userManager.UpdateAsync(user);
+        return IdentityResult.Success;
+    }
+
+    public static async Task<IdentityResult> ChangeEmailAsync(this UserManager<AppUser> userManager, AppUser user, string newEmail)
+    {
+        var token = await userManager.GenerateChangeEmailTokenAsync(user, newEmail);
+        var result = await userManager.ChangeEmailAsync(user, newEmail, token);
+        return result;
+    }
+
+    public static async Task<IdentityResult> ChangePhoneNumberAsync(this UserManager<AppUser> userManager, AppUser user,
+        string newPhoneNumber)
+    {
+        var token = await userManager.GenerateChangePhoneNumberTokenAsync(user, newPhoneNumber);
+        var result = await userManager.ChangePhoneNumberAsync(user, newPhoneNumber, token);
+        return result;
     }
 }

@@ -37,7 +37,7 @@ internal sealed class CreateUserAccountCommandHandler(
                 $"Cannot create account due to server error: {accountResult.Errors.First().Description}."));
         }
 
-        var password = appManager.UserManager.GenerateRandomPassword(18);
+        var password = appManager.SecurityManager.GenerateRandomPassword(18);
         var passwordResult = await appManager.UserManager.AddPasswordAsync(user, password);
 
         if (!passwordResult.Succeeded)

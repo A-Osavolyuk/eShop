@@ -69,7 +69,7 @@ internal sealed class HandleExternalLoginResponseQueryHandler(
                 EmailConfirmed = true
             };
 
-            var tempPassword = appManager.UserManager.GenerateRandomPassword(18);
+            var tempPassword = appManager.SecurityManager.GenerateRandomPassword(18);
             var result = await appManager.UserManager.CreateAsync(user, tempPassword);
 
             if (!result.Succeeded)
