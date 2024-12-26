@@ -1,4 +1,6 @@
-﻿namespace eShop.AuthApi.Commands.Auth;
+﻿using eShop.Domain.Models;
+
+namespace eShop.AuthApi.Commands.Auth;
 
 internal sealed record ChangeEmailCommand(ChangeEmailRequest Request) : IRequest<Result<ChangeEmailResponse>>;
 
@@ -16,34 +18,39 @@ internal sealed class RequestChangeEmailCommandHandler(
         CancellationToken cancellationToken)
     {
         var user = await appManager.UserManager.FindByEmailAsync(request.Request.CurrentEmail);
-        
+
         if (user is null)
         {
             return new(new NotFoundException($"Cannot find user with email {request.Request.CurrentEmail}"));
         }
 
-        var token = await appManager.UserManager.GenerateChangeEmailTokenAsync(user, request.Request.NewEmail);
-
-        var encodedToken = Uri.EscapeDataString(token);
-        var link = UrlGenerator.ActionLink("/account/change-email", frontendUri, new
+        var destination = new DestinationSet()
         {
-            request.Request.CurrentEmail,
-            request.Request.NewEmail,
-            Token = encodedToken
-        });
+            Current = request.Request.CurrentEmail, 
+            Next = request.Request.NewEmail
+        };
+        var code = await appManager.SecurityManager.GenerateVerificationCodeSetAsync(destination, CodeType.ChangeEmail);
 
-        await emailSender.SendChangeEmailMessage(new ChangeEmailMessage()
+        await emailSender.SendMessageAsync("email-change", new ChangeEmailMessage()
         {
-            Link = link,
+            Code = code.Current,
             To = request.Request.CurrentEmail,
-            Subject = "Change email address request",
+            Subject = "Email change (step one)",
             UserName = request.Request.CurrentEmail,
             NewEmail = request.Request.NewEmail,
         });
 
+        await emailSender.SendMessageAsync("new-email-verification", new NewEmailVerification()
+        {
+            Code = code.Next,
+            UserName = request.Request.CurrentEmail,
+            Subject = "Email change (step two)",
+            To = request.Request.NewEmail,
+        });
+
         return new(new ChangeEmailResponse()
         {
-            Message = "We have sent an email with instructions to your email."
+            Message = "We have sent a letter with instructions to your current and new email addresses"
         });
     }
 }

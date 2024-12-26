@@ -20,7 +20,7 @@
         {
             CurrentEmail = CurrentEmail,
             NewEmail = NewEmail,
-            Token = Token
+            CodeSet = new CodeSet()
         };
 
         var result = await AuthenticationService.ConfirmChangeEmailAsync(Request);

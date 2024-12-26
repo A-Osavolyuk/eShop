@@ -7,7 +7,7 @@ using MimeKit;
 
 namespace eShop.EmailSenderApi.Receivers;
 
-public class ConfirmEmailConsumer(IOptions<EmailOptions> options) : IConsumer<EmailVerificationMessage>
+public class VerifyEmailConsumer(IOptions<EmailOptions> options) : IConsumer<EmailVerificationMessage>
 {
     private readonly EmailOptions options = options.Value;
 
@@ -54,10 +54,15 @@ public class ConfirmEmailConsumer(IOptions<EmailOptions> options) : IConsumer<Em
                                     <p style="font: 16px Arial, sans-serif; margin:0;">Hello, {userName}!.</p>
                                     <br>
                                     <p style="font: 16px Arial, sans-serif; margin: 0;">
+                                        Your account was successfully registered. Now verify your email to sing in.
                                         To verify your email address and complete registration, please enter verification code from below.
                                     </p>
                                     <br>
                                     <p style="font: 16px Arial, sans-serif; margin: 0;"> Your verification code: {code}. Will expire in: 10 mins.</p>
+                                    <br>
+                                    <p style="font: 16px Arial, sans-serif; margin: 0;">
+                                        Please do not give this code to anyone under any circumstances.
+                                    </p>
                                     <br>
                                     <p style="font: 16px Arial, sans-serif; margin: 0;">eShop Team.</p>
                                     <div style="border: 1px solid rgb(190, 189, 189); width: 100%; margin-top: 40px;"></div>

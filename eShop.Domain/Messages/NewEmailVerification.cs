@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.Messages;
 
-public class ResetPasswordMessage : MessageBase
+public class NewEmailVerification : MessageBase
 {
     public string Code { get; set; } = string.Empty;
 }

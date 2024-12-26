@@ -20,19 +20,12 @@ internal sealed class RequestChangePhoneNumberCommandHandler(
         {
             return new(new NotFoundException($"Cannot find user with email {request.Request.Email}."));
         }
+        
+        var code = await appManager.SecurityManager.GenerateVerificationCodeAsync(user.PhoneNumber!, CodeType.ChangePhoneNumber);
 
-        var token = await appManager.UserManager.GenerateChangePhoneNumberTokenAsync(user, request.Request.PhoneNumber);
-
-        var link = UrlGenerator.ActionLink("/account/change-phone-number", frontendUri, new
+        await emailSender.SendMessageAsync("phone-number-change", new ChangePhoneNumberMessage()
         {
-            Token = token,
-            Email = request.Request.Email,
-            PhoneNumber = request.Request.PhoneNumber
-        });
-
-        await emailSender.SendChangePhoneNumberMessage(new ChangePhoneNumberMessage()
-        {
-            Link = link,
+            Code = code,
             To = request.Request.Email,
             Subject = "Change phone number request",
             UserName = request.Request.Email,

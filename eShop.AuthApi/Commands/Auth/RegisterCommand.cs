@@ -54,17 +54,14 @@ internal sealed class RegisterCommandHandler(
                 $"Cannot issue permissions for user with email {request.Request.Email} " +
                 $"due to server errors: {issuingPermissionsResult.Errors.First().Description}"));
         }
+        
+        var code = await appManager.SecurityManager.GenerateVerificationCodeAsync(newUser.Email!, CodeType.VerifyEmail);
 
-        //var emailConfirmationToken = await appManager.UserManager.GenerateEmailConfirmationTokenAsync(newUser);
-        var emailVerificationCode = await appManager.SecurityManager.GenerateVerificationCodeAsync(newUser.Email!, CodeType.VerifyEmail);
-        //var encodedToken = Uri.EscapeDataString(emailConfirmationToken);
-        //var link = UrlGenerator.ActionLink("/account/confirm-email", frontendUri, new { Email = request.Request.Email, Token = encodedToken });
-
-        await emailSender.SendEmailVerificationMessage(new EmailVerificationMessage()
+        await emailSender.SendMessageAsync("email-verification", new EmailVerificationMessage()
         {
             To = request.Request.Email,
             Subject = "Email verification",
-            Code = emailVerificationCode,
+            Code = code,
             UserName = newUser.UserName!
         });
 

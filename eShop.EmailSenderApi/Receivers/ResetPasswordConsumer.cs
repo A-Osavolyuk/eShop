@@ -7,11 +7,11 @@ using MimeKit;
 
 namespace eShop.EmailSenderApi.Receivers;
 
-public class ChangeEmailConsumer(IOptions<EmailOptions> options) : IConsumer<ChangeEmailMessage>
+public class ResetPasswordConsumer(IOptions<EmailOptions> options) : IConsumer<ResetPasswordMessage>
 {
     private readonly EmailOptions options = options.Value;
 
-    public async Task Consume(ConsumeContext<ChangeEmailMessage> context)
+    public async Task Consume(ConsumeContext<ResetPasswordMessage> context)
     {
         var emailMessage = new MimeMessage();
 
@@ -20,7 +20,7 @@ public class ChangeEmailConsumer(IOptions<EmailOptions> options) : IConsumer<Cha
         emailMessage.Subject = context.Message.Subject;
 
         var builder = new BodyBuilder();
-        builder.HtmlBody = GetEmailBody(context.Message.To, context.Message.Code, context.Message.NewEmail);
+        builder.HtmlBody = GetEmailBody(context.Message.To, context.Message.Code);
 
         emailMessage.Body = builder.ToMessageBody();
 
@@ -33,15 +33,15 @@ public class ChangeEmailConsumer(IOptions<EmailOptions> options) : IConsumer<Cha
         }
     }
 
-    private string GetEmailBody(string userName, string code, string newEmail)
+    private string GetEmailBody(string userName, string code)
     {
         string body = $"""
-                        <!DOCTYPE html>
+                      <!DOCTYPE html>
                       <html lang="en">
                       <head>
                           <meta charset="UTF-8">
                           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                          <title>Email change (step one)</title>
+                          <title>Password reset</title>
                       </head>
                       <body>
                       <div style="border: 1px solid rgb(190, 189, 189); width: 800px; margin: auto; padding: 1px;">
@@ -50,24 +50,23 @@ public class ChangeEmailConsumer(IOptions<EmailOptions> options) : IConsumer<Cha
                           </div>
                           <div style="border: 1px solid rgb(190, 189, 189); width: 100%;"></div>
                           <div style="padding: 50px 100px; margin: auto;">
-                              <h1 style="font: bold 24px Arial, sans-serif; margin: 0; margin-bottom: 40px;">Email change (step one)</h1>
+                              <h1 style="font: bold 24px Arial, sans-serif; margin: 0; margin-bottom: 40px;">Password reset</h1>
                               <p style="font: 16px Arial, sans-serif; margin:0;">Hello, {userName}!.</p>
                               <br>
                               <p style="font: 16px Arial, sans-serif; margin: 0;">
-                                  We received a request to change your current email to a new email: {newEmail}.
-                                  To confirm the first step of an email change, please enter the confirmation code from this letter.
+                                  We received a request to reset your password. To reset password, please enter code below.
                               </p>
                               <br>
-                              <p style="font: 16px Arial, sans-serif; margin: 0;"> Your confirmation code: {code}. Will expire in: 10 mins.</p>
+                              <p style="font: 16px Arial, sans-serif; margin: 0;"> 
+                                  Your password reset code: {code}. Will expire in: 10 mins.
+                              </p>
                               <br>
                               <p style="font: 16px Arial, sans-serif; margin: 0;">
                                   Please do not give this code to anyone under any circumstances.
                               </p>
                               <br>
                               <p style="font: 16px Arial, sans-serif; margin: 0;">
-                                  If you didn't request an email change, please contact our <a href="#">technical support</a>,
-                                  change your password to a more secure one and turn on 2FA (two-factor authentication).
-                                  We will help you to configure you account security. You can know more about an account security <a href="#">here</a>.
+                                  If you didn't request a password reset, then you can ignore this letter.
                               </p>
                               <br>
                               <p style="font: 16px Arial, sans-serif; margin: 0;">eShop Team.</p>

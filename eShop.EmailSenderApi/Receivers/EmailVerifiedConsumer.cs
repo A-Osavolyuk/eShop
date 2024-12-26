@@ -7,10 +7,10 @@ using MimeKit;
 
 namespace eShop.EmailSenderApi.Receivers;
 
-public class AccountRegisteredConsumer(IOptions<EmailOptions> options) : IConsumer<AccountRegisteredMessage>
+public class EmailVerifiedConsumer(IOptions<EmailOptions> options) : IConsumer<EmailVerifiedMessage>
 {
     private readonly EmailOptions options = options.Value;
-    public async Task Consume(ConsumeContext<AccountRegisteredMessage> context)
+    public async Task Consume(ConsumeContext<EmailVerifiedMessage> context)
     {
         var emailMessage = new MimeMessage();
 
@@ -38,7 +38,7 @@ public class AccountRegisteredConsumer(IOptions<EmailOptions> options) : IConsum
                          <head>
                              <meta charset="UTF-8">
                              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                             <title>Welcome to eShop!</title>
+                             <title>Email verified</title>
                          </head>
                          <body>
                          <div style="border: 1px solid rgb(190, 189, 189); width: 800px; margin: auto; padding: 1px;">
@@ -47,11 +47,10 @@ public class AccountRegisteredConsumer(IOptions<EmailOptions> options) : IConsum
                             </div>
                              <div style="border: 1px solid rgb(190, 189, 189); width: 100%;"></div>
                              <div style="padding: 50px 100px; margin: auto;">
-                                 <h1 style="font: bold 24px Arial, sans-serif; margin: 0; margin-bottom: 40px;">Welcome to eShop!</h1>
+                                 <h1 style="font: bold 24px Arial, sans-serif; margin: 0; margin-bottom: 40px;">Email verified</h1>
                                  <p style="font: 16px Arial, sans-serif; margin: 0;">Hello, {userName}!.</p>
                                  <br/>
-                                 <p style="font: 16px Arial, sans-serif; margin: 0;">Your account was successfully registered.</p>
-                                 <p style="font: 16px Arial, sans-serif; margin: 0;">Thank you for your registration.</p>
+                                 <p style="font: 16px Arial, sans-serif; margin: 0;">Your email address was successfully verified.</p>
                                  <br/>
                                  <p style="font: 16px Arial, sans-serif; margin: 0;">eShop Team.</p>
                                  <div style="border: 1px solid rgb(190, 189, 189); width: 100%; margin-top: 40px;"></div>

@@ -18,9 +18,8 @@ internal sealed class ConfirmChangeEmailCommandHandler(
         {
             return new(new NotFoundException($"Cannot find user with email {request.Request.CurrentEmail}."));
         }
-
-        var token = Uri.UnescapeDataString(request.Request.Token);
-        var result = await appManager.UserManager.ChangeEmailAsync(user, request.Request.NewEmail, token);
+        
+        var result = await appManager.SecurityManager.ChangeEmailAsync(user, request.Request.NewEmail, request.Request.CodeSet);
 
         if (!result.Succeeded)
         {

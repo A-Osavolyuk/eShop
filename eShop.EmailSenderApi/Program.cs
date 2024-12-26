@@ -1,3 +1,4 @@
+using eShop.Domain.Messages;
 using eShop.Domain.Options;
 using eShop.EmailSenderApi.Receivers;
 using eShop.ServiceDefaults;
@@ -23,22 +24,22 @@ builder.Services.AddMassTransit(x =>
             h.Password(password);
         });
 
-        cfg.ReceiveEndpoint("reset-password", e => e.ConfigureConsumer<ResetPasswordEmailConsumer>(context));
-        cfg.ReceiveEndpoint("change-email", e => e.ConfigureConsumer<ChangeEmailConsumer>(context));
-        cfg.ReceiveEndpoint("change-phone-number", e => e.ConfigureConsumer<ChangePhoneNumberConsumer>(context));
-        cfg.ReceiveEndpoint("confirm-email", e => e.ConfigureConsumer<ConfirmEmailConsumer>(context));
-        cfg.ReceiveEndpoint("account-registered", e => e.ConfigureConsumer<AccountRegisteredConsumer>(context));
+        cfg.ReceiveEndpoint("password-reset", e => e.ConfigureConsumer<ResetPasswordConsumer>(context));
+        cfg.ReceiveEndpoint("email-change", e => e.ConfigureConsumer<ChangeEmailConsumer>(context));
+        cfg.ReceiveEndpoint("email-verification", e => e.ConfigureConsumer<VerifyEmailConsumer>(context));
+        cfg.ReceiveEndpoint("email-verified", e => e.ConfigureConsumer<EmailVerifiedConsumer>(context));
         cfg.ReceiveEndpoint("2fa-code", e => e.ConfigureConsumer<TwoFactorAuthenticationCodeConsumer>(context));
-        cfg.ReceiveEndpoint("registered-on-external-login", e => e.ConfigureConsumer<ExternalLoginConsumer>(context));
+        cfg.ReceiveEndpoint("external-provider-registration", e => e.ConfigureConsumer<ExternalLoginConsumer>(context));
+        cfg.ReceiveEndpoint("new-email-verification", e => e.ConfigureConsumer<VerifyNewEmailConsumer>(context));
     });
 
-    x.AddConsumer<ResetPasswordEmailConsumer>();
+    x.AddConsumer<ResetPasswordConsumer>();
     x.AddConsumer<ChangeEmailConsumer>();
-    x.AddConsumer<ChangePhoneNumberConsumer>();
-    x.AddConsumer<ConfirmEmailConsumer>();
-    x.AddConsumer<AccountRegisteredConsumer>();
+    x.AddConsumer<VerifyEmailConsumer>();
+    x.AddConsumer<EmailVerifiedConsumer>();
     x.AddConsumer<TwoFactorAuthenticationCodeConsumer>();
     x.AddConsumer<ExternalLoginConsumer>();
+    x.AddConsumer<VerifyNewEmailConsumer>();
 });
 
 var app = builder.Build();

@@ -12,13 +12,18 @@
 @using eShop.BlazorWebUI.Components.Layout
 @using eShop.BlazorWebUI.Components.Shared
 @using eShop.BlazorWebUI.Components.Shared.Products
+@using eShop.Infrastructure.StateContainers
 @using eShop.Domain.Common
 @using eShop.Domain.DTOs
 @using eShop.Domain.Entities
 @using eShop.Domain.Enums
 @using eShop.Domain.Interfaces
 @using eShop.Domain.Models
+@using eShop.Domain.Requests.AuthApi.Auth
+@using eShop.Domain.Requests.AuthApi.Admin
 @using eShop.Domain.Responses
+@using eShop.Domain.Responses.AuthApi.Auth
+@using eShop.Domain.Responses.AuthApi.Admin
 @using eShop.Infrastructure.Account
 @using FluentValidation
 @using Microsoft.AspNetCore.Authorization
@@ -30,5 +35,6 @@
 @using Microsoft.AspNetCore.WebUtilities
 @using Microsoft.JSInterop
 @using MudBlazor
+@using MudExtensions
 @using Newtonsoft.Json
 @using static Microsoft.AspNetCore.Components.Web.RenderMode

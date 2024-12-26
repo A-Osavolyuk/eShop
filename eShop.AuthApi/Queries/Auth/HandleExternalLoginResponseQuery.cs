@@ -93,15 +93,14 @@ internal sealed class HandleExternalLoginResponseQueryHandler(
             if (!issuingPermissionsResult.Succeeded)
             {
                 return new(new FailedOperationException(
-                    $"Cannot assing permissions for user with email {user.Email} " +
+                    $"Cannot assign permissions for user with email {user.Email} " +
                     $"due to server error: {issuingPermissionsResult.Errors.First().Description}"));
             }
 
-            await emailSender.SendAccountRegisteredOnExternalLoginMessage(
-                new AccountRegisteredOnExternalLoginMessage()
+            await emailSender.SendMessageAsync("external-provider-registration", new AccountRegisteredOnExternalLoginMessage()
                 {
                     To = email,
-                    Subject = $"Account created with {request.ExternalLoginInfo!.ProviderDisplayName} sign in",
+                    Subject = $"Account registered with {request.ExternalLoginInfo!.ProviderDisplayName}",
                     TempPassword = tempPassword,
                     UserName = email,
                     ProviderName = request.ExternalLoginInfo!.ProviderDisplayName!

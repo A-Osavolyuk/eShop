@@ -23,17 +23,13 @@ internal sealed class RequestResetPasswordCommandHandler(
             return new(new NotFoundException($"Cannot find user with email {request.Request.Email}."));
         }
 
-        var token = await appManager.UserManager.GeneratePasswordResetTokenAsync(user);
+        var code = await appManager.SecurityManager.GenerateVerificationCodeAsync(user.Email!, CodeType.ResetPassword);
 
-        var encodedToken = Uri.EscapeDataString(token);
-        var link = UrlGenerator.ActionLink("/account/confirm-password-reset", frontendUri,
-            new { Email = request.Request.Email, Token = encodedToken });
-
-        await emailSender.SendResetPasswordMessage(new ResetPasswordMessage()
+        await emailSender.SendMessageAsync("password-reset", new ResetPasswordMessage()
         {
             To = request.Request.Email,
-            Subject = "Reset Password Request",
-            Link = link,
+            Subject = "Password reset",
+            Code = code,
             UserName = user.UserName!
         });
 

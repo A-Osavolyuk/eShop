@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="accountSettings">
-    <option name="activeProfile" value="profile:default" />
+    <option name="activeProfile" value="profile:AleksanDOOR" />
     <option name="activeRegion" value="eu-north-1" />
     <option name="recentlyUsedProfiles">
       <list>
-        <option value="profile:default" />
         <option value="profile:AleksanDOOR" />
+        <option value="profile:default" />
       </list>
     </option>
     <option name="recentlyUsedRegions">
@@ -17,6 +17,6 @@
     </option>
   </component>
   <component name="explorerToolWindow">
-    <option name="selectedTab" value="Explorer" />
+    <option name="selectedTab" value="Amazon Q" />
   </component>
 </project>

@@ -2,11 +2,5 @@
 
 internal interface IEmailSender
 {
-    public ValueTask SendResetPasswordMessage(ResetPasswordMessage resetPasswordMessage);
-    public ValueTask SendEmailVerificationMessage(EmailVerificationMessage emailVerificationMessage);
-    public ValueTask SendAccountRegisteredMessage(AccountRegisteredMessage accountRegisteredMessage);
-    public ValueTask SendTwoFactorAuthenticationCodeMessage(TwoFactorAuthenticationCodeMessage twoFactorAuthenticationCodeMessage);
-    public ValueTask SendAccountRegisteredOnExternalLoginMessage(AccountRegisteredOnExternalLoginMessage accountRegisteredOnExternalLoginMessage);
-    public ValueTask SendChangeEmailMessage(ChangeEmailMessage changeEmailMessage);
-    public ValueTask SendChangePhoneNumberMessage(ChangePhoneNumberMessage changePhoneNumberMessage);
+    public ValueTask SendMessageAsync<TMessage>(string queryName, TMessage message) where TMessage : MessageBase;
 }

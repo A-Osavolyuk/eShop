@@ -30,10 +30,10 @@ internal sealed class VerifyEmailCommandHandler(
                 $"due to server error: {confirmResult.Errors.First().Description}."));
         }
 
-        await emailSender.SendAccountRegisteredMessage(new AccountRegisteredMessage()
+        await emailSender.SendMessageAsync("email-verified", new EmailVerifiedMessage()
         {
             To = request.Request.Email,
-            Subject = "Successful Account Registration",
+            Subject = "Email verified",
             UserName = user.UserName!
         });
 
