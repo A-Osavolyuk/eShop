@@ -2,7 +2,7 @@
 
 public record class ConfirmChangePhoneNumberRequest
 {
-    public string Email { get; set; } = string.Empty;
-    public string PhoneNumber { get; set; } = string.Empty;
-    public string Token { get; set; } = string.Empty;
+    public string CurrentPhoneNumber { get; set; } = string.Empty;
+    public string NewPhoneNumber { get; set; } = string.Empty;
+    public CodeSet CodeSet { get; set; } = null!;
 }

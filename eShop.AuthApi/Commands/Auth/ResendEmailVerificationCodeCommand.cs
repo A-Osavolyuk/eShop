@@ -1,13 +1,15 @@
-﻿namespace eShop.AuthApi.Commands.Auth;
+﻿using eShop.Domain.Messages.Email;
+
+namespace eShop.AuthApi.Commands.Auth;
 
 internal sealed record ResendEmailVerificationCodeCommand (ResendEmailVerificationCodeRequest Request)
     : IRequest<Result<ResendEmailVerificationCodeResponse>>;
 
-internal sealed class ResendEmailVerificationCodeCommandHandler(AppManager manager, IEmailSender emailSender, AuthDbContext context)
+internal sealed class ResendEmailVerificationCodeCommandHandler(AppManager manager, IEmailService emailService, AuthDbContext context)
     : IRequestHandler<ResendEmailVerificationCodeCommand, Result<ResendEmailVerificationCodeResponse>>
 {
     private readonly AppManager manager = manager;
-    private readonly IEmailSender emailSender = emailSender;
+    private readonly IEmailService emailService = emailService;
     private readonly AuthDbContext context = context;
 
     public async Task<Result<ResendEmailVerificationCodeResponse>> Handle(ResendEmailVerificationCodeCommand request,
@@ -35,7 +37,7 @@ internal sealed class ResendEmailVerificationCodeCommandHandler(AppManager manag
             code = entity.Code;
         }
 
-        await emailSender.SendMessageAsync("email-verification", new EmailVerificationMessage()
+        await emailService.SendMessageAsync("email-verification", new EmailVerificationEmail()
         {
             To = request.Request.Email,
             Code = code,

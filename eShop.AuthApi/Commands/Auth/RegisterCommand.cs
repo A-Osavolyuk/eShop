@@ -1,14 +1,16 @@
-﻿namespace eShop.AuthApi.Commands.Auth;
+﻿using eShop.Domain.Messages.Email;
+
+namespace eShop.AuthApi.Commands.Auth;
 
 internal sealed record RegisterCommand(RegistrationRequest Request) : IRequest<Result<RegistrationResponse>>;
 
 internal sealed class RegisterCommandHandler(
     AppManager appManager,
-    IEmailSender emailSender,
+    IEmailService emailService,
     IConfiguration configuration) : IRequestHandler<RegisterCommand, Result<RegistrationResponse>>
 {
     private readonly AppManager appManager = appManager;
-    private readonly IEmailSender emailSender = emailSender;
+    private readonly IEmailService emailService = emailService;
     private readonly string frontendUri = configuration["Configuration:General:Frontend:Clients:BlazorServer:Uri"]!;
     private readonly string defaultRole = configuration["Configuration:General:DefaultValues:DefaultRole"]!;
 
@@ -57,7 +59,7 @@ internal sealed class RegisterCommandHandler(
         
         var code = await appManager.SecurityManager.GenerateVerificationCodeAsync(newUser.Email!, CodeType.VerifyEmail);
 
-        await emailSender.SendMessageAsync("email-verification", new EmailVerificationMessage()
+        await emailService.SendMessageAsync("email-verification", new EmailVerificationEmail()
         {
             To = request.Request.Email,
             Subject = "Email verification",

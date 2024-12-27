@@ -1,4 +1,6 @@
-﻿namespace eShop.AuthApi.Queries.Auth;
+﻿using eShop.Domain.Messages.Email;
+
+namespace eShop.AuthApi.Queries.Auth;
 
 internal sealed record HandleExternalLoginResponseQuery(
     ExternalLoginInfo ExternalLoginInfo,
@@ -9,13 +11,13 @@ internal sealed class HandleExternalLoginResponseQueryHandler(
     AppManager appManager,
     ITokenHandler tokenHandler,
     IConfiguration configuration,
-    IEmailSender emailSender,
+    IEmailService emailService,
     AuthDbContext context) : IRequestHandler<HandleExternalLoginResponseQuery, Result<string>>
 {
     private readonly AppManager appManager = appManager;
     private readonly ITokenHandler tokenHandler = tokenHandler;
     private readonly IConfiguration configuration = configuration;
-    private readonly IEmailSender emailSender = emailSender;
+    private readonly IEmailService emailService = emailService;
     private readonly AuthDbContext context = context;
     private readonly string frontendUri = configuration["Configuration:General:Frontend:Clients:BlazorServer:Uri"]!;
     private readonly string defaultRole = configuration["Configuration:General:DefaultValues:DefaultRole"]!;
@@ -97,7 +99,7 @@ internal sealed class HandleExternalLoginResponseQueryHandler(
                     $"due to server error: {issuingPermissionsResult.Errors.First().Description}"));
             }
 
-            await emailSender.SendMessageAsync("external-provider-registration", new AccountRegisteredOnExternalLoginMessage()
+            await emailService.SendMessageAsync("external-provider-registration", new AccountRegisteredOnExternalLoginEmail()
                 {
                     To = email,
                     Subject = $"Account registered with {request.ExternalLoginInfo!.ProviderDisplayName}",

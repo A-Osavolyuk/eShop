@@ -1,4 +1,5 @@
 ﻿using eShop.Domain.Messages;
+using eShop.Domain.Messages.Email;
 using eShop.Domain.Options;
 using MailKit.Net.Smtp;
 using MassTransit;
@@ -7,11 +8,11 @@ using MimeKit;
 
 namespace eShop.EmailSenderApi.Receivers;
 
-public class ResetPasswordConsumer(IOptions<EmailOptions> options) : IConsumer<ResetPasswordMessage>
+public class ResetPasswordConsumer(IOptions<EmailOptions> options) : IConsumer<ResetPasswordEmail>
 {
     private readonly EmailOptions options = options.Value;
 
-    public async Task Consume(ConsumeContext<ResetPasswordMessage> context)
+    public async Task Consume(ConsumeContext<ResetPasswordEmail> context)
     {
         var emailMessage = new MimeMessage();
 

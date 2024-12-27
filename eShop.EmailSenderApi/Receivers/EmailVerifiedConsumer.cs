@@ -1,4 +1,5 @@
 ﻿using eShop.Domain.Messages;
+using eShop.Domain.Messages.Email;
 using eShop.Domain.Options;
 using MailKit.Net.Smtp;
 using MassTransit;
@@ -7,10 +8,10 @@ using MimeKit;
 
 namespace eShop.EmailSenderApi.Receivers;
 
-public class EmailVerifiedConsumer(IOptions<EmailOptions> options) : IConsumer<EmailVerifiedMessage>
+public class EmailVerifiedConsumer(IOptions<EmailOptions> options) : IConsumer<EmailVerifiedEmail>
 {
     private readonly EmailOptions options = options.Value;
-    public async Task Consume(ConsumeContext<EmailVerifiedMessage> context)
+    public async Task Consume(ConsumeContext<EmailVerifiedEmail> context)
     {
         var emailMessage = new MimeMessage();
 

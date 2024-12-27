@@ -5,7 +5,7 @@
 
 @inject IAuthenticationService AuthenticationService
 @inject IValidator<TwoFactorAuthenticationLoginRequest> Validator
-@inject AuthenticationStateProvider authenticationStateProvider
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <Title Text="Login with 2FA" />
 
@@ -45,7 +45,7 @@
         if (result.Success)
         {
             var data = JsonConvert.DeserializeObject<LoginResponse>(result.Result!.ToString()!);
-            await (authenticationStateProvider as ApplicationAuthenticationStateProvider)!.LoginAsync(data!.AccessToken, data.RefreshToken);
+            await (AuthenticationStateProvider as ApplicationAuthenticationStateProvider)!.LoginAsync(data!.AccessToken, data.RefreshToken);
             NavigationManager.NavigateTo("/products");
             Snackbar.Add(result.Message, MudBlazor.Severity.Success);
         }

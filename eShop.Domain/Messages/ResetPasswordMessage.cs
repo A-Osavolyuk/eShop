@@ -1,6 +1,0 @@
-﻿namespace eShop.Domain.Messages;
-
-public class ResetPasswordMessage : MessageBase
-{
-    public string Code { get; set; } = string.Empty;
-}

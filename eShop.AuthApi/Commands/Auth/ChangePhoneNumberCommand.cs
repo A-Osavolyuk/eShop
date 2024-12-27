@@ -1,40 +1,51 @@
-﻿namespace eShop.AuthApi.Commands.Auth;
+﻿using eShop.Domain.Messages.Sms;
+using eShop.Domain.Models;
+
+namespace eShop.AuthApi.Commands.Auth;
 
 internal sealed record ChangePhoneNumberCommand(ChangePhoneNumberRequest Request) : IRequest<Result<ChangePhoneNumberResponse>>;
 
 internal sealed class RequestChangePhoneNumberCommandHandler(
     AppManager appManager,
-    IEmailSender emailSender,
+    ISmsService smsService,
     IConfiguration configuration) : IRequestHandler<ChangePhoneNumberCommand, Result<ChangePhoneNumberResponse>>
 {
     private readonly AppManager appManager = appManager;
-    private readonly IEmailSender emailSender = emailSender;
+    private readonly ISmsService smsService = smsService;
     private readonly IConfiguration configuration = configuration;
     private readonly string frontendUri = configuration["Configuration:General:Frontend:Clients:BlazorServer:Uri"]!;
 
     public async Task<Result<ChangePhoneNumberResponse>> Handle(ChangePhoneNumberCommand request, CancellationToken cancellationToken)
     {
-        var user = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
+        var user = await appManager.UserManager.FindByPhoneNumberAsync(request.Request.CurrentPhoneNumber);
 
         if (user is null)
         {
-            return new(new NotFoundException($"Cannot find user with email {request.Request.Email}."));
+            return new(new NotFoundException($"Cannot find user with phone number {request.Request.CurrentPhoneNumber}."));
         }
-        
-        var code = await appManager.SecurityManager.GenerateVerificationCodeAsync(user.PhoneNumber!, CodeType.ChangePhoneNumber);
 
-        await emailSender.SendMessageAsync("phone-number-change", new ChangePhoneNumberMessage()
+        var destinationSet = new DestinationSet()
         {
-            Code = code,
-            To = request.Request.Email,
-            Subject = "Change phone number request",
-            UserName = request.Request.Email,
-            PhoneNumber = request.Request.PhoneNumber
+            Current = user.PhoneNumber!,
+            Next = request.Request.NewPhoneNumber
+        };
+        var code = await appManager.SecurityManager.GenerateVerificationCodeSetAsync(destinationSet, CodeType.ChangePhoneNumber);
+
+        await smsService.SendMessageAsync("phone-number-change", new ChangePhoneNumberMessage()
+        {
+            Code = code.Current,
+            PhoneNumber = request.Request.NewPhoneNumber
+        });
+        
+        await smsService.SendMessageAsync("new-phone-number-verification", new ChangePhoneNumberMessage()
+        {
+            Code = code.Next,
+            PhoneNumber = request.Request.NewPhoneNumber
         });
 
         return new(new ChangePhoneNumberResponse()
         {
-            Message = "We have sent you an email with instructions."
+            Message = "We have sent sms messages to your phone numbers."
         });
     }
 }

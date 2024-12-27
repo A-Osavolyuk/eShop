@@ -1,14 +1,16 @@
-﻿namespace eShop.AuthApi.Commands.Auth;
+﻿using eShop.Domain.Messages.Email;
+
+namespace eShop.AuthApi.Commands.Auth;
 
 internal sealed record VerifyEmailCommand(VerifyEmailRequest Request) : IRequest<Result<VerifyEmailResponse>>;
 
 internal sealed class VerifyEmailCommandHandler(
     AppManager appManager,
-    IEmailSender emailSender,
+    IEmailService emailService,
     CartClient client) : IRequestHandler<VerifyEmailCommand, Result<VerifyEmailResponse>>
 {
     private readonly AppManager appManager = appManager;
-    private readonly IEmailSender emailSender = emailSender;
+    private readonly IEmailService emailService = emailService;
     private readonly CartClient client = client;
 
     public async Task<Result<VerifyEmailResponse>> Handle(VerifyEmailCommand request,
@@ -30,7 +32,7 @@ internal sealed class VerifyEmailCommandHandler(
                 $"due to server error: {confirmResult.Errors.First().Description}."));
         }
 
-        await emailSender.SendMessageAsync("email-verified", new EmailVerifiedMessage()
+        await emailService.SendMessageAsync("email-verified", new EmailVerifiedEmail()
         {
             To = request.Request.Email,
             Subject = "Email verified",

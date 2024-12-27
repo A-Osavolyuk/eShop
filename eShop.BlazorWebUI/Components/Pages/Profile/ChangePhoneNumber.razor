@@ -23,9 +23,9 @@
                     </MudGrid>
                     <MudGrid Justify="Justify.Center">
                         <MudItem xs="12">
-                            <EditForm Context="formcontext" Model="Request" FormName="change-phone-number-form" OnValidSubmit="OnValidSubmit">
+                            <EditForm Context="formcontext" Model="request" FormName="change-phone-number-form" OnValidSubmit="OnValidSubmit">
                                 <FluentValidationValidator Validator="Validator" />
-                                <MudTextField Immediate Clearable For="@(() => Request.PhoneNumber)" Label="Phone number" @bind-Value="Request.PhoneNumber" Variant="Variant.Outlined" />
+                                <MudTextField Immediate Clearable For="@(() => request.NewPhoneNumber)" Label="Phone number" @bind-Value="request.NewPhoneNumber" Variant="Variant.Outlined" />
                                 <MudButton Class="mt-3" Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Success" EndIcon="@Icons.Material.Filled.Save">Save changes</MudButton>
                             </EditForm>
                         </MudItem>
@@ -40,22 +40,25 @@
 </AuthorizeView>
 
 @code {
-    private ChangePhoneNumberRequest Request = new();
-    private UserData User = new();
+    private ChangePhoneNumberRequest request = new();
+    private UserData user = new();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            User = await LocalDataAccessor.ReadUserDataAsync();
-            Request = new() { Email = User.Email, PhoneNumber = "380686100242" };
+            user = await LocalDataAccessor.ReadUserDataAsync();
+            request = new()
+            {
+                CurrentPhoneNumber = user.PhoneNumber,
+            };
             StateHasChanged();
         }
     }
 
     private async Task OnValidSubmit()
     {
-        var response = await AuthService.RequestChangePhoneNumberAsync(Request);
+        var response = await AuthService.RequestChangePhoneNumberAsync(request);
 
         if (response.Success)
         {

@@ -1,6 +1,8 @@
-﻿namespace eShop.AuthApi.Services.Implementation;
+﻿using eShop.Domain.Messages.Email;
 
-internal sealed class EmailSender(IBus bus) : IEmailSender
+namespace eShop.AuthApi.Services.Implementation;
+
+internal sealed class EmailService(IBus bus) : IEmailService
 {
     private readonly IBus bus = bus;
     
@@ -16,7 +18,7 @@ internal sealed class EmailSender(IBus bus) : IEmailSender
         return uri;
     }
 
-    public async ValueTask SendMessageAsync<TMessage>(string queryName, TMessage message) where TMessage : MessageBase
+    public async ValueTask SendMessageAsync<TMessage>(string queryName, TMessage message) where TMessage : EmailBase
     {
         var endpoint = await bus.GetSendEndpoint(CreateQueryUri(queryName));
         await endpoint.Send(message);

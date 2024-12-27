@@ -1,15 +1,17 @@
-﻿namespace eShop.AuthApi.Commands.Auth;
+﻿using eShop.Domain.Messages.Email;
+
+namespace eShop.AuthApi.Commands.Auth;
 
 internal sealed record RequestResetPasswordCommand(ResetPasswordRequest Request)
     : IRequest<Result<ResetPasswordResponse>>;
 
 internal sealed class RequestResetPasswordCommandHandler(
     AppManager appManager,
-    IEmailSender emailSender,
+    IEmailService emailService,
     IConfiguration configuration) : IRequestHandler<RequestResetPasswordCommand, Result<ResetPasswordResponse>>
 {
     private readonly AppManager appManager = appManager;
-    private readonly IEmailSender emailSender = emailSender;
+    private readonly IEmailService emailService = emailService;
     private readonly IConfiguration configuration = configuration;
     private readonly string frontendUri = configuration["Configuration:General:Frontend:Clients:BlazorServer:Uri"]!;
 
@@ -25,7 +27,7 @@ internal sealed class RequestResetPasswordCommandHandler(
 
         var code = await appManager.SecurityManager.GenerateVerificationCodeAsync(user.Email!, CodeType.ResetPassword);
 
-        await emailSender.SendMessageAsync("password-reset", new ResetPasswordMessage()
+        await emailService.SendMessageAsync("password-reset", new ResetPasswordEmail()
         {
             To = request.Request.Email,
             Subject = "Password reset",

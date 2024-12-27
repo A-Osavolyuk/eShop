@@ -1,4 +1,5 @@
 ﻿using eShop.Domain.Messages;
+using eShop.Domain.Messages.Email;
 using eShop.Domain.Options;
 using MailKit.Net.Smtp;
 using MassTransit;
@@ -7,11 +8,11 @@ using MimeKit;
 
 namespace eShop.EmailSenderApi.Receivers;
 
-public class ChangeEmailConsumer(IOptions<EmailOptions> options) : IConsumer<ChangeEmailMessage>
+public class ChangeEmailConsumer(IOptions<EmailOptions> options) : IConsumer<ChangeEmailEmail>
 {
     private readonly EmailOptions options = options.Value;
 
-    public async Task Consume(ConsumeContext<ChangeEmailMessage> context)
+    public async Task Consume(ConsumeContext<ChangeEmailEmail> context)
     {
         var emailMessage = new MimeMessage();
 

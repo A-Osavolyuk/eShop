@@ -1,4 +1,5 @@
 ﻿using eShop.Domain.Messages;
+using eShop.Domain.Messages.Email;
 using eShop.Domain.Options;
 using MailKit.Net.Smtp;
 using MassTransit;
@@ -8,11 +9,11 @@ using MimeKit;
 namespace eShop.EmailSenderApi.Receivers;
 
 public class TwoFactorAuthenticationCodeConsumer(IOptions<EmailOptions> options)
-    : IConsumer<TwoFactorAuthenticationCodeMessage>
+    : IConsumer<TwoFactorAuthenticationCodeEmail>
 {
     private readonly EmailOptions options = options.Value;
 
-    public async Task Consume(ConsumeContext<TwoFactorAuthenticationCodeMessage> context)
+    public async Task Consume(ConsumeContext<TwoFactorAuthenticationCodeEmail> context)
     {
         var emailMessage = new MimeMessage();
 

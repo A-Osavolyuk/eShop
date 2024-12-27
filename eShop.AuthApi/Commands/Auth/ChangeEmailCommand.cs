@@ -1,4 +1,5 @@
-﻿using eShop.Domain.Models;
+﻿using eShop.Domain.Messages.Email;
+using eShop.Domain.Models;
 
 namespace eShop.AuthApi.Commands.Auth;
 
@@ -6,11 +7,11 @@ internal sealed record ChangeEmailCommand(ChangeEmailRequest Request) : IRequest
 
 internal sealed class RequestChangeEmailCommandHandler(
     AppManager appManager,
-    IEmailSender emailSender,
+    IEmailService emailService,
     IConfiguration configuration) : IRequestHandler<ChangeEmailCommand, Result<ChangeEmailResponse>>
 {
     private readonly AppManager appManager = appManager;
-    private readonly IEmailSender emailSender = emailSender;
+    private readonly IEmailService emailService = emailService;
     private readonly IConfiguration configuration = configuration;
     private readonly string frontendUri = configuration["Configuration:General:Frontend:Clients:BlazorServer:Uri"]!;
 
@@ -31,7 +32,7 @@ internal sealed class RequestChangeEmailCommandHandler(
         };
         var code = await appManager.SecurityManager.GenerateVerificationCodeSetAsync(destination, CodeType.ChangeEmail);
 
-        await emailSender.SendMessageAsync("email-change", new ChangeEmailMessage()
+        await emailService.SendMessageAsync("email-change", new ChangeEmailEmail()
         {
             Code = code.Current,
             To = request.Request.CurrentEmail,
@@ -40,7 +41,7 @@ internal sealed class RequestChangeEmailCommandHandler(
             NewEmail = request.Request.NewEmail,
         });
 
-        await emailSender.SendMessageAsync("new-email-verification", new NewEmailVerification()
+        await emailService.SendMessageAsync("new-email-verification", new NewEmailVerification()
         {
             Code = code.Next,
             UserName = request.Request.CurrentEmail,

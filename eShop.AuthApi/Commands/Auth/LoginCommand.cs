@@ -1,15 +1,17 @@
-﻿namespace eShop.AuthApi.Commands.Auth;
+﻿using eShop.Domain.Messages.Email;
+
+namespace eShop.AuthApi.Commands.Auth;
 
 internal sealed record LoginCommand(LoginRequest Request) : IRequest<Result<LoginResponse>>;
 
 internal sealed class LoginCommandHandler(
     AppManager appManager,
-    IEmailSender emailSender,
+    IEmailService emailService,
     ITokenHandler tokenHandler,
     AuthDbContext context) : IRequestHandler<LoginCommand, Result<LoginResponse>>
 {
     private readonly AppManager appManager = appManager;
-    private readonly IEmailSender emailSender = emailSender;
+    private readonly IEmailService emailService = emailService;
     private readonly ITokenHandler tokenHandler = tokenHandler;
     private readonly AuthDbContext context = context;
 
@@ -57,7 +59,7 @@ internal sealed class LoginCommandHandler(
             {
                 var loginCode = await appManager.UserManager.GenerateTwoFactorTokenAsync(user, "Email");
 
-                await emailSender.SendMessageAsync("2fa-code", new TwoFactorAuthenticationCodeMessage()
+                await emailService.SendMessageAsync("2fa-code", new TwoFactorAuthenticationCodeEmail()
                 {
                     To = user.Email!,
                     Subject = "Login with 2FA code",

@@ -14,29 +14,29 @@ internal sealed class ConfirmChangePhoneNumberCommandHandler(
     public async Task<Result<ConfirmChangePhoneNumberResponse>> Handle(ConfirmChangePhoneNumberCommand request,
         CancellationToken cancellationToken)
     {
-        var user = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
+        var user = await appManager.UserManager.FindByPhoneNumberAsync(request.Request.CurrentPhoneNumber);
 
         if (user is null)
         {
-            return new(new NotFoundException($"Cannot find user with email {request.Request.Email}."));
+            return new(new NotFoundException($"Cannot find user with phone number {request.Request.CurrentPhoneNumber}."));
         }
 
-        var token = Uri.UnescapeDataString(request.Request.Token);
         var result =
-            await appManager.UserManager.ChangePhoneNumberAsync(user, request.Request.PhoneNumber, token);
+            await appManager.SecurityManager.ChangePhoneNumberAsync(user, request.Request.NewPhoneNumber,
+                request.Request.CodeSet);
 
         if (!result.Succeeded)
         {
-            return new(new FailedOperationException(
-                $"Cannot change phone number of user with email {request.Request.Email} " +
-                $"due to server error: {result.Errors.First().Description}."));
+            return new(
+                new FailedOperationException(
+                    $"Failed on phone number change with message: {result.Errors.First().Description}"));
         }
 
-        user = await appManager.UserManager.FindByEmailAsync(request.Request.Email);
+        user = await appManager.UserManager.FindByPhoneNumberAsync(request.Request.NewPhoneNumber);
 
         if (user is null)
         {
-            return new(new NotFoundException($"Cannot find user with email {request.Request.Email}."));
+            return new(new NotFoundException($"Cannot find user with phone number {request.Request.NewPhoneNumber}."));
         }
 
         var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();

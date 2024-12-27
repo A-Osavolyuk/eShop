@@ -1,4 +1,5 @@
 ﻿using eShop.Domain.Messages;
+using eShop.Domain.Messages.Email;
 using eShop.Domain.Options;
 using MailKit.Net.Smtp;
 using MassTransit;
@@ -8,11 +9,11 @@ using MimeKit;
 namespace eShop.EmailSenderApi.Receivers;
 
 public class ExternalLoginConsumer(IOptions<EmailOptions> options)
-    : IConsumer<AccountRegisteredOnExternalLoginMessage>
+    : IConsumer<AccountRegisteredOnExternalLoginEmail>
 {
     private readonly EmailOptions options = options.Value;
 
-    public async Task Consume(ConsumeContext<AccountRegisteredOnExternalLoginMessage> context)
+    public async Task Consume(ConsumeContext<AccountRegisteredOnExternalLoginEmail> context)
     {
         var emailMessage = new MimeMessage();
 
