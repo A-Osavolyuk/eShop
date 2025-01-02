@@ -13,6 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
+builder.Logging.AddConfiguration(builder.Configuration.GetSection("Configuration:Logging"));
+
 builder.Services.AddCascadingAuthenticationState();
 
 builder.Services.AddRazorComponents()

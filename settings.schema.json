@@ -352,6 +352,19 @@
               }
             }
           }
+        },
+        "Logging": {
+          "type": "object",
+          "properties": {
+            "LogLevel": {
+              "type": "object",
+              "patternProperties": {
+                ".*": {
+                  "type": "string"
+                }
+              }
+            }
+          }
         }
       }
     }

@@ -4,6 +4,8 @@ public static class BuilderExtensions
 {
     public static void AddApiServices(this IHostApplicationBuilder builder)
     {
+        builder.Logging.AddConfiguration(builder.Configuration.GetSection("Configuration:Logging"));
+        
         builder.AddVersioning();
         builder.AddValidation();
         builder.AddMessageBus();

@@ -6,6 +6,7 @@ using Ocelot.DependencyInjection;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
+builder.Logging.AddConfiguration(builder.Configuration.GetSection("Configuration:Logging"));
 builder.Services.AddReverseProxy().LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
 builder.Services.AddOcelot();

@@ -4,6 +4,8 @@ public static class BuilderExtensions
 {
     public static IHostApplicationBuilder AddApiServices(this IHostApplicationBuilder builder)
     {
+        builder.Logging.AddConfiguration(builder.Configuration.GetSection("Configuration:Logging"));
+        
         builder.AddJwtAuthentication();
         builder.AddVersioning();
         builder.AddValidation();

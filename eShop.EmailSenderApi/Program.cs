@@ -8,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
+builder.Logging.AddConfiguration(builder.Configuration.GetSection("Configuration:Logging"));
+
 builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("Configuration:Services:SMTP"));
 
 builder.Services.AddMassTransit(x =>
