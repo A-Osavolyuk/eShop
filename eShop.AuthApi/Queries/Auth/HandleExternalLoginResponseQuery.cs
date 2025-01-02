@@ -97,7 +97,7 @@ internal sealed class HandleExternalLoginResponseQueryHandler(
                     $"due to server error: {issuingPermissionsResult.Errors.First().Description}"));
             }
 
-            await emailService.SendMessageAsync("external-provider-registration", new AccountRegisteredOnExternalLoginEmail()
+            await emailService.SendMessageAsync("external-provider-registration", new ExternalRegistrationMessage()
                 {
                     To = email,
                     Subject = $"Account registered with {request.ExternalLoginInfo!.ProviderDisplayName}",

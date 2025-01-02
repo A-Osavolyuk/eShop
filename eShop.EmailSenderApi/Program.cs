@@ -30,7 +30,7 @@ builder.Services.AddMassTransit(x =>
         cfg.ReceiveEndpoint("email-verified", e => e.ConfigureConsumer<EmailVerifiedConsumer>(context));
         cfg.ReceiveEndpoint("2fa-code", e => e.ConfigureConsumer<TwoFactorAuthenticationCodeConsumer>(context));
         cfg.ReceiveEndpoint("external-provider-registration", e => e.ConfigureConsumer<ExternalLoginConsumer>(context));
-        cfg.ReceiveEndpoint("new-email-verification", e => e.ConfigureConsumer<VerifyNewEmailConsumer>(context));
+        //cfg.ReceiveEndpoint("new-email-verification", e => e.ConfigureConsumer<VerifyNewEmailConsumer>(context));
     });
 
     x.AddConsumer<ResetPasswordConsumer>();
@@ -39,7 +39,7 @@ builder.Services.AddMassTransit(x =>
     x.AddConsumer<EmailVerifiedConsumer>();
     x.AddConsumer<TwoFactorAuthenticationCodeConsumer>();
     x.AddConsumer<ExternalLoginConsumer>();
-    x.AddConsumer<VerifyNewEmailConsumer>();
+    //x.AddConsumer<VerifyNewEmailConsumer>();
 });
 
 var app = builder.Build();

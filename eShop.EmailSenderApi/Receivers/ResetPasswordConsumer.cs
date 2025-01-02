@@ -8,11 +8,11 @@ using MimeKit;
 
 namespace eShop.EmailSenderApi.Receivers;
 
-public class ResetPasswordConsumer(IOptions<EmailOptions> options) : IConsumer<ResetPasswordEmail>
+public class ResetPasswordConsumer(IOptions<EmailOptions> options) : IConsumer<ResetPasswordMessage>
 {
     private readonly EmailOptions options = options.Value;
 
-    public async Task Consume(ConsumeContext<ResetPasswordEmail> context)
+    public async Task Consume(ConsumeContext<ResetPasswordMessage> context)
     {
         var emailMessage = new MimeMessage();
 

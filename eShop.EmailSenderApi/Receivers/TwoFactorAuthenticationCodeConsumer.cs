@@ -9,11 +9,11 @@ using MimeKit;
 namespace eShop.EmailSenderApi.Receivers;
 
 public class TwoFactorAuthenticationCodeConsumer(IOptions<EmailOptions> options)
-    : IConsumer<TwoFactorAuthenticationCodeEmail>
+    : IConsumer<TwoFactorAuthenticationCodeMessage>
 {
     private readonly EmailOptions options = options.Value;
 
-    public async Task Consume(ConsumeContext<TwoFactorAuthenticationCodeEmail> context)
+    public async Task Consume(ConsumeContext<TwoFactorAuthenticationCodeMessage> context)
     {
         var emailMessage = new MimeMessage();
 

@@ -9,11 +9,11 @@ using MimeKit;
 namespace eShop.EmailSenderApi.Receivers;
 
 public class ExternalLoginConsumer(IOptions<EmailOptions> options)
-    : IConsumer<AccountRegisteredOnExternalLoginEmail>
+    : IConsumer<ExternalRegistrationMessage>
 {
     private readonly EmailOptions options = options.Value;
 
-    public async Task Consume(ConsumeContext<AccountRegisteredOnExternalLoginEmail> context)
+    public async Task Consume(ConsumeContext<ExternalRegistrationMessage> context)
     {
         var emailMessage = new MimeMessage();
 

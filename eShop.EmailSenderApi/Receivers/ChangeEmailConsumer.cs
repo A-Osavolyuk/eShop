@@ -8,11 +8,11 @@ using MimeKit;
 
 namespace eShop.EmailSenderApi.Receivers;
 
-public class ChangeEmailConsumer(IOptions<EmailOptions> options) : IConsumer<ChangeEmailEmail>
+public class ChangeEmailConsumer(IOptions<EmailOptions> options) : IConsumer<ChangeEmailMessage>
 {
     private readonly EmailOptions options = options.Value;
 
-    public async Task Consume(ConsumeContext<ChangeEmailEmail> context)
+    public async Task Consume(ConsumeContext<ChangeEmailMessage> context)
     {
         var emailMessage = new MimeMessage();
 

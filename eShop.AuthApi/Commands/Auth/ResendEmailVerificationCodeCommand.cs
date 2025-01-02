@@ -35,7 +35,7 @@ internal sealed class ResendEmailVerificationCodeCommandHandler(AppManager manag
             code = entity.Code;
         }
 
-        await emailService.SendMessageAsync("email-verification", new EmailVerificationEmail()
+        await emailService.SendMessageAsync("email-verification", new EmailVerificationMessage()
         {
             To = request.Request.Email,
             Code = code,

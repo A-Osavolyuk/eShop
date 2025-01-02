@@ -1,5 +1,5 @@
 ﻿namespace eShop.Domain.Messages.Email;
 
-public class EmailVerifiedEmail : EmailBase
+public class EmailVerifiedMessage : EmailBase
 {
 }

@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.Messages.Email;
 
-public class NewEmailVerification : EmailBase
+public class NewEmailVerificationMessage : EmailBase
 {
     public string Code { get; set; } = string.Empty;
 }

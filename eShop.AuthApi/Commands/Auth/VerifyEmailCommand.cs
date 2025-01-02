@@ -30,7 +30,7 @@ internal sealed class VerifyEmailCommandHandler(
                 $"due to server error: {confirmResult.Errors.First().Description}."));
         }
 
-        await emailService.SendMessageAsync("email-verified", new EmailVerifiedEmail()
+        await emailService.SendMessageAsync("email-verified", new EmailVerifiedMessage()
         {
             To = request.Request.Email,
             Subject = "Email verified",

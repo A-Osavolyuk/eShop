@@ -25,7 +25,7 @@ internal sealed class RequestResetPasswordCommandHandler(
 
         var code = await appManager.SecurityManager.GenerateVerificationCodeAsync(user.Email!, CodeType.ResetPassword);
 
-        await emailService.SendMessageAsync("password-reset", new ResetPasswordEmail()
+        await emailService.SendMessageAsync("password-reset", new ResetPasswordMessage()
         {
             To = request.Request.Email,
             Subject = "Password reset",

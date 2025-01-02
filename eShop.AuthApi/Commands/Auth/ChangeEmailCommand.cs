@@ -29,7 +29,7 @@ internal sealed class RequestChangeEmailCommandHandler(
         };
         var code = await appManager.SecurityManager.GenerateVerificationCodeSetAsync(destination, CodeType.ChangeEmail);
 
-        await emailService.SendMessageAsync("email-change", new ChangeEmailEmail()
+        await emailService.SendMessageAsync("email-change", new ChangeEmailMessage()
         {
             Code = code.Current,
             To = request.Request.CurrentEmail,
@@ -38,7 +38,7 @@ internal sealed class RequestChangeEmailCommandHandler(
             NewEmail = request.Request.NewEmail,
         });
 
-        await emailService.SendMessageAsync("new-email-verification", new NewEmailVerification()
+        await emailService.SendMessageAsync("email-verification", new EmailVerificationMessage()
         {
             Code = code.Next,
             UserName = request.Request.CurrentEmail,

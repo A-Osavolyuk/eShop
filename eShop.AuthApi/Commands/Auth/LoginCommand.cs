@@ -57,7 +57,7 @@ internal sealed class LoginCommandHandler(
             {
                 var loginCode = await appManager.UserManager.GenerateTwoFactorTokenAsync(user, "Email");
 
-                await emailService.SendMessageAsync("2fa-code", new TwoFactorAuthenticationCodeEmail()
+                await emailService.SendMessageAsync("2fa-code", new TwoFactorAuthenticationCodeMessage()
                 {
                     To = user.Email!,
                     Subject = "Login with 2FA code",
