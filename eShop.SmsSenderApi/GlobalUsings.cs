@@ -8,6 +8,7 @@ global using eShop.Application.Behaviours;
 global using eShop.Application.Extensions;
 global using eShop.Application.Middlewares;
 global using eShop.Domain.Common.Api;
+global using eShop.Domain.Messages.Sms;
 global using eShop.Domain.Requests.SmsApi;
 global using eShop.Domain.Responses.SmsApi;
 global using eShop.ServiceDefaults;

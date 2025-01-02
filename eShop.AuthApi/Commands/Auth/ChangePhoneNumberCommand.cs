@@ -37,7 +37,7 @@ internal sealed class RequestChangePhoneNumberCommandHandler(
             PhoneNumber = request.Request.NewPhoneNumber
         });
         
-        await smsService.SendMessageAsync("new-phone-number-verification", new ChangePhoneNumberMessage()
+        await smsService.SendMessageAsync("phone-number-verification", new ChangePhoneNumberMessage()
         {
             Code = code.Next,
             PhoneNumber = request.Request.NewPhoneNumber

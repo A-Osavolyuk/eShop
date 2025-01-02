@@ -45,11 +45,12 @@ public static class BuilderExtensions
                     h.Password(password);
                 });
                 
-                cfg.ReceiveEndpoint("sms-phone-number-verification-code", 
-                    e => e.ConfigureConsumer<VerifyPhoneNumberConsumer>(context));
+                cfg.ReceiveEndpoint("phone-number-verification", e => e.ConfigureConsumer<VerifyPhoneNumberConsumer>(context));
+                cfg.ReceiveEndpoint("change-phone-number", e => e.ConfigureConsumer<ChangePhoneNumberConsumer>(context));
             });
             
             x.AddConsumer<VerifyPhoneNumberConsumer>();
+            x.AddConsumer<ChangePhoneNumberConsumer>();
         });
     }
 }
