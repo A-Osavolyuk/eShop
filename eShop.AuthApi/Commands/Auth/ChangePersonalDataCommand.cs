@@ -20,22 +20,18 @@ internal sealed class ChangePersonalDataCommandHandler(
             return new(new NotFoundException($"Cannot find user with email {request.Request.Email}."));
         }
 
-        var personalData = await context.PersonalData.AsNoTracking()
-            .SingleOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
+        var entity = PersonalDataMapper.ToPersonalDataEntity(request.Request);
+        var result = await appManager.AccountManager.ChangePersonalDataAsync(user, entity);
 
-        if (personalData is null)
+        if (!result.Succeeded)
         {
-            return new(new NotFoundException(
-                $"Cannot find personal data for user with email {request.Request.Email}."));
+            return new Result<ChangePersonalDataResponse>(new FailedOperationException(
+                $"Failed on changing personal data with message: {result.Errors.First().Description}"));
         }
 
-        personalData = PersonalDataMapper.ToPersonalDataEntity(request.Request) with
+        return new(new ChangePersonalDataResponse()
         {
-            Id = personalData.Id, UserId = user.Id
-        };
-        context.PersonalData.Update(personalData);
-        await context.SaveChangesAsync(cancellationToken);
-
-        return new(PersonalDataMapper.ToChangePersonalDataResponse(personalData));
+            Message = "Personal data was successfully updated"
+        });
     }
 }

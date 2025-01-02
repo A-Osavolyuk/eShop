@@ -26,8 +26,7 @@ internal sealed class GetPersonalDataQueryHandler(
                 return new(new NotFoundException($"Cannot find user with email {request.Email}."));
             }
             
-            var personalData = await context.PersonalData.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
+            var personalData = await appManager.AccountManager.FindPersonalDataAsync(user);
 
             if (personalData is null)
             {
