@@ -18,11 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Requests\AuthApi\" />
     <Folder Include="Requests\CartApi\" />
     <Folder Include="Requests\ProductApi\" />
     <Folder Include="Requests\ReviewApi\" />
-    <Folder Include="Responses\AuthApi\" />
     <Folder Include="Responses\CartApi\" />
     <Folder Include="Responses\FilesApi\" />
     <Folder Include="Responses\ProductApi\" />

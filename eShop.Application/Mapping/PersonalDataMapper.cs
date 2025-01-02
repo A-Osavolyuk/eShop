@@ -1,4 +1,5 @@
 ﻿using eShop.Domain.Entities.AuthApi;
+using eShop.Domain.Requests.AuthApi.Account;
 using eShop.Domain.Requests.AuthApi.Auth;
 using eShop.Domain.Responses.AuthApi.Auth;
 
@@ -36,6 +37,18 @@ public static class PersonalDataMapper
             LastName = model.LastName,
             Gender = model.Gender,
             DateOfBirth = model.DateOfBirth
+        };
+    }
+
+    public static PersonalDataEntity ToPersonalDataEntity(SetPersonalDataRequest request)
+    {
+        return new PersonalDataEntity()
+        {
+            FirstName = request.FirstName,
+            LastName = request.LastName,
+            Gender = request.Gender,
+            DateOfBirth = request.BirthDate,
+            
         };
     }
 }
