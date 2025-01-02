@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Messages.Email;
-
-namespace eShop.AuthApi.Commands.Auth;
+﻿namespace eShop.AuthApi.Commands.Auth;
 
 internal sealed record LoginCommand(LoginRequest Request) : IRequest<Result<LoginResponse>>;
 

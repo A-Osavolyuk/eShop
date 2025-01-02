@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Models;
-
-namespace eShop.AuthApi.Services.Interfaces;
+﻿namespace eShop.AuthApi.Services.Interfaces;
 
 public interface ISecurityManager
 {

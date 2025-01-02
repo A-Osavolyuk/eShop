@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Messages.Email;
-
-namespace eShop.AuthApi.Commands.Auth;
+﻿namespace eShop.AuthApi.Commands.Auth;
 
 internal sealed record VerifyEmailCommand(VerifyEmailRequest Request) : IRequest<Result<VerifyEmailResponse>>;
 

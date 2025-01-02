@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Messages.Sms;
-
-namespace eShop.AuthApi.Services.Interfaces;
+﻿namespace eShop.AuthApi.Services.Interfaces;
 
 public interface ISmsService
 {

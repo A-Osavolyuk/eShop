@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Models;
-
-namespace eShop.AuthApi.Services.Implementation;
+﻿namespace eShop.AuthApi.Services.Implementation;
 
 internal sealed class SecurityManager(
     AuthDbContext context,

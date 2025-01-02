@@ -1,7 +1,4 @@
-﻿using eShop.Domain.Messages.Email;
-using eShop.Domain.Models;
-
-namespace eShop.AuthApi.Commands.Auth;
+﻿namespace eShop.AuthApi.Commands.Auth;
 
 internal sealed record ChangeEmailCommand(ChangeEmailRequest Request) : IRequest<Result<ChangeEmailResponse>>;
 

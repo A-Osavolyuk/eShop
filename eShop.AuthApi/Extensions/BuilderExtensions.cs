@@ -1,6 +1,4 @@
-﻿using eShop.AuthApi.HostedServices;
-
-namespace eShop.AuthApi.Extensions;
+﻿namespace eShop.AuthApi.Extensions;
 
 public static class BuilderExtensions
 {

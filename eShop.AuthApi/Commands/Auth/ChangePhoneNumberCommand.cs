@@ -1,7 +1,4 @@
-﻿using eShop.Domain.Messages.Sms;
-using eShop.Domain.Models;
-
-namespace eShop.AuthApi.Commands.Auth;
+﻿namespace eShop.AuthApi.Commands.Auth;
 
 internal sealed record ChangePhoneNumberCommand(ChangePhoneNumberRequest Request) : IRequest<Result<ChangePhoneNumberResponse>>;
 

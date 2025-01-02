@@ -55,8 +55,7 @@ public class VerifyEmailConsumer(IOptions<EmailOptions> options) : IConsumer<Ema
                                     <p style="font: 16px Arial, sans-serif; margin:0;">Hello, {userName}!.</p>
                                     <br>
                                     <p style="font: 16px Arial, sans-serif; margin: 0;">
-                                        Your account was successfully registered. Now verify your email to sing in.
-                                        To verify your email address and complete registration, please enter verification code from below.
+                                        To verify your email address, please enter verification code from below.
                                     </p>
                                     <br>
                                     <p style="font: 16px Arial, sans-serif; margin: 0;"> Your verification code: {code}. Will expire in: 10 mins.</p>

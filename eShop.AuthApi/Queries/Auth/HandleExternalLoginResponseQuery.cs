@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Messages.Email;
-
-namespace eShop.AuthApi.Queries.Auth;
+﻿namespace eShop.AuthApi.Queries.Auth;
 
 internal sealed record HandleExternalLoginResponseQuery(
     ExternalLoginInfo ExternalLoginInfo,

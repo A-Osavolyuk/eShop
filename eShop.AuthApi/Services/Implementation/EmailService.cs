@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Messages.Email;
-
-namespace eShop.AuthApi.Services.Implementation;
+﻿namespace eShop.AuthApi.Services.Implementation;
 
 internal sealed class EmailService(IBus bus) : IEmailService
 {

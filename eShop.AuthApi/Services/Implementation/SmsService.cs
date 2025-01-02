@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Messages.Sms;
-
-namespace eShop.AuthApi.Services.Implementation;
+﻿namespace eShop.AuthApi.Services.Implementation;
 
 public class SmsService(IBus bus) : ISmsService
 {
