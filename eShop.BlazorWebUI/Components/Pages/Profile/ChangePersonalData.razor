@@ -70,7 +70,8 @@
         if (response.Success)
         {
             var data = JsonConvert.DeserializeObject<ChangePersonalDataResponse>(response.Result!.ToString()!);
-            await LocalDataAccessor.WritePersonalDataAsync(PersonalDataMapper.ToPersonalDataModel(data!));
+            //TODO: personal data reload
+            //await LocalDataAccessor.WritePersonalDataAsync(PersonalDataMapper.ToPersonalDataModel(data!));
             NavigationManager.NavigateTo("/account/profile", true);
             Snackbar.Add(response.Message, MudBlazor.Severity.Success);
         }
