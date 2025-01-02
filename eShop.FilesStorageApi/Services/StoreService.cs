@@ -4,9 +4,9 @@ internal sealed class StoreService(IConfiguration configuration) : IStoreService
 {
     private readonly IConfiguration configuration = configuration;
 
-    private readonly string avatarContainer = configuration["AzureOptions:ContainerNames:AvatarContainer"]!;
-    private readonly string productContainer = configuration["AzureOptions:ContainerNames:ProductContainer"]!;
-    private readonly string connectionString = configuration["AzureOptions:ConnectionString"]!;
+    private readonly string avatarContainer = configuration["Configuration:Storage:Azure:Containers:AvatarContainer"]!;
+    private readonly string productContainer = configuration["Configuration:Storage:Azure:Containers:ProductContainer"]!;
+    private readonly string connectionString = configuration["Configuration:Storage:Azure:ConnectionString"]!;
 
     public async ValueTask<List<string>> GetProductImagesAsync(Guid productId)
     {

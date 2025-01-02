@@ -1,0 +1,15 @@
+﻿{
+  "$schema": "settings.schema.json",
+  "Configuration": {
+    "Security": {
+      "Authentication": {
+        "Providers": {
+          "Some": {
+            "ClientId": "SOme",
+            "ClientSecret": ""
+          }
+        }
+      }
+    }
+  }
+}

@@ -49,7 +49,7 @@
       },
       "Azure": {
         "ConnectionString": "",
-        "ContainerNames": {
+        "Containers": {
           "ProductContainer": "",
           "AvatarContainer": ""
         }
