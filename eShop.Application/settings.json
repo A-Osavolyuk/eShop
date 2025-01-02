@@ -1,108 +1,122 @@
 {
-    "Configuration": {
-        "Security": {
-            "Authentication": {
-                "Providers": {
-                    "Google": {
-                        "ClientId": "856315432868-qjtkgmftvimc25d6oib9egp0h7m0lie7.apps.googleusercontent.com",
-                        "ClientSecret": "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"
-                    },
-                    "Facebook": {
-                        "ClientId": "1003243987630782",
-                        "ClientSecret": "6c437cb50b994e1e5db954a54755b696"
-                    }
-                },
-                "JWT": {
-                    "Key": "ZIRNssDs8De2K0PhEtwfZoFPwzxznhrV",
-                    "Audience": "eShop.Client",
-                    "Issuer": "eShop.AuthWebApi",
-                    "ExpirationSeconds": 2592000
-                }
-            }
+  "Configuration": {
+    "Security": {
+      "Authentication": {
+        "Providers": {
+          "Google": {
+            "ClientId": "",
+            "ClientSecret": ""
+          },
+          "Facebook": {
+            "ClientId": "",
+            "ClientSecret": ""
+          }
         },
-        "Storage": {
-            "Databases": {
-                "SQL": {
-                    "MSSQL":{
-                        "ConnectionString": ""
-                    },
-                    "PostgreSQL": {
-                        "ConnectionString": ""
-                    },
-                    "SQLite": {
-                        "ConnectionString": ""
-                    }
-                },
-                "NoSQL": {
-                    "Mongo": {
-                        "ConnectionString": "mongodb://127.0.0.1:27017@admin:atpDWGvDb4jR5pE7rT59c7",
-                        "DatabaseName": "CartDB"
-                    }
-                }
-            },
-            "Azure": {
-                "ConnectionString": "DefaultEndpointsProtocol=https;AccountName=eshopproductimages;AccountKey=pAeDFDZ4IY6GV3SdCyUpVFV5uLLcZauQfPxcmtjb8BiAQWB7tZ9S4pg2dtfI2dwUQ4oY9uXNMNJy+ASt7lDTBw==;EndpointSuffix=core.windows.net",
-                "ContainerNames": {
-                    "ProductContainer": "productimages",
-                    "AvatarContainer": "avatars"
-                }
-            }
-        },
-        "Services": {
-            "Cache": {
-                "Redis": {
-                    "ConnectionString": "https://127.0.0.1:60001",
-                    "InstanceName": "eShopCache"
-                }
-            },
-            "MessageBus": {
-                "RabbitMQ": {
-                    "Password": "atpDWGvDb4jR5pE7rT59c7",
-                    "UserName": "admin",
-                    "HostUri": "rabbitmq://localhost:60003"
-                },
-                "Kafka": {
-                    "BootstrapServer": ""
-                }
-            },
-            "Grpc": {
-                "Servers": {
-                    "CartServer": {
-                        "Uri": "https://localhost:60205"
-                    },
-                    "AuthServer": {
-                        "Uri": "https://localhost:60201"
-                    }
-                }
-            },
-            "Proxy": {
-                "Gateway": {
-                    "Uri": "https://localhost:60101"
-                }
-            },
-            "SMTP": {
-                "Email": "sasha.osavol11@gmail.com",
-                "Password": "qwph saoe vhuw saqy",
-                "DisplayName": "Technical Support",
-                "Host": "smtp.gmail.com",
-                "Port": 587,
-                "EnableSSL": false
-            }
-        },
-        "General": {
-            "Frontend": {
-                "Clients": {
-                    "BlazorServer": {
-                        "Uri": "https://localhost:60501"
-                    },
-                    "Angular": {
-                        "Uri": "http://localhost:60502"
-                    }
-                }
-            },
-            "DefaultValues": {
-                "ValueName": ""
-            }
+        "JWT": {
+          "Key": "",
+          "Audience": "",
+          "Issuer": "",
+          "ExpirationSeconds": 0
         }
+      },
+      "Authorization": {
+        "Policies": {
+          "Policy": {
+            "Name": ""
+          }
+        }
+      }
+    },
+    "Storage": {
+      "Databases": {
+        "SQL": {
+          "MSSQL": {
+            "ConnectionString": ""
+          },
+          "PostgreSQL": {
+            "ConnectionString": ""
+          },
+          "SQLite": {
+            "ConnectionString": ""
+          }
+        },
+        "NoSQL": {
+          "Mongo": {
+            "ConnectionString": "",
+            "DatabaseName": ""
+          }
+        }
+      },
+      "Azure": {
+        "ConnectionString": "",
+        "ContainerNames": {
+          "ProductContainer": "",
+          "AvatarContainer": ""
+        }
+      }
+    },
+    "Services": {
+      "Cache": {
+        "Redis": {
+          "ConnectionString": "",
+          "InstanceName": ""
+        }
+      },
+      "MessageBus": {
+        "RabbitMQ": {
+          "Password": "",
+          "UserName": "",
+          "HostUri": ""
+        },
+        "Kafka": {
+          "BootstrapServer": ""
+        }
+      },
+      "Grpc": {
+        "Servers": {
+          "CartServer": {
+            "Uri": ""
+          },
+          "AuthServer": {
+            "Uri": ""
+          }
+        }
+      },
+      "Proxy": {
+        "Gateway": {
+          "Uri": ""
+        }
+      },
+      "SMTP": {
+        "Email": "",
+        "Password": "",
+        "DisplayName": "",
+        "Host": "",
+        "Port": 0,
+        "EnableSSL": false
+      },
+      "SMS": {
+        "Twilio": {
+          "AccountSID": "",
+          "AuthToken": "",
+          "PhoneNumber": ""
+        }
+      }
+    },
+    "General": {
+      "Frontend": {
+        "Clients": {
+          "BlazorServer": {
+            "Uri": ""
+          },
+          "Angular": {
+            "Uri": ""
+          }
+        }
+      },
+      "DefaultValues": {
+        "ValueName": ""
+      }
     }
+  }
 }
