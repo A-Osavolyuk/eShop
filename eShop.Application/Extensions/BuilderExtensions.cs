@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 
 namespace eShop.Application.Extensions;
 
@@ -94,10 +95,16 @@ public static class BuilderExtensions
 
     public static IHostApplicationBuilder AddRedisCache(this IHostApplicationBuilder builder)
     {
+        var connectionString = builder.Configuration["Configuration:Services:Cache:Redis:ConnectionString"]!;
+        var instanceName = builder.Configuration["Configuration:Services:Cache:Redis:InstanceName"]!;
+        
+        builder.Services.AddSingleton<IConnectionMultiplexer>(sp => 
+                ConnectionMultiplexer.Connect(connectionString));
+        
         builder.Services.AddStackExchangeRedisCache(cfg =>
         {
-            cfg.Configuration = builder.Configuration["Configuration:Services:Cache:Redis:ConnectionString"];
-            cfg.InstanceName = builder.Configuration["Configuration:Services:Cache:Redis:InstanceName"];
+            cfg.Configuration = connectionString;
+            cfg.InstanceName = instanceName;
         });
         
         return builder;

@@ -1,6 +1,8 @@
-﻿namespace eShop.Domain.Responses.AuthApi.Auth;
+﻿using eShop.Domain.Common.Security;
+
+namespace eShop.Domain.Responses.AuthApi.Auth;
 
 public class TwoFactorAuthenticationStateResponse
 {
-    public bool TwoFactorAuthenticationState { get; set; } = false;
+    public TwoFactorAuthenticationState State { get; set; }
 }

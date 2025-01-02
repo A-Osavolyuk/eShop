@@ -4,24 +4,39 @@ internal sealed record GetTwoFactorAuthenticationStateQuery(string Email)
     : IRequest<Result<TwoFactorAuthenticationStateResponse>>;
 
 internal sealed class GetTwoFactorAuthenticationStateQueryHandler(
-    AppManager appManager)
+    AppManager appManager, ICacheService cacheService)
     : IRequestHandler<GetTwoFactorAuthenticationStateQuery, Result<TwoFactorAuthenticationStateResponse>>
 {
     private readonly AppManager appManager = appManager;
+    private readonly ICacheService cacheService = cacheService;
 
     public async Task<Result<TwoFactorAuthenticationStateResponse>> Handle(
         GetTwoFactorAuthenticationStateQuery request, CancellationToken cancellationToken)
     {
-        var user = await appManager.UserManager.FindByEmailAsync(request.Email);
-
-        if (user is null)
+        var key = $"2fa-stata-{request.Email}";
+        var state = await cacheService.GetAsync<TwoFactorAuthenticationState>(key);
+        
+        if (state is null)
         {
-            return new(new NotFoundException($"Cannot find user with email {request.Email}."));
+            var user = await appManager.UserManager.FindByEmailAsync(request.Email);
+
+            if (user is null)
+            {
+                return new(new NotFoundException($"Cannot find user with email {request.Email}."));
+            }
+
+            state = new TwoFactorAuthenticationState() { Enabled = user.TwoFactorEnabled };
+            await cacheService.SetAsync(key, state, TimeSpan.FromHours(6));
+
+            return new(new TwoFactorAuthenticationStateResponse()
+            {
+                State = state
+            });
         }
 
-        return new(new TwoFactorAuthenticationStateResponse()
+        return new Result<TwoFactorAuthenticationStateResponse>(new TwoFactorAuthenticationStateResponse()
         {
-            TwoFactorAuthenticationState = user.TwoFactorEnabled
+            State = state
         });
     }
 }

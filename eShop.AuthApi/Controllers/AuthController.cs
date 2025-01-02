@@ -31,7 +31,7 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
         return result.Match(
             s => Ok(new ResponseBuilder()
                 .Succeeded()
-                .WithMessage(s.TwoFactorAuthenticationState
+                .WithMessage(s.State.Enabled
                     ? "Two factor authentication state is enabled."
                     : "Two factor authentication state is disabled.")
                 .WithResult(s)

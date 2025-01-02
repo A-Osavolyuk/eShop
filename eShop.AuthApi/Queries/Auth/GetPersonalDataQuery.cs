@@ -4,30 +4,42 @@ internal sealed record GetPersonalDataQuery(string Email) : IRequest<Result<Pers
 
 internal sealed class GetPersonalDataQueryHandler(
     AppManager appManager,
-    AuthDbContext context) : IRequestHandler<GetPersonalDataQuery, Result<PersonalDataResponse>>
+    AuthDbContext context,
+    ICacheService cacheService) : IRequestHandler<GetPersonalDataQuery, Result<PersonalDataResponse>>
 {
     private readonly AppManager appManager = appManager;
     private readonly AuthDbContext context = context;
+    private readonly ICacheService cacheService = cacheService;
 
     public async Task<Result<PersonalDataResponse>> Handle(GetPersonalDataQuery request,
         CancellationToken cancellationToken)
     {
-        var user = await appManager.UserManager.FindByEmailAsync(request.Email);
+        var key = $"personal-data-{request.Email}";
+        var data = await cacheService.GetAsync<PersonalDataEntity>(key);
 
-        if (user is null)
+        if (data is null)
         {
-            return new(new NotFoundException($"Cannot find user with email {request.Email}."));
+            var user = await appManager.UserManager.FindByEmailAsync(request.Email);
+
+            if (user is null)
+            {
+                return new(new NotFoundException($"Cannot find user with email {request.Email}."));
+            }
+            
+            var personalData = await context.PersonalData.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
+
+            if (personalData is null)
+            {
+                return new(new NotFoundException(
+                    $"Cannot find or user with email {user.Email} has no personal data."));
+            }
+
+            await cacheService.SetAsync(key, personalData, TimeSpan.FromHours(6));
+            
+            return new(PersonalDataMapper.ToPersonalDataResponse(personalData));
         }
 
-        var personalData = await context.PersonalData.AsNoTracking()
-            .FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
-
-        if (personalData is null)
-        {
-            return new(new NotFoundException(
-                $"Cannot find or user with email {user.Email} has no personal data."));
-        }
-
-        return new(PersonalDataMapper.ToPersonalDataResponse(personalData));
+        return new (PersonalDataMapper.ToPersonalDataResponse(data));
     }
 }
