@@ -59,5 +59,3 @@ global using Microsoft.IdentityModel.Tokens;
 global using Newtonsoft.Json;
 global using Response = eShop.Domain.Common.Api.Response;
 global using TokenHandler = eShop.AuthApi.Services.Implementation.TokenHandler;
-global using UserData = eShop.Application.UserData;
-global using UserData_ = eShop.Domain.Entities.AuthApi.UserData;

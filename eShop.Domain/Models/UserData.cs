@@ -1,4 +1,6 @@
-﻿namespace eShop.Domain.Entities.AuthApi;
+﻿using eShop.Domain.Entities.AuthApi;
+
+namespace eShop.Domain.Models;
 
 public class UserData
 {
