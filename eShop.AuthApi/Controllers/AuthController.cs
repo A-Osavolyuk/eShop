@@ -60,7 +60,7 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
         var result = await sender.Send(new HandleExternalLoginResponseQuery(info!, remoteError, returnUri));
 
         return result.Match(
-            s => Redirect(s),
+            Redirect,
             ExceptionHandler.HandleException);
     }
 

@@ -31,7 +31,7 @@ internal sealed class AuthDbContext(DbContextOptions<AuthDbContext> options) : I
         builder.Entity<PersonalDataEntity>(x =>
         {
             x.HasKey(p => p.Id);
-            x.HasOne(x => x.User).WithOne(x => x.PersonalData).HasForeignKey<PersonalDataEntity>(x => x.UserId);
+            x.HasOne(p => p.User).WithOne(u => u.PersonalData).HasForeignKey<PersonalDataEntity>(p => p.UserId);
 
             x.HasData(new PersonalDataEntity()
             {
@@ -100,8 +100,8 @@ internal sealed class AuthDbContext(DbContextOptions<AuthDbContext> options) : I
         builder.Entity<SecurityTokenEntity>(x =>
         {
             x.HasKey(k => k.Id);
-            x.Property(x => x.Token).HasColumnType("VARCHAR(MAX)");
-            x.HasOne(x => x.User).WithOne(x => x.AuthenticationToken).HasForeignKey<SecurityTokenEntity>(x => x.UserId);
+            x.Property(t => t.Token).HasColumnType("VARCHAR(MAX)");
+            x.HasOne(t => t.User).WithOne(u => u.AuthenticationToken).HasForeignKey<SecurityTokenEntity>(t => t.UserId);
         });
     }
 }

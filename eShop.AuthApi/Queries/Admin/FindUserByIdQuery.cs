@@ -3,11 +3,9 @@
 internal sealed record FindUserByIdQuery(Guid UserId) : IRequest<Result<FindUserResponse>>;
 
 internal sealed class FindUserByIdQueryHandler(
-    AppManager appManager,
-    AuthDbContext context) : IRequestHandler<FindUserByIdQuery, Result<FindUserResponse>>
+    AppManager appManager) : IRequestHandler<FindUserByIdQuery, Result<FindUserResponse>>
 {
     private readonly AppManager appManager = appManager;
-    private readonly AuthDbContext context = context;
 
     public async Task<Result<FindUserResponse>> Handle(FindUserByIdQuery request,
         CancellationToken cancellationToken)
@@ -20,9 +18,7 @@ internal sealed class FindUserByIdQueryHandler(
         }
 
         var accountData = UserMapper.ToAccountData(user);
-        var personalData =
-            await context.PersonalData.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
+        var personalData = await appManager.ProfileManager.FindPersonalDataAsync(user);
         var rolesList = await appManager.UserManager.GetRolesAsync(user);
         var permissions = await appManager.PermissionManager.GetUserPermissionsAsync(user);
 
@@ -52,9 +48,7 @@ internal sealed class FindUserByIdQueryHandler(
 
         foreach (var permission in permissions)
         {
-            var permissionInfo = await context.Permissions.AsNoTracking()
-                .SingleOrDefaultAsync(x => x.Name == permission, cancellationToken: cancellationToken);
-
+            var permissionInfo = await appManager.PermissionManager.FindPermissionAsync(permission);
             if (permissionInfo is null)
             {
                 return new(new NotFoundException($"Cannot find permission {permission}."));

@@ -4,11 +4,9 @@ internal sealed record GetPersonalDataQuery(string Email) : IRequest<Result<Pers
 
 internal sealed class GetPersonalDataQueryHandler(
     AppManager appManager,
-    AuthDbContext context,
     ICacheService cacheService) : IRequestHandler<GetPersonalDataQuery, Result<PersonalDataResponse>>
 {
     private readonly AppManager appManager = appManager;
-    private readonly AuthDbContext context = context;
     private readonly ICacheService cacheService = cacheService;
 
     public async Task<Result<PersonalDataResponse>> Handle(GetPersonalDataQuery request,

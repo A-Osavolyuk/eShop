@@ -9,14 +9,12 @@ internal sealed class HandleExternalLoginResponseQueryHandler(
     AppManager appManager,
     ITokenHandler tokenHandler,
     IConfiguration configuration,
-    IMessageService messageService,
-    AuthDbContext context) : IRequestHandler<HandleExternalLoginResponseQuery, Result<string>>
+    IMessageService messageService) : IRequestHandler<HandleExternalLoginResponseQuery, Result<string>>
 {
     private readonly AppManager appManager = appManager;
     private readonly ITokenHandler tokenHandler = tokenHandler;
     private readonly IConfiguration configuration = configuration;
     private readonly IMessageService messageService = messageService;
-    private readonly AuthDbContext context = context;
     private readonly string frontendUri = configuration["Configuration:General:Frontend:Clients:BlazorServer:Uri"]!;
     private readonly string defaultRole = configuration["Configuration:General:DefaultValues:DefaultRole"]!;
 
@@ -39,8 +37,7 @@ internal sealed class HandleExternalLoginResponseQueryHandler(
         if (user is not null)
         {
             var userDto = new UserDto(user.Email!, user.UserName!, user.Id);
-            var securityToken = await context.SecurityTokens.AsNoTracking()
-                .SingleOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
+            var securityToken = await appManager.SecurityManager.FindTokenAsync(user);
 
             if (securityToken is not null)
             {

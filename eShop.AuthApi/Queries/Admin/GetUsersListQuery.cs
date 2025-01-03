@@ -5,11 +5,9 @@ namespace eShop.AuthApi.Queries.Admin;
 internal sealed record GetUsersListQuery() : IRequest<Result<IEnumerable<UserData>>>;
 
 internal sealed class GetUsersListQueryHandler(
-    AppManager appManager,
-    AuthDbContext context) : IRequestHandler<GetUsersListQuery, Result<IEnumerable<UserData>>>
+    AppManager appManager) : IRequestHandler<GetUsersListQuery, Result<IEnumerable<UserData>>>
 {
     private readonly AppManager appManager = appManager;
-    private readonly AuthDbContext context = context;
 
     public async Task<Result<IEnumerable<UserData>>> Handle(GetUsersListQuery request,
         CancellationToken cancellationToken)
@@ -27,8 +25,7 @@ internal sealed class GetUsersListQueryHandler(
         foreach (var user in usersList)
         {
             var accountData = UserMapper.ToAccountData(user);
-            var personalData = await context.PersonalData.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
+            var personalData = await appManager.ProfileManager.FindPersonalDataAsync(user);
             var rolesList = await appManager.UserManager.GetRolesAsync(user);
 
             if (!rolesList.Any())
@@ -36,8 +33,7 @@ internal sealed class GetUsersListQueryHandler(
                 return new(new NotFoundException($"Cannot find roles for user with ID {user.Id}."));
             }
 
-            var rolesData = (await appManager.RoleManager.GetRolesInfoAsync(rolesList) ?? Array.Empty<RoleInfo>())
-                .ToList();
+            var rolesData = (await appManager.RoleManager.GetRolesInfoAsync(rolesList) ?? Array.Empty<RoleInfo>()).ToList();
             var permissions = await appManager.PermissionManager.GetUserPermissionsAsync(user);
             var roleInfos = rolesData.ToList();
 
@@ -50,8 +46,7 @@ internal sealed class GetUsersListQueryHandler(
 
             foreach (var permission in permissions)
             {
-                var permissionInfo = await context.Permissions.AsNoTracking()
-                    .SingleOrDefaultAsync(x => x.Name == permission, cancellationToken: cancellationToken);
+                var permissionInfo = await appManager.PermissionManager.FindPermissionAsync(permission);
 
                 if (permissionInfo is null)
                 {

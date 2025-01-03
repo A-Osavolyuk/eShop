@@ -3,11 +3,9 @@
 internal sealed record FindUserByEmailQuery(string Email) : IRequest<Result<FindUserResponse>>;
 
 internal sealed class FindUserByEmailQueryHandler(
-    AppManager appManager,
-    AuthDbContext context) : IRequestHandler<FindUserByEmailQuery, Result<FindUserResponse>>
+    AppManager appManager) : IRequestHandler<FindUserByEmailQuery, Result<FindUserResponse>>
 {
     private readonly AppManager appManager = appManager;
-    private readonly AuthDbContext context = context;
 
     public async Task<Result<FindUserResponse>> Handle(FindUserByEmailQuery request,
         CancellationToken cancellationToken)
@@ -20,8 +18,7 @@ internal sealed class FindUserByEmailQueryHandler(
         }
 
         var accountData = UserMapper.ToAccountData(user);
-        var personalData = await context.PersonalData.AsNoTracking()
-            .FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
+        var personalData = await appManager.ProfileManager.FindPersonalDataAsync(user);
         var rolesList = await appManager.UserManager.GetRolesAsync(user);
         var permissions = await appManager.PermissionManager.GetUserPermissionsAsync(user);
 
@@ -50,8 +47,7 @@ internal sealed class FindUserByEmailQueryHandler(
 
         foreach (var permission in permissions)
         {
-            var permissionInfo = await context.Permissions.AsNoTracking()
-                .SingleOrDefaultAsync(x => x.Name == permission, cancellationToken: cancellationToken);
+            var permissionInfo = await appManager.PermissionManager.FindPermissionAsync(permission);
 
             if (permissionInfo is null)
             {

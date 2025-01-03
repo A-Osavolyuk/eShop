@@ -20,11 +20,6 @@ internal sealed class GetRolesListQueryHandler(
         var response = new List<RoleDto>();
         foreach (var role in roles)
         {
-            if (role is null)
-            {
-                return new(new NullReferenceException("Role from role list is null"));
-            }
-
             var memberCount = await appManager.RoleManager.Roles
                 .Where(x => x.Id == role.Id)
                 .CountAsync(cancellationToken: cancellationToken);

@@ -9,25 +9,25 @@ public class AdminController(ISender sender) : ControllerBase
     private readonly ISender sender = sender;
 
     [Authorize(Policy = "ManageUsersPolicy")]
-    [HttpGet("find-user-by-email/{Email}")]
-    public async ValueTask<ActionResult<Response>> FindUserByEmailAsync(string Email)
+    [HttpGet("find-user-by-email/{email}")]
+    public async ValueTask<ActionResult<Response>> FindUserByEmailAsync(string email)
     {
-        var result = await sender.Send(new FindUserByEmailQuery(Email));
+        var result = await sender.Send(new FindUserByEmailQuery(email));
 
         return result.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
-            f => ExceptionHandler.HandleException(f));
+            ExceptionHandler.HandleException);
     }
 
     [Authorize(Policy = "ManageUsersPolicy")]
-    [HttpGet("find-user-by-id/{Id:guid}")]
-    public async ValueTask<ActionResult<Response>> FindUserByIdAsync(Guid Id)
+    [HttpGet("find-user-by-id/{id:guid}")]
+    public async ValueTask<ActionResult<Response>> FindUserByIdAsync(Guid id)
     {
-        var result = await sender.Send(new FindUserByIdQuery(Id));
+        var result = await sender.Send(new FindUserByIdQuery(id));
 
         return result.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
-            f => ExceptionHandler.HandleException(f));
+            ExceptionHandler.HandleException);
     }
 
     [Authorize(Policy = "ManageUsersPolicy")]
@@ -38,7 +38,7 @@ public class AdminController(ISender sender) : ControllerBase
 
         return result.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
-            f => ExceptionHandler.HandleException(f));
+            ExceptionHandler.HandleException);
     }
 
     [Authorize(Policy = "ManageRolesPolicy")]
@@ -49,29 +49,29 @@ public class AdminController(ISender sender) : ControllerBase
 
         return result.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
-            f => ExceptionHandler.HandleException(f));
+            ExceptionHandler.HandleException);
     }
 
     [Authorize(Policy = "ManageRolesPolicy")]
-    [HttpGet("get-user-roles/{Id:guid}")]
-    public async ValueTask<ActionResult<Response>> GetUserRolesAsync(Guid Id)
+    [HttpGet("get-user-roles/{id:guid}")]
+    public async ValueTask<ActionResult<Response>> GetUserRolesAsync(Guid id)
     {
-        var result = await sender.Send(new GetUserRolesQuery(Id));
+        var result = await sender.Send(new GetUserRolesQuery(id));
 
         return result.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
-            f => ExceptionHandler.HandleException(f));
+            ExceptionHandler.HandleException);
     }
 
     [Authorize(Policy = "ManageLockoutPolicy")]
-    [HttpGet("get-lockout-status/{Email}")]
-    public async ValueTask<ActionResult<Response>> GetRolesListAsync(string Email)
+    [HttpGet("get-lockout-status/{email}")]
+    public async ValueTask<ActionResult<Response>> GetRolesListAsync(string email)
     {
-        var result = await sender.Send(new GetUserLockoutStatusQuery(Email));
+        var result = await sender.Send(new GetUserLockoutStatusQuery(email));
 
         return result.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
-            f => ExceptionHandler.HandleException(f));
+            ExceptionHandler.HandleException);
     }
 
     [Authorize(Policy = "ManagePermissionsPolicy")]
@@ -82,7 +82,7 @@ public class AdminController(ISender sender) : ControllerBase
 
         return result.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
-            f => ExceptionHandler.HandleException(f));
+            ExceptionHandler.HandleException);
     }
 
     [Authorize(Policy = "ManageRolesPolicy")]
@@ -92,7 +92,7 @@ public class AdminController(ISender sender) : ControllerBase
         var result = await sender.Send(new AssignRoleCommand(request));
         return result.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithMessage(s.Message).Build()),
-            f => ExceptionHandler.HandleException(f));
+            ExceptionHandler.HandleException);
     }
 
     [Authorize(Policy = "ManagePermissionsPolicy")]
@@ -102,7 +102,7 @@ public class AdminController(ISender sender) : ControllerBase
         var result = await sender.Send(new IssuePermissionCommand(request));
         return result.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithMessage(s.Message).Build()),
-            f => ExceptionHandler.HandleException(f));
+            ExceptionHandler.HandleException);
     }
 
     [Authorize(Policy = "ManageRolesPolicy")]
@@ -113,7 +113,7 @@ public class AdminController(ISender sender) : ControllerBase
         var result = await sender.Send(new CreateRoleCommand(request));
         return result.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithMessage(s.Message).Build()),
-            f => ExceptionHandler.HandleException(f));
+            ExceptionHandler.HandleException);
     }
 
     [Authorize(Policy = "ManageUsersPolicy")]
@@ -123,7 +123,7 @@ public class AdminController(ISender sender) : ControllerBase
         var result = await sender.Send(new CreateUserAccountCommand(request));
         return result.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithMessage(s.Message).Build()),
-            f => ExceptionHandler.HandleException(f));
+            ExceptionHandler.HandleException);
     }
 
     [Authorize(Policy = "ManageLockoutPolicy")]
@@ -133,7 +133,7 @@ public class AdminController(ISender sender) : ControllerBase
         var result = await sender.Send(new LockoutUserCommand(request));
         return result.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithMessage(s.Message).Build()),
-            f => ExceptionHandler.HandleException(f));
+            ExceptionHandler.HandleException);
     }
 
     [Authorize(Policy = "ManageLockoutPolicy")]
@@ -143,7 +143,7 @@ public class AdminController(ISender sender) : ControllerBase
         var result = await sender.Send(new UnlockUserCommand(request));
         return result.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithMessage(s.Message).Build()),
-            f => ExceptionHandler.HandleException(f));
+            ExceptionHandler.HandleException);
     }
 
     [Authorize(Policy = "ManageRolesPolicy")]
@@ -153,7 +153,7 @@ public class AdminController(ISender sender) : ControllerBase
         var result = await sender.Send(new RemoveUserRolesCommand(request));
         return result.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithMessage(s.Message).Build()),
-            f => ExceptionHandler.HandleException(f));
+            ExceptionHandler.HandleException);
     }
 
     [Authorize(Policy = "ManageRolesPolicy")]
@@ -163,7 +163,7 @@ public class AdminController(ISender sender) : ControllerBase
         var result = await sender.Send(new RemoveUserRoleCommand(request));
         return result.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithMessage(s.Message).Build()),
-            f => ExceptionHandler.HandleException(f));
+            ExceptionHandler.HandleException);
     }
 
     [Authorize(Policy = "ManageRolesPolicy")]
@@ -173,7 +173,7 @@ public class AdminController(ISender sender) : ControllerBase
         var result = await sender.Send(new DeleteRoleCommand(request));
         return result.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithMessage(s.Message).Build()),
-            f => ExceptionHandler.HandleException(f));
+            ExceptionHandler.HandleException);
     }
 
     [Authorize(Policy = "ManagePermissionsPolicy")]
@@ -183,7 +183,7 @@ public class AdminController(ISender sender) : ControllerBase
         var result = await sender.Send(new RemoveUserFromPermissionCommand(request));
         return result.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithMessage(s.Message).Build()),
-            f => ExceptionHandler.HandleException(f));
+            ExceptionHandler.HandleException);
     }
 
     [Authorize(Policy = "ManageUsersPolicy")]
@@ -193,6 +193,6 @@ public class AdminController(ISender sender) : ControllerBase
         var result = await sender.Send(new DeleteUserAccountCommand(request));
         return result.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithMessage(s.Message).Build()),
-            f => ExceptionHandler.HandleException(f));
+            ExceptionHandler.HandleException);
     }
 }
