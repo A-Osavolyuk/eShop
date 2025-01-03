@@ -31,12 +31,11 @@ internal sealed class TwoFactorAuthenticationLoginCommandHandler(
         }
 
         var userDto = new UserDto(user.Email!, user.UserName!, user.Id);
-        var securityToken = await context.SecurityTokens.AsNoTracking()
-            .SingleOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
+        var securityToken = await appManager.SecurityManager.FindTokenAsync(user);
 
         if (securityToken is not null)
         {
-            var tokens = tokenHandler.ReuseToken(securityToken.Token);
+            var tokens = tokenHandler.RefreshToken(securityToken.Token);
                     
             return new(new LoginResponse()
             {
@@ -50,7 +49,7 @@ internal sealed class TwoFactorAuthenticationLoginCommandHandler(
         else
         {
             var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
-            var permissions = (await appManager.PermissionManager.GetUserPermissionsAsync(user)).ToList();
+            var permissions = await appManager.PermissionManager.GetUserPermissionsAsync(user);
             var tokens = await tokenHandler.GenerateTokenAsync(user, roles, permissions);
 
             return new(new LoginResponse()

@@ -22,14 +22,13 @@ internal sealed class IssuePermissionCommandHandler(
 
         var permissions = new List<PermissionEntity>();
 
-        foreach (var p in request.Request.Permissions)
+        foreach (var permissionName in request.Request.Permissions)
         {
-            var permission = await context.Permissions.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Name == p, cancellationToken: cancellationToken);
+            var permission = await appManager.PermissionManager.FindPermissionAsync(permissionName);
 
             if (permission is null)
             {
-                return new(new NotFoundException($"Cannot find permission {p}."));
+                return new(new NotFoundException($"Cannot find permission {permissionName}."));
             }
 
             permissions.Add(permission);
@@ -37,20 +36,19 @@ internal sealed class IssuePermissionCommandHandler(
 
         foreach (var permission in permissions)
         {
-            var alreadyHasPermission = await context.UserPermissions.AsNoTracking()
-                .AnyAsync(x => x.UserId == user.Id && x.PermissionId == permission.Id,
-                    cancellationToken: cancellationToken);
+            var alreadyHasPermission = await appManager.PermissionManager.HasPermissionAsync(user, permission.Name);
 
             if (!alreadyHasPermission)
             {
-                await context.UserPermissions.AddAsync(
-                    new UserPermissionsEntity() { PermissionId = permission.Id, UserId = user.Id }, cancellationToken);
+                var result = await appManager.PermissionManager.IssuePermissionAsync(user, permission.Name);
+
+                if (!result.Succeeded)
+                {
+                    return new(new FailedOperationException(
+                        $"Failed on issuing permission with message: {result.Errors.First().Description}"));
+                }
             }
-
-            continue;
         }
-
-        await context.SaveChangesAsync(cancellationToken);
 
         return new(new IssuePermissionsResponse()
             { Succeeded = true, Message = "Successfully issued permissions." });

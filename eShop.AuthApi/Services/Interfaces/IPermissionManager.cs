@@ -2,12 +2,13 @@
 
 internal interface IPermissionManager
 {
-    public ValueTask<bool> UserHasPermissionAsync(AppUser user, string name);
-    public ValueTask<IList<PermissionEntity>> GetPermissionsAsync();
-    public ValueTask<IList<string>> GetUserPermissionsAsync(AppUser user);
+    public ValueTask<bool> ExistsAsync(string name);
+    public ValueTask<bool> HasPermissionAsync(AppUser user, string name);
+    public ValueTask<List<PermissionEntity>> GetPermissionsAsync();
+    public ValueTask<List<string>> GetUserPermissionsAsync(AppUser user);
     public ValueTask<PermissionEntity?> FindPermissionAsync(string name);
-    public ValueTask<IdentityResult> IssuePermissionsToUserAsync(AppUser user, IList<string> permissions);
-    public ValueTask<IdentityResult> IssuePermissionToUserAsync(AppUser user, string permission);
-    public ValueTask<IdentityResult> RemoveUserFromPermissionAsync(AppUser user, PermissionEntity permissionEntity);
-    public ValueTask<IdentityResult> RemoveUserFromPermissionsAsync(AppUser user);
+    public ValueTask<IdentityResult> IssuePermissionsAsync(AppUser user, IList<string> permissions);
+    public ValueTask<IdentityResult> IssuePermissionAsync(AppUser user, string permission);
+    public ValueTask<IdentityResult> RemoveFromPermissionAsync(AppUser user, PermissionEntity permissionEntity);
+    public ValueTask<IdentityResult> RemoveFromPermissionsAsync(AppUser user);
 }

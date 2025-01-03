@@ -147,7 +147,7 @@ internal sealed class TokenHandler : ITokenHandler
         return claims;
     }
 
-    public TokenResponse? ReuseToken(string token)
+    public TokenResponse? RefreshToken(string token)
     {
         if (string.IsNullOrEmpty(token))
         {

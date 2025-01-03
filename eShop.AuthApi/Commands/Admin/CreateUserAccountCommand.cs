@@ -46,16 +46,14 @@ internal sealed class CreateUserAccountCommandHandler(
                 $"Cannot add password to user account due ti server error: {passwordResult.Errors.First().Description}."));
         }
 
-        await context.PersonalData.AddAsync(new PersonalDataEntity()
+        await appManager.AccountManager.SetPersonalDataAsync(user, new PersonalDataEntity()
         {
             UserId = userId.ToString(),
             FirstName = request.Request.FirstName,
             LastName = request.Request.LastName,
             DateOfBirth = request.Request.DateOfBirth,
-            Gender = request.Request.Gender,
-        }, cancellationToken);
-
-        await context.SaveChangesAsync(cancellationToken);
+            Gender = request.Request.Gender
+        });
 
         if (request.Request.Roles.Any())
         {
@@ -93,8 +91,7 @@ internal sealed class CreateUserAccountCommandHandler(
         {
             foreach (var permission in request.Request.Permissions)
             {
-                var permissionExists =
-                    await context.Permissions.AsNoTracking().AnyAsync(x => x.Name == permission, cancellationToken: cancellationToken);
+                var permissionExists = await appManager.PermissionManager.ExistsAsync(permission);
 
                 if (!permissionExists)
                 {
@@ -102,7 +99,7 @@ internal sealed class CreateUserAccountCommandHandler(
                 }
 
                 var permissionResult =
-                    await appManager.PermissionManager.IssuePermissionToUserAsync(user, permission);
+                    await appManager.PermissionManager.IssuePermissionAsync(user, permission);
 
                 if (!permissionResult.Succeeded)
                 {
@@ -117,7 +114,7 @@ internal sealed class CreateUserAccountCommandHandler(
             foreach (var permission in defaultPermissions)
             {
                 var permissionResult =
-                    await appManager.PermissionManager.IssuePermissionToUserAsync(user, permission);
+                    await appManager.PermissionManager.IssuePermissionAsync(user, permission);
 
                 if (!permissionResult.Succeeded)
                 {

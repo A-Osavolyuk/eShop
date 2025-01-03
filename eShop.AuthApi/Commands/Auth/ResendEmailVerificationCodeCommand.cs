@@ -21,10 +21,8 @@ internal sealed class ResendEmailVerificationCodeCommandHandler(AppManager manag
         }
 
         string code;
-        
-        var entity = await context.Codes
-            .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.SentTo == request.Request.Email && x.VerificationCodeType == VerificationCodeType.VerifyEmail, cancellationToken: cancellationToken);
+
+        var entity = await manager.SecurityManager.FindCodeAsync(user.Email!, VerificationCodeType.VerifyEmail);
 
         if (entity is null || entity.ExpiresAt < DateTime.UtcNow)
         {

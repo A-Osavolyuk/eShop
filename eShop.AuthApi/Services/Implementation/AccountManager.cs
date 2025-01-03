@@ -53,4 +53,21 @@ internal sealed class AccountManager(AuthDbContext context) : IAccountManager
 
         return IdentityResult.Success;
     }
+
+    public async ValueTask<IdentityResult> RemovePersonalDataAsync(AppUser user)
+    {
+        var data = await context.PersonalData
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.UserId == user.Id);
+
+        if (data is null)
+        {
+            return IdentityResult.Failed(new IdentityError() {Code = "404", Description = "Cannot find personal data"});
+        }
+
+        context.PersonalData.Remove(data);
+        await context.SaveChangesAsync();
+
+        return IdentityResult.Success;
+    }
 }

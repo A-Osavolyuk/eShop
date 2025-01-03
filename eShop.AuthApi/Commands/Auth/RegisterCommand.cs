@@ -46,7 +46,7 @@ internal sealed class RegisterCommandHandler(
         }
 
         var issuingPermissionsResult =
-            await appManager.PermissionManager.IssuePermissionsToUserAsync(newUser, defaultPermissions);
+            await appManager.PermissionManager.IssuePermissionsAsync(newUser, defaultPermissions);
 
         if (!issuingPermissionsResult.Succeeded)
         {

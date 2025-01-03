@@ -44,7 +44,7 @@ internal sealed class HandleExternalLoginResponseQueryHandler(
 
             if (securityToken is not null)
             {
-                var tokens = tokenHandler.ReuseToken(securityToken.Token);
+                var tokens = tokenHandler.RefreshToken(securityToken.Token);
 
                 var link = UrlGenerator.ActionLink("/account/confirm-external-login", frontendUri,
                     new { tokens!.AccessToken, tokens.RefreshToken, request.ReturnUri });
@@ -88,7 +88,7 @@ internal sealed class HandleExternalLoginResponseQueryHandler(
             }
 
             var issuingPermissionsResult =
-                await appManager.PermissionManager.IssuePermissionsToUserAsync(user, defaultPermissions);
+                await appManager.PermissionManager.IssuePermissionsAsync(user, defaultPermissions);
 
             if (!issuingPermissionsResult.Succeeded)
             {

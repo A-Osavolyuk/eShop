@@ -29,7 +29,7 @@ internal sealed class DeleteUserAccountCommandHandler(
                 $"due to server error: {rolesResult.Errors.First().Description}"));
         }
 
-        var permissionsResult = await appManager.PermissionManager.RemoveUserFromPermissionsAsync(user);
+        var permissionsResult = await appManager.PermissionManager.RemoveFromPermissionsAsync(user);
 
         if (!permissionsResult.Succeeded)
         {
@@ -38,23 +38,20 @@ internal sealed class DeleteUserAccountCommandHandler(
                 $"due to server error: {permissionsResult.Errors.First().Description}"));
         }
 
-        var personalData =
-            await context.PersonalData.AsNoTracking().SingleOrDefaultAsync(x => x.UserId == user.Id,
-                cancellationToken: cancellationToken);
+        var personalDataResult = await appManager.AccountManager.RemovePersonalDataAsync(user);
 
-        if (personalData is not null)
+        if (!personalDataResult.Succeeded)
         {
-            context.PersonalData.Remove(personalData);
-            await context.SaveChangesAsync(cancellationToken);
+            return new(new FailedOperationException(
+                $"Failed on deleting the user account with message: {personalDataResult.Errors.First().Description}"));
         }
 
-        var userTokens = await context.SecurityTokens.AsNoTracking()
-            .SingleOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
+        var tokenResult = await appManager.SecurityManager.RemoveTokenAsync(user);
 
-        if (userTokens is not null)
+        if (!tokenResult.Succeeded)
         {
-            context.SecurityTokens.Remove(userTokens);
-            await context.SaveChangesAsync(cancellationToken);
+            return new(new FailedOperationException(
+                $"Failed on deleting the user account with message: {tokenResult.Errors.First().Description}"));
         }
 
         var accountResult = await appManager.UserManager.DeleteAsync(user);

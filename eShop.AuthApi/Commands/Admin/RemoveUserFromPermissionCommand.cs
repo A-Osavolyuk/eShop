@@ -27,7 +27,7 @@ internal sealed class RemoveUserFromPermissionCommandHandler(
         }
 
         var hasUserPermission =
-            await appManager.PermissionManager.UserHasPermissionAsync(user, permission.Name);
+            await appManager.PermissionManager.HasPermissionAsync(user, permission.Name);
 
         if (!hasUserPermission)
         {
@@ -40,7 +40,7 @@ internal sealed class RemoveUserFromPermissionCommandHandler(
         else
         {
             var permissionResult =
-                await appManager.PermissionManager.RemoveUserFromPermissionAsync(user, permission);
+                await appManager.PermissionManager.RemoveFromPermissionAsync(user, permission);
 
             if (!permissionResult.Succeeded)
             {

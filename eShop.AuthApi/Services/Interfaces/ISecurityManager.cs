@@ -10,4 +10,7 @@ public interface ISecurityManager
     public ValueTask<IdentityResult> ResetPasswordAsync(AppUser user, string code, string password);
     public ValueTask<IdentityResult> ChangeEmailAsync(AppUser user, string newEmail, CodeSet codeSet);
     public ValueTask<IdentityResult> ChangePhoneNumberAsync(AppUser user, string newPhoneNumber, CodeSet codeSet);
+    public ValueTask<CodeEntity?> FindCodeAsync(string sentTo, VerificationCodeType verificationCodeType);
+    public ValueTask<SecurityTokenEntity?> FindTokenAsync(AppUser user);
+    public ValueTask<IdentityResult> RemoveTokenAsync(AppUser user);
 }

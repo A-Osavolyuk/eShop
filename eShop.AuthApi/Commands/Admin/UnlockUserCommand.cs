@@ -19,12 +19,6 @@ internal sealed class UnlockUserCommandHandler(
 
         var lockoutStatus = await appManager.UserManager.GetLockoutStatusAsync(user);
 
-        if (lockoutStatus is null)
-        {
-            return new(new NotFoundException(
-                $"Cannot find lockout status for user with ID {request.Request.UserId}."));
-        }
-
         if (lockoutStatus.LockoutEnabled)
         {
             var result = await appManager.UserManager.UnlockUserAsync(user);
