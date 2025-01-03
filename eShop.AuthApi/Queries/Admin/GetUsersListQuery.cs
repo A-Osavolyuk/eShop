@@ -38,7 +38,7 @@ internal sealed class GetUsersListQueryHandler(
 
             var rolesData = (await appManager.RoleManager.GetRolesInfoAsync(rolesList) ?? Array.Empty<RoleInfo>())
                 .ToList();
-            var permissions = await appManager.PermissionManager.GetUserPermisisonsAsync(user);
+            var permissions = await appManager.PermissionManager.GetUserPermissionsAsync(user);
             var roleInfos = rolesData.ToList();
 
             if (!roleInfos.Any())

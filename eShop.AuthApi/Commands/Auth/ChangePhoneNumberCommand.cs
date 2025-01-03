@@ -4,11 +4,11 @@ internal sealed record ChangePhoneNumberCommand(ChangePhoneNumberRequest Request
 
 internal sealed class RequestChangePhoneNumberCommandHandler(
     AppManager appManager,
-    ISmsService smsService,
+    IMessageService messageService,
     IConfiguration configuration) : IRequestHandler<ChangePhoneNumberCommand, Result<ChangePhoneNumberResponse>>
 {
     private readonly AppManager appManager = appManager;
-    private readonly ISmsService smsService = smsService;
+    private readonly IMessageService messageService = messageService;
     private readonly IConfiguration configuration = configuration;
     private readonly string frontendUri = configuration["Configuration:General:Frontend:Clients:BlazorServer:Uri"]!;
 
@@ -28,13 +28,13 @@ internal sealed class RequestChangePhoneNumberCommandHandler(
         };
         var code = await appManager.SecurityManager.GenerateVerificationCodeSetAsync(destinationSet, VerificationCodeType.ChangePhoneNumber);
 
-        await smsService.SendMessageAsync("phone-number-change", new ChangePhoneNumberMessage()
+        await messageService.SendMessageAsync("phone-number-change", new ChangePhoneNumberMessage()
         {
             Code = code.Current,
             PhoneNumber = request.Request.NewPhoneNumber
         });
         
-        await smsService.SendMessageAsync("phone-number-verification", new ChangePhoneNumberMessage()
+        await messageService.SendMessageAsync("phone-number-verification", new ChangePhoneNumberMessage()
         {
             Code = code.Next,
             PhoneNumber = request.Request.NewPhoneNumber

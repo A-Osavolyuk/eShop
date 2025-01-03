@@ -4,10 +4,10 @@ internal sealed record VerifyPhoneNumberCommand(VerifyPhoneNumberRequest Request
 
 internal sealed class VerifyPhoneNumberCommandHandler(
     AppManager appManager, 
-    ISmsService smsService) : IRequestHandler<VerifyPhoneNumberCommand, Result<VerifyPhoneNumberResponse>>
+    IMessageService messageService) : IRequestHandler<VerifyPhoneNumberCommand, Result<VerifyPhoneNumberResponse>>
 {
     private readonly AppManager appManager = appManager;
-    private readonly ISmsService smsService = smsService;
+    private readonly IMessageService messageService = messageService;
     public async Task<Result<VerifyPhoneNumberResponse>> Handle(VerifyPhoneNumberCommand request, CancellationToken cancellationToken)
     {
         var user = await appManager.UserManager.FindByPhoneNumberAsync(request.Request.PhoneNumber);

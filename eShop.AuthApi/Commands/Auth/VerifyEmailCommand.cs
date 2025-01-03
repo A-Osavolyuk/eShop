@@ -4,11 +4,11 @@ internal sealed record VerifyEmailCommand(VerifyEmailRequest Request) : IRequest
 
 internal sealed class VerifyEmailCommandHandler(
     AppManager appManager,
-    IEmailService emailService,
+    IMessageService messageService,
     CartClient client) : IRequestHandler<VerifyEmailCommand, Result<VerifyEmailResponse>>
 {
     private readonly AppManager appManager = appManager;
-    private readonly IEmailService emailService = emailService;
+    private readonly IMessageService messageService = messageService;
     private readonly CartClient client = client;
 
     public async Task<Result<VerifyEmailResponse>> Handle(VerifyEmailCommand request,
@@ -30,7 +30,7 @@ internal sealed class VerifyEmailCommandHandler(
                 $"due to server error: {confirmResult.Errors.First().Description}."));
         }
 
-        await emailService.SendMessageAsync("email-verified", new EmailVerifiedMessage()
+        await messageService.SendMessageAsync("email-verified", new EmailVerifiedMessage()
         {
             To = request.Request.Email,
             Subject = "Email verified",

@@ -4,11 +4,11 @@ internal sealed record ChangeEmailCommand(ChangeEmailRequest Request) : IRequest
 
 internal sealed class RequestChangeEmailCommandHandler(
     AppManager appManager,
-    IEmailService emailService,
+    IMessageService messageService,
     IConfiguration configuration) : IRequestHandler<ChangeEmailCommand, Result<ChangeEmailResponse>>
 {
     private readonly AppManager appManager = appManager;
-    private readonly IEmailService emailService = emailService;
+    private readonly IMessageService messageService = messageService;
     private readonly IConfiguration configuration = configuration;
     private readonly string frontendUri = configuration["Configuration:General:Frontend:Clients:BlazorServer:Uri"]!;
 
@@ -29,7 +29,7 @@ internal sealed class RequestChangeEmailCommandHandler(
         };
         var code = await appManager.SecurityManager.GenerateVerificationCodeSetAsync(destination, VerificationCodeType.ChangeEmail);
 
-        await emailService.SendMessageAsync("email-change", new ChangeEmailMessage()
+        await messageService.SendMessageAsync("email-change", new ChangeEmailMessage()
         {
             Code = code.Current,
             To = request.Request.CurrentEmail,
@@ -38,7 +38,7 @@ internal sealed class RequestChangeEmailCommandHandler(
             NewEmail = request.Request.NewEmail,
         });
 
-        await emailService.SendMessageAsync("email-verification", new EmailVerificationMessage()
+        await messageService.SendMessageAsync("email-verification", new EmailVerificationMessage()
         {
             Code = code.Next,
             UserName = request.Request.CurrentEmail,

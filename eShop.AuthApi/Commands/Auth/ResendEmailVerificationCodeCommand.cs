@@ -3,11 +3,11 @@
 internal sealed record ResendEmailVerificationCodeCommand (ResendEmailVerificationCodeRequest Request)
     : IRequest<Result<ResendEmailVerificationCodeResponse>>;
 
-internal sealed class ResendEmailVerificationCodeCommandHandler(AppManager manager, IEmailService emailService, AuthDbContext context)
+internal sealed class ResendEmailVerificationCodeCommandHandler(AppManager manager, IMessageService messageService, AuthDbContext context)
     : IRequestHandler<ResendEmailVerificationCodeCommand, Result<ResendEmailVerificationCodeResponse>>
 {
     private readonly AppManager manager = manager;
-    private readonly IEmailService emailService = emailService;
+    private readonly IMessageService messageService = messageService;
     private readonly AuthDbContext context = context;
 
     public async Task<Result<ResendEmailVerificationCodeResponse>> Handle(ResendEmailVerificationCodeCommand request,
@@ -35,7 +35,7 @@ internal sealed class ResendEmailVerificationCodeCommandHandler(AppManager manag
             code = entity.Code;
         }
 
-        await emailService.SendMessageAsync("email-verification", new EmailVerificationMessage()
+        await messageService.SendMessageAsync("email-verification", new EmailVerificationMessage()
         {
             To = request.Request.Email,
             Code = code,

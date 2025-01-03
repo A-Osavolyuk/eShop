@@ -4,11 +4,11 @@ internal sealed record RegisterCommand(RegistrationRequest Request) : IRequest<R
 
 internal sealed class RegisterCommandHandler(
     AppManager appManager,
-    IEmailService emailService,
+    IMessageService messageService,
     IConfiguration configuration) : IRequestHandler<RegisterCommand, Result<RegistrationResponse>>
 {
     private readonly AppManager appManager = appManager;
-    private readonly IEmailService emailService = emailService;
+    private readonly IMessageService messageService = messageService;
     private readonly string frontendUri = configuration["Configuration:General:Frontend:Clients:BlazorServer:Uri"]!;
     private readonly string defaultRole = configuration["Configuration:General:DefaultValues:DefaultRole"]!;
 
@@ -57,7 +57,7 @@ internal sealed class RegisterCommandHandler(
         
         var code = await appManager.SecurityManager.GenerateVerificationCodeAsync(newUser.Email!, VerificationCodeType.VerifyEmail);
 
-        await emailService.SendMessageAsync("email-verification", new EmailVerificationMessage()
+        await messageService.SendMessageAsync("email-verification", new EmailVerificationMessage()
         {
             To = request.Request.Email,
             Subject = "Email verification",

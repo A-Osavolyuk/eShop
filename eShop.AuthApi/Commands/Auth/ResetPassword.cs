@@ -5,11 +5,11 @@ internal sealed record RequestResetPasswordCommand(ResetPasswordRequest Request)
 
 internal sealed class RequestResetPasswordCommandHandler(
     AppManager appManager,
-    IEmailService emailService,
+    IMessageService messageService,
     IConfiguration configuration) : IRequestHandler<RequestResetPasswordCommand, Result<ResetPasswordResponse>>
 {
     private readonly AppManager appManager = appManager;
-    private readonly IEmailService emailService = emailService;
+    private readonly IMessageService messageService = messageService;
     private readonly IConfiguration configuration = configuration;
     private readonly string frontendUri = configuration["Configuration:General:Frontend:Clients:BlazorServer:Uri"]!;
 
@@ -25,7 +25,7 @@ internal sealed class RequestResetPasswordCommandHandler(
 
         var code = await appManager.SecurityManager.GenerateVerificationCodeAsync(user.Email!, VerificationCodeType.ResetPassword);
 
-        await emailService.SendMessageAsync("password-reset", new ResetPasswordMessage()
+        await messageService.SendMessageAsync("password-reset", new ResetPasswordMessage()
         {
             To = request.Request.Email,
             Subject = "Password reset",

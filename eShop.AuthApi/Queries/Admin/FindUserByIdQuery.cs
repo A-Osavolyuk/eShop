@@ -24,7 +24,7 @@ internal sealed class FindUserByIdQueryHandler(
             await context.PersonalData.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken: cancellationToken);
         var rolesList = await appManager.UserManager.GetRolesAsync(user);
-        var permissions = await appManager.PermissionManager.GetUserPermisisonsAsync(user);
+        var permissions = await appManager.PermissionManager.GetUserPermissionsAsync(user);
 
         if (!rolesList.Any())
         {

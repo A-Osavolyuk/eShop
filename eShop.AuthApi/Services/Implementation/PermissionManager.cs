@@ -21,7 +21,7 @@ internal sealed class PermissionManager(AuthDbContext context) : IPermissionMana
         return permissions;
     }
 
-    public async ValueTask<IList<string>> GetUserPermisisonsAsync(AppUser user)
+    public async ValueTask<IList<string>> GetUserPermissionsAsync(AppUser user)
     {
         var permissions = await context.UserPermissions.AsNoTracking().Where(x => x.UserId == user.Id).ToListAsync();
         var result = new List<string>();

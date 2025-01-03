@@ -4,12 +4,12 @@ internal sealed record LoginCommand(LoginRequest Request) : IRequest<Result<Logi
 
 internal sealed class LoginCommandHandler(
     AppManager appManager,
-    IEmailService emailService,
+    IMessageService messageService,
     ITokenHandler tokenHandler,
     AuthDbContext context) : IRequestHandler<LoginCommand, Result<LoginResponse>>
 {
     private readonly AppManager appManager = appManager;
-    private readonly IEmailService emailService = emailService;
+    private readonly IMessageService eMessageService = messageService;
     private readonly ITokenHandler tokenHandler = tokenHandler;
     private readonly AuthDbContext context = context;
 
@@ -57,7 +57,7 @@ internal sealed class LoginCommandHandler(
             {
                 var loginCode = await appManager.UserManager.GenerateTwoFactorTokenAsync(user, "Email");
 
-                await emailService.SendMessageAsync("2fa-code", new TwoFactorAuthenticationCodeMessage()
+                await messageService.SendMessageAsync("2fa-code", new TwoFactorAuthenticationCodeMessage()
                 {
                     To = user.Email!,
                     Subject = "Login with 2FA code",
@@ -74,7 +74,7 @@ internal sealed class LoginCommandHandler(
             }
 
             var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
-            var permissions = (await appManager.PermissionManager.GetUserPermisisonsAsync(user)).ToList();
+            var permissions = (await appManager.PermissionManager.GetUserPermissionsAsync(user)).ToList();
             var tokens = await tokenHandler.GenerateTokenAsync(user, roles, permissions);
 
             return new(new LoginResponse()

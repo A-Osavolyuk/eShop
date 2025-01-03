@@ -9,13 +9,13 @@ internal sealed class HandleExternalLoginResponseQueryHandler(
     AppManager appManager,
     ITokenHandler tokenHandler,
     IConfiguration configuration,
-    IEmailService emailService,
+    IMessageService messageService,
     AuthDbContext context) : IRequestHandler<HandleExternalLoginResponseQuery, Result<string>>
 {
     private readonly AppManager appManager = appManager;
     private readonly ITokenHandler tokenHandler = tokenHandler;
     private readonly IConfiguration configuration = configuration;
-    private readonly IEmailService emailService = emailService;
+    private readonly IMessageService messageService = messageService;
     private readonly AuthDbContext context = context;
     private readonly string frontendUri = configuration["Configuration:General:Frontend:Clients:BlazorServer:Uri"]!;
     private readonly string defaultRole = configuration["Configuration:General:DefaultValues:DefaultRole"]!;
@@ -53,7 +53,7 @@ internal sealed class HandleExternalLoginResponseQueryHandler(
             else
             {
                 var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
-                var permissions = (await appManager.PermissionManager.GetUserPermisisonsAsync(user)).ToList();
+                var permissions = (await appManager.PermissionManager.GetUserPermissionsAsync(user)).ToList();
                 var tokens = await tokenHandler.GenerateTokenAsync(user, roles, permissions);
                 var link = UrlGenerator.ActionLink("/account/confirm-external-login", frontendUri,
                     new { tokens!.AccessToken, tokens.RefreshToken, request.ReturnUri });
@@ -97,7 +97,7 @@ internal sealed class HandleExternalLoginResponseQueryHandler(
                     $"due to server error: {issuingPermissionsResult.Errors.First().Description}"));
             }
 
-            await emailService.SendMessageAsync("external-provider-registration", new ExternalRegistrationMessage()
+            await messageService.SendMessageAsync("external-provider-registration", new ExternalRegistrationMessage()
                 {
                     To = email,
                     Subject = $"Account registered with {request.ExternalLoginInfo!.ProviderDisplayName}",
@@ -107,7 +107,7 @@ internal sealed class HandleExternalLoginResponseQueryHandler(
                 });
 
             var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
-            var permissions = (await appManager.PermissionManager.GetUserPermisisonsAsync(user)).ToList();
+            var permissions = (await appManager.PermissionManager.GetUserPermissionsAsync(user)).ToList();
             var token = await tokenHandler.GenerateTokenAsync(user, roles, permissions);
             var link = UrlGenerator.ActionLink("/account/confirm-external-login", frontendUri,
                 new { Token = token, ReturnUri = request.ReturnUri });

@@ -50,7 +50,7 @@ internal sealed class TwoFactorAuthenticationLoginCommandHandler(
         else
         {
             var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
-            var permissions = (await appManager.PermissionManager.GetUserPermisisonsAsync(user)).ToList();
+            var permissions = (await appManager.PermissionManager.GetUserPermissionsAsync(user)).ToList();
             var tokens = await tokenHandler.GenerateTokenAsync(user, roles, permissions);
 
             return new(new LoginResponse()

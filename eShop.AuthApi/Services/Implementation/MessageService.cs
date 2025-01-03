@@ -1,10 +1,16 @@
 ﻿namespace eShop.AuthApi.Services.Implementation;
 
-public class SmsService(IBus bus) : ISmsService
+public class MessageService(IBus bus) : IMessageService
 {
     private readonly IBus bus = bus;
+    
+    public async ValueTask SendMessageAsync(string queryName, EmailBase message)
+    {
+        var endpoint = await bus.GetSendEndpoint(CreateQueryUri(queryName));
+        await endpoint.Send(message);
+    }
 
-    public async ValueTask SendMessageAsync<TMessage>(string queryName, TMessage message) where TMessage: SmsBase
+    public async ValueTask SendMessageAsync(string queryName, SmsBase message)
     {
         var endpoint = await bus.GetSendEndpoint(CreateQueryUri(queryName));
         await endpoint.Send(message);

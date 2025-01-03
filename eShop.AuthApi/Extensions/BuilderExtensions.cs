@@ -101,11 +101,11 @@ public static class BuilderExtensions
     private static void AddDependencyInjection(this IHostApplicationBuilder builder)
     {
         builder.Services.AddScoped<ITokenHandler, TokenHandler>();
-        builder.Services.AddScoped<IEmailService, EmailService>();
         builder.Services.AddScoped<IPermissionManager, PermissionManager>();
         builder.Services.AddScoped<ISecurityManager, SecurityManager>();
         builder.Services.AddScoped<IAccountManager, AccountManager>();
         builder.Services.AddScoped<ICacheService, CacheService>();
+        builder.Services.AddScoped<IMessageService, MessageService>();
         
         builder.Services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
         
