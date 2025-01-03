@@ -24,11 +24,11 @@ internal sealed class ResendEmailVerificationCodeCommandHandler(AppManager manag
         
         var entity = await context.Codes
             .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.SentTo == request.Request.Email && x.CodeType == CodeType.VerifyEmail, cancellationToken: cancellationToken);
+            .FirstOrDefaultAsync(x => x.SentTo == request.Request.Email && x.VerificationCodeType == VerificationCodeType.VerifyEmail, cancellationToken: cancellationToken);
 
         if (entity is null || entity.ExpiresAt < DateTime.UtcNow)
         {
-            code = await manager.SecurityManager.GenerateVerificationCodeAsync(user.Email!, CodeType.VerifyEmail);
+            code = await manager.SecurityManager.GenerateVerificationCodeAsync(user.Email!, VerificationCodeType.VerifyEmail);
         }
         else
         {

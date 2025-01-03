@@ -3,6 +3,6 @@
 public class Price
 {
     [BsonRepresentation(BsonType.String)]
-    public Currency Currency { get; set; }
+    public ProductCurrency ProductCurrency { get; set; }
     public decimal Amount { get; set; }
 }

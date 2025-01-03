@@ -1,5 +1,6 @@
 ﻿using eShop.Domain.DTOs.CartApi;
 using eShop.Domain.Entities.CartApi;
+using eShop.Domain.Models.Store;
 using eShop.Domain.Requests.CartApi.Favorites;
 
 namespace eShop.Application.Mapping;
@@ -16,7 +17,7 @@ public static class FavoritesMapper
         };
     }
 
-    public static FavoritesModel ToFavoritesModel(FavoritesDto dto)
+    public static FavoritesStore ToFavoritesModel(FavoritesDto dto)
     {
         return new()
         {
@@ -26,13 +27,13 @@ public static class FavoritesMapper
         };
     }
 
-    public static UpdateFavoritesRequest ToUpdateFavoritesRequest(FavoritesModel model)
+    public static UpdateFavoritesRequest ToUpdateFavoritesRequest(FavoritesStore store)
     {
         return new()
         {
-            Items = model.Items,
-            FavoritesId = model.FavoritesId,
-            ItemsCount = model.ItemsCount,
+            Items = store.Items,
+            FavoritesId = store.FavoritesId,
+            ItemsCount = store.ItemsCount,
         };
     }
 }

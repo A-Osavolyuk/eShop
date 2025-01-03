@@ -11,6 +11,6 @@ public class SellerService(IHttpClientService httpClient, IConfiguration configu
 
     public async ValueTask<Response> RegisterSellerAsync(RegisterSellerRequest request) =>
         await httpClient.SendAsync(new Request(
-            Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Seller/register-seller", Method: HttpMethods.POST,
+            Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Seller/register-seller", Method: HttpMethods.Post,
             Data: request));
 }

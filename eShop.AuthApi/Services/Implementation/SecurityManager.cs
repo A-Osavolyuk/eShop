@@ -22,19 +22,19 @@ internal sealed class SecurityManager(
         return sb.ToString();
     }
     
-    public async ValueTask<string> GenerateVerificationCodeAsync(string sentTo, CodeType codeType)
+    public async ValueTask<string> GenerateVerificationCodeAsync(string sentTo, VerificationCodeType verificationCodeType)
     {
         var code = GenerateCode();
-        await SaveCodeAsync(code, sentTo, codeType);
+        await SaveCodeAsync(code, sentTo, verificationCodeType);
         return code;
     }
 
-    public async ValueTask<CodeSet> GenerateVerificationCodeSetAsync(DestinationSet destinationSet, CodeType codeType)
+    public async ValueTask<CodeSet> GenerateVerificationCodeSetAsync(DestinationSet destinationSet, VerificationCodeType verificationCodeType)
     {
         var codeSet = new CodeSet()
         {
-            Current = await GenerateVerificationCodeAsync(destinationSet.Current, codeType),
-            Next = await GenerateVerificationCodeAsync(destinationSet.Next, codeType)
+            Current = await GenerateVerificationCodeAsync(destinationSet.Current, verificationCodeType),
+            Next = await GenerateVerificationCodeAsync(destinationSet.Next, verificationCodeType)
         };
 
         return codeSet;
@@ -42,7 +42,7 @@ internal sealed class SecurityManager(
 
     public async ValueTask<IdentityResult> VerifyEmailAsync(AppUser user, string code)
     {
-        var validationResult = await ValidateAndRemoveAsync(code, user.Email!, CodeType.VerifyEmail);
+        var validationResult = await ValidateAndRemoveAsync(code, user.Email!, VerificationCodeType.VerifyEmail);
         
         if (!validationResult.Succeeded)
         {
@@ -61,7 +61,7 @@ internal sealed class SecurityManager(
 
     public async ValueTask<IdentityResult> VerifyPhoneNumberAsync(AppUser user, string code)
     {
-        var validationResult = await ValidateAndRemoveAsync(code, user.Email!, CodeType.VerifyEmail);
+        var validationResult = await ValidateAndRemoveAsync(code, user.Email!, VerificationCodeType.VerifyPhoneNumber);
         
         if (!validationResult.Succeeded)
         {
@@ -80,7 +80,7 @@ internal sealed class SecurityManager(
 
     public async ValueTask<IdentityResult> ResetPasswordAsync(AppUser user, string code, string password)
     {
-        var validationResult = await ValidateAndRemoveAsync(code, user.Email!, CodeType.VerifyEmail);
+        var validationResult = await ValidateAndRemoveAsync(code, user.Email!, VerificationCodeType.VerifyEmail);
         
         if (!validationResult.Succeeded)
         {
@@ -100,7 +100,7 @@ internal sealed class SecurityManager(
     public async ValueTask<IdentityResult> ChangeEmailAsync(AppUser user, string newEmail, CodeSet codeSet)
     {
         var destinationSet = new DestinationSet() { Current = user.Email!, Next = newEmail };
-        var validationResult = await ValidateAndRemoveAsync(codeSet, destinationSet , CodeType.ChangeEmail);
+        var validationResult = await ValidateAndRemoveAsync(codeSet, destinationSet , VerificationCodeType.ChangeEmail);
         
         if (!validationResult.Succeeded)
         {
@@ -114,7 +114,7 @@ internal sealed class SecurityManager(
     public async ValueTask<IdentityResult> ChangePhoneNumberAsync(AppUser user, string newPhoneNumber, CodeSet codeSet)
     {
         var destinationSet = new DestinationSet() { Current = user.PhoneNumber!, Next = newPhoneNumber };
-        var validationResult = await ValidateAndRemoveAsync(codeSet, destinationSet , CodeType.ChangePhoneNumber);
+        var validationResult = await ValidateAndRemoveAsync(codeSet, destinationSet , VerificationCodeType.ChangePhoneNumber);
         
         if (!validationResult.Succeeded)
         {
@@ -133,14 +133,14 @@ internal sealed class SecurityManager(
         return code;
     }
 
-    private async Task SaveCodeAsync(string code, string sentTo, CodeType codeType)
+    private async Task SaveCodeAsync(string code, string sentTo, VerificationCodeType verificationCodeType)
     {
         await context.Codes.AddAsync(new CodeEntity()
         {
             Id = Guid.CreateVersion7(),
             SentTo = sentTo,
             Code = code,
-            CodeType = codeType,
+            VerificationCodeType = verificationCodeType,
             CreatedAt = DateTime.UtcNow,
             ExpiresAt = DateTime.UtcNow.AddMinutes(10)
         });
@@ -148,11 +148,11 @@ internal sealed class SecurityManager(
         await context.SaveChangesAsync();
     }
 
-    private async Task<CodeEntity?> FindCodeAsync(string code, string sentTo, CodeType codeType)
+    private async Task<CodeEntity?> FindCodeAsync(string code, string sentTo, VerificationCodeType verificationCodeType)
     {
         var entity = await context.Codes
             .AsNoTracking()
-            .FirstOrDefaultAsync(c => c.Code == code && c.SentTo == sentTo && c.CodeType == codeType);
+            .FirstOrDefaultAsync(c => c.Code == code && c.SentTo == sentTo && c.VerificationCodeType == verificationCodeType);
 
         return entity;
     }
@@ -163,9 +163,9 @@ internal sealed class SecurityManager(
         await context.SaveChangesAsync();
     }
 
-    private async Task<IdentityResult> ValidateAndRemoveAsync(string code, string sentTo, CodeType codeType)
+    private async Task<IdentityResult> ValidateAndRemoveAsync(string code, string sentTo, VerificationCodeType verificationCodeType)
     {
-        var entity = await FindCodeAsync(code, sentTo, codeType);
+        var entity = await FindCodeAsync(code, sentTo, verificationCodeType);
 
         if (entity is null)
         {
@@ -190,10 +190,10 @@ internal sealed class SecurityManager(
         return IdentityResult.Success;
     }
 
-    private async Task<IdentityResult> ValidateAndRemoveAsync(CodeSet codeSet, DestinationSet destinationSet, CodeType codeType)
+    private async Task<IdentityResult> ValidateAndRemoveAsync(CodeSet codeSet, DestinationSet destinationSet, VerificationCodeType verificationCodeType)
     {
-        var currentResult = await ValidateAndRemoveAsync(codeSet.Current, destinationSet.Current, codeType);
-        var nextResult = await ValidateAndRemoveAsync(codeSet.Next, destinationSet.Next, codeType);
+        var currentResult = await ValidateAndRemoveAsync(codeSet.Current, destinationSet.Current, verificationCodeType);
+        var nextResult = await ValidateAndRemoveAsync(codeSet.Next, destinationSet.Next, verificationCodeType);
 
         if (!currentResult.Succeeded)
         {

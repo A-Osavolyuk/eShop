@@ -3,8 +3,8 @@
 public interface ISecurityManager
 {
     public string GenerateRandomPassword(int length);
-    public ValueTask<string> GenerateVerificationCodeAsync(string sentTo, CodeType codeType);
-    public ValueTask<CodeSet> GenerateVerificationCodeSetAsync(DestinationSet destinationSet, CodeType codeType);
+    public ValueTask<string> GenerateVerificationCodeAsync(string sentTo, VerificationCodeType verificationCodeType);
+    public ValueTask<CodeSet> GenerateVerificationCodeSetAsync(DestinationSet destinationSet, VerificationCodeType verificationCodeType);
     public ValueTask<IdentityResult> VerifyEmailAsync(AppUser user, string code);
     public ValueTask<IdentityResult> VerifyPhoneNumberAsync(AppUser user, string code);
     public ValueTask<IdentityResult> ResetPasswordAsync(AppUser user, string code, string password);

@@ -10,5 +10,5 @@ public class BrandSevice(
     private readonly IHttpClientService clientService = clientService;
     private readonly IConfiguration configuration = configuration;
     public async ValueTask<Response> GetBrandsListAsync() => await clientService.SendAsync(
-        new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Brands", Method: HttpMethods.GET));
+        new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Brands", Method: HttpMethods.Get));
 }

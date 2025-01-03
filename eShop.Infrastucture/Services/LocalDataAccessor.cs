@@ -1,4 +1,5 @@
 ﻿using eShop.Domain.Entities.CartApi;
+using eShop.Domain.Models.Store;
 
 namespace eShop.Infrastructure.Services;
 
@@ -7,13 +8,13 @@ public class LocalDataAccessor(ILocalStorageService localStorageService) : ILoca
     private readonly ILocalStorageService localStorageService = localStorageService;
 
     public async ValueTask RemoveDataAsync() => await localStorageService.ClearAsync();
-    public async ValueTask SetCartAsync(CartModel cartModel)
+    public async ValueTask SetCartAsync(CartStore cartStore)
     {
         var key = "cart";
-        await localStorageService.SetItemAsync(key, cartModel);
+        await localStorageService.SetItemAsync(key, cartStore);
     }
 
-    public async ValueTask WriteUserDataAsync(UserDataStoreModel user)
+    public async ValueTask WriteUserDataAsync(UserStore user)
     {
         if (user is null)
         {
@@ -23,9 +24,9 @@ public class LocalDataAccessor(ILocalStorageService localStorageService) : ILoca
         await localStorageService.SetItemAsync("user", user);
     }
 
-    public async ValueTask<UserDataStoreModel> ReadUserDataAsync()
+    public async ValueTask<UserStore> ReadUserDataAsync()
     {
-        var user = await localStorageService.GetItemAsync<UserDataStoreModel>("user");
+        var user = await localStorageService.GetItemAsync<UserStore>("user");
 
         if (user is null)
         {
@@ -99,12 +100,12 @@ public class LocalDataAccessor(ILocalStorageService localStorageService) : ILoca
         await localStorageService.RemoveItemAsync("avatar-link");
     }
 
-    public async ValueTask<FavoritesModel> ReadFavoritesAsync()
+    public async ValueTask<FavoritesStore> ReadFavoritesAsync()
     {
         var key = "favorites";
         if (await localStorageService.ContainKeyAsync(key))
         {
-            var favorites = await localStorageService.GetItemAsync<FavoritesModel>(key);
+            var favorites = await localStorageService.GetItemAsync<FavoritesStore>(key);
 
             if (favorites is not null)
             {
@@ -120,7 +121,7 @@ public class LocalDataAccessor(ILocalStorageService localStorageService) : ILoca
         var key = "favorites";
         if (await localStorageService.ContainKeyAsync(key))
         {
-            var favorites = await localStorageService.GetItemAsync<FavoritesModel>(key);
+            var favorites = await localStorageService.GetItemAsync<FavoritesStore>(key);
 
             if (favorites is not null)
             {
@@ -131,7 +132,7 @@ public class LocalDataAccessor(ILocalStorageService localStorageService) : ILoca
         }
         else
         {
-            var favorites = new FavoritesModel() { Items = new List<FavoritesItem> { item } };
+            var favorites = new FavoritesStore() { Items = new List<FavoritesItem> { item } };
             favorites.Count();
             await localStorageService.SetItemAsync(key, favorites);
         }
@@ -142,7 +143,7 @@ public class LocalDataAccessor(ILocalStorageService localStorageService) : ILoca
         var key = "favorites";
         if (await localStorageService.ContainKeyAsync(key))
         {
-            var favorites = await localStorageService.GetItemAsync<FavoritesModel>(key);
+            var favorites = await localStorageService.GetItemAsync<FavoritesStore>(key);
 
             if (favorites is not null)
             {
@@ -163,7 +164,7 @@ public class LocalDataAccessor(ILocalStorageService localStorageService) : ILoca
         var key = "favorites";
         if (await localStorageService.ContainKeyAsync(key))
         {
-            var favorites = await localStorageService.GetItemAsync<FavoritesModel>(key);
+            var favorites = await localStorageService.GetItemAsync<FavoritesStore>(key);
 
             if (favorites is not null)
             {
@@ -177,11 +178,11 @@ public class LocalDataAccessor(ILocalStorageService localStorageService) : ILoca
     public async ValueTask AddToCartAsync(CartItem item)
     {
         var key = "cart";
-        var cart = new CartModel();
+        var cart = new CartStore();
 
         if (await localStorageService.ContainKeyAsync(key))
         {
-            cart = await localStorageService.GetItemAsync<CartModel>(key);
+            cart = await localStorageService.GetItemAsync<CartStore>(key);
 
             if (cart is not null)
             {
@@ -229,16 +230,16 @@ public class LocalDataAccessor(ILocalStorageService localStorageService) : ILoca
         return await localStorageService.ContainKeyAsync(key);
     }
 
-    public async ValueTask CreateCartAsync(CartModel cartModel)
+    public async ValueTask CreateCartAsync(CartStore cartStore)
     {
         var key = "cart";
-        await localStorageService.SetItemAsync(key, cartModel);
+        await localStorageService.SetItemAsync(key, cartStore);
     }
 
-    public async ValueTask<CartModel> ReadCartAsync()
+    public async ValueTask<CartStore> ReadCartAsync()
     {
         var key = "cart";
-        return (await localStorageService.GetItemAsync<CartModel>(key))!;
+        return (await localStorageService.GetItemAsync<CartStore>(key))!;
     }
 
     public async ValueTask<int> GetStoreItemsCountAsync()
@@ -250,23 +251,23 @@ public class LocalDataAccessor(ILocalStorageService localStorageService) : ILoca
 
         if (await localStorageService.ContainKeyAsync(cartKey))
         {
-            var cart = await localStorageService.GetItemAsync<CartModel>(cartKey);
+            var cart = await localStorageService.GetItemAsync<CartStore>(cartKey);
             cartCount = cart!.ItemsCount;
         }
 
         if (await localStorageService.ContainKeyAsync(favoritesKey))
         {
-            var favorites = await localStorageService.GetItemAsync<FavoritesModel>(favoritesKey);
+            var favorites = await localStorageService.GetItemAsync<FavoritesStore>(favoritesKey);
             favoritesCount = favorites!.ItemsCount;
         }
 
         return cartCount + favoritesCount;
     }
 
-    public async ValueTask CreateFavoritesAsync(FavoritesModel favoritesModel)
+    public async ValueTask CreateFavoritesAsync(FavoritesStore favoritesStore)
     {
         var key = "favorites";
-        await localStorageService.SetItemAsync(key, favoritesModel);
+        await localStorageService.SetItemAsync(key, favoritesStore);
     }
 
     public async ValueTask<bool> IsFavoritesExistsAsync()

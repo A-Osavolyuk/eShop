@@ -1,4 +1,5 @@
 ﻿@page "/seller/register"
+@using eShop.Domain.Models.Store
 @using eShop.Domain.Requests.ProductApi.Seller
 @using Severity = MudBlazor.Severity
 @inherits PageBase
@@ -8,7 +9,7 @@
 
 @code {
     private RegisterSellerRequest Model { get; set; } = new();
-    private UserDataStoreModel user = new();
+    private UserStore user = new();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

@@ -43,24 +43,24 @@
     }
 </MudSelect>
 <MudSelect
-    T="Audience"
+    T="ProductAudience"
     Variant="Variant.Outlined"
     Placeholder="Select audience..."
     Label="Audience"
     ShrinkLabel
     Immediate
-    For="() => Model.Audience"
-    @bind-Value="Model.Audience">
+    For="() => Model.ProductAudience"
+    @bind-Value="Model.ProductAudience">
     <MudSelectItem
         Disabled
-        T="Audience"
-        Value="Audience.None">
+        T="ProductAudience"
+        Value="ProductAudience.None">
     </MudSelectItem>
     @foreach (var audience in GetAudience())
     {
         <MudSelectItem
-            T="Audience"
-            Value="Enum.Parse<Audience>(audience)">
+            T="ProductAudience"
+            Value="Enum.Parse<ProductAudience>(audience)">
         </MudSelectItem>
     }
 </MudSelect>
@@ -87,8 +87,8 @@
     private List<string> GetAudience()
     {
         return Enum
-            .GetNames<Audience>()
-            .Where(x => x != Audience.None.ToString())
+            .GetNames<ProductAudience>()
+            .Where(x => x != ProductAudience.None.ToString())
             .ToList();
     }
 

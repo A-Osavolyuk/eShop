@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.Enums;
 
-public enum Audience
+public enum ProductAudience
 {
     None = 0,
     Unisex = 1,

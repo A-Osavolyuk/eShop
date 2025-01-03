@@ -1,4 +1,5 @@
 ﻿using eShop.Domain.Common.Security;
+using eShop.Domain.Models.Store;
 using eShop.Domain.Requests.AuthApi.Auth;
 using eShop.Domain.Responses.AuthApi.Auth;
 
@@ -163,7 +164,7 @@ public class ApplicationAuthenticationStateProvider(
         var roles = Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToList();
         var permissions = Claims.Where(x => x.Type == CustomClaimTypes.Permission).Select(x => x.Value).ToList();
 
-        await localDataAccessor.WriteUserDataAsync(new UserDataStoreModel()
+        await localDataAccessor.WriteUserDataAsync(new UserStore()
         {
             PhoneNumber = phoneNumber,
             Email = email,

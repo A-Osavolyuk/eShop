@@ -1,8 +1,8 @@
 ﻿using eShop.Domain.Entities.CartApi;
 
-namespace eShop.Domain.Models;
+namespace eShop.Domain.Models.Store;
 
-public class CartModel
+public class CartStore
 {
     public Guid CartId { get; set; }
     public int ItemsCount { get; set; }

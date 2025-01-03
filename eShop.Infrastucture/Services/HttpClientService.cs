@@ -38,9 +38,9 @@ public class HttpClientService : IHttpClientService
 
             message.Method = request.Method switch
             {
-                HttpMethods.POST => HttpMethod.Post,
-                HttpMethods.DELETE => HttpMethod.Delete,
-                HttpMethods.PUT => HttpMethod.Put,
+                HttpMethods.Post => HttpMethod.Post,
+                HttpMethods.Delete => HttpMethod.Delete,
+                HttpMethods.Put => HttpMethod.Put,
                 _ => HttpMethod.Get,
             };
 
@@ -67,10 +67,10 @@ public class HttpClientService : IHttpClientService
             message.RequestUri = new Uri(request.Url);
             message.Method = request.Method switch
             {
-                HttpMethods.POST => HttpMethod.Post,
-                HttpMethods.PUT => HttpMethod.Put,
-                HttpMethods.DELETE => HttpMethod.Delete,
-                HttpMethods.GET => HttpMethod.Get,
+                HttpMethods.Post => HttpMethod.Post,
+                HttpMethods.Put => HttpMethod.Put,
+                HttpMethods.Delete => HttpMethod.Delete,
+                HttpMethods.Get => HttpMethod.Get,
                 _ => throw new Exception("Invalid HTTP method"),
             };
 

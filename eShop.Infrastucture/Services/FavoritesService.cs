@@ -12,8 +12,8 @@ public class FavoritesService(
     private readonly IConfiguration configuration = configuration;
 
     public async ValueTask<Response> GetFavoritesAsync(Guid userId) => await clientService.SendAsync(
-        new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Favorites/get-favorites/{userId}", Method: HttpMethods.GET));
+        new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Favorites/get-favorites/{userId}", Method: HttpMethods.Get));
 
     public async ValueTask<Response> UpdateFavoritesAsync(UpdateFavoritesRequest request) => await clientService.SendAsync(
-        new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Favorites/update-favorites", Method: HttpMethods.PUT, Data: request));
+        new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Favorites/update-favorites", Method: HttpMethods.Put, Data: request));
 }

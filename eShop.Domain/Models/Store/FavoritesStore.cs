@@ -1,8 +1,8 @@
 ﻿using eShop.Domain.Entities.CartApi;
 
-namespace eShop.Domain.Models;
+namespace eShop.Domain.Models.Store;
 
-public class FavoritesModel
+public class FavoritesStore
 {
     public Guid FavoritesId { get; set; }
     public int ItemsCount { get; set; }

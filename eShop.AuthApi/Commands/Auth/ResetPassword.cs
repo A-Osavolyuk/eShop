@@ -23,7 +23,7 @@ internal sealed class RequestResetPasswordCommandHandler(
             return new(new NotFoundException($"Cannot find user with email {request.Request.Email}."));
         }
 
-        var code = await appManager.SecurityManager.GenerateVerificationCodeAsync(user.Email!, CodeType.ResetPassword);
+        var code = await appManager.SecurityManager.GenerateVerificationCodeAsync(user.Email!, VerificationCodeType.ResetPassword);
 
         await emailService.SendMessageAsync("password-reset", new ResetPasswordMessage()
         {

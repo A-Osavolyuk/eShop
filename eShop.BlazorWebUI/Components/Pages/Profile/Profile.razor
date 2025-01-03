@@ -1,4 +1,5 @@
 ﻿@page "/profile"
+@using eShop.Domain.Models.Store
 @using eShop.Domain.Responses.AuthApi.Auth
 @using Severity = MudBlazor.Severity
 @inherits PageBase
@@ -14,7 +15,7 @@
         <MudGrid Justify="Justify.Center">
             <MudItem xs="8">
                 <MudPaper Class="pa-3" Outlined>
-                    @if (userDataStoreModel is null)
+                    @if (userStore is null)
                     {
                         <MudText Typo="Typo.h3">Loading...</MudText>
                     }
@@ -40,11 +41,11 @@
                                 <MudPaper Outlined Class="pa-3 mb-3">
                                     <MudText Typo="Typo.h6">Account Information</MudText>
                                     <MudGrid Spacing="3" Class="mt-3">
-                                        <ProfileField Divided Label="User name" Text="@userDataStoreModel.UserName" HasButton
+                                        <ProfileField Divided Label="User name" Text="@userStore.UserName" HasButton
                                                       Tooltip="Change user name" OnEditClick="@(() => NavigationManager.NavigateTo("/profile/change-username"))" />
-                                        <ProfileField Divided Label="Email address" Text="@userDataStoreModel.Email" HasButton
+                                        <ProfileField Divided Label="Email address" Text="@userStore.Email" HasButton
                                                       Tooltip="Change email address" OnEditClick="@(() => NavigationManager.NavigateTo("/profile/change-email"))" />
-                                        <ProfileField Divided Label="Phone number" Text="@userDataStoreModel.PhoneNumber" HasButton
+                                        <ProfileField Divided Label="Phone number" Text="@userStore.PhoneNumber" HasButton
                                                       Tooltip="Change phone number" OnEditClick="@(() => NavigationManager.NavigateTo("/profile/change-phone-number"))" />
                                     </MudGrid>
                                 </MudPaper>
@@ -105,14 +106,14 @@
 </AuthorizeView>
 
 @code {
-    private UserDataStoreModel userDataStoreModel = null!;
+    private UserStore userStore = null!;
     private PersonalDataModel personalDataModel = null!;
     private SecurityData securityData = null!;
     private string avatarUri = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        userDataStoreModel = await LocalDataAccessor.ReadUserDataAsync();
+        userStore = await LocalDataAccessor.ReadUserDataAsync();
         await GetPersonalData();
         await GetSecurityData();
         await GetAvatar();
@@ -128,7 +129,7 @@
 
         if (string.IsNullOrEmpty(personalDataModel.FirstName) || string.IsNullOrEmpty(personalDataModel.LastName) || string.IsNullOrEmpty(personalDataModel.Gender))
         {
-            var response = await AuthService.GetPersonalDataAsync(userDataStoreModel!.Email);
+            var response = await AuthService.GetPersonalDataAsync(userStore!.Email);
 
             if (response.Success)
             {
@@ -157,7 +158,7 @@
 
         if (securityData.PasswordUpdatedDate == new DateTime(1, 1, 1))
         {
-            var response = await AuthService.GetTwoFactorStateAsync(userDataStoreModel.Email);
+            var response = await AuthService.GetTwoFactorStateAsync(userStore.Email);
 
             if (response.Success)
             {
@@ -184,7 +185,7 @@
 
         if (string.IsNullOrEmpty(avatarUri))
         {
-            var response = await StoreService.GetUserAvatarAsync(userDataStoreModel.UserId);
+            var response = await StoreService.GetUserAvatarAsync(userStore.UserId);
 
             if (response.Success)
             {
@@ -200,7 +201,7 @@
 
     private async Task ChangeTwoFactorAuthenticationState()
     {
-        var response = await AuthService.ChangeTwoFactorAuthenticationStateAsync(new() { Email = userDataStoreModel.Email });
+        var response = await AuthService.ChangeTwoFactorAuthenticationStateAsync(new() { Email = userStore.Email });
 
         if (response.Success)
         {
@@ -218,7 +219,7 @@
     private async Task RemoveAvatar()
     {
         avatarUri = Configuration["DefaultAvatar"]!;
-        await StoreService.RemoveUserAvatarAsync(userDataStoreModel.UserId);
+        await StoreService.RemoveUserAvatarAsync(userStore.UserId);
         await LocalDataAccessor.RemoveAvatarLinkAsync();
         StateHasChanged();
     }

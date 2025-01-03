@@ -1,4 +1,5 @@
 ﻿@page "/profile/change-email"
+@using eShop.Domain.Models.Store
 @using eShop.Domain.Requests.AuthApi.Auth
 @using eShop.Domain.Responses.AuthApi.Auth
 @inherits PageBase
@@ -42,7 +43,7 @@
 
 @code {
     private ChangeEmailRequest Request = new();
-    private UserDataStoreModel User = new();
+    private UserStore User = new();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

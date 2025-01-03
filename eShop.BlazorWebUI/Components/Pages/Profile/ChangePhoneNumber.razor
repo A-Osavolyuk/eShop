@@ -1,4 +1,5 @@
 ﻿@page "/profile/change-phone-number"
+@using eShop.Domain.Models.Store
 @using eShop.Domain.Requests.AuthApi.Auth
 @using eShop.Domain.Responses.AuthApi.Auth
 @inherits PageBase
@@ -41,7 +42,7 @@
 
 @code {
     private ChangePhoneNumberRequest request = new();
-    private UserDataStoreModel user = new();
+    private UserStore user = new();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

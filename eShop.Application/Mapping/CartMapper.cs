@@ -1,5 +1,6 @@
 ﻿using eShop.Domain.DTOs.CartApi;
 using eShop.Domain.Entities.CartApi;
+using eShop.Domain.Models.Store;
 using eShop.Domain.Requests.CartApi.Cart;
 
 namespace eShop.Application.Mapping;
@@ -16,9 +17,9 @@ public static class CartMapper
         };
     }
 
-    public static CartModel ToCartModel(CartDto cartDto)
+    public static CartStore ToCartModel(CartDto cartDto)
     {
-        return new CartModel()
+        return new CartStore()
         {
             CartId = cartDto.CartId,
             ItemsCount = cartDto.ItemsCount,
@@ -26,13 +27,13 @@ public static class CartMapper
         };
     }
 
-    public static UpdateCartRequest ToUpdateCartRequest(CartModel model)
+    public static UpdateCartRequest ToUpdateCartRequest(CartStore store)
     {
         return new()
         {
-            CartId = model.CartId,
-            ItemsCount = model.ItemsCount,
-            Items = model.Items
+            CartId = store.CartId,
+            ItemsCount = store.ItemsCount,
+            Items = store.Items
         };
     }
 }
