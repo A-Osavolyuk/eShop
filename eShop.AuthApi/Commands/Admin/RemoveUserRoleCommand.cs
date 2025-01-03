@@ -3,10 +3,8 @@
 internal sealed record RemoveUserRoleCommand(RemoveUserRoleRequest Request) : IRequest<Result<RemoveUserRoleResponse>>;
 
 internal sealed class RemoveUserRoleCommandHandler(
-    AuthDbContext context,
     AppManager appManager) : IRequestHandler<RemoveUserRoleCommand, Result<RemoveUserRoleResponse>>
 {
-    private readonly AuthDbContext context = context;
     private readonly AppManager appManager = appManager;
 
     public async Task<Result<RemoveUserRoleResponse>> Handle(RemoveUserRoleCommand request,

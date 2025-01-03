@@ -3,11 +3,9 @@
 internal sealed record CreateRoleCommand(CreateRoleRequest Request) : IRequest<Result<CreateRoleResponse>>;
 
 internal sealed class CreateRoleCommandHandler(
-    AppManager appManager,
-    AuthDbContext context) : IRequestHandler<CreateRoleCommand, Result<CreateRoleResponse>>
+    AppManager appManager) : IRequestHandler<CreateRoleCommand, Result<CreateRoleResponse>>
 {
     private readonly AppManager appManager = appManager;
-    private readonly AuthDbContext context = context;
 
     public async Task<Result<CreateRoleResponse>> Handle(CreateRoleCommand request,
         CancellationToken cancellationToken)

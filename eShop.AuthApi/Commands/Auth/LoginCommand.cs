@@ -5,13 +5,11 @@ internal sealed record LoginCommand(LoginRequest Request) : IRequest<Result<Logi
 internal sealed class LoginCommandHandler(
     AppManager appManager,
     IMessageService messageService,
-    ITokenHandler tokenHandler,
-    AuthDbContext context) : IRequestHandler<LoginCommand, Result<LoginResponse>>
+    ITokenHandler tokenHandler) : IRequestHandler<LoginCommand, Result<LoginResponse>>
 {
     private readonly AppManager appManager = appManager;
     private readonly IMessageService messageService = messageService;
     private readonly ITokenHandler tokenHandler = tokenHandler;
-    private readonly AuthDbContext context = context;
 
     public async Task<Result<LoginResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {

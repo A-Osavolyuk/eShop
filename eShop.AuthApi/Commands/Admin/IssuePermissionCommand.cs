@@ -4,11 +4,9 @@ internal sealed record IssuePermissionCommand(IssuePermissionRequest Request)
     : IRequest<Result<IssuePermissionsResponse>>;
 
 internal sealed class IssuePermissionCommandHandler(
-    AppManager appManager,
-    AuthDbContext context) : IRequestHandler<IssuePermissionCommand, Result<IssuePermissionsResponse>>
+    AppManager appManager) : IRequestHandler<IssuePermissionCommand, Result<IssuePermissionsResponse>>
 {
     private readonly AppManager appManager = appManager;
-    private readonly AuthDbContext context = context;
 
     public async Task<Result<IssuePermissionsResponse>> Handle(IssuePermissionCommand request,
         CancellationToken cancellationToken)

@@ -5,12 +5,10 @@ internal sealed record TwoFactorAuthenticationLoginCommand(TwoFactorAuthenticati
 
 internal sealed class TwoFactorAuthenticationLoginCommandHandler(
     AppManager appManager,
-    ITokenHandler tokenHandler,
-    AuthDbContext context) : IRequestHandler<TwoFactorAuthenticationLoginCommand, Result<LoginResponse>>
+    ITokenHandler tokenHandler) : IRequestHandler<TwoFactorAuthenticationLoginCommand, Result<LoginResponse>>
 {
     private readonly AppManager appManager = appManager;
     private readonly ITokenHandler tokenHandler = tokenHandler;
-    private readonly AuthDbContext context = context;
 
     public async Task<Result<LoginResponse>> Handle(TwoFactorAuthenticationLoginCommand request,
         CancellationToken cancellationToken)

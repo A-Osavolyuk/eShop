@@ -4,11 +4,9 @@ internal sealed record DeleteUserAccountCommand(DeleteUserAccountRequest Request
     : IRequest<Result<DeleteUserAccountResponse>>;
 
 internal sealed class DeleteUserAccountCommandHandler(
-    AppManager appManager,
-    AuthDbContext context) : IRequestHandler<DeleteUserAccountCommand, Result<DeleteUserAccountResponse>>
+    AppManager appManager) : IRequestHandler<DeleteUserAccountCommand, Result<DeleteUserAccountResponse>>
 {
     private readonly AppManager appManager = appManager;
-    private readonly AuthDbContext context = context;
 
     public async Task<Result<DeleteUserAccountResponse>> Handle(DeleteUserAccountCommand request,
         CancellationToken cancellationToken)

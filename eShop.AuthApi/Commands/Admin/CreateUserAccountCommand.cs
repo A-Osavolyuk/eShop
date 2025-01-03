@@ -5,11 +5,9 @@ internal sealed record CreateUserAccountCommand(CreateUserAccountRequest Request
 
 internal sealed class CreateUserAccountCommandHandler(
     AppManager appManager,
-    AuthDbContext context,
     IConfiguration configuration) : IRequestHandler<CreateUserAccountCommand, Result<CreateUserAccountResponse>>
 {
     private readonly AppManager appManager = appManager;
-    private readonly AuthDbContext context = context;
     private readonly string defaultRole = configuration["Configuration:General:DefaultValues:DefaultRole"]!;
     private readonly List<string> defaultPermissions =
         configuration.GetValue<List<string>>("Configuration:General:DefaultValues:DefaultPermissions")!;
