@@ -1,4 +1,4 @@
-﻿namespace eShop.Domain.Entities.AuthApi;
+﻿namespace eShop.Domain.Models;
 
 public class RoleInfo
 {

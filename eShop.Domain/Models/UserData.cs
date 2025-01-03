@@ -1,12 +1,8 @@
-﻿namespace eShop.Domain.Models;
+﻿namespace eShop.Domain.Entities.AuthApi;
 
 public class UserData
 {
-    public string UserId { get; set; } = string.Empty;
-    public string UserName { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-    public string PhoneNumber { get; set; } = string.Empty;
-
-    public List<string> Roles { get; set; } = null!;
-    public List<string> Permissions { get; set; } = null!;
+    public AccountData AccountData { get; set; } = null!;
+    public PersonalDataEntity PersonalDataEntity { get; set; } = null!;
+    public PermissionsData PermissionsData { get; set; } = null!;
 }

@@ -13,7 +13,7 @@ public class LocalDataAccessor(ILocalStorageService localStorageService) : ILoca
         await localStorageService.SetItemAsync(key, cartModel);
     }
 
-    public async ValueTask WriteUserDataAsync(UserData user)
+    public async ValueTask WriteUserDataAsync(UserDataStoreModel user)
     {
         if (user is null)
         {
@@ -23,9 +23,9 @@ public class LocalDataAccessor(ILocalStorageService localStorageService) : ILoca
         await localStorageService.SetItemAsync("user", user);
     }
 
-    public async ValueTask<UserData> ReadUserDataAsync()
+    public async ValueTask<UserDataStoreModel> ReadUserDataAsync()
     {
-        var user = await localStorageService.GetItemAsync<UserData>("user");
+        var user = await localStorageService.GetItemAsync<UserDataStoreModel>("user");
 
         if (user is null)
         {

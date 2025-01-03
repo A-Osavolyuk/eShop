@@ -1,5 +1,4 @@
 ﻿using eShop.Domain.Entities.CartApi;
-using UserData = eShop.Domain.Models.UserData;
 
 namespace eShop.Domain.Interfaces;
 
@@ -19,8 +18,8 @@ public interface ILocalDataAccessor
     public ValueTask RemoveAvatarLinkAsync();
     public ValueTask WriteAvatarLinkAsync(string link);
     public ValueTask<string> ReadAvatarLinkAsync();
-    public ValueTask WriteUserDataAsync(UserData user);
-    public ValueTask<UserData> ReadUserDataAsync();
+    public ValueTask WriteUserDataAsync(UserDataStoreModel user);
+    public ValueTask<UserDataStoreModel> ReadUserDataAsync();
     public ValueTask WritePersonalDataAsync(PersonalDataModel personalDataModel);
     public ValueTask<PersonalDataModel> ReadPersonalDataAsync();
     public ValueTask WriteSecurityDataAsync(SecurityData securityData);
