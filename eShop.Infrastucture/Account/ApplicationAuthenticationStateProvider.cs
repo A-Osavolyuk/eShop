@@ -8,14 +8,12 @@ namespace eShop.Infrastructure.Account;
 public class ApplicationAuthenticationStateProvider(
     ITokenProvider tokenProvider,
     IAuthenticationService authenticationService,
-    ILocalDataAccessor localDataAccessor,
-    ICookieManager cookieManager) : AuthenticationStateProvider
+    ILocalDataAccessor localDataAccessor) : AuthenticationStateProvider
 {
     private readonly AuthenticationState anonymous = new(new ClaimsPrincipal());
     private readonly ITokenProvider tokenProvider = tokenProvider;
     private readonly IAuthenticationService authenticationService = authenticationService;
     private readonly ILocalDataAccessor localDataAccessor = localDataAccessor;
-    private readonly ICookieManager cookieManager = cookieManager;
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
@@ -28,12 +26,12 @@ public class ApplicationAuthenticationStateProvider(
 
             var token = DecryptToken(AuthenticationHandler.Token);
 
-            if (token is null || !token!.Claims.Any())
+            if (token is null || !token.Claims.Any())
             {
                 return await Task.FromResult(anonymous);
             }
 
-            var valid = IsValid(token!);
+            var valid = IsValid(token);
 
             if (!valid)
             {
@@ -64,7 +62,7 @@ public class ApplicationAuthenticationStateProvider(
 
         if (string.IsNullOrEmpty(token))
         {
-            AuthenticationHandler.Token = "";
+            AuthenticationHandler.Token = string.Empty;
         }
         else
         {
@@ -72,7 +70,7 @@ public class ApplicationAuthenticationStateProvider(
             await tokenProvider.SetTokenAsync(token);
 
             var rawToken = DecryptToken(token)!;
-            var claims = SetClaims(rawToken)!;
+            var claims = SetClaims(rawToken);
             await WriteToLocalStorageAsync(claims);
             claimsPrincipal = new(new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme));
         }
@@ -94,7 +92,7 @@ public class ApplicationAuthenticationStateProvider(
             await tokenProvider.SetTokenAsync(refreshToken);
 
             var rawToken = DecryptToken(accessToken)!;
-            var claims = SetClaims(rawToken)!;
+            var claims = SetClaims(rawToken);
             await WriteToLocalStorageAsync(claims);
             claimsPrincipal = new(new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme));
         }
@@ -117,52 +115,46 @@ public class ApplicationAuthenticationStateProvider(
 
     private List<Claim> SetClaims(JwtSecurityToken token)
     {
-        if (token is not null)
+        var claims = token.Claims.ToList();
+
+        var output = new List<Claim>()
         {
-            var claims = token.Claims.ToList();
+            new(CustomClaimTypes.Id, claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value),
+            new(ClaimTypes.Name, claims.FirstOrDefault(x => x.Type == CustomClaimTypes.UserName)!.Value),
+            new(ClaimTypes.Email, claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email)!.Value),
+            new(ClaimTypes.MobilePhone, claims.FirstOrDefault(x => x.Type == ClaimTypes.MobilePhone)!.Value),
+        };
 
-            var output = new List<Claim>()
+        var roles = claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToList();
+        var permissions = claims.Where(x => x.Type == CustomClaimTypes.Permission).Select(x => x.Value).ToList();
+
+        if (roles.Any())
+        {
+            foreach (var role in roles)
             {
-                new(CustomClaimTypes.Id, claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value),
-                new(ClaimTypes.Name, claims.FirstOrDefault(x => x.Type == CustomClaimTypes.UserName)!.Value),
-                new(ClaimTypes.Email, claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email)!.Value),
-                new(ClaimTypes.MobilePhone, claims.FirstOrDefault(x => x.Type == ClaimTypes.MobilePhone)!.Value),
-            };
-
-            var roles = claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value);
-            var permissions = claims.Where(x => x.Type == CustomClaimTypes.Permission).Select(x => x.Value);
-
-            if (roles.Any())
-            {
-                foreach (var role in roles)
-                {
-                    output.Add(new Claim(ClaimTypes.Role, role));
-                }
+                output.Add(new Claim(ClaimTypes.Role, role));
             }
-
-            if (permissions.Any())
-            {
-                foreach (var permission in permissions)
-                {
-                    output.Add(new Claim(CustomClaimTypes.Permission, permission));
-                }
-            }
-
-            return output;
         }
 
-        return new List<Claim>();
+        if (permissions.Any())
+        {
+            foreach (var permission in permissions)
+            {
+                output.Add(new Claim(CustomClaimTypes.Permission, permission));
+            }
+        }
+
+        return output;
     }
 
-    private async Task WriteToLocalStorageAsync(List<Claim> Claims)
+    private async Task WriteToLocalStorageAsync(List<Claim> claims)
     {
-
-        var email = Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value;
-        var username = Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)!.Value;
-        var phoneNumber = Claims.FirstOrDefault(x => x.Type == ClaimTypes.MobilePhone)!.Value;
-        var id = Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value;
-        var roles = Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToList();
-        var permissions = Claims.Where(x => x.Type == CustomClaimTypes.Permission).Select(x => x.Value).ToList();
+        var email = claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value;
+        var username = claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)!.Value;
+        var phoneNumber = claims.FirstOrDefault(x => x.Type == ClaimTypes.MobilePhone)!.Value;
+        var id = claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value;
+        var roles = claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToList();
+        var permissions = claims.Where(x => x.Type == CustomClaimTypes.Permission).Select(x => x.Value).ToList();
 
         await localDataAccessor.WriteUserDataAsync(new UserStore()
         {

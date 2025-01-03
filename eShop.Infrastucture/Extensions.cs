@@ -45,7 +45,6 @@ public static class Extensions
         builder.Services.AddScoped<IReviewService, ReviewService>();
         builder.Services.AddScoped<ICartService, CartService>();
         builder.Services.AddScoped<IFavoritesService, FavoritesService>();
-        builder.Services.AddScoped<ICookieManager, CookieManager>();
         builder.Services.AddScoped<ISellerService, SellerService>();
 
         builder.Services.AddScoped<INotificationService, NotificationService>();
