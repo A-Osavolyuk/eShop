@@ -103,7 +103,7 @@ public static class BuilderExtensions
         builder.Services.AddScoped<ITokenHandler, TokenHandler>();
         builder.Services.AddScoped<IPermissionManager, PermissionManager>();
         builder.Services.AddScoped<ISecurityManager, SecurityManager>();
-        builder.Services.AddScoped<IAccountManager, AccountManager>();
+        builder.Services.AddScoped<IProfileManager, ProfileManager>();
         builder.Services.AddScoped<ICacheService, CacheService>();
         builder.Services.AddScoped<IMessageService, MessageService>();
         

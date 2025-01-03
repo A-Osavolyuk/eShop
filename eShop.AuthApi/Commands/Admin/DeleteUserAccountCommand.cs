@@ -36,7 +36,7 @@ internal sealed class DeleteUserAccountCommandHandler(
                 $"due to server error: {permissionsResult.Errors.First().Description}"));
         }
 
-        var personalDataResult = await appManager.AccountManager.RemovePersonalDataAsync(user);
+        var personalDataResult = await appManager.ProfileManager.RemovePersonalDataAsync(user);
 
         if (!personalDataResult.Succeeded)
         {

@@ -44,7 +44,7 @@ internal sealed class CreateUserAccountCommandHandler(
                 $"Cannot add password to user account due ti server error: {passwordResult.Errors.First().Description}."));
         }
 
-        await appManager.AccountManager.SetPersonalDataAsync(user, new PersonalDataEntity()
+        await appManager.ProfileManager.SetPersonalDataAsync(user, new PersonalDataEntity()
         {
             UserId = userId.ToString(),
             FirstName = request.Request.FirstName,

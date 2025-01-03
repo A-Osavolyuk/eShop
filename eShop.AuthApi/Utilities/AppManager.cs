@@ -6,12 +6,12 @@ internal sealed class AppManager(
     RoleManager<IdentityRole> roleManager,
     IPermissionManager permissionManager,
     ISecurityManager securityManager,
-    IAccountManager accountManager)
+    IProfileManager profileManager)
 {
     public readonly SignInManager<AppUser> SignInManager = signInManager;
     public readonly UserManager<AppUser> UserManager = userManager;
     public readonly RoleManager<IdentityRole> RoleManager = roleManager;
     public readonly IPermissionManager PermissionManager = permissionManager;
     public readonly ISecurityManager SecurityManager = securityManager;
-    public readonly IAccountManager AccountManager = accountManager;
+    public readonly IProfileManager ProfileManager = profileManager;
 }

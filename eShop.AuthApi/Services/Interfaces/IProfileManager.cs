@@ -1,6 +1,6 @@
 ﻿namespace eShop.AuthApi.Services.Interfaces;
 
-public interface IAccountManager
+public interface IProfileManager
 {
     public ValueTask<PersonalDataEntity?> FindPersonalDataAsync(AppUser user);
     public ValueTask<IdentityResult> SetPersonalDataAsync(AppUser user, PersonalDataEntity personalData);

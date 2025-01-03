@@ -1,6 +1,6 @@
 ﻿namespace eShop.AuthApi.Services.Implementation;
 
-internal sealed class AccountManager(AuthDbContext context) : IAccountManager
+internal sealed class ProfileManager(AuthDbContext context) : IProfileManager
 {
     private readonly AuthDbContext context = context;
 
