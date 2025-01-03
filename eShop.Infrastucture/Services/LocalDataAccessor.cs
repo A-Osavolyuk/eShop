@@ -7,7 +7,7 @@ public class LocalDataAccessor(ILocalStorageService localStorageService) : ILoca
 {
     private readonly ILocalStorageService localStorageService = localStorageService;
 
-    public async ValueTask RemoveDataAsync() => await localStorageService.ClearAsync();
+    public async ValueTask ClearAsync() => await localStorageService.ClearAsync();
     public async ValueTask SetCartAsync(CartStore cartStore)
     {
         var key = "cart";

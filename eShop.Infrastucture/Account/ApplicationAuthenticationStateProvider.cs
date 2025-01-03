@@ -56,7 +56,7 @@ public class ApplicationAuthenticationStateProvider(
         }
     }
 
-    public async Task UpdateAuthenticationState(string token)
+    public async Task UpdateAuthenticationStateAsync(string token)
     {
         var claimsPrincipal = new ClaimsPrincipal();
 
@@ -209,8 +209,8 @@ public class ApplicationAuthenticationStateProvider(
 
     public async Task LogOutAsync()
     {
-        await tokenProvider.RemoveTokenAsync();
-        await localDataAccessor.RemoveDataAsync();
-        await UpdateAuthenticationState(string.Empty);
+        await tokenProvider.ClearAsync();
+        await localDataAccessor.ClearAsync();
+        await UpdateAuthenticationStateAsync(string.Empty);
     }
 }

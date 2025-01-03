@@ -1,9 +1,5 @@
-﻿@using eShop.Application.Mapping
-@using eShop.Domain.DTOs.ProductApi
-@using eShop.Domain.Entities.CartApi
-@using eShop.Infrastructure.Services
-@using eShop.Infrastructure.StateContainers
-@using Severity = MudBlazor.Severity
+﻿@using eShop.Domain.DTOs.ProductApi
+
 @inject NavigationManager NavigationManager
 @inject ILocalDataAccessor LocalDataAccessor
 @inject ISnackbar Snackbar
@@ -20,8 +16,9 @@
                 </MudItem>
                 <MudItem xs="1">
                     <MudIconButton Style="padding:0"
-                                   OnClick="async () => await AddToFavorite_OnClick()"
-                                   Color="Color.Error" Icon="@(isFavorite ? Icons.Material.Outlined.Favorite : Icons.Material.Outlined.FavoriteBorder)" />
+                                   OnClick="async () => await AddToFavoritesAsync()"
+                                   Color="Color.Error"
+                                   Icon="@(isFavorite ? Icons.Material.Outlined.Favorite : Icons.Material.Outlined.FavoriteBorder)"/>
                 </MudItem>
                 <MudItem Class="pt-0 pb-0" xs="12">
                     <MudText Style="opacity:0.5" Typo="Typo.subtitle2">Article: @Model.Article</MudText>
@@ -50,7 +47,7 @@
                                Variant="Variant.Filled"
                                ButtonType="ButtonType.Button"
                                StartIcon="@Icons.Material.Filled.ShoppingCart"
-                               OnClick="@(async () => await AddToCart_OnClick())"
+                               OnClick="@(async () => await AddToCartAsync())"
                                FullWidth>
                         Add to card
                     </MudButton>
@@ -74,29 +71,34 @@
                         <MudItem xs="12" Class="">
                             <MudGrid Spacing="1">
                                 <MudItem xs="7">
-                                    <MudIcon Color="Color.Secondary" Style="margin-right:10px" Icon="@Icons.Material.Filled.Store" />
+                                    <MudIcon Color="Color.Secondary" Style="margin-right:10px"
+                                             Icon="@Icons.Material.Filled.Store"/>
                                     <MudText Typo="Typo.body2" Inline>Pick up from the store</MudText>
                                 </MudItem>
                                 <MudItem xs="5" Class="m-auto">
-                                    <MudText Inline Typo="Typo.caption" Style="opacity:.5">Free (Mn-Fr 09:00 - 20:00)</MudText>
+                                    <MudText Inline Typo="Typo.caption" Style="opacity:.5">Free (Mn-Fr 09:00 - 20:00)
+                                    </MudText>
                                 </MudItem>
                             </MudGrid>
                         </MudItem>
                         <MudItem xs="12" Class="d-flex justify-content-between">
                             <MudGrid Spacing="1">
                                 <MudItem xs="7">
-                                    <MudIcon Color="Color.Info" Style="margin-right:10px" Icon="@Icons.Material.Filled.LocalPostOffice" />
+                                    <MudIcon Color="Color.Info" Style="margin-right:10px"
+                                             Icon="@Icons.Material.Filled.LocalPostOffice"/>
                                     <MudText Typo="Typo.body2" Inline>Delivery to the post office</MudText>
                                 </MudItem>
                                 <MudItem xs="5" Class="m-auto">
-                                    <MudText Inline Style="opacity:.5" Typo="Typo.caption">At your post office rates</MudText>
+                                    <MudText Inline Style="opacity:.5" Typo="Typo.caption">At your post office rates
+                                    </MudText>
                                 </MudItem>
                             </MudGrid>
                         </MudItem>
                         <MudItem xs="12" Class="d-flex justify-content-between">
                             <MudGrid Spacing="1">
                                 <MudItem xs="7">
-                                    <MudIcon Color="Color.Primary" Style="margin-right:10px" Icon="@Icons.Material.Filled.DeliveryDining" />
+                                    <MudIcon Color="Color.Primary" Style="margin-right:10px"
+                                             Icon="@Icons.Material.Filled.DeliveryDining"/>
                                     <MudText Typo="Typo.body2" Inline>Home delivery</MudText>
                                 </MudItem>
                                 <MudItem xs="5" Class="m-auto">
@@ -120,7 +122,8 @@
                         <MudItem xs="12">
                             <MudGrid Spacing="1">
                                 <MudItem xs="7">
-                                    <MudIcon Color="Color.Primary" Style="margin-right:10px" Icon="@Icons.Material.Filled.CreditCard" />
+                                    <MudIcon Color="Color.Primary" Style="margin-right:10px"
+                                             Icon="@Icons.Material.Filled.CreditCard"/>
                                     <MudText Typo="Typo.body2" Inline>Payment by card</MudText>
                                 </MudItem>
                                 <MudItem xs="5">
@@ -131,7 +134,8 @@
                         <MudItem xs="12">
                             <MudGrid Spacing="1">
                                 <MudItem xs="7">
-                                    <MudIcon Color="Color.Success" Style="margin-right:10px" Icon="@Icons.Material.Filled.Check" />
+                                    <MudIcon Color="Color.Success" Style="margin-right:10px"
+                                             Icon="@Icons.Material.Filled.Check"/>
                                     <MudText Typo="Typo.body2" Inline>After payment</MudText>
                                 </MudItem>
                                 <MudItem xs="5">
@@ -142,11 +146,13 @@
                         <MudItem xs="12">
                             <MudGrid Spacing="1">
                                 <MudItem xs="7">
-                                    <MudIcon Color="Color.Error" Style="margin-right:10px" Icon="@Icons.Material.Filled.Percent" />
+                                    <MudIcon Color="Color.Error" Style="margin-right:10px"
+                                             Icon="@Icons.Material.Filled.Percent"/>
                                     <MudText Typo="Typo.body2" Inline>Installment plan</MudText>
                                 </MudItem>
                                 <MudItem xs="5">
-                                    <MudText Typo="Typo.caption" Style="opacity:.5" Inline>Interest on installments 2%</MudText>
+                                    <MudText Typo="Typo.caption" Style="opacity:.5" Inline>Interest on installments 2%
+                                    </MudText>
                                 </MudItem>
                             </MudGrid>
                         </MudItem>
@@ -164,7 +170,7 @@
                 <MudItem xs="12">
                     <MudGrid Spacing="1">
                         <MudItem xs="7">
-                            <MudIcon Color="Color.Info" Style="margin-right:10px" Icon="@Icons.Material.Filled.Shield" />
+                            <MudIcon Color="Color.Info" Style="margin-right:10px" Icon="@Icons.Material.Filled.Shield"/>
                             <MudText Typo="Typo.body2" Inline>Warranty term</MudText>
                         </MudItem>
                         <MudItem xs="5">
@@ -174,12 +180,18 @@
                         </MudItem>
                         <MudItem xs="12">
                             <MudText Inline Typo="Typo.caption" Style="opacity:.5">
-                                Each product has a warranty period of 12 to 72 months depending on the cost and type of product.
-                                The main conditions for exchange/return under warranty are: keeping the receipt for payment for
-                                the product, keeping the basic packaging of the product. Read more about the warranty conditions
+                                Each product has a warranty period of 12 to 72 months depending on the cost and type of
+                                product.
+                                The main conditions for exchange/return under warranty are: keeping the receipt for
+                                payment for
+                                the product, keeping the basic packaging of the product. Read more about the warranty
+                                conditions
                                 and the return/exchange procedure in warranty cases
                             </MudText>
-                            <MudLink Class="cursor-pointer" Href="company-policy/terms#warranty" Typo="Typo.caption">here</MudLink>.
+                            <MudLink Class="cursor-pointer" Href="company-policy/terms#warranty" Typo="Typo.caption">
+                                here
+                            </MudLink>
+                            .
                         </MudItem>
                     </MudGrid>
                 </MudItem>
@@ -189,8 +201,7 @@
 </MudGrid>
 
 @code {
-    [Parameter, NotNull] public ProductDto Model { get; set; } = new();
-    [CascadingParameter] MainLayout Layout { get; set; } = new();
+    [Parameter] public ProductDto Model { get; set; } = new();
 
     private bool isFavorite = false;
 
@@ -199,68 +210,25 @@
         isFavorite = await LocalDataAccessor.IsInFavoriteGoodsAsync(Model.Id.ToString());
     }
 
-    private async Task AddToCart_OnClick()
+    private async Task AddToCartAsync()
     {
         await NotificationService.IncrementNotificationsCountAsync();
-        await LocalDataAccessor.AddToCartAsync(new CartItem()
-            {
-                ProductId = Model.Id,
-                ProductArticle = Model.Article,
-                AddedAt = DateTime.UtcNow,
-                Amount = 1,
-            });
-
-        Snackbar.Add("Product was added to your cart", MudBlazor.Severity.Success);
         StateHasChanged();
-        await UpdateCartAsync();
     }
 
-    private async Task AddToFavorite_OnClick()
+    private async Task AddToFavoritesAsync()
     {
         if (isFavorite)
         {
             await NotificationService.DecrementNotificationsCountAsync();
-            await LocalDataAccessor.RemoveFromFavoritesAsync(Model.Id.ToString());
-            Snackbar.Add("Product was removed from favorite list", MudBlazor.Severity.Success);
         }
         else
         {
             await NotificationService.IncrementNotificationsCountAsync();
-            await LocalDataAccessor.AddToFavoritesAsync(new()
-                {
-                    AddedAt = DateTime.UtcNow,
-                    ProductId = Model.Id,
-                    ProductArticle = Model.Article,
-
-                });
-            Snackbar.Add("Product was added to favorite list", MudBlazor.Severity.Success);
         }
+
         isFavorite = !isFavorite;
         StateHasChanged();
-        await UpdateFavoritesAsync();
     }
 
-    private async Task UpdateCartAsync()
-    {
-        var cart = await LocalDataAccessor.ReadCartAsync();
-        var request = CartMapper.ToUpdateCartRequest(cart);
-        var response = await CartService.UpdateCartAsync(request);
-
-        if (!response.Success)
-        {
-            Snackbar.Add(response.Message, Severity.Error);
-        }
-    }
-    
-    private async Task UpdateFavoritesAsync()
-    {
-        var favorites = await LocalDataAccessor.ReadFavoritesAsync();
-        var request = FavoritesMapper.ToUpdateFavoritesRequest(favorites);
-        var response = await FavoritesService.UpdateFavoritesAsync(request);
-
-        if (!response.Success)
-        {
-            Snackbar.Add(response.Message, Severity.Error);
-        }
-    }
 }

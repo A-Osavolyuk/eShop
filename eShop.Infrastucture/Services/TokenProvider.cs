@@ -21,7 +21,7 @@ public class TokenProvider : ITokenProvider
         return string.Empty;
     }
 
-    public async ValueTask RemoveTokenAsync()
+    public async ValueTask ClearAsync()
     {
         await localStorage.RemoveItemAsync("jwt-access-token");
     }

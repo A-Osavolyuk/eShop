@@ -25,6 +25,6 @@ public interface ILocalDataAccessor
     public ValueTask<PersonalDataModel> ReadPersonalDataAsync();
     public ValueTask WriteSecurityDataAsync(SecurityData securityData);
     public ValueTask<SecurityData> ReadSecurityDataAsync();
-    public ValueTask RemoveDataAsync();
+    public ValueTask ClearAsync();
     public ValueTask SetCartAsync(CartStore cartStore);
 }

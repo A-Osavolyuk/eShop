@@ -61,7 +61,7 @@
         if (response.Success)
         {
             var data = JsonConvert.DeserializeObject<ChangeUserNameResponse>(response.Result!.ToString()!);
-            await (AuthenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationState(data!.RefreshToken);
+            await (AuthenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationStateAsync(data!.RefreshToken);
             NavigationManager.NavigateTo("/account/profile", true);
             Snackbar.Add(data!.Message, MudBlazor.Severity.Success);
         }
