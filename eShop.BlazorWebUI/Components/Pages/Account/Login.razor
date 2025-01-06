@@ -3,36 +3,33 @@
 
 @inject IAuthenticationService AuthenticationService
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject IValidator<LoginRequest> Validator
+@inject LoginValidator Validator
 @inject IConfiguration Configuration
 
 <Title Text="Login"/>
 
-<MudGrid Justify="Justify.Center" Style="height: 80vh">
-    <MudItem xs="4" Style="margin: auto">
+<MudGrid Justify="Justify.Center">
+    <MudItem xs="4" Style="margin-top: 150px">
         <MudPaper Outlined Class="pa-3" Style="margin-bottom: 10px">
             <MudText Align="Align.Center" Typo="Typo.h4">
                 Log in
             </MudText>
         </MudPaper>
         <MudPaper Outlined Class="pa-3">
-            <EditForm FormName="login-form" Model="LoginRequest" OnValidSubmit="LoginClick">
-                <FluentValidationValidator Validator="Validator"/>
+            <MudForm @ref="form" Model="LoginRequest" Validation="Validator.ValidateValue">
                 <MudTextField @bind-Value="LoginRequest.Email" For="(() => LoginRequest.Email)"
                               InputType="InputType.Email" Label="Email" Immediate Variant="Variant.Outlined"/>
-                <MudPasswordField PasswordMode="true" @bind-Value="LoginRequest.Password" For="(() => LoginRequest.Password)"
-                              Label="Password" Immediate Variant="Variant.Outlined"/>
+                <MudPasswordField PasswordMode="true" @bind-Value="LoginRequest.Password"
+                                  For="(() => LoginRequest.Password)"
+                                  Label="Password" Immediate Variant="Variant.Outlined"/>
 
-                <MudGrid Justify="Justify.Center">
-                    <MudItem xs="8">
-                        <MudLoadingButton LoadingAdornment="Adornment.End" ButtonType="ButtonType.Submit" StartIcon="@Icons.Material.Filled.Login"
-                                          Variant="Variant.Filled" Color="Color.Primary" Class="mt-3" FullWidth>
-                            Log In
-                        </MudLoadingButton>
-                    </MudItem>
-
-                </MudGrid>
-            </EditForm>
+                <MudLoadingButton LoadingAdornment="Adornment.End" ButtonType="ButtonType.Button"
+                                  OnClick="async () => await LoginClick()"
+                                  StartIcon="@Icons.Material.Filled.Login" Disabled="form.IsValid"
+                                  Variant="Variant.Filled" Color="Color.Primary" Class="mt-3" FullWidth>
+                    Log In
+                </MudLoadingButton>
+            </MudForm>
         </MudPaper>
         <MudPaper Outlined Class="mt-3 pa-3">
             <MudGrid Spacing="1">
@@ -83,7 +80,11 @@
 
 @code {
     [SupplyParameterFromForm] private LoginRequest LoginRequest { get; set; } = new();
-    [SupplyParameterFromQuery(Name = "returnUri")] public string ReturnUri { get; set; } = string.Empty;
+
+    [SupplyParameterFromQuery(Name = "returnUri")]
+    public string ReturnUri { get; set; } = string.Empty;
+
+    private MudForm form = new();
 
     protected override async Task OnInitializedAsync()
     {

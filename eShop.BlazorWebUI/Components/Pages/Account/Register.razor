@@ -3,40 +3,37 @@
 @inherits PageBase
 
 @inject IAuthenticationService AuthenticationService
-@inject IValidator<RegistrationRequest> RegistrationValidator
+@inject RegistrationValidator Validator
 
 <Title Text="Register"/>
 
-<MudGrid Justify="Justify.Center" Style="height: 80vh">
-    <MudItem xs="4" Style="margin: auto">
+<MudGrid Justify="Justify.Center">
+    <MudItem xs="4" Style="margin-top: 150px">
         <MudPaper Outlined Class="pa-3" Style="margin-bottom: 10px">
             <MudText Align="Align.Center" Typo="Typo.h4">
                 Register
             </MudText>
         </MudPaper>
         <MudPaper Outlined Class="pa-3">
-            <EditForm FormName="register-form" Model="RegistrationRequest"
-                      OnValidSubmit="async () => await RegisterUserAsync()">
-                <FluentValidationValidator Validator="RegistrationValidator"/>
-                
+            <MudForm Model="RegistrationRequest" @ref="form" Validation="Validator.ValidateValue">
                 <MudTextField @bind-Value="RegistrationRequest.Email" For="(() => RegistrationRequest.Email)"
                               InputType="InputType.Email" Label="Email" Immediate Variant="Variant.Outlined"/>
-                <MudPasswordField PasswordMode="true" @bind-Value="RegistrationRequest.Password" For="(() => RegistrationRequest.Password)"
-                              Label="Password" InputType="InputType.Password" Immediate Variant="Variant.Outlined"/>
+                <MudPasswordField PasswordMode="true" @bind-Value="RegistrationRequest.Password"
+                                  For="(() => RegistrationRequest.Password)"
+                                  Label="Password" InputType="InputType.Password" Immediate Variant="Variant.Outlined"/>
                 <MudPasswordField PasswordMode="true" @bind-Value="RegistrationRequest.ConfirmPassword"
-                              For="(() => RegistrationRequest.ConfirmPassword)"
-                              Label="Confirm Password" InputType="InputType.Password" Immediate
-                              Variant="Variant.Outlined"/>
+                                  For="(() => RegistrationRequest.ConfirmPassword)"
+                                  Label="Confirm Password" InputType="InputType.Password" Immediate
+                                  Variant="Variant.Outlined"/>
 
-                <MudGrid Justify="Justify.Center">
-                    <MudItem xs="8">
-                        <MudButton ButtonType="ButtonType.Submit" StartIcon="@Icons.Material.Filled.AppRegistration"
-                                   Variant="Variant.Filled" Color="Color.Primary" Class="mt-3" FullWidth>
-                            Register
-                        </MudButton>
-                    </MudItem>
-                </MudGrid>
-            </EditForm>
+                <MudLoadingButton ButtonType="ButtonType.Button" StartIcon="@Icons.Material.Filled.AppRegistration"
+                                  Disabled="form.IsValid"
+                                  Variant="Variant.Filled" Color="Color.Primary" Class="mt-3" FullWidth
+                                  OnClick="async () => await RegisterUserAsync()">
+                    Register
+                </MudLoadingButton>
+
+            </MudForm>
         </MudPaper>
         <MudPaper Outlined Class="mt-3 pa-3">
             <MudText Align="Align.Center">Already have an account?
@@ -48,6 +45,8 @@
 
 @code {
     [SupplyParameterFromForm] private RegistrationRequest RegistrationRequest { get; set; } = new();
+
+    private MudForm form = new();
 
     private async Task RegisterUserAsync()
     {
@@ -64,6 +63,5 @@
         RegistrationRequest = new();
     }
 
-    
 
 }

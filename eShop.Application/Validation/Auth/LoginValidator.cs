@@ -4,6 +4,14 @@ namespace eShop.Application.Validation.Auth;
 
 public class LoginValidator : AbstractValidator<LoginRequest>
 {
+    public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+    {
+        var result = await ValidateAsync(ValidationContext<LoginRequest>
+            .CreateWithOptions((LoginRequest)model, x => x.IncludeProperties(propertyName)));
+        if (result.IsValid)
+            return Array.Empty<string>();
+        return result.Errors.Select(e => e.ErrorMessage);
+    };
     public LoginValidator()
     {
         RuleFor(p => p.Email)
