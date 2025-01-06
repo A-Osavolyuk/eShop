@@ -1,6 +1,4 @@
-﻿using eShop.CartApi.Data;
-
-namespace eShop.CartApi.Extensions;
+﻿namespace eShop.CartApi.Extensions;
 
 public static class BuilderExtensions
 {

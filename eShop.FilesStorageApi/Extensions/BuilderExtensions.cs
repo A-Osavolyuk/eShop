@@ -1,5 +1,7 @@
 ﻿using eShop.Application.Extensions;
 using eShop.FilesStorageApi.Services;
+using eShop.FilesStorageApi.Services.Implementation;
+using eShop.FilesStorageApi.Services.Interfaces;
 using eShop.ServiceDefaults;
 
 namespace eShop.FilesStorageApi.Extensions;

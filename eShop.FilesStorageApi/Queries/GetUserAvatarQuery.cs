@@ -1,4 +1,5 @@
 ﻿using eShop.Domain.Exceptions;
+using eShop.FilesStorageApi.Services.Interfaces;
 
 namespace eShop.FilesStorageApi.Queries;
 

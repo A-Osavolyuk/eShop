@@ -1,7 +1,4 @@
-﻿using eShop.Domain.Requests.ProductApi.Product;
-using eShop.Domain.Responses.ProductApi.Products;
-
-namespace eShop.ProductApi.Commands.Products;
+﻿namespace eShop.ProductApi.Commands.Products;
 
 internal sealed record DeleteProductCommand(DeleteProductRequest Request) : IRequest<Result<DeleteProductResponse>>;
 

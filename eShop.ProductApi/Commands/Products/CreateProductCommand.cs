@@ -1,7 +1,4 @@
-﻿using eShop.Domain.Requests.ProductApi.Product;
-using eShop.Domain.Responses.ProductApi.Products;
-
-namespace eShop.ProductApi.Commands.Products;
+﻿namespace eShop.ProductApi.Commands.Products;
 
 internal sealed record CreateProductCommand(CreateProductRequest Request) : IRequest<Result<CreateProductResponse>>;
 

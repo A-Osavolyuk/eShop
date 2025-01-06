@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Common.Api;
-using eShop.Domain.Requests.CartApi.Favorites;
-using Response = eShop.Domain.Common.Api.Response;
+﻿using Response = eShop.Domain.Common.Api.Response;
 
 namespace eShop.CartApi.Controllers;
 

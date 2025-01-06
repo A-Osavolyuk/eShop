@@ -1,6 +1,4 @@
-﻿using Grpc.Net.Client;
-
-namespace eShop.ProductApi.Rpc;
+﻿namespace eShop.ProductApi.Rpc;
 
 public class AuthClient
 {

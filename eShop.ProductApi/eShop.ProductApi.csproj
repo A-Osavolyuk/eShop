@@ -8,13 +8,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Services\**" />
-	  <Content Remove="Services\**" />
-	  <EmbeddedResource Remove="Services\**" />
-	  <None Remove="Services\**" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
 		<PackageReference Include="Azure.Storage.Blobs" Version="12.23.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
@@ -45,6 +38,10 @@
 	
 	<ItemGroup>
 		<Protobuf Include="..\eShop.Application\Protos\auth.proto" GrpcServices="Client" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <Compile Include="Services\Implementation\CacheService.cs" />
 	</ItemGroup>
 
 </Project>
