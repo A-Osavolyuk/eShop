@@ -21,9 +21,9 @@
                 
                 <MudTextField @bind-Value="RegistrationRequest.Email" For="(() => RegistrationRequest.Email)"
                               InputType="InputType.Email" Label="Email" Immediate Variant="Variant.Outlined"/>
-                <MudTextField @bind-Value="RegistrationRequest.Password" For="(() => RegistrationRequest.Password)"
+                <MudPasswordField PasswordMode="true" @bind-Value="RegistrationRequest.Password" For="(() => RegistrationRequest.Password)"
                               Label="Password" InputType="InputType.Password" Immediate Variant="Variant.Outlined"/>
-                <MudTextField @bind-Value="RegistrationRequest.ConfirmPassword"
+                <MudPasswordField PasswordMode="true" @bind-Value="RegistrationRequest.ConfirmPassword"
                               For="(() => RegistrationRequest.ConfirmPassword)"
                               Label="Confirm Password" InputType="InputType.Password" Immediate
                               Variant="Variant.Outlined"/>

@@ -20,8 +20,8 @@
                 <FluentValidationValidator Validator="Validator"/>
                 <MudTextField @bind-Value="LoginRequest.Email" For="(() => LoginRequest.Email)"
                               InputType="InputType.Email" Label="Email" Immediate Variant="Variant.Outlined"/>
-                <MudTextField @bind-Value="LoginRequest.Password" For="(() => LoginRequest.Password)"
-                              Label="Password" InputType="InputType.Password" Immediate Variant="Variant.Outlined"/>
+                <MudPasswordField PasswordMode="true" @bind-Value="LoginRequest.Password" For="(() => LoginRequest.Password)"
+                              Label="Password" Immediate Variant="Variant.Outlined"/>
 
                 <MudGrid Justify="Justify.Center">
                     <MudItem xs="8">
