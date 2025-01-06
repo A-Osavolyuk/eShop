@@ -1,46 +1,56 @@
 ﻿@page "/account/login-2fa/{Email}"
-@using eShop.Domain.Requests.AuthApi.Auth
-@using eShop.Domain.Responses.AuthApi.Auth
 @inherits PageBase
 
 @inject IAuthenticationService AuthenticationService
-@inject IValidator<TwoFactorAuthenticationLoginRequest> Validator
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<Title Text="Login with 2FA" />
+<Title Text="Login with 2FA"/>
 
 <MudGrid Justify="Justify.Center">
-    <MudItem xs="4">
-        <MudPaper Outlined Style="margin-top: 30%;" Class="pa-3">
-            <EditForm FormName="login-form" Model="Model" OnValidSubmit="OnValidSubmit">
-                <FluentValidationValidator Validator="Validator" />
-
-                <MudText Align="Align.Center" Typo="Typo.h4">Two Factor Log In</MudText>
-                <MudText Class="mt-2" Align="Align.Center" Typo="Typo.h5">Enter the 6-digit code that was sent to you by email</MudText>
-                <MudTextField @bind-Value="Model.Code" For="(() => Model.Code)"
-                              Label="Code" Immediate Variant="Variant.Outlined" />
-
-                <MudGrid Justify="Justify.Center">
-                    <MudItem xs="8">
-                        <MudButton ButtonType="ButtonType.Submit" StartIcon="@Icons.Material.Filled.Login"
-                                   Variant="Variant.Filled" Color="Color.Primary" Class="mt-3" FullWidth>
-                            Submit
-                        </MudButton>
+    <MudItem xs="4" Style="margin-top: 150px">
+        <MudPaper Style="margin-bottom: 10px;" Outlined Class="pa-3">
+            <MudText Align="Align.Center" Typo="Typo.h4">Two-factor verification</MudText>
+        </MudPaper>
+        <MudPaper Outlined Class="pa-3">
+            <MudForm Model="Request">
+                <MudText Class="mt-2" Align="Align.Center" Typo="Typo.body1" Style="width: 50ch; margin: auto">
+                    Your account has enabled 2-FA (Two-factor authentication). 
+                    To verify a log in attempt, please enter the 6-digit code from the letter we
+                    sent you to: <strong>@Email</strong>
+                </MudText>
+                <MudGrid Justify="Justify.Center" Spacing="1">
+                    <MudItem xs="7">
+                        <br>
+                        <MudCodeInput Count="6" Margin="Margin.Normal" @bind-Value="Request.Code"
+                                      Variant="Variant.Outlined"/>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudLoadingButton ButtonType="ButtonType.Button" Disabled="Request.Code.Length <= 5"
+                                          StartIcon="@Icons.Material.Filled.Login"
+                                          OnClick="async () => await OnVerifySubmit()"
+                                          Variant="Variant.Filled" Color="Color.Primary" FullWidth>
+                            Verify
+                        </MudLoadingButton>
                     </MudItem>
 
                 </MudGrid>
-            </EditForm>
+            </MudForm>
+        </MudPaper>
+        <MudPaper Outlined Class="pa-3" Style="margin-top: 10px">
+            <MudText Align="Align.Center">More about 2-fa you can read
+                <MudLink Href="/faq/security/2fa">here</MudLink>
+            </MudText>
         </MudPaper>
     </MudItem>
 </MudGrid>
 
 @code {
     [Parameter] public string Email { get; set; } = string.Empty;
-    private TwoFactorAuthenticationLoginRequest Model { get; set; } = new();
+    private TwoFactorAuthenticationLoginRequest Request { get; set; } = new();
 
-    private async Task OnValidSubmit()
+    private async Task OnVerifySubmit()
     {
-        var result = await AuthenticationService.LoginWithTwoFactorAuthenticationAsync(Model with { Email = Email });
+        var result = await AuthenticationService.LoginWithTwoFactorAuthenticationAsync(Request with { Email = Email });
 
         if (result.Success)
         {
@@ -52,4 +62,5 @@
         else
             Snackbar.Add(result.Message, MudBlazor.Severity.Error);
     }
+
 }
