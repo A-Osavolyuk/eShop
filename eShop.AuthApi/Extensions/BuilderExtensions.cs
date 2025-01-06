@@ -11,7 +11,7 @@ public static class BuilderExtensions
         builder.AddMessageBus();
         builder.AddSwaggerWithSecurity();
         builder.AddServiceDefaults();
-        builder.AddAuth();
+        builder.AddSecurity();
         builder.AddDependencyInjection();
         builder.AddRedisCache();
         builder.Services.AddDbContext<AuthDbContext>(cfg =>
@@ -43,7 +43,7 @@ public static class BuilderExtensions
         builder.Services.AddProblemDetails();
     }
 
-    private static void AddAuth(this IHostApplicationBuilder builder)
+    private static void AddSecurity(this IHostApplicationBuilder builder)
     {
         builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
         {

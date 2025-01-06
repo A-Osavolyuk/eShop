@@ -1,8 +1,4 @@
 ﻿@page "/account/login"
-
-@using eShop.Domain.DTOs.AuthApi
-@using eShop.Domain.Requests.AuthApi.Auth
-@using eShop.Domain.Responses.AuthApi.Auth
 @inherits PageBase
 
 @inject IAuthenticationService AuthenticationService
@@ -10,57 +6,66 @@
 @inject IValidator<LoginRequest> Validator
 @inject IConfiguration Configuration
 
-<Title Text="Login" />
+<Title Text="Login"/>
 
-<MudGrid Justify="Justify.Center">
-    <MudItem xs="4">
-        <MudPaper Outlined Style="margin-top: 30%;" Class="pa-3">
-            <EditForm FormName="login-form" Model="loginRequest" OnValidSubmit="LoginClick">
-                <FluentValidationValidator Validator="Validator" />
-
-                <MudText Align="Align.Center" Typo="Typo.h4">Log In</MudText>
-                <MudTextField @bind-Value="loginRequest.Email" For="(() => loginRequest.Email)"
-                              InputType="InputType.Email" Label="Email" Immediate Variant="Variant.Outlined" />
-                <MudTextField @bind-Value="loginRequest.Password" For="(() => loginRequest.Password)"
-                              Label="Password" InputType="InputType.Password" Immediate Variant="Variant.Outlined" />
+<MudGrid Justify="Justify.Center" Style="height: 80vh">
+    <MudItem xs="4" Style="margin: auto">
+        <MudPaper Outlined Class="pa-3" Style="margin-bottom: 10px">
+            <MudText Align="Align.Center" Typo="Typo.h4">
+                Log in
+            </MudText>
+        </MudPaper>
+        <MudPaper Outlined Class="pa-3">
+            <EditForm FormName="login-form" Model="LoginRequest" OnValidSubmit="LoginClick">
+                <FluentValidationValidator Validator="Validator"/>
+                <MudTextField @bind-Value="LoginRequest.Email" For="(() => LoginRequest.Email)"
+                              InputType="InputType.Email" Label="Email" Immediate Variant="Variant.Outlined"/>
+                <MudTextField @bind-Value="LoginRequest.Password" For="(() => LoginRequest.Password)"
+                              Label="Password" InputType="InputType.Password" Immediate Variant="Variant.Outlined"/>
 
                 <MudGrid Justify="Justify.Center">
                     <MudItem xs="8">
-                        <MudButton ButtonType="ButtonType.Submit" StartIcon="@Icons.Material.Filled.Login"
-                                   Variant="Variant.Filled" Color="Color.Primary" Class="mt-3" FullWidth>
+                        <MudLoadingButton LoadingAdornment="Adornment.End" ButtonType="ButtonType.Submit" StartIcon="@Icons.Material.Filled.Login"
+                                          Variant="Variant.Filled" Color="Color.Primary" Class="mt-3" FullWidth>
                             Log In
-                        </MudButton>
+                        </MudLoadingButton>
                     </MudItem>
 
                 </MudGrid>
             </EditForm>
         </MudPaper>
-        @if (Providers.Any())
-        {
-            <MudPaper Outlined Class="mt-3 pa-3">
-                <MudGrid Spacing="1">
-                    @foreach (var p in Providers)
-                    {
-                        <MudItem xs="3">
-                            <MudButton ButtonType="ButtonType.Button" StartIcon="@Icons.Material.Filled.Login"
-                                       Variant="Variant.Filled" OnClick="(() => ExternalLogin(p.Name))" Color="Color.Primary" FullWidth>
-                                @p.Name
-                            </MudButton>
-                        </MudItem>
-                    }
-                </MudGrid>
-            </MudPaper>
-        }
-        else
-        {
-            <MudPaper Outlined Class="mt-3 pa-2">
-                <MudGrid Justify="Justify.Center">
-                    <MudItem>
-                        <MudProgressCircular Color="Color.Primary" Indeterminate />
-                    </MudItem>
-                </MudGrid>
-            </MudPaper>
-        }
+        <MudPaper Outlined Class="mt-3 pa-3">
+            <MudGrid Spacing="1">
+                <MudItem xs="6">
+                    <MudButton ButtonType="ButtonType.Button" StartIcon="@Icons.Custom.Brands.Google"
+                               Variant="Variant.Filled" OnClick="@(() => ExternalLogin("Google"))"
+                               Color="Color.Primary" FullWidth>
+                        Google
+                    </MudButton>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudButton ButtonType="ButtonType.Button" StartIcon="@Icons.Custom.Brands.Facebook"
+                               Variant="Variant.Filled" OnClick="@(() => ExternalLogin("Facebook"))"
+                               Color="Color.Primary" FullWidth>
+                        Facebook
+                    </MudButton>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudButton ButtonType="ButtonType.Button" StartIcon="@Icons.Custom.Brands.Microsoft"
+                               Variant="Variant.Filled" OnClick="@(() => ExternalLogin("Microsoft"))"
+                               Color="Color.Primary" FullWidth>
+                        Microsoft
+                    </MudButton>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudButton ButtonType="ButtonType.Button" StartIcon="@Icons.Custom.Brands.Twitter"
+                               Variant="Variant.Filled" OnClick="@(() => ExternalLogin("Twitter"))"
+                               Color="Color.Primary" FullWidth>
+                        Twitter
+                    </MudButton>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
         <MudPaper Outlined Class="mt-3 pa-3">
             <MudText Align="Align.Center">
                 Do not have an account?
@@ -77,27 +82,22 @@
 </MudGrid>
 
 @code {
-    [SupplyParameterFromForm] private LoginRequest loginRequest { get; set; } = new();
+    [SupplyParameterFromForm] private LoginRequest LoginRequest { get; set; } = new();
     [SupplyParameterFromQuery(Name = "returnUri")] public string ReturnUri { get; set; } = string.Empty;
-
-    private List<ExternalProviderDto> Providers { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
         var user = await LocalDataAccessor.ReadUserDataAsync();
 
-        if(user is not null)
+        if (user is not null)
         {
             NavigationManager.NavigateTo("products");
         }
-
-        var result = await AuthenticationService.GetExternalProvidersAsync();
-        Providers = JsonConvert.DeserializeObject<List<ExternalProviderDto>>(result.Result!.ToString()!)!;
     }
 
     private async Task LoginClick()
     {
-        var result = await AuthenticationService.LoginAsync(loginRequest);
+        var result = await AuthenticationService.LoginAsync(LoginRequest);
 
         if (result.Success)
         {
@@ -106,14 +106,14 @@
             if (data!.HasTwoFactorAuthentication)
             {
                 Snackbar.Add(result.Message, MudBlazor.Severity.Success);
-                NavigationManager.NavigateTo($"/account/login-2fa/{loginRequest.Email}");
+                NavigationManager.NavigateTo($"/account/login-2fa/{LoginRequest.Email}");
             }
             else
             {
                 await (AuthenticationStateProvider as ApplicationAuthenticationStateProvider)!.LoginAsync(data!.AccessToken, data.RefreshToken);
                 NavigationManager.NavigateTo((string.IsNullOrEmpty(ReturnUri) ? "products" : ReturnUri));
                 Snackbar.Add(result.Message, MudBlazor.Severity.Success);
-                loginRequest = new();
+                LoginRequest = new();
             }
         }
         else
@@ -125,4 +125,5 @@
         var authUrl = $"{Configuration["Services:Gateway"]!}/api/v1/Auth/external-login/{providerName}";
         NavigationManager.NavigateTo(authUrl);
     }
+
 }

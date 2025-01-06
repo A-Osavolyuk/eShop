@@ -7,14 +7,18 @@
 
 <Title Text="Register"/>
 
-<MudGrid Justify="Justify.Center">
-    <MudItem xs="4">
-        <MudPaper Outlined Style="margin-top: 30%;" Class="pa-3">
+<MudGrid Justify="Justify.Center" Style="height: 80vh">
+    <MudItem xs="4" Style="margin: auto">
+        <MudPaper Outlined Class="pa-3" Style="margin-bottom: 10px">
+            <MudText Align="Align.Center" Typo="Typo.h4">
+                Register
+            </MudText>
+        </MudPaper>
+        <MudPaper Outlined Class="pa-3">
             <EditForm FormName="register-form" Model="RegistrationRequest"
                       OnValidSubmit="async () => await RegisterUserAsync()">
                 <FluentValidationValidator Validator="RegistrationValidator"/>
-
-                <MudText Align="Align.Center" Typo="Typo.h4">Register</MudText>
+                
                 <MudTextField @bind-Value="RegistrationRequest.Email" For="(() => RegistrationRequest.Email)"
                               InputType="InputType.Email" Label="Email" Immediate Variant="Variant.Outlined"/>
                 <MudTextField @bind-Value="RegistrationRequest.Password" For="(() => RegistrationRequest.Password)"
@@ -44,7 +48,6 @@
 
 @code {
     [SupplyParameterFromForm] private RegistrationRequest RegistrationRequest { get; set; } = new();
-    
 
     private async Task RegisterUserAsync()
     {
