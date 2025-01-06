@@ -1,4 +1,7 @@
-﻿namespace eShop.ReviewsApi.Extensions;
+﻿using eShop.Domain.Interfaces;
+using eShop.ReviewsApi.Services.Implementation;
+
+namespace eShop.ReviewsApi.Extensions;
 
 public static class BuilderExtensions
 {
@@ -33,6 +36,7 @@ public static class BuilderExtensions
 
     private static void AddDependencyInjection(this IHostApplicationBuilder builder)
     {
+        builder.Services.AddScoped<ICacheService, CacheService>();
     }
 
     private static void AddMessageBus(this IHostApplicationBuilder builder)

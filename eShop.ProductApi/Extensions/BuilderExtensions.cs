@@ -1,4 +1,6 @@
-﻿namespace eShop.ProductApi.Extensions;
+﻿using eShop.ProductApi.Services.Implementation;
+
+namespace eShop.ProductApi.Extensions;
 
 public static class BuilderExtensions
 {
@@ -32,6 +34,8 @@ public static class BuilderExtensions
 
     private static void AddDependencyInjection(this IHostApplicationBuilder builder)
     {
+        builder.Services.AddScoped<ICacheService, CacheService>();
+        
         builder.Services.AddScoped<AuthClient>();
     }
 
