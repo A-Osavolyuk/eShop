@@ -11,6 +11,7 @@ public interface ISecurityManager
     public ValueTask<IdentityResult> ChangeEmailAsync(AppUser user, string newEmail, CodeSet codeSet);
     public ValueTask<IdentityResult> ChangePhoneNumberAsync(AppUser user, string newPhoneNumber, CodeSet codeSet);
     public ValueTask<CodeEntity?> FindCodeAsync(string sentTo, VerificationCodeType verificationCodeType);
+    public ValueTask<IdentityResult> VerifyCodeAsync(string code, string sentTo, VerificationCodeType codeType);
     public ValueTask<SecurityTokenEntity?> FindTokenAsync(AppUser user);
     public ValueTask<IdentityResult> RemoveTokenAsync(AppUser user);
 }

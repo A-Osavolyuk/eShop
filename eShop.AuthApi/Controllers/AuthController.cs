@@ -91,6 +91,17 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
     #region Post methods
 
     [AllowAnonymous]
+    [HttpPost("verify-code")]
+    public async ValueTask<ActionResult<Response>> VerifyCodeAsync([FromBody] VerifyCodeRequest request)
+    {
+        var result = await sender.Send(new VerifyCodeCommand(request));
+
+        return result.Match(
+            succ => Ok(new ResponseBuilder().Succeeded().WithMessage(succ.Message).Build()),
+            ExceptionHandler.HandleException);
+    }
+    
+    [AllowAnonymous]
     [HttpPost("resend-verification-code")]
     public async ValueTask<ActionResult<Response>> ResendVerificationCode(
         [FromBody] ResendEmailVerificationCodeRequest request)

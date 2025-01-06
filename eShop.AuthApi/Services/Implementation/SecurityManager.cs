@@ -137,6 +137,24 @@ internal sealed class SecurityManager(
         return entity;
     }
 
+    public async ValueTask<IdentityResult> VerifyCodeAsync(string code, string sentTo, VerificationCodeType codeType)
+    {
+        var entity = await context.Codes
+            .AsNoTracking()
+            .SingleOrDefaultAsync(
+            x => x.SentTo == sentTo
+                 && x.Code == code
+                 && x.VerificationCodeType == codeType 
+                 && x.ExpiresAt < DateTime.UtcNow);
+
+        if (entity is null)
+        {
+            return IdentityResult.Failed(new IdentityError {Code = "404", Description = "Cannot find code"});
+        }
+
+        return IdentityResult.Success;
+    }
+
     public async ValueTask<SecurityTokenEntity?> FindTokenAsync(AppUser user)
     {
         var entity = await context.SecurityTokens

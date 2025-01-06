@@ -25,4 +25,5 @@ public interface IAuthenticationService
     public ValueTask<Response> ConfirmChangePhoneNumberAsync(ConfirmChangePhoneNumberRequest request);
     public ValueTask<Response> GetPhoneNumber(string email);
     public ValueTask<Response> ResendVerificationCodeAsync(ResendEmailVerificationCodeRequest request);
+    public ValueTask<Response> VerifyCodeAsync(VerifyCodeRequest request);
 }
