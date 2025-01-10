@@ -7,7 +7,7 @@
 
 @inject IProductService ProductService
 
-<Title Text="Products"/>
+<Title Text="Products"></Title>
 
 <MudGrid>
     @if (ProductsList.Any())
@@ -47,7 +47,7 @@
     {
         if (firstRender)
         {
-            //await GetAllProducts();
+            await GetAllProducts();
         }
     }
 

@@ -5,6 +5,7 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>e17aed67-f014-4b7e-be24-5aadbeede8cb</UserSecretsId>
+		<EnableDefaultCompileItems>true</EnableDefaultCompileItems>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -22,8 +23,8 @@
 		</PackageReference>
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
 		<PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
-		<PackageReference Include="MassTransit.RabbitMQ" Version="8.3.3" />
-		<PackageReference Include="Grpc.Tools" Version="2.68.1">
+		<PackageReference Include="MassTransit.RabbitMQ" Version="8.3.4" />
+		<PackageReference Include="Grpc.Tools" Version="2.69.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
@@ -38,10 +39,6 @@
 	
 	<ItemGroup>
 		<Protobuf Include="..\eShop.Application\Protos\auth.proto" GrpcServices="Client" />
-	</ItemGroup>
-	
-	<ItemGroup>
-	  <Compile Include="Services\Implementation\CacheService.cs" />
 	</ItemGroup>
 
 </Project>
