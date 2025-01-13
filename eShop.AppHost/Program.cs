@@ -5,16 +5,16 @@ var builder = DistributedApplication.CreateBuilder(args);
 var defaultPassword = builder.AddParameter("password", "atpDWGvDb4jR5pE7rT59c7");
 var defaultUser = builder.AddParameter("admin", "admin");
 
-var redisCache = builder.AddRedis("redis", 60001)
+var redisCache = builder.AddRedis("redis", 40001)
     .WithLifetime(ContainerLifetime.Persistent)
     .WithDataVolume()
     .WithRedisInsight(containerName: "redis-insights");
 
-var sqlServer = builder.AddSqlServer("mssql-server", port: 60002, password: defaultPassword)
+var sqlServer = builder.AddSqlServer("mssql-server", port: 40002, password: defaultPassword)
     .WithLifetime(ContainerLifetime.Persistent)
     .WithDataVolume();
 
-var mongo = builder.AddMongoDB("mongo", port: 60004, userName: defaultUser, password: defaultPassword)
+var mongo = builder.AddMongoDB("mongo", port: 40004, userName: defaultUser, password: defaultPassword)
     .WithLifetime(ContainerLifetime.Persistent)
     .WithDataVolume()
     .WithMongoExpress(cfg =>
@@ -22,7 +22,7 @@ var mongo = builder.AddMongoDB("mongo", port: 60004, userName: defaultUser, pass
         cfg.WithAuthentication();
         cfg.WithMongoCredentials("admin", "atpDWGvDb4jR5pE7rT59c7");
         cfg.WithMongoServer("mongo");
-        cfg.WithMongoUrl("mongodb://mongo:60004");
+        cfg.WithMongoUrl("mongodb://mongo:40004");
     }, "mongo-express");
 
 var cartDb = mongo.AddDatabase("cart-db", "CartDB");
@@ -30,7 +30,7 @@ var authDb = sqlServer.AddDatabase("auth-db", "AuthDB");
 var reviewsDb = sqlServer.AddDatabase("reviews-db", "ReviewsDB");
 var productDb = sqlServer.AddDatabase("product-db", "ProductDB");
 
-var rabbitMq = builder.AddRabbitMQ("rabbit-mq", port: 60003, userName: defaultUser, password: defaultPassword)
+var rabbitMq = builder.AddRabbitMQ("rabbit-mq", port: 40003, userName: defaultUser, password: defaultPassword)
     .WithLifetime(ContainerLifetime.Persistent)
     .WithManagementPlugin()
     .WithDataVolume();
@@ -72,7 +72,7 @@ var angularClient = builder.AddNpmApp("angular-webui",
         "../eShop.AngularWebUI")
     .WaitForReference(gateway)
     .WaitForReference(authApi)
-    .WithHttpEndpoint(port: 60502, targetPort: 4200, env: "PORT")
+    .WithHttpEndpoint(port: 40502, targetPort: 4200, env: "PORT")
     .WithExternalHttpEndpoints()
     .PublishAsDockerFile();
 
