@@ -18,6 +18,7 @@ public static class BuilderExtensions
         builder.AddSwaggerWithSecurity();
         builder.AddDependencyInjection();
         builder.AddServiceDefaults();
+        builder.AddRedisCache();
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddMediatR(x =>

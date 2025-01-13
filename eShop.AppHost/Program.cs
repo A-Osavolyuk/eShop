@@ -14,7 +14,7 @@ var sqlServer = builder.AddSqlServer("mssql-server", port: 60002, password: defa
     .WithLifetime(ContainerLifetime.Persistent)
     .WithDataVolume();
 
-var mongo = builder.AddMongoDB("mongo", port:60004,  userName: defaultUser, password: defaultPassword)
+var mongo = builder.AddMongoDB("mongo", port: 60004, userName: defaultUser, password: defaultPassword)
     .WithLifetime(ContainerLifetime.Persistent)
     .WithDataVolume()
     .WithMongoExpress(cfg =>
@@ -44,7 +44,8 @@ var smsService = builder.AddProject<Projects.eShop_SmsSenderApi>("sms-service-ap
 var authApi = builder.AddProject<Projects.eShop_AuthApi>("auth-api")
     .WaitForReference(sqlServer)
     .WaitForReference(emailService)
-    .WaitForReference(smsService);
+    .WaitForReference(smsService)
+    .WaitForReference(redisCache);
 
 var productApi = builder.AddProject<Projects.eShop_ProductApi>("product-api")
     .WaitForReference(sqlServer)
