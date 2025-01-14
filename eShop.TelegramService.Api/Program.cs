@@ -1,5 +1,3 @@
-using eShop.TelegramService.Api.Extensions;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddApiServices();

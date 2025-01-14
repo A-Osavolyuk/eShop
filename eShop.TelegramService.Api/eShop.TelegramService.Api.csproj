@@ -7,10 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\eShop.Application\eShop.Application.csproj" />
       <ProjectReference Include="..\eShop.ServiceDefaults\eShop.ServiceDefaults.csproj" />
     </ItemGroup>
@@ -18,6 +14,7 @@
     <ItemGroup>
       <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />
       <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.4" />
+      <PackageReference Include="Telegram.Bot" Version="22.3.0" />
     </ItemGroup>
 
 </Project>

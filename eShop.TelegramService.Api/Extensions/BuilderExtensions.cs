@@ -10,6 +10,7 @@ public static class BuilderExtensions
         builder.AddVersioning();
         builder.AddValidation();
         builder.AddSwaggerWithSecurity();
+        builder.AddDependencyInjection();
         builder.AddMessageBus();
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
@@ -22,6 +23,17 @@ public static class BuilderExtensions
         builder.Services.AddProblemDetails();
         
         return builder;
+    }
+
+    private static void AddDependencyInjection(this IHostApplicationBuilder builder)
+    {
+        var section = builder.Configuration.GetSection("Configuration:Services:Bots:Telegram");
+        builder.Services.Configure<BotOptions>(section);
+        builder.Services.AddHttpClient("tgwebhook")
+            .RemoveAllLoggers()
+            .AddTypedClient<ITelegramBotClient>(client => new TelegramBotClient(section.Get<BotOptions>()!.Token, client));
+        builder.Services.ConfigureTelegramBotMvc();
+        builder.Services.AddSingleton<UpdateHandler>();
     }
 
     private static void AddMessageBus(this IHostApplicationBuilder builder)
