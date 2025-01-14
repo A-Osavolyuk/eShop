@@ -35,28 +35,28 @@ var rabbitMq = builder.AddRabbitMQ("rabbit-mq", port: 40003, userName: defaultUs
     .WithManagementPlugin()
     .WithDataVolume();
 
-var emailService = builder.AddProject<Projects.eShop_EmailSenderApi>("email-sender-api")
+var emailService = builder.AddProject<Projects.eShop_EmailSender_Api>("email-sender-api")
     .WithReference(rabbitMq);
 
-var smsService = builder.AddProject<Projects.eShop_SmsSenderApi>("sms-service-api")
+var smsService = builder.AddProject<Projects.eShop_SmsSender_Api>("sms-service-api")
     .WaitForReference(rabbitMq);
 
-var authApi = builder.AddProject<Projects.eShop_AuthApi>("auth-api")
+var authApi = builder.AddProject<Projects.eShop_Auth_Api>("auth-api")
     .WaitForReference(sqlServer)
     .WaitForReference(emailService)
     .WaitForReference(smsService)
     .WaitForReference(redisCache);
 
-var productApi = builder.AddProject<Projects.eShop_ProductApi>("product-api")
+var productApi = builder.AddProject<Projects.eShop_Product_Api>("product-api")
     .WaitForReference(authApi);
 
-var reviewsApi = builder.AddProject<Projects.eShop_ReviewsApi>("reviews-api")
+var reviewsApi = builder.AddProject<Projects.eShop_Reviews_Api>("reviews-api")
     .WaitForReference(authApi);
 
-var cartApi = builder.AddProject<Projects.eShop_CartApi>("cart-api")
+var cartApi = builder.AddProject<Projects.eShop_Cart_Api>("cart-api")
     .WaitForReference(authApi);
 
-var filesStorageApi = builder.AddProject<Projects.eShop_FilesStorageApi>("file-store-api")
+var filesStorageApi = builder.AddProject<Projects.eShop_FilesStorage_Api>("file-store-api")
     .WaitForReference(authApi);
 
 var gateway = builder.AddProject<Projects.eShop_Gateway>("gateway");
