@@ -1,4 +1,7 @@
-﻿namespace eShop.TelegramService.Api.Controllers;
+﻿using eShop.Domain.Common.Api;
+using Response = eShop.Domain.Common.Api.Response;
+
+namespace eShop.TelegramService.Api.Controllers;
 
 [ApiController]
 [ApiVersion("1.0")]
@@ -13,7 +16,7 @@ public class TelegramController(
     private readonly BotOptions options = options.Value;
     
     [HttpGet("setWebhook")]
-    public async Task<IActionResult> SetWebHook(CancellationToken ct)
+    public async ValueTask<IActionResult> SetWebHookAsync(CancellationToken ct)
     {
         var webhookUrl = options.WebhookUrl;
         await bot.SetWebhook(webhookUrl, allowedUpdates: [], secretToken: options.Secret, cancellationToken: ct);
@@ -21,7 +24,7 @@ public class TelegramController(
     }
     
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] Update update, CancellationToken ct)
+    public async ValueTask<IActionResult> UpdateAsync([FromBody] Update update, CancellationToken ct)
     {
         if (Request.Headers["X-Telegram-Bot-Api-Secret-Token"] != options.Secret)
             return Forbid();
@@ -34,5 +37,13 @@ public class TelegramController(
             await updateHandler.OnErrorAsync(bot, exception, HandleErrorSource.HandleUpdateError, ct);
         }
         return Ok();
+    }
+
+    [HttpPost("send")]
+    public async ValueTask<ActionResult<Response>> SendAsync([FromBody] SendMessageRequest request)
+    {
+        await bot.SendMessage(chatId: new ChatId(request.ChatId), text: request.Message);
+        
+        return Ok(new ResponseBuilder().WithMessage("Message was successfully sent!").Build());
     }
 }

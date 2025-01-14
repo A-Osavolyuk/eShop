@@ -3,6 +3,9 @@
 global using eShop.Application.Behaviours;
 global using eShop.Application.Extensions;
 global using eShop.Application.Middlewares;
+global using eShop.Domain.Requests.SmsApi;
+global using eShop.Domain.Requests.TelegramApi;
+global using eShop.Domain.Responses.TelegramApi;
 global using eShop.ServiceDefaults;
 global using eShop.TelegramService.Api.Extensions;
 global using eShop.TelegramService.Api.Options;
