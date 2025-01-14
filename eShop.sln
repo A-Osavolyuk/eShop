@@ -35,7 +35,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.ServiceDefaults", "eS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.ReviewsApi", "eShop.ReviewsApi\eShop.ReviewsApi.csproj", "{6521BC9F-1951-4C8E-9216-193A25F3C3DF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.CartApi", "eShop.CartApi\eShop.CartApi.csproj", "{FF34FF4A-E9FA-42B4-8C0E-5AEBE61458EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.Cart.Api", "eShop.Cart.Api\eShop.Cart.Api.csproj", "{FF34FF4A-E9FA-42B4-8C0E-5AEBE61458EA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateway", "Gateway", "{B69FD745-58C4-46EB-A0A2-1C7242B25750}"
 EndProject

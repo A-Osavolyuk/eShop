@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>1d743842-e811-42e5-af0a-d0547966882b</UserSecretsId>
+        <RootNamespace>eShop.CartApi</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
