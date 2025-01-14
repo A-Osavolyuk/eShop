@@ -1,4 +1,6 @@
-﻿namespace eShop.CartApi.Queries.Favorites;
+﻿using eShop.Cart.Api.Data;
+
+namespace eShop.Cart.Api.Queries.Favorites;
 
 internal sealed record GetFavoritesQuery(Guid UserId) : IRequest<Result<FavoritesDto>>;
 

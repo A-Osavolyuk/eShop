@@ -1,4 +1,4 @@
-﻿namespace eShop.CartApi.Data;
+﻿namespace eShop.Cart.Api.Data;
 
 public class DbClient
 {

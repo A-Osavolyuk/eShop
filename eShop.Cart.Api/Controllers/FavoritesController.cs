@@ -1,6 +1,8 @@
-﻿using Response = eShop.Domain.Common.Api.Response;
+﻿using eShop.Cart.Api.Commands.Favorites;
+using eShop.Cart.Api.Queries.Favorites;
+using Response = eShop.Domain.Common.Api.Response;
 
-namespace eShop.CartApi.Controllers;
+namespace eShop.Cart.Api.Controllers;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]

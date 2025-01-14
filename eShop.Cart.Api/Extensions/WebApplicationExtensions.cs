@@ -1,4 +1,6 @@
-﻿namespace eShop.CartApi.Extensions;
+﻿using eShop.Cart.Api.Data;
+
+namespace eShop.Cart.Api.Extensions;
 
 public static class WebApplicationExtensions
 {

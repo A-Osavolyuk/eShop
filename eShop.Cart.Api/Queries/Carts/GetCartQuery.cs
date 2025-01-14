@@ -1,4 +1,6 @@
-﻿namespace eShop.CartApi.Queries.Carts;
+﻿using eShop.Cart.Api.Data;
+
+namespace eShop.Cart.Api.Queries.Carts;
 
 internal sealed record GetCartQuery(Guid UserId) : IRequest<Result<CartDto>>;
 
