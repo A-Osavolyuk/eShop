@@ -6,7 +6,7 @@ using MassTransit;
 using Microsoft.Extensions.Options;
 using MimeKit;
 
-namespace eShop.EmailSenderApi.Receivers;
+namespace eShop.EmailSender.Api.Receivers;
 
 public class ResetPasswordConsumer(IOptions<EmailOptions> options) : IConsumer<ResetPasswordMessage>
 {

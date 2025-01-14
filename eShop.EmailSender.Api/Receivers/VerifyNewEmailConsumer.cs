@@ -6,7 +6,7 @@ using MassTransit;
 using Microsoft.Extensions.Options;
 using MimeKit;
 
-namespace eShop.EmailSenderApi.Receivers;
+namespace eShop.EmailSender.Api.Receivers;
 
 public class VerifyNewEmailConsumer(IOptions<EmailOptions> options) : IConsumer<NewEmailVerificationMessage>
 {

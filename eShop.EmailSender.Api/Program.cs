@@ -1,6 +1,6 @@
 using eShop.Domain.Messages;
 using eShop.Domain.Options;
-using eShop.EmailSenderApi.Receivers;
+using eShop.EmailSender.Api.Receivers;
 using eShop.ServiceDefaults;
 using MassTransit;
 
