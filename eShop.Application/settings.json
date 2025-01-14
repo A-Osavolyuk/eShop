@@ -101,6 +101,13 @@
           "AuthToken": "",
           "PhoneNumber": ""
         }
+      },
+      "Bots": {
+        "Telegram": {
+          "Token": "",
+          "Secret": "",
+          "WebhookUrl": ""
+        }
       }
     },
     "General": {

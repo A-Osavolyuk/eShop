@@ -316,6 +316,25 @@
                   ]
                 }
               }
+            },
+            "Bots": {
+              "type": "object",
+              "properties": {
+                "Telegram": {
+                  "type": "object",
+                  "properties": {
+                    "Token": {
+                      "type": "string"
+                    },
+                    "Secret": {
+                      "type": "string"
+                    },
+                    "WebhookUrl":{
+                      "type": "string"
+                    }
+                  }
+                }
+              }
             }
           }
         },
