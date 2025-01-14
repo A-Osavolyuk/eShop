@@ -41,10 +41,14 @@ var emailService = builder.AddProject<Projects.eShop_EmailSender_Api>("email-sen
 var smsService = builder.AddProject<Projects.eShop_SmsSender_Api>("sms-service-api")
     .WaitForReference(rabbitMq);
 
+var telegramService = builder.AddProject<Projects.eShop_TelegramService_Api>("telegram-service-api")
+    .WaitForReference(rabbitMq);
+
 var authApi = builder.AddProject<Projects.eShop_Auth_Api>("auth-api")
     .WaitForReference(sqlServer)
     .WaitForReference(emailService)
     .WaitForReference(smsService)
+    .WaitForReference(telegramService)
     .WaitForReference(redisCache);
 
 var productApi = builder.AddProject<Projects.eShop_Product_Api>("product-api")

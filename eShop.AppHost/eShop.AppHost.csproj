@@ -40,6 +40,7 @@
     <ProjectReference Include="..\eShop.Product.Api\eShop.Product.Api.csproj" />
     <ProjectReference Include="..\eShop.Reviews.Api\eShop.Reviews.Api.csproj" />
     <ProjectReference Include="..\eShop.SmsSender.Api\eShop.SmsSender.Api.csproj" />
+    <ProjectReference Include="..\eShop.TelegramService.Api\eShop.TelegramService.Api.csproj" />
   </ItemGroup>
 
 </Project>

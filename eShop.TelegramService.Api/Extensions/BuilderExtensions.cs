@@ -1,4 +1,4 @@
-﻿namespace eShop.SmsSender.Api.Extensions;
+﻿namespace eShop.TelegramService.Api.Extensions;
 
 public static class BuilderExtensions
 {
@@ -10,7 +10,6 @@ public static class BuilderExtensions
         builder.AddVersioning();
         builder.AddValidation();
         builder.AddSwaggerWithSecurity();
-        builder.AddDependencyInjection();
         builder.AddMessageBus();
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
@@ -23,12 +22,6 @@ public static class BuilderExtensions
         builder.Services.AddProblemDetails();
         
         return builder;
-    }
-
-    private static void AddDependencyInjection(this IHostApplicationBuilder builder)
-    {
-        builder.Services.AddScoped<ISmsService, SmsService>();
-        builder.Services.AddSingleton<IAmazonSimpleNotificationService>(sp => new AmazonSimpleNotificationServiceClient(RegionEndpoint.EUNorth1));
     }
 
     private static void AddMessageBus(this IHostApplicationBuilder builder)
@@ -46,13 +39,7 @@ public static class BuilderExtensions
                     h.Username(username);
                     h.Password(password);
                 });
-                
-                cfg.ReceiveEndpoint("phone-number-verification", e => e.ConfigureConsumer<VerifyPhoneNumberConsumer>(context));
-                cfg.ReceiveEndpoint("change-phone-number", e => e.ConfigureConsumer<ChangePhoneNumberConsumer>(context));
             });
-            
-            x.AddConsumer<VerifyPhoneNumberConsumer>();
-            x.AddConsumer<ChangePhoneNumberConsumer>();
         });
     }
 }
