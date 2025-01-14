@@ -1,6 +1,6 @@
 ﻿using eShop.ServiceDefaults;
 
-namespace eShop.FilesStorageApi.Extensions;
+namespace eShop.FilesStorage.Api.Extensions;
 
 public static class WebApplicationExtensions
 {

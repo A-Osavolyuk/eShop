@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 
-namespace eShop.FilesStorageApi.Services.Implementation;
+namespace eShop.FilesStorage.Api.Services.Implementation;
 
 public class CacheService(IDistributedCache cache) : ICacheService
 {

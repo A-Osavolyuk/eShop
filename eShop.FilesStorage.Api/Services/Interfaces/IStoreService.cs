@@ -1,4 +1,4 @@
-﻿namespace eShop.FilesStorageApi.Services.Interfaces;
+﻿namespace eShop.FilesStorage.Api.Services.Interfaces;
 
 public interface IStoreService
 {

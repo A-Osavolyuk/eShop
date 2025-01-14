@@ -1,7 +1,7 @@
 ﻿using eShop.Domain.Responses.FilesApi.Files;
-using eShop.FilesStorageApi.Services.Interfaces;
+using eShop.FilesStorage.Api.Services.Interfaces;
 
-namespace eShop.FilesStorageApi.Commands;
+namespace eShop.FilesStorage.Api.Commands;
 
 internal sealed record DeleteUserAvatarCommand(Guid UserId) : IRequest<Result<DeleteUserAvatarResponse>>;
 

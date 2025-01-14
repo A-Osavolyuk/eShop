@@ -1,12 +1,12 @@
 ﻿using eShop.Application.Utilities;
 using eShop.Domain.Common.Api;
 using eShop.Domain.DTOs;
-using eShop.FilesStorageApi.Commands;
-using eShop.FilesStorageApi.Queries;
-using eShop.FilesStorageApi.Services;
-using eShop.FilesStorageApi.Services.Interfaces;
+using eShop.FilesStorage.Api.Commands;
+using eShop.FilesStorage.Api.Queries;
+using eShop.FilesStorage.Api.Services.Interfaces;
+using eShop.FilesStorage.Api.Services;
 
-namespace eShop.FilesStorageApi.Controllers;
+namespace eShop.FilesStorage.Api.Controllers;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]

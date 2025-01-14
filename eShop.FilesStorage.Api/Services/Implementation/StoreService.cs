@@ -1,6 +1,6 @@
-﻿using eShop.FilesStorageApi.Services.Interfaces;
+﻿using eShop.FilesStorage.Api.Services.Interfaces;
 
-namespace eShop.FilesStorageApi.Services.Implementation;
+namespace eShop.FilesStorage.Api.Services.Implementation;
 
 internal sealed class StoreService(IConfiguration configuration) : IStoreService
 {

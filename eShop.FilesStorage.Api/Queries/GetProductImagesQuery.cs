@@ -1,9 +1,9 @@
 ﻿using System.Net.Mime;
 using eShop.Domain.Exceptions;
-using eShop.FilesStorageApi.Services;
-using eShop.FilesStorageApi.Services.Interfaces;
+using eShop.FilesStorage.Api.Services.Interfaces;
+using eShop.FilesStorage.Api.Services;
 
-namespace eShop.FilesStorageApi.Queries;
+namespace eShop.FilesStorage.Api.Queries;
 
 internal sealed record GetProductImagesQuery(Guid ProductId) : IRequest<Result<List<string>>>;
 
