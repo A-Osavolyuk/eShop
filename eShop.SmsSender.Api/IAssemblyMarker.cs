@@ -1,3 +1,3 @@
-﻿namespace eShop.SmsSenderApi;
+﻿namespace eShop.SmsSender.Api;
 
 public interface IAssemblyMarker;

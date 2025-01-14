@@ -1,4 +1,4 @@
-﻿namespace eShop.SmsSenderApi.Services;
+﻿namespace eShop.SmsSender.Api.Services;
 
 public class SmsService(IAmazonSimpleNotificationService simpleNotificationService) : ISmsService
 {

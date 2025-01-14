@@ -1,4 +1,6 @@
-﻿namespace eShop.SmsSenderApi.Controllers;
+﻿using eShop.SmsSender.Api.Services;
+
+namespace eShop.SmsSender.Api.Controllers;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]

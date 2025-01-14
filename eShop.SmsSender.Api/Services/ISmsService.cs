@@ -1,4 +1,4 @@
-﻿namespace eShop.SmsSenderApi.Services;
+﻿namespace eShop.SmsSender.Api.Services;
 
 public interface ISmsService
 {

@@ -1,4 +1,6 @@
-﻿namespace eShop.SmsSenderApi.Consumers;
+﻿using eShop.SmsSender.Api.Services;
+
+namespace eShop.SmsSender.Api.Consumers;
 
 public class VerifyPhoneNumberConsumer(ISmsService smsService) : IConsumer<VerifyPhoneNumberMessage>
 {

@@ -1,4 +1,7 @@
-﻿namespace eShop.SmsSenderApi.Extensions;
+﻿using eShop.SmsSender.Api.Consumers;
+using eShop.SmsSender.Api.Services;
+
+namespace eShop.SmsSender.Api.Extensions;
 
 public static class BuilderExtensions
 {
