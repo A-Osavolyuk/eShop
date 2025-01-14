@@ -48,15 +48,12 @@ var authApi = builder.AddProject<Projects.eShop_AuthApi>("auth-api")
     .WaitForReference(redisCache);
 
 var productApi = builder.AddProject<Projects.eShop_ProductApi>("product-api")
-    .WaitForReference(sqlServer)
     .WaitForReference(authApi);
 
 var reviewsApi = builder.AddProject<Projects.eShop_ReviewsApi>("reviews-api")
-    .WaitForReference(sqlServer)
     .WaitForReference(authApi);
 
 var cartApi = builder.AddProject<Projects.eShop_CartApi>("cart-api")
-    .WaitForReference(sqlServer)
     .WaitForReference(authApi);
 
 var filesStorageApi = builder.AddProject<Projects.eShop_FilesStorageApi>("file-store-api")
