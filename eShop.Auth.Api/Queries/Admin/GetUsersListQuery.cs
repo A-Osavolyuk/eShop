@@ -40,7 +40,7 @@ internal sealed class GetUsersListQueryHandler(
                 return new(new NotFoundException("Cannot find roles data."));
             }
 
-            var permissionsList = new List<PermissionEntity>();
+            var permissionsList = new List<Permission>();
 
             foreach (var permission in permissions)
             {
@@ -51,7 +51,7 @@ internal sealed class GetUsersListQueryHandler(
                     return new(new NotFoundException($"Cannot find permission {permission}."));
                 }
 
-                permissionsList.Add(new PermissionEntity()
+                permissionsList.Add(new Permission()
                 {
                     Id = permissionInfo.Id,
                     Name = permissionInfo.Name,
