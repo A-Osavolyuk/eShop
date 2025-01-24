@@ -1,7 +1,4 @@
-﻿using eShop.Domain.Responses.Api.Admin;
-using eShop.Domain.Types;
-
-namespace eShop.Auth.Api.Queries.Admin;
+﻿namespace eShop.Auth.Api.Queries.Admin;
 
 internal sealed record GetUserRolesQuery(Guid Id) : IRequest<Result<UserRolesResponse>>;
 

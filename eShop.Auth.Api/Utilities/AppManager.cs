@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Entities.Api.Auth;
-
-namespace eShop.Auth.Api.Utilities;
+﻿namespace eShop.Auth.Api.Utilities;
 
 internal sealed class AppManager(
     SignInManager<AppUser> signInManager,

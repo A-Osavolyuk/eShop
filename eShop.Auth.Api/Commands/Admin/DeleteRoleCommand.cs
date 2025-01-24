@@ -1,7 +1,4 @@
-﻿using eShop.Domain.Requests.Api.Admin;
-using eShop.Domain.Responses.Api.Admin;
-
-namespace eShop.Auth.Api.Commands.Admin;
+﻿namespace eShop.Auth.Api.Commands.Admin;
 
 internal sealed record DeleteRoleCommand(DeleteRoleRequest Request) : IRequest<Result<DeleteRoleResponse>>;
 

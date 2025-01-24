@@ -1,9 +1,4 @@
-﻿using eShop.Domain.DTOs.Api.Auth;
-using eShop.Domain.Requests.Api.Auth;
-using eShop.Domain.Responses.Api.Auth;
-using eShop.Domain.Types;
-
-namespace eShop.Auth.Api.Commands.Auth;
+﻿namespace eShop.Auth.Api.Commands.Auth;
 
 internal sealed record TwoFactorAuthenticationLoginCommand(TwoFactorAuthenticationLoginRequest Request)
     : IRequest<Result<LoginResponse>>;

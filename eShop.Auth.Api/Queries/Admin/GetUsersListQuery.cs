@@ -1,8 +1,4 @@
-﻿using eShop.Domain.DTOs.Api.Auth;
-using eShop.Domain.Entities.Api.Auth;
-using eShop.Domain.Types;
-
-namespace eShop.Auth.Api.Queries.Admin;
+﻿namespace eShop.Auth.Api.Queries.Admin;
 
 internal sealed record GetUsersListQuery() : IRequest<Result<IEnumerable<UserDto>>>;
 

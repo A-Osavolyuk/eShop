@@ -14,11 +14,6 @@ public class RegistrationValidator : AbstractValidator<RegistrationRequest>
     };
     public RegistrationValidator()
     {
-        //RuleFor(p => p.Name)
-        //    .NotEmpty().WithMessage("Name is must.")
-        //    .MinimumLength(2).WithMessage("Name must contains at least 2 characters.")
-        //    .MaximumLength(18).WithMessage("Name cannot be longer then 18 characters.");
-
         RuleFor(p => p.Email)
             .NotEmpty().WithMessage("Email is must.")
             .EmailAddress().WithMessage("Invalid format of email address.");
