@@ -4,6 +4,25 @@ namespace eShop.Product.Api.Extensions;
 
 public static class WebApplicationExtensions
 {
+    public static async Task MapApiServices(this WebApplication app)
+    {
+        app.MapDefaultEndpoints();
+
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+            await app.ConfigureDatabaseAsync<AppDbContext>();
+        }
+
+        app.UseHttpsRedirection();
+        app.UseAuthentication();
+        app.UseAuthorization();
+        app.MapControllers();
+        app.ConfigureMongoDB();
+        app.UseExceptionHandler();
+    }
+    
     public static void ConfigureMongoDB(this WebApplication app)
     {
         RegisterClassMaps();

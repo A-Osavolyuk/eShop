@@ -12,6 +12,7 @@ public static class BuilderExtensions
     {
         builder.Logging.AddConfiguration(builder.Configuration.GetSection("Configuration:Logging"));
         
+        builder.AddServiceDefaults();
         builder.AddJwtAuthentication();
         builder.AddVersioning();
         builder.AddValidation();

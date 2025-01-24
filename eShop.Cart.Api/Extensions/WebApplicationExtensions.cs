@@ -5,6 +5,22 @@ namespace eShop.Cart.Api.Extensions;
 
 public static class WebApplicationExtensions
 {
+    public static async Task MapApiServices(this WebApplication app)
+    {
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+            await app.SeedDataAsync();
+        }
+
+        app.UseHttpsRedirection();
+        app.UseAuthorization();
+        app.MapControllers();
+        app.UseExceptionHandler();
+        app.MapGrpcService<CartServer>();
+    }
+    
     public static async Task SeedDataAsync(this WebApplication app)
     {
         using var scope = app.Services.CreateScope();
