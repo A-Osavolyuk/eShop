@@ -1,4 +1,5 @@
-﻿using UserData = eShop.Domain.Models.UserData;
+﻿using eShop.Domain.Types;
+using UserData = eShop.Domain.Types.UserData;
 
 namespace eShop.Auth.Api.Queries.Admin;
 

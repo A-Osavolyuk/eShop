@@ -1,5 +1,6 @@
 ﻿using eShop.Domain.Entities.CartApi;
 using eShop.Domain.Models.Store;
+using eShop.Domain.Types;
 
 namespace eShop.Infrastructure.Services;
 

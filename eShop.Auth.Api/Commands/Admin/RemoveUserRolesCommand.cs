@@ -21,15 +21,15 @@ internal sealed class RemoveUserRolesCommandHandler(
 
         foreach (var role in request.Request.Roles)
         {
-            var isInRole = await appManager.UserManager.IsInRoleAsync(user, role.Name);
+            var isInRole = await appManager.UserManager.IsInRoleAsync(user, role);
 
             if (!isInRole)
             {
                 return new(new BadRequestException(
-                    $"User with ID {request.Request.UserId} is not in role {role.Name}."));
+                    $"User with ID {request.Request.UserId} is not in role {role}."));
             }
 
-            var result = await appManager.UserManager.RemoveFromRoleAsync(user, role.Name);
+            var result = await appManager.UserManager.RemoveFromRoleAsync(user, role);
 
             if (!result.Succeeded)
             {

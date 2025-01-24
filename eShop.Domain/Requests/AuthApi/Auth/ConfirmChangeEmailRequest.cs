@@ -1,4 +1,6 @@
-﻿namespace eShop.Domain.Requests.AuthApi.Auth;
+﻿using eShop.Domain.Types;
+
+namespace eShop.Domain.Requests.AuthApi.Auth;
 
 public record class ConfirmChangeEmailRequest
 {

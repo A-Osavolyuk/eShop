@@ -17,20 +17,20 @@ internal sealed class RemoveUserRoleCommandHandler(
             return new(new NotFoundException($"Cannot find user with ID {request.Request.UserId}."));
         }
 
-        var isInRole = await appManager.UserManager.IsInRoleAsync(user, request.Request.Role.Name);
+        var isInRole = await appManager.UserManager.IsInRoleAsync(user, request.Request.Role);
 
         if (!isInRole)
         {
             return new(new BadRequestException(
-                $"User with ID {user.Id} not in role {request.Request.Role.Name}"));
+                $"User with ID {user.Id} not in role {request.Request.Role}"));
         }
 
-        var result = await appManager.UserManager.RemoveFromRoleAsync(user, request.Request.Role.Name);
+        var result = await appManager.UserManager.RemoveFromRoleAsync(user, request.Request.Role);
 
         if (!result.Succeeded)
         {
             return new(new FailedOperationException(
-                $"Cannot remove user with ID {user.Id} from role {request.Request.Role.Name}."));
+                $"Cannot remove user with ID {user.Id} from role {request.Request.Role}."));
         }
                 
         return new(new RemoveUserRoleResponse()

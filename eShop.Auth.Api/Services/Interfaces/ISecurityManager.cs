@@ -1,4 +1,6 @@
-﻿namespace eShop.Auth.Api.Services.Interfaces;
+﻿using eShop.Domain.Types;
+
+namespace eShop.Auth.Api.Services.Interfaces;
 
 public interface ISecurityManager
 {

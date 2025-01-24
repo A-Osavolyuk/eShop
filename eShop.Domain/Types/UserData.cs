@@ -1,6 +1,6 @@
 ﻿using eShop.Domain.Entities.AuthApi;
 
-namespace eShop.Domain.Models;
+namespace eShop.Domain.Types;
 
 public class UserData
 {

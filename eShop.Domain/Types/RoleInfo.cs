@@ -1,4 +1,4 @@
-﻿namespace eShop.Domain.Models;
+﻿namespace eShop.Domain.Types;
 
 public class RoleInfo
 {
