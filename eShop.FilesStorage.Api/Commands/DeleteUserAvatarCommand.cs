@@ -1,4 +1,4 @@
-﻿using eShop.Domain.Responses.FilesApi.Files;
+﻿using eShop.Domain.Responses.Api.Files;
 using eShop.FilesStorage.Api.Services.Interfaces;
 
 namespace eShop.FilesStorage.Api.Commands;

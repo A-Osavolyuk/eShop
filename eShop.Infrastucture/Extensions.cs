@@ -1,4 +1,5 @@
 ﻿using eShop.Application.Extensions;
+using eShop.Domain.Interfaces.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;

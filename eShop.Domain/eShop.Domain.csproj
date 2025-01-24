@@ -18,12 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Requests\CartApi\" />
-    <Folder Include="Requests\ProductApi\" />
-    <Folder Include="Requests\ReviewApi\" />
-    <Folder Include="Responses\CartApi\" />
-    <Folder Include="Responses\FilesApi\" />
-    <Folder Include="Responses\ProductApi\" />
+    <Folder Include="DTOs\Api\" />
+    <Folder Include="Entities\Api\" />
+    <Folder Include="Requests\Api\" />
+    <Folder Include="Responses\Api\" />
   </ItemGroup>
 
 </Project>

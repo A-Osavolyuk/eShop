@@ -1,4 +1,6 @@
-﻿using eShop.Domain.Types;
+﻿using eShop.Domain.Requests.Api.Auth;
+using eShop.Domain.Responses.Api.Auth;
+using eShop.Domain.Types;
 
 namespace eShop.Auth.Api.Commands.Auth;
 

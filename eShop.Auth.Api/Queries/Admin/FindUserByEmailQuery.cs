@@ -1,15 +1,18 @@
-﻿using eShop.Domain.Types;
+﻿using eShop.Domain.DTOs.Api.Auth;
+using eShop.Domain.Entities.Api.Auth;
+using eShop.Domain.Responses.Api.Admin;
+using eShop.Domain.Types;
 
 namespace eShop.Auth.Api.Queries.Admin;
 
-internal sealed record FindUserByEmailQuery(string Email) : IRequest<Result<FindUserResponse>>;
+internal sealed record FindUserByEmailQuery(string Email) : IRequest<Result<UserDto>>;
 
 internal sealed class FindUserByEmailQueryHandler(
-    AppManager appManager) : IRequestHandler<FindUserByEmailQuery, Result<FindUserResponse>>
+    AppManager appManager) : IRequestHandler<FindUserByEmailQuery, Result<UserDto>>
 {
     private readonly AppManager appManager = appManager;
 
-    public async Task<Result<FindUserResponse>> Handle(FindUserByEmailQuery request,
+    public async Task<Result<UserDto>> Handle(FindUserByEmailQuery request,
         CancellationToken cancellationToken)
     {
         var user = await appManager.UserManager.FindByEmailAsync(request.Email);
@@ -39,7 +42,7 @@ internal sealed class FindUserByEmailQueryHandler(
                 return new(new NotFoundException($"Cannot find role {role}."));
             }
 
-            permissionData.Roles.Add(new RoleInfo()
+            permissionData.Roles.Add(new RoleData()
             {
                 Id = Guid.Parse(roleInfo.Id),
                 Name = roleInfo.Name!,
@@ -63,7 +66,7 @@ internal sealed class FindUserByEmailQueryHandler(
             });
         }
 
-        var response = new FindUserResponse()
+        var response = new UserDto()
         {
             AccountData = accountData,
             PersonalDataEntity = personalData ?? new PersonalDataEntity(),

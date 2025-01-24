@@ -1,4 +1,6 @@
-﻿namespace eShop.Product.Api.Extensions;
+﻿using eShop.Domain.Entities.Api.Product;
+
+namespace eShop.Product.Api.Extensions;
 
 public static class WebApplicationExtensions
 {

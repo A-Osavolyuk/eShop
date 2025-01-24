@@ -1,4 +1,9 @@
-﻿namespace eShop.Auth.Api.Commands.Auth;
+﻿using eShop.Domain.DTOs.Api.Auth;
+using eShop.Domain.Requests.Api.Auth;
+using eShop.Domain.Responses.Api.Auth;
+using eShop.Domain.Types;
+
+namespace eShop.Auth.Api.Commands.Auth;
 
 internal sealed record LoginCommand(LoginRequest Request) : IRequest<Result<LoginResponse>>;
 
@@ -32,7 +37,7 @@ internal sealed class LoginCommandHandler(
             return new(new BadRequestException("The password is not valid."));
         }
 
-        var userDto = new UserDto(user.Email!, user.UserName!, user.Id);
+        var userDto = new User(user.Email!, user.UserName!, user.Id);
         var securityToken = await appManager.SecurityManager.FindTokenAsync(user);
 
         if (securityToken is not null)

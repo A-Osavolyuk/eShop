@@ -1,5 +1,5 @@
 ﻿using eShop.Domain.Common.Api;
-using eShop.Domain.Requests.ReviewApi.Comments;
+using eShop.Domain.Requests.Api.Comments;
 using eShop.Reviews.Api.Commands.Comments;
 using eShop.Reviews.Api.Queries.Comments;
 using Response = eShop.Domain.Common.Api.Response;

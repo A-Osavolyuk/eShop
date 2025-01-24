@@ -1,4 +1,6 @@
-﻿namespace eShop.Auth.Api.Data;
+﻿using eShop.Domain.Entities.Api.Auth;
+
+namespace eShop.Auth.Api.Data;
 
 internal sealed class AuthDbContext(DbContextOptions<AuthDbContext> options) : IdentityDbContext<AppUser>(options)
 {

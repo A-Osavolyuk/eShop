@@ -1,4 +1,6 @@
-﻿using eShop.Product.Api.Data;
+﻿using eShop.Domain.Requests.Api.Brand;
+using eShop.Domain.Responses.Api.Brand;
+using eShop.Product.Api.Data;
 
 namespace eShop.Product.Api.Commands.Brands;
 

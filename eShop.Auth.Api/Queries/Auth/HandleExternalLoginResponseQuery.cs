@@ -1,4 +1,8 @@
-﻿namespace eShop.Auth.Api.Queries.Auth;
+﻿using eShop.Domain.DTOs.Api.Auth;
+using eShop.Domain.Entities.Api.Auth;
+using eShop.Domain.Types;
+
+namespace eShop.Auth.Api.Queries.Auth;
 
 internal sealed record HandleExternalLoginResponseQuery(
     ExternalLoginInfo ExternalLoginInfo,
@@ -36,7 +40,7 @@ internal sealed class HandleExternalLoginResponseQueryHandler(
 
         if (user is not null)
         {
-            var userDto = new UserDto(user.Email!, user.UserName!, user.Id);
+            var userDto = new User(user.Email!, user.UserName!, user.Id);
             var securityToken = await appManager.SecurityManager.FindTokenAsync(user);
 
             if (securityToken is not null)

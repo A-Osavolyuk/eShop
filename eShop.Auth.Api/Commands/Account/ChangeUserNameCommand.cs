@@ -1,4 +1,7 @@
-﻿namespace eShop.Auth.Api.Commands.Account;
+﻿using eShop.Domain.Requests.Api.Auth;
+using eShop.Domain.Responses.Api.Auth;
+
+namespace eShop.Auth.Api.Commands.Account;
 
 internal sealed record ChangeUserNameCommand(ChangeUserNameRequest Request)
     : IRequest<Result<ChangeUserNameResponse>>;

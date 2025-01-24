@@ -1,5 +1,5 @@
-﻿using eShop.Domain.DTOs.ProductApi;
-using eShop.Domain.Entities.ProductApi;
+﻿using eShop.Domain.DTOs.Api.Product;
+using eShop.Domain.Entities.Api.Product;
 
 namespace eShop.Application.Mapping;
 

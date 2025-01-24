@@ -1,4 +1,5 @@
-﻿using eShop.Domain.Entities.CartApi;
+﻿using eShop.Domain.Entities.Api.Cart;
+using eShop.Domain.Interfaces.Client;
 using eShop.Domain.Models.Store;
 using eShop.Domain.Types;
 

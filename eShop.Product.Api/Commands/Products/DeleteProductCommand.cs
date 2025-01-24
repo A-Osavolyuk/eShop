@@ -1,4 +1,6 @@
-﻿using eShop.Product.Api.Data;
+﻿using eShop.Domain.Requests.Api.Product;
+using eShop.Domain.Responses.Api.Products;
+using eShop.Product.Api.Data;
 
 namespace eShop.Product.Api.Commands.Products;
 

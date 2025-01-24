@@ -1,4 +1,4 @@
-﻿using eShop.Domain.Entities.ReviewApi;
+﻿using eShop.Domain.Entities.Api.Review;
 
 namespace eShop.Reviews.Api.Data;
 

@@ -1,5 +1,6 @@
 ﻿using eShop.Domain.Common.Api;
-using eShop.Domain.Requests.ReviewApi.Review;
+using eShop.Domain.Interfaces.Client;
+using eShop.Domain.Requests.Api.Review;
 using HttpMethods = eShop.Domain.Enums.HttpMethods;
 
 namespace eShop.Infrastructure.Services;

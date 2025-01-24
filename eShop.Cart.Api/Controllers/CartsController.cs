@@ -1,5 +1,6 @@
 ﻿using eShop.Cart.Api.Commands.Carts;
 using eShop.Cart.Api.Queries.Carts;
+using eShop.Domain.Requests.Api.Cart;
 using Response = eShop.Domain.Common.Api.Response;
 
 namespace eShop.Cart.Api.Controllers;

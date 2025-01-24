@@ -1,4 +1,6 @@
-﻿namespace eShop.Application.Behaviours;
+﻿using eShop.Domain.Exceptions.Interfaces;
+
+namespace eShop.Application.Behaviours;
 
 public class LoggingBehaviour<TRequest, TResponse>(ILogger<TRequest> logger)
     : IPipelineBehavior<TRequest, TResponse>

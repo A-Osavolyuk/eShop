@@ -1,4 +1,8 @@
-﻿namespace eShop.Cart.Api.Commands.Carts;
+﻿using eShop.Domain.Entities.Api.Cart;
+using eShop.Domain.Requests.Api.Cart;
+using eShop.Domain.Responses.Api.Cart;
+
+namespace eShop.Cart.Api.Commands.Carts;
 
 internal sealed record UpdatedCartCommand(UpdateCartRequest Request) : IRequest<Result<UpdateCartResponse>>;
 

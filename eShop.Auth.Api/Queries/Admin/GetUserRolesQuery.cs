@@ -1,4 +1,5 @@
-﻿using eShop.Domain.Types;
+﻿using eShop.Domain.Responses.Api.Admin;
+using eShop.Domain.Types;
 
 namespace eShop.Auth.Api.Queries.Admin;
 
@@ -37,7 +38,7 @@ internal sealed class GetUserRolesQueryHandler(
                 return new(new NotFoundException($"Cannot find role {role}"));
             }
 
-            result.Roles.Add(new RoleInfo()
+            result.Roles.Add(new RoleData()
             {
                 Id = Guid.Parse(roleInfo.Id),
                 Name = roleInfo.Name!,

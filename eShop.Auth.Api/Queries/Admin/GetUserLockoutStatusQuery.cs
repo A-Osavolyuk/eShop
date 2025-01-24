@@ -1,4 +1,6 @@
-﻿namespace eShop.Auth.Api.Queries.Admin;
+﻿using eShop.Domain.Responses.Api.Admin;
+
+namespace eShop.Auth.Api.Queries.Admin;
 
 internal sealed record GetUserLockoutStatusQuery(string Email) : IRequest<Result<LockoutStatusResponse>>;
 

@@ -1,4 +1,5 @@
-﻿using eShop.Product.Api.Commands.Products;
+﻿using eShop.Domain.Requests.Api.Product;
+using eShop.Product.Api.Commands.Products;
 using eShop.Product.Api.Queries.Products;
 using Response = eShop.Domain.Common.Api.Response;
 

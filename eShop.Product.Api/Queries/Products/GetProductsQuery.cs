@@ -1,4 +1,5 @@
-﻿using eShop.Product.Api.Data;
+﻿using eShop.Domain.DTOs.Api.Product;
+using eShop.Product.Api.Data;
 
 namespace eShop.Product.Api.Queries.Products;
 

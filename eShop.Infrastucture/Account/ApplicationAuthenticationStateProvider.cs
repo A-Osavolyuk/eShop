@@ -1,7 +1,8 @@
 ﻿using eShop.Domain.Common.Security;
+using eShop.Domain.Interfaces.Client;
 using eShop.Domain.Models.Store;
-using eShop.Domain.Requests.AuthApi.Auth;
-using eShop.Domain.Responses.AuthApi.Auth;
+using eShop.Domain.Requests.Api.Auth;
+using eShop.Domain.Responses.Api.Auth;
 
 namespace eShop.Infrastructure.Account;
 

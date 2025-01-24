@@ -1,4 +1,4 @@
-﻿using eShop.Domain.Responses.CartApi.Comments;
+﻿using eShop.Domain.Responses.Api.Comments;
 using eShop.Reviews.Api.Data;
 
 namespace eShop.Reviews.Api.Queries.Comments;

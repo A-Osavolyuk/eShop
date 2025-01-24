@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using eShop.Domain.Common.Api;
+using eShop.Domain.Exceptions.Interfaces;
 
 namespace eShop.Application.Utilities;
 

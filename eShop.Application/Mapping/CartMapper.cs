@@ -1,7 +1,7 @@
-﻿using eShop.Domain.DTOs.CartApi;
-using eShop.Domain.Entities.CartApi;
+﻿using eShop.Domain.DTOs.Api.Cart;
+using eShop.Domain.Entities.Api.Cart;
 using eShop.Domain.Models.Store;
-using eShop.Domain.Requests.CartApi.Cart;
+using eShop.Domain.Requests.Api.Cart;
 
 namespace eShop.Application.Mapping;
 

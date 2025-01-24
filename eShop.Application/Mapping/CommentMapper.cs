@@ -1,7 +1,7 @@
-﻿using eShop.Domain.DTOs.ReviewApi;
+﻿using eShop.Domain.DTOs.Api.Review;
 using eShop.Domain.Entities;
-using eShop.Domain.Entities.ReviewApi;
-using eShop.Domain.Requests.ReviewApi.Comments;
+using eShop.Domain.Entities.Api.Review;
+using eShop.Domain.Requests.Api.Comments;
 
 namespace eShop.Application.Mapping;
 

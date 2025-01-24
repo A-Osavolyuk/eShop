@@ -1,4 +1,8 @@
-﻿namespace eShop.Auth.Api.Extensions;
+﻿using eShop.Domain.Entities.Api.Auth;
+using eShop.Domain.Requests.Api.Cart;
+using eShop.Domain.Requests.Api.Sms;
+
+namespace eShop.Auth.Api.Extensions;
 
 public static class BuilderExtensions
 {

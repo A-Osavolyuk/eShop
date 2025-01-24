@@ -1,16 +1,17 @@
-﻿using eShop.Domain.Types;
-using UserData = eShop.Domain.Types.UserData;
+﻿using eShop.Domain.DTOs.Api.Auth;
+using eShop.Domain.Entities.Api.Auth;
+using eShop.Domain.Types;
 
 namespace eShop.Auth.Api.Queries.Admin;
 
-internal sealed record GetUsersListQuery() : IRequest<Result<IEnumerable<UserData>>>;
+internal sealed record GetUsersListQuery() : IRequest<Result<IEnumerable<UserDto>>>;
 
 internal sealed class GetUsersListQueryHandler(
-    AppManager appManager) : IRequestHandler<GetUsersListQuery, Result<IEnumerable<UserData>>>
+    AppManager appManager) : IRequestHandler<GetUsersListQuery, Result<IEnumerable<UserDto>>>
 {
     private readonly AppManager appManager = appManager;
 
-    public async Task<Result<IEnumerable<UserData>>> Handle(GetUsersListQuery request,
+    public async Task<Result<IEnumerable<UserDto>>> Handle(GetUsersListQuery request,
         CancellationToken cancellationToken)
     {
         var usersList = await appManager.UserManager.Users.AsNoTracking()
@@ -18,23 +19,23 @@ internal sealed class GetUsersListQueryHandler(
 
         if (!usersList.Any())
         {
-            return new(new List<UserData>());
+            return new(new List<UserDto>());
         }
 
-        var users = new List<UserData>();
+        var users = new List<UserDto>();
 
         foreach (var user in usersList)
         {
             var accountData = UserMapper.ToAccountData(user);
             var personalData = await appManager.ProfileManager.FindPersonalDataAsync(user);
-            var rolesList = await appManager.UserManager.GetRolesAsync(user);
+            var rolesList = (await appManager.UserManager.GetRolesAsync(user)).ToList();
 
             if (!rolesList.Any())
             {
                 return new(new NotFoundException($"Cannot find roles for user with ID {user.Id}."));
             }
 
-            var rolesData = (await appManager.RoleManager.GetRolesInfoAsync(rolesList) ?? Array.Empty<RoleInfo>()).ToList();
+            var rolesData = (await appManager.RoleManager.GetRolesInfoAsync(rolesList) ?? Array.Empty<RoleData>()).ToList();
             var permissions = await appManager.PermissionManager.GetUserPermissionsAsync(user);
             var roleInfos = rolesData.ToList();
 
@@ -67,7 +68,7 @@ internal sealed class GetUsersListQueryHandler(
                 Permissions = permissionsList
             };
 
-            users.Add(new UserData()
+            users.Add(new UserDto()
             {
                 PermissionsData = permissionData,
                 PersonalDataEntity = personalData ?? new(),

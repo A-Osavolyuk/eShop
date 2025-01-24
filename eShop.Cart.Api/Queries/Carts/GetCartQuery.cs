@@ -1,4 +1,6 @@
 ﻿using eShop.Cart.Api.Data;
+using eShop.Domain.DTOs.Api.Cart;
+using eShop.Domain.Entities.Api.Cart;
 
 namespace eShop.Cart.Api.Queries.Carts;
 
