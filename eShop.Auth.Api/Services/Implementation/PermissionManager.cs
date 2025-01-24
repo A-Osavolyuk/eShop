@@ -9,11 +9,6 @@ internal sealed class PermissionManager(AuthDbContext context) : IPermissionMana
     public async ValueTask<PermissionEntity?> FindPermissionAsync(string name)
     {
         var permission = await context.Permissions.AsNoTracking().SingleOrDefaultAsync(x => x.Name == name);
-
-        if (permission is null)
-        {
-            return default;
-        }
         return permission;
     }
 
@@ -61,8 +56,8 @@ internal sealed class PermissionManager(AuthDbContext context) : IPermissionMana
 
     public async ValueTask<IdentityResult> IssuePermissionAsync(AppUser user, string permission)
     {
-        var permisisonId = (await context.Permissions.AsNoTracking().SingleOrDefaultAsync(x => x.Name == permission))!.Id;
-        await context.UserPermissions.AddAsync(new() { UserId = user.Id, PermissionId = permisisonId });
+        var permissionId = (await context.Permissions.AsNoTracking().SingleOrDefaultAsync(x => x.Name == permission))!.Id;
+        await context.UserPermissions.AddAsync(new() { UserId = user.Id, PermissionId = permissionId });
         await context.SaveChangesAsync();
         return IdentityResult.Success;
     }
@@ -85,12 +80,10 @@ internal sealed class PermissionManager(AuthDbContext context) : IPermissionMana
 
     public async ValueTask<IdentityResult> RemoveFromPermissionsAsync(AppUser user)
     {
-        if (user is null)
-        {
-            return IdentityResult.Failed(new IdentityError() { Code = "400", Description = "User is null." });
-        }
-
-        var userPermissions = await context.UserPermissions.AsNoTracking().Where(x => x.UserId == user.Id).ToListAsync();
+        var userPermissions = await context.UserPermissions
+            .AsNoTracking()
+            .Where(x => x.UserId == user.Id)
+            .ToListAsync();
 
         if (userPermissions.Any())
         {
