@@ -1,24 +1,11 @@
-using eShop.Application;
-using eShop.Application.Extensions;
-using eShop.ServiceDefaults;
-using Ocelot.DependencyInjection;
+using eShop.Gateway.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddServiceDefaults();
-builder.Logging.AddConfiguration(builder.Configuration.GetSection("Configuration:Logging"));
-builder.Services.AddReverseProxy().LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
-
-builder.Services.AddOcelot();
-
-builder.AddJwtAuthentication();
+builder.AppApiServices();
 
 var app = builder.Build();
 
-app.MapDefaultEndpoints();
-app.MapReverseProxy(proxyPipeline =>
-{
-    proxyPipeline.UseAuthorization();
-});
+app.MapApiServices();
 
 app.Run();
