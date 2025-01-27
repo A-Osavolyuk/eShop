@@ -1,4 +1,6 @@
-﻿namespace eShop.Auth.Api.Queries.Admin;
+﻿using eShop.Auth.Api.Mapping;
+
+namespace eShop.Auth.Api.Queries.Admin;
 
 internal sealed record GetUsersListQuery() : IRequest<Result<IEnumerable<UserDto>>>;
 
@@ -67,7 +69,7 @@ internal sealed class GetUsersListQueryHandler(
             users.Add(new UserDto()
             {
                 PermissionsData = permissionData,
-                PersonalDataEntity = personalData ?? new(),
+                PersonalData = personalData ?? new(),
                 AccountData = accountData
             });
         }

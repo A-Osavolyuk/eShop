@@ -1,10 +1,13 @@
-﻿namespace eShop.Auth.Api.Services.Implementation;
+﻿using eShop.Auth.Api.Data.Entities;
+using eShop.Auth.Api.Mapping;
+
+namespace eShop.Auth.Api.Services.Implementation;
 
 internal sealed class ProfileManager(AuthDbContext context) : IProfileManager
 {
     private readonly AuthDbContext context = context;
 
-    public async ValueTask<PersonalDataEntity?> FindPersonalDataAsync(AppUser user)
+    public async ValueTask<PersonalData?> FindPersonalDataAsync(AppUser user)
     {
         var data = await context.PersonalData.AsNoTracking().FirstOrDefaultAsync(x => x.UserId == user.Id);
 
@@ -13,7 +16,8 @@ internal sealed class ProfileManager(AuthDbContext context) : IProfileManager
             return null;
         }
 
-        return data;
+        var response = PersonalDataMapper.ToPersonalData(data);
+        return response;
     }
 
     public async ValueTask<IdentityResult> SetPersonalDataAsync(AppUser user, PersonalDataEntity personalData)

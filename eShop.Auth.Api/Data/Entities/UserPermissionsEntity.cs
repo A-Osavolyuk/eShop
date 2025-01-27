@@ -1,4 +1,4 @@
-﻿namespace eShop.Domain.Entities.Api.Auth;
+﻿namespace eShop.Auth.Api.Data.Entities;
 
 public class UserPermissionsEntity
 {

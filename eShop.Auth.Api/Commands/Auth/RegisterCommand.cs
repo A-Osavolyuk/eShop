@@ -1,4 +1,6 @@
-﻿namespace eShop.Auth.Api.Commands.Auth;
+﻿using eShop.Auth.Api.Mapping;
+
+namespace eShop.Auth.Api.Commands.Auth;
 
 internal sealed record RegisterCommand(RegistrationRequest Request) : IRequest<Result<RegistrationResponse>>;
 

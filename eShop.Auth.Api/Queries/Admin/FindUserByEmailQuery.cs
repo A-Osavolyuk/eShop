@@ -1,4 +1,7 @@
-﻿namespace eShop.Auth.Api.Queries.Admin;
+﻿using eShop.Auth.Api.Data.Entities;
+using eShop.Auth.Api.Mapping;
+
+namespace eShop.Auth.Api.Queries.Admin;
 
 internal sealed record FindUserByEmailQuery(string Email) : IRequest<Result<UserDto>>;
 
@@ -64,7 +67,7 @@ internal sealed class FindUserByEmailQueryHandler(
         var response = new UserDto()
         {
             AccountData = accountData,
-            PersonalDataEntity = personalData ?? new PersonalDataEntity(),
+            PersonalData = personalData ?? new PersonalData(),
             PermissionsData = permissionData
         };
 

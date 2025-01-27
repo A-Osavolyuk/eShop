@@ -1,4 +1,6 @@
-﻿namespace eShop.Auth.Api.Commands.Account;
+﻿using eShop.Auth.Api.Mapping;
+
+namespace eShop.Auth.Api.Commands.Account;
 
 internal sealed record SetPersonalDataCommand(SetPersonalDataRequest Request)
     : IRequest<Result<SetPersonalDataResponse>>;

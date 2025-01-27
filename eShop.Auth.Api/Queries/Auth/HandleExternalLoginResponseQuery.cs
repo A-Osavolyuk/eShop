@@ -1,4 +1,6 @@
-﻿namespace eShop.Auth.Api.Queries.Auth;
+﻿using eShop.Auth.Api.Data.Entities;
+
+namespace eShop.Auth.Api.Queries.Auth;
 
 internal sealed record HandleExternalLoginResponseQuery(
     ExternalLoginInfo ExternalLoginInfo,

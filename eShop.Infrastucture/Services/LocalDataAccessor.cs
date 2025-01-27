@@ -48,7 +48,7 @@ public class LocalDataAccessor(ILocalStorageService localStorageService) : ILoca
         await localStorageService.SetItemAsync("personal-data", personalDataModel);
     }
 
-    public async ValueTask<PersonalDataModel> ReadPersonalDataAsync()
+    public async ValueTask<PersonalDataModel?> ReadPersonalDataAsync()
     {
         var personalData = await localStorageService.GetItemAsync<PersonalDataModel>("personal-data");
 

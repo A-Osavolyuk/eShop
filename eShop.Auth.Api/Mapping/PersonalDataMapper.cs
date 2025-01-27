@@ -1,13 +1,10 @@
-﻿using eShop.Domain.Entities.Api.Auth;
-using eShop.Domain.Requests.Api.Account;
-using eShop.Domain.Requests.Api.Auth;
-using eShop.Domain.Responses.Api.Auth;
+﻿using eShop.Auth.Api.Data.Entities;
 
-namespace eShop.Application.Mapping;
+namespace eShop.Auth.Api.Mapping;
 
 public static class PersonalDataMapper
 {
-    public static PersonalDataResponse ToPersonalDataResponse(PersonalDataEntity entity)
+    public static PersonalDataResponse ToPersonalDataResponse(PersonalData entity)
     {
         return new PersonalDataResponse()
         {
@@ -29,17 +26,6 @@ public static class PersonalDataMapper
         };
     }
 
-    public static ChangePersonalDataRequest ToChangePersonalDataRequest(PersonalDataModel model)
-    {
-        return new ChangePersonalDataRequest()
-        {
-            FirstName = model.FirstName,
-            LastName = model.LastName,
-            Gender = model.Gender,
-            DateOfBirth = model.DateOfBirth
-        };
-    }
-
     public static PersonalDataEntity ToPersonalDataEntity(SetPersonalDataRequest request)
     {
         return new PersonalDataEntity()
@@ -49,6 +35,17 @@ public static class PersonalDataMapper
             Gender = request.Gender,
             DateOfBirth = request.BirthDate,
             
+        };
+    }
+
+    public static PersonalData ToPersonalData(PersonalDataEntity data)
+    {
+        return new PersonalData()
+        {
+            FirstName = data.FirstName,
+            LastName = data.LastName,
+            Gender = data.Gender,
+            DateOfBirth = data.DateOfBirth,
         };
     }
 }

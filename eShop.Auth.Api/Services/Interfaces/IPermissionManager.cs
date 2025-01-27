@@ -1,4 +1,6 @@
-﻿namespace eShop.Auth.Api.Services.Interfaces;
+﻿using eShop.Auth.Api.Data.Entities;
+
+namespace eShop.Auth.Api.Services.Interfaces;
 
 internal interface IPermissionManager
 {

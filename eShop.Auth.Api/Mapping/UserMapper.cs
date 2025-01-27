@@ -1,9 +1,6 @@
-﻿using eShop.Domain.Entities.Api.Auth;
-using eShop.Domain.Requests.Api.Auth;
-using eShop.Domain.Responses.Api.Admin;
-using eShop.Domain.Types;
+﻿using eShop.Auth.Api.Data.Entities;
 
-namespace eShop.Application.Mapping;
+namespace eShop.Auth.Api.Mapping;
 
 public class UserMapper
 {
@@ -15,23 +12,6 @@ public class UserMapper
             UserName = request.Email,
             NormalizedEmail = request.Email.ToUpper(),
             NormalizedUserName = request.Email.ToUpper(),
-        };
-    }
-    
-    public static AppUser ToAppUser(AccountData data)
-    {
-        return new AppUser()
-        {
-            Id = data.Id.ToString(),
-            Email = data.Email,
-            UserName = data.UserName,
-            NormalizedEmail = data.Email.ToUpper(),
-            NormalizedUserName = data.UserName.ToUpper(),
-            PhoneNumber = data.PhoneNumber,
-            PhoneNumberConfirmed = data.PhoneNumberConfirmed,
-            EmailConfirmed = data.EmailConfirmed,
-            LockoutEnabled = data.LockoutEnabled,
-            LockoutEnd = data.LockoutEnd
         };
     }
 

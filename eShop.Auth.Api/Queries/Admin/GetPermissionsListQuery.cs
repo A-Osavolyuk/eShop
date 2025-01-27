@@ -1,4 +1,6 @@
-﻿namespace eShop.Auth.Api.Queries.Admin;
+﻿using eShop.Auth.Api.Data.Entities;
+
+namespace eShop.Auth.Api.Queries.Admin;
 
 internal sealed record GetPermissionsListQuery() : IRequest<Result<IEnumerable<PermissionEntity>>>;
 

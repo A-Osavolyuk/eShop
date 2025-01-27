@@ -23,7 +23,7 @@ public interface ILocalDataAccessor
     public ValueTask WriteUserDataAsync(UserStore user);
     public ValueTask<UserStore> ReadUserDataAsync();
     public ValueTask WritePersonalDataAsync(PersonalDataModel personalDataModel);
-    public ValueTask<PersonalDataModel> ReadPersonalDataAsync();
+    public ValueTask<PersonalDataModel?> ReadPersonalDataAsync();
     public ValueTask WriteSecurityDataAsync(SecurityData securityData);
     public ValueTask<SecurityData> ReadSecurityDataAsync();
     public ValueTask ClearAsync();

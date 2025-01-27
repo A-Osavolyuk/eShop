@@ -1,4 +1,6 @@
-﻿namespace eShop.Auth.Api.HostedServices;
+﻿using eShop.Auth.Api.Data.Entities;
+
+namespace eShop.Auth.Api.HostedServices;
 
 public class HostedCodeValidator(IServiceScopeFactory scopeFactory) : IHostedService, IDisposable
 {

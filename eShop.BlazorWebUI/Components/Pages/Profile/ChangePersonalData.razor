@@ -25,12 +25,12 @@
                     </MudGrid>
                     <MudGrid Justify="Justify.Center">
                         <MudItem xs="12">
-                            <EditForm Context="formcontext" Model="Request" FormName="change-personal-data-form" OnValidSubmit="OnValidSubmit">
+                            <EditForm Context="formcontext" Model="request" FormName="change-personal-data-form" OnValidSubmit="OnValidSubmit">
                                 <FluentValidationValidator Validator="Validator" />
-                                <MudTextField Immediate Clearable Counter="32" MaxLength="32" For="@(() => Request.FirstName)" Label="First name" @bind-Value="Request.FirstName" Variant="Variant.Outlined" />
-                                <MudTextField Immediate Clearable Counter="32" MaxLength="32" For="@(() => Request.LastName)" Label="Last name" @bind-Value="Request.LastName" Variant="Variant.Outlined" />
-                                <MudTextField Immediate Clearable Counter="32" MaxLength="32" For="@(() => Request.Gender)" Label="Gender" @bind-Value="Request.Gender" Variant="Variant.Outlined" />
-                                <MudDatePicker @ref="DatePicker" For="@(() => Request.DateOfBirth)" Label="Date of birth" @bind-Date="Request.DateOfBirth" Variant="Variant.Outlined" />
+                                <MudTextField Immediate Clearable Counter="32" MaxLength="32" For="@(() => request.FirstName)" Label="First name" @bind-Value="request.FirstName" Variant="Variant.Outlined" />
+                                <MudTextField Immediate Clearable Counter="32" MaxLength="32" For="@(() => request.LastName)" Label="Last name" @bind-Value="request.LastName" Variant="Variant.Outlined" />
+                                <MudTextField Immediate Clearable Counter="32" MaxLength="32" For="@(() => request.Gender)" Label="Gender" @bind-Value="request.Gender" Variant="Variant.Outlined" />
+                                <MudDatePicker @ref="datePicker" For="@(() => request.DateOfBirth)" Label="Date of birth" @bind-Date="request.DateOfBirth" Variant="Variant.Outlined" />
                                 <MudButton Class="mt-3" Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Success" EndIcon="@Icons.Material.Filled.Save">Save changes</MudButton>
                             </EditForm>
                         </MudItem>
@@ -45,20 +45,27 @@
 </AuthorizeView>
 
 @code {
-    private ChangePersonalDataRequest Request = new();
-    private UserStore User = new();
-    private MudDatePicker DatePicker = new();
+    private ChangePersonalDataRequest request = new();
+    private UserStore user = new();
+    private MudDatePicker datePicker = new();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             var personalDataModel = await LocalDataAccessor.ReadPersonalDataAsync();
-            User = await LocalDataAccessor.ReadUserDataAsync();
+            user = await LocalDataAccessor.ReadUserDataAsync();
 
             if (personalDataModel is not null)
             {
-                Request = PersonalDataMapper.ToChangePersonalDataRequest(personalDataModel) with { Email = User.Email };
+                request = new ChangePersonalDataRequest()
+                {
+                    FirstName = personalDataModel.FirstName,
+                    LastName = personalDataModel.LastName,
+                    DateOfBirth = personalDataModel.DateOfBirth,
+                    Gender = personalDataModel.Gender,
+                    Email = user.Email
+                };
             }
 
             StateHasChanged();
@@ -67,7 +74,7 @@
 
     private async Task OnValidSubmit()
     {
-        var response = await AuthService.ChangePersonalDataAsync(Request);
+        var response = await AuthService.ChangePersonalDataAsync(request);
 
         if (response.Success)
         {

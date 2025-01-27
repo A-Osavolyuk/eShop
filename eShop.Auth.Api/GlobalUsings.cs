@@ -24,7 +24,6 @@ global using eShop.Auth.Api.Utilities;
 global using eShop.Domain.Common.Api;
 global using eShop.Domain.Common.Security;
 global using eShop.Domain.DTOs.Api.Auth;
-global using eShop.Domain.Entities.Api.Auth;
 global using eShop.Domain.Enums;
 global using eShop.Domain.Exceptions;
 global using eShop.Domain.Interfaces;
