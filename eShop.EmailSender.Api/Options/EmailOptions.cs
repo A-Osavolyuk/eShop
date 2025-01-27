@@ -1,4 +1,4 @@
-﻿namespace eShop.Domain.Options;
+﻿namespace eShop.EmailSender.Api.Options;
 
 public class EmailOptions
 {
@@ -7,5 +7,5 @@ public class EmailOptions
     public string DisplayName { get; set; } = string.Empty;
     public string Host { get; set; } = string.Empty;
     public int Port { get; set; }
-    public bool EnableSSL { get; set; }
+    public bool EnableSsl { get; set; }
 }

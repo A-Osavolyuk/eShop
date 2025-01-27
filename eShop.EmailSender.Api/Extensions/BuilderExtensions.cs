@@ -1,4 +1,4 @@
-﻿using eShop.Domain.Options;
+﻿using eShop.EmailSender.Api.Options;
 using eShop.EmailSender.Api.Receivers;
 using eShop.ServiceDefaults;
 using MassTransit;

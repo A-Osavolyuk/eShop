@@ -1,4 +1,4 @@
-﻿namespace eShop.Domain.Options;
+﻿namespace eShop.Auth.Api.Options;
 
 public class JwtOptions
 {

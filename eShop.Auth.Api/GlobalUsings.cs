@@ -31,7 +31,6 @@ global using eShop.Domain.Messages;
 global using eShop.Domain.Messages.Email;
 global using eShop.Domain.Messages.Sms;
 global using eShop.Domain.Models;
-global using eShop.Domain.Options;
 global using eShop.Domain.Requests.Api.Account;
 global using eShop.Domain.Requests.Api.Admin;
 global using eShop.Domain.Requests.Api.Auth;

@@ -1,7 +1,7 @@
 ﻿using eShop.Application.Extensions;
 using eShop.Domain.Interfaces;
-using eShop.FilesStorage.Api.Services.Implementation;
 using eShop.FilesStorage.Api.Services;
+using eShop.FilesStorage.Api.Services.Implementation;
 using eShop.ServiceDefaults;
 using Interfaces_IStoreService = eShop.FilesStorage.Api.Services.Interfaces.IStoreService;
 using IStoreService = eShop.FilesStorage.Api.Services.Interfaces.IStoreService;
