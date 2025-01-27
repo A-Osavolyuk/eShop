@@ -37,9 +37,9 @@ internal sealed class GetPersonalDataQueryHandler(
 
             await cacheService.SetAsync(key, personalData, TimeSpan.FromHours(6));
             
-            return new(PersonalDataMapper.ToPersonalDataResponse(personalData));
+            return new(Mapper.ToPersonalDataResponse(personalData));
         }
 
-        return new (PersonalDataMapper.ToPersonalDataResponse(data));
+        return new (Mapper.ToPersonalDataResponse(data));
     }
 }

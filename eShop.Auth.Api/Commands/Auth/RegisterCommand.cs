@@ -29,7 +29,7 @@ internal sealed class RegisterCommandHandler(
             return new(new BadRequestException("User already exists"));
         }
 
-        var newUser = UserMapper.ToAppUser(request.Request);
+        var newUser = Mapper.ToAppUser(request.Request);
         var registrationResult = await appManager.UserManager.CreateAsync(newUser, request.Request.Password);
 
         if (!registrationResult.Succeeded)

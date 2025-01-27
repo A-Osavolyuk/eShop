@@ -22,7 +22,7 @@ internal sealed class ChangePersonalDataCommandHandler(
             return new(new NotFoundException($"Cannot find user with email {request.Request.Email}."));
         }
 
-        var entity = PersonalDataMapper.ToPersonalDataEntity(request.Request);
+        var entity = Mapper.ToPersonalDataEntity(request.Request);
         var result = await appManager.ProfileManager.ChangePersonalDataAsync(user, entity);
 
         if (!result.Succeeded)

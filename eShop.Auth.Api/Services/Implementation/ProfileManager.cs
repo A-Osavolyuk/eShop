@@ -16,7 +16,7 @@ internal sealed class ProfileManager(AuthDbContext context) : IProfileManager
             return null;
         }
 
-        var response = PersonalDataMapper.ToPersonalData(data);
+        var response = Mapper.ToPersonalData(data);
         return response;
     }
 

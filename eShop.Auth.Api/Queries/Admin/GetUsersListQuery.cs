@@ -24,7 +24,7 @@ internal sealed class GetUsersListQueryHandler(
 
         foreach (var user in usersList)
         {
-            var accountData = UserMapper.ToAccountData(user);
+            var accountData = Mapper.ToAccountData(user);
             var personalData = await appManager.ProfileManager.FindPersonalDataAsync(user);
             var rolesList = (await appManager.UserManager.GetRolesAsync(user)).ToList();
 
