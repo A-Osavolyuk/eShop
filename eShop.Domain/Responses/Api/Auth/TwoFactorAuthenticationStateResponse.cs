@@ -1,4 +1,5 @@
 ﻿using eShop.Domain.Common.Security;
+using eShop.Domain.Types;
 
 namespace eShop.Domain.Responses.Api.Auth;
 

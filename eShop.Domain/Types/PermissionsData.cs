@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Entities.Api.Auth;
-
-namespace eShop.Domain.Types;
+﻿namespace eShop.Domain.Types;
 
 public class PermissionsData
 {

@@ -1,4 +1,4 @@
-﻿namespace eShop.Domain.Common.Security;
+﻿namespace eShop.Domain.Types;
 
 public class TwoFactorAuthenticationState
 {
