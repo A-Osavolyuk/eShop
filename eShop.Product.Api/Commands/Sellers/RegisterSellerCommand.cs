@@ -1,10 +1,4 @@
-﻿using eShop.Domain.Entities.Api.Product;
-using eShop.Domain.Requests.Api.Seller;
-using eShop.Domain.Responses.Api.Seller;
-using eShop.Product.Api.Data;
-using eShop.Product.Api.Rpc;
-
-namespace eShop.Product.Api.Commands.Sellers;
+﻿namespace eShop.Product.Api.Commands.Sellers;
 
 internal sealed record RegisterSellerCommand(RegisterSellerRequest Request) : IRequest<Result<RegisterSellerResponse>>;
 

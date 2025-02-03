@@ -1,9 +1,4 @@
-﻿using eShop.Product.Api.Behaviours;
-using eShop.Product.Api.Data;
-using eShop.Product.Api.Rpc;
-using eShop.Product.Api.Services.Implementation;
-
-namespace eShop.Product.Api.Extensions;
+﻿namespace eShop.Product.Api.Extensions;
 
 public static class BuilderExtensions
 {

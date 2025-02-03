@@ -1,4 +1,4 @@
-﻿namespace eShop.Domain.Entities.Api.Product;
+﻿namespace eShop.Product.Api.Data.Entities;
 
 public class ProductEntity
 {

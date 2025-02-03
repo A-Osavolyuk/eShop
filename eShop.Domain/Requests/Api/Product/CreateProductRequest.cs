@@ -1,11 +1,9 @@
 ﻿using eShop.Domain.DTOs.Api.Product;
-using eShop.Domain.Entities.Api.Product;
 
 namespace eShop.Domain.Requests.Api.Product;
 
 public record CreateProductRequest
 {
-    public CreateProductRequest() => Article = ProductEntity.GenerateArticle();
     public Guid Id { get; set; } = Guid.NewGuid();
     public ProductTypes ProductType { get; set; } = ProductTypes.None;
     public string Article { get; set; } = string.Empty;

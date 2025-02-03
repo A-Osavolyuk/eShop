@@ -1,5 +1,4 @@
-﻿using eShop.Domain.Interfaces;
-using Microsoft.Extensions.Caching.Distributed;
+﻿using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 
 namespace eShop.Product.Api.Services.Implementation;

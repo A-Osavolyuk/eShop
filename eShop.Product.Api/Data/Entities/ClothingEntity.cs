@@ -1,6 +1,6 @@
-﻿namespace eShop.Domain.Entities.Api.Product;
+﻿namespace eShop.Product.Api.Data.Entities;
 
-public class ShoesEntity : ProductEntity
+public class ClothingEntity : ProductEntity
 {
     public ProductColor Color { get; set; } = ProductColor.None;
     public List<ProductSize> Size { get; set; } = new List<ProductSize>();

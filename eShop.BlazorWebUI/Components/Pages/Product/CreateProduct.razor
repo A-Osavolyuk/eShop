@@ -219,6 +219,7 @@
 
     private async Task CreateProductAsync(CreateProductRequest request)
     {
+        request.Article = GenerateArticle();
         var response = await ProductService.CreateProductAsync(request);
 
         if (response.Success)
@@ -232,6 +233,8 @@
             Snackbar.Add(response.Message, Severity.Error);
         }
     }
+    
+    public string GenerateArticle() => new Random().NextInt64(100_000_000, 999_999_999_999).ToString();
 
     #endregion
 

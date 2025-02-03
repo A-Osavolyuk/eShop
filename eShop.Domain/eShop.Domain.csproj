@@ -19,8 +19,6 @@
 
   <ItemGroup>
     <Folder Include="DTOs\Api\" />
-    <Folder Include="Entities\Api\" />
-    <Folder Include="Entities\Api\Review\" />
     <Folder Include="Requests\Api\" />
     <Folder Include="Responses\Api\" />
   </ItemGroup>

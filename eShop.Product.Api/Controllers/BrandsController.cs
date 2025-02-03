@@ -1,7 +1,4 @@
-﻿using eShop.Domain.Requests.Api.Brand;
-using eShop.Product.Api.Commands.Brands;
-using eShop.Product.Api.Queries.Brands;
-using Response = eShop.Domain.Common.Api.Response;
+﻿using Response = eShop.Domain.Common.Api.Response;
 
 namespace eShop.Product.Api.Controllers;
 
