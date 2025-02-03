@@ -18,6 +18,6 @@ internal sealed class GetCartQueryHandler(DbClient client) : IRequestHandler<Get
             return new(new NotFoundException($"Cannot find cart with user ID {request.UserId}."));
         }
 
-        return CartMapper.ToCartDto(cart);
+        return Mapper.ToCartDto(cart);
     }
 }

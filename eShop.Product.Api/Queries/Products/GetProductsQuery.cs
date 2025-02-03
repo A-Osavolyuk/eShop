@@ -22,7 +22,7 @@ internal sealed class GetProductsQueryHandler(AppDbContext context, ICacheServic
                 .ToListAsync(cancellationToken);
 
             var response = products
-                .Select(ProductMapper.ToProductDto)
+                .Select(Mapper.ToProductDto)
                 .ToList();
 
             await cacheService.SetAsync(key, response, TimeSpan.FromMinutes(30));

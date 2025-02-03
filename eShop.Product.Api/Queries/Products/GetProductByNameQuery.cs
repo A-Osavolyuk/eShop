@@ -45,9 +45,9 @@ internal sealed class GetProductQueryByNameHandler(AppDbContext context, ICacheS
     {
         var response = entity.ProductType switch
         {
-            ProductTypes.Shoes => ProductMapper.ToShoesDto(await FindOfType<ShoesEntity>(entity)),
-            ProductTypes.Clothing => ProductMapper.ToClothingDto(await FindOfType<ClothingEntity>(entity)),
-            _ or ProductTypes.None => ProductMapper.ToProductDto(entity),
+            ProductTypes.Shoes => Mapper.ToShoesDto(await FindOfType<ShoesEntity>(entity)),
+            ProductTypes.Clothing => Mapper.ToClothingDto(await FindOfType<ClothingEntity>(entity)),
+            _ or ProductTypes.None => Mapper.ToProductDto(entity),
         };
 
         return response;

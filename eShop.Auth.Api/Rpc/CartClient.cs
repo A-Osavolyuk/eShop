@@ -8,7 +8,7 @@ public class CartClient
         var uri = configuration["Configuration:Grpc:Servers:CartServer:Uri"] ??
                   throw new NullReferenceException("Not specified RPC server uri");
         var channel = GrpcChannel.ForAddress(uri);
-        this.client = new CartService.CartServiceClient(channel);
+        client = new CartService.CartServiceClient(channel);
     }
     
     private readonly ILogger<CartClient> logger;

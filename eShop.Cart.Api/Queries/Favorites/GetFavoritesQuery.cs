@@ -18,6 +18,6 @@ internal sealed class GetFavoritesQueryHandler(DbClient client) : IRequestHandle
             return new(new NotFoundException($"Cannot find favorites with user ID {request.UserId}"));
         }
 
-        return FavoritesMapper.ToFavoritesDto(favorites);
+        return Mapper.ToFavoritesDto(favorites);
     }
 }

@@ -12,7 +12,7 @@ internal sealed class CreateCommentCommandHandler(
     public async Task<Result<CreateCommentResponse>> Handle(CreateCommentCommand request,
         CancellationToken cancellationToken)
     {
-        var comment = CommentMapper.ToCommentEntity(request.Request);
+        var comment = Mapper.ToCommentEntity(request.Request);
         await context.Comments.AddAsync(comment, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
 

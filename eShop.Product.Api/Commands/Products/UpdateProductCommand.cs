@@ -28,9 +28,9 @@ internal sealed class UpdateProductCommandHandler(AppDbContext context)
 
         var entity = request.Request.ProductType switch
         {
-            ProductTypes.Clothing => ProductMapper.ToClothingEntity(request.Request),
-            ProductTypes.Shoes => ProductMapper.ToShoesEntity(request.Request),
-            _ or ProductTypes.None => ProductMapper.ToProductEntity(request.Request)
+            ProductTypes.Clothing => Mapper.ToClothingEntity(request.Request),
+            ProductTypes.Shoes => Mapper.ToShoesEntity(request.Request),
+            _ or ProductTypes.None => Mapper.ToProductEntity(request.Request)
         };
 
         context.Products.Update(entity);

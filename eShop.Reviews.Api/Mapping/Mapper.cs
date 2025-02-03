@@ -1,6 +1,6 @@
 ﻿namespace eShop.Reviews.Api.Mapping;
 
-public static class CommentMapper
+public static class Mapper
 {
     public static CommentDto ToCommentDto(CommentEntity entity)
     {

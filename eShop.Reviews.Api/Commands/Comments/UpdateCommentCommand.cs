@@ -19,7 +19,7 @@ internal sealed class UpdateCommentCommandHandler(
             return new(new NotFoundException($"Cannot find comment with id: {request.Request.CommentId}."));
         }
 
-        var newComment = CommentMapper.ToCommentEntity(request.Request) with { UpdatedAt = DateTime.UtcNow };
+        var newComment = Mapper.ToCommentEntity(request.Request) with { UpdatedAt = DateTime.UtcNow };
         context.Comments.Update(newComment);
         await context.SaveChangesAsync(cancellationToken);
 

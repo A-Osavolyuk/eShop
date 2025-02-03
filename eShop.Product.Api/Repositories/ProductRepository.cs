@@ -8,7 +8,7 @@ public class ProductRepository(AppDbContext context) : IProductRepository
     {
         return await context.Products
             .AsNoTracking()
-            .Select(x => ProductMapper.ToProductDto(x))
+            .Select(x => Mapper.ToProductDto(x))
             .ToListAsync();
     }
 
@@ -17,7 +17,7 @@ public class ProductRepository(AppDbContext context) : IProductRepository
         return await context.Products
             .AsNoTracking()
             .Where(x => x.ProductType == productType)
-            .Select(x => ProductMapper.ToProductDto(x))
+            .Select(x => Mapper.ToProductDto(x))
             .ToListAsync();
     }
 
@@ -26,7 +26,7 @@ public class ProductRepository(AppDbContext context) : IProductRepository
         return await context.Products
             .AsNoTracking()
             .Where(x => x.Name.Contains(name))
-            .Select(x => ProductMapper.ToProductDto(x))
+            .Select(x => Mapper.ToProductDto(x))
             .ToListAsync();
     }
 
@@ -129,9 +129,9 @@ public class ProductRepository(AppDbContext context) : IProductRepository
     {
         var dto = entity?.ProductType switch
         {
-            ProductTypes.Shoes => ProductMapper.ToProductDto((await FindAndMapAsync<ShoesEntity>(entity))!),
-            ProductTypes.Clothing => ProductMapper.ToProductDto((await FindAndMapAsync<ClothingEntity>(entity))!),
-            _ or ProductTypes.None => ProductMapper.ToProductDto(entity!),
+            ProductTypes.Shoes => Mapper.ToProductDto((await FindAndMapAsync<ShoesEntity>(entity))!),
+            ProductTypes.Clothing => Mapper.ToProductDto((await FindAndMapAsync<ClothingEntity>(entity))!),
+            _ or ProductTypes.None => Mapper.ToProductDto(entity!),
         };
 
         return dto;
@@ -141,9 +141,9 @@ public class ProductRepository(AppDbContext context) : IProductRepository
     {
         var entity = request?.ProductType switch
         {
-            ProductTypes.Shoes => ProductMapper.ToProductEntity(request),
-            ProductTypes.Clothing => ProductMapper.ToProductEntity(request),
-            _ or ProductTypes.None => ProductMapper.ToProductEntity(request!),
+            ProductTypes.Shoes => Mapper.ToProductEntity(request),
+            ProductTypes.Clothing => Mapper.ToProductEntity(request),
+            _ or ProductTypes.None => Mapper.ToProductEntity(request!),
         };
         
         return entity;
@@ -153,9 +153,9 @@ public class ProductRepository(AppDbContext context) : IProductRepository
     {
         var entity = request?.ProductType switch
         {
-            ProductTypes.Shoes => ProductMapper.ToProductEntity(request),
-            ProductTypes.Clothing => ProductMapper.ToProductEntity(request),
-            _ or ProductTypes.None => ProductMapper.ToProductEntity(request!),
+            ProductTypes.Shoes => Mapper.ToProductEntity(request),
+            ProductTypes.Clothing => Mapper.ToProductEntity(request),
+            _ or ProductTypes.None => Mapper.ToProductEntity(request!),
         };
         
         return entity;

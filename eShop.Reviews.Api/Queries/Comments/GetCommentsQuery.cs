@@ -16,7 +16,7 @@ internal sealed class GetCommentsQueryHandler(
 
         var response = await commentsList
             .AsQueryable()
-            .Select(x => CommentMapper.ToCommentDto(x))
+            .Select(x => Mapper.ToCommentDto(x))
             .ToListAsync(cancellationToken);
 
         return new(new GetCommentsResponse()

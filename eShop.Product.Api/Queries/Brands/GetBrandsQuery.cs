@@ -10,7 +10,7 @@ internal sealed class GetBrandsQueryHandler(AppDbContext context)
     public async Task<Result<List<BrandDto>>> Handle(GetBrandsQuery request, CancellationToken cancellationToken)
     {
         var brands = await context.Brands.AsNoTracking().ToListAsync(cancellationToken);
-        var response = brands.Select(BrandMapper.ToBrandDto).ToList();
+        var response = brands.Select(Mapper.ToBrandDto).ToList();
         return response;
     }
 }

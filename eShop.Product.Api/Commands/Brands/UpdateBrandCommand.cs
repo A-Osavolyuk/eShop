@@ -16,7 +16,7 @@ internal sealed class UpdateBrandCommandHandler(
                 new NotFoundException($"Cannot find brand with ID {request.Request.Id}"));
         }
 
-        var entity = BrandMapper.ToBrandEntity(request.Request);
+        var entity = Mapper.ToBrandEntity(request.Request);
         context.Brands.Update(entity);
         await context.SaveChangesAsync(cancellationToken);
 

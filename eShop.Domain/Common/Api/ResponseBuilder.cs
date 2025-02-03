@@ -8,13 +8,13 @@ public class ResponseBuilder
 
     public ResponseBuilder WithResult(object value)
     {
-        this.result = value;
+        result = value;
         return this;
     }
 
     public ResponseBuilder WithMessage(string value)
     {
-        this.resultMessage = value;
+        resultMessage = value;
         return this;
     }
 

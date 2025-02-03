@@ -1,6 +1,6 @@
 ﻿namespace eShop.Product.Api.Mapping;
 
-public static class ProductMapper
+public static class Mapper
 {
     #region Create request to entities
 
@@ -16,8 +16,8 @@ public static class ProductMapper
             ProductAudience = request.ProductAudience,
             ProductType = request.ProductType,
             Article = request.Article,
-            Brand = BrandMapper.ToBrandEntity(request.Brand),
-            Seller = SellerMapper.ToSellerDto(request.Seller),
+            Brand = ToBrandEntity(request.Brand),
+            Seller = ToSellerDto(request.Seller),
             Color = request.Color,
             Description = request.Description,
             Images = request.Images,
@@ -37,8 +37,8 @@ public static class ProductMapper
             ProductAudience = request.ProductAudience,
             ProductType = request.ProductType,
             Article = request.Article,
-            Brand = BrandMapper.ToBrandEntity(request.Brand),
-            Seller = SellerMapper.ToSellerDto(request.Seller),
+            Brand = ToBrandEntity(request.Brand),
+            Seller = ToSellerDto(request.Seller),
             Color = request.Color,
             Description = request.Description,
             Images = request.Images,
@@ -57,8 +57,8 @@ public static class ProductMapper
             ProductCurrency = request.ProductCurrency,
             ProductType = request.ProductType,
             Article = request.Article,
-            Brand = BrandMapper.ToBrandEntity(request.Brand), 
-            Seller = SellerMapper.ToSellerDto(request.Seller),
+            Brand = ToBrandEntity(request.Brand), 
+            Seller = ToSellerDto(request.Seller),
             Description = request.Description,
             Images = request.Images,
         };
@@ -79,8 +79,8 @@ public static class ProductMapper
             ProductAudience = request.ProductAudience,
             ProductType = request.ProductType,
             Article = request.Article,
-            Brand = BrandMapper.ToBrandEntity(request.Brand),
-            Seller = SellerMapper.ToSellerDto(request.Seller),
+            Brand = ToBrandEntity(request.Brand),
+            Seller = ToSellerDto(request.Seller),
             Color = request.Color,
             Description = request.Description,
             Images = request.Images,
@@ -99,8 +99,8 @@ public static class ProductMapper
             ProductAudience = request.ProductAudience,
             ProductType = request.ProductType,
             Article = request.Article,
-            Brand = BrandMapper.ToBrandEntity(request.Brand),
-            Seller = SellerMapper.ToSellerDto(request.Seller),
+            Brand = ToBrandEntity(request.Brand),
+            Seller = ToSellerDto(request.Seller),
             Color = request.Color,
             Description = request.Description,
             Images = request.Images,
@@ -118,8 +118,8 @@ public static class ProductMapper
             ProductCurrency = request.ProductCurrency,
             ProductType = request.ProductType,
             Article = request.Article,
-            Brand = BrandMapper.ToBrandEntity(request.Brand),
-            Seller = SellerMapper.ToSellerDto(request.Seller),
+            Brand = ToBrandEntity(request.Brand),
+            Seller = ToSellerDto(request.Seller),
             Description = request.Description,
             Images = request.Images,
         };
@@ -135,8 +135,8 @@ public static class ProductMapper
         {
             Id = entity.Id,
             Article = entity.Article,
-            Brand = BrandMapper.ToBrandDto(entity.Brand),
-            Seller = SellerMapper.ToSellerDto(entity.Seller),
+            Brand = ToBrandDto(entity.Brand),
+            Seller = ToSellerDto(entity.Seller),
             Description = entity.Description,
             Images = entity.Images,
             ProductType = entity.ProductType,
@@ -152,8 +152,8 @@ public static class ProductMapper
         {
             Id = entity.Id,
             Article = entity.Article,
-            Brand = BrandMapper.ToBrandDto(entity.Brand),
-            Seller = SellerMapper.ToSellerDto(entity.Seller),
+            Brand = ToBrandDto(entity.Brand),
+            Seller = ToSellerDto(entity.Seller),
             Description = entity.Description,
             Images = entity.Images,
             ProductType = entity.ProductType,
@@ -172,8 +172,8 @@ public static class ProductMapper
         {
             Id = entity.Id,
             Article = entity.Article,
-            Brand = BrandMapper.ToBrandDto(entity.Brand),
-            Seller = SellerMapper.ToSellerDto(entity.Seller),
+            Brand = ToBrandDto(entity.Brand),
+            Seller = ToSellerDto(entity.Seller),
             Description = entity.Description,
             Images = entity.Images,
             ProductType = entity.ProductType,
@@ -186,4 +186,68 @@ public static class ProductMapper
     }
 
     #endregion
+    
+    public static BrandEntity ToBrandEntity(CreateBrandRequest request)
+    {
+        return new()
+        {
+            Name = request.Name,
+            Country = request.Country,
+        };
+    }
+
+    public static BrandEntity ToBrandEntity(UpdateBrandRequest request)
+    {
+        return new()
+        {
+            Name = request.Name,
+            Country = request.Country,
+        };
+    }
+
+    public static BrandDto ToBrandDto(BrandEntity entity)
+    {
+        return new()
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            Country = entity.Country,
+        };
+    }
+    
+    public static BrandEntity ToBrandEntity(BrandDto dto)
+    {
+        return new()
+        {
+            Id = dto.Id,
+            Name = dto.Name,
+            Country = dto.Country,
+        };
+    }
+    
+    public static SellerDto ToSellerDto(SellerEntity entity)
+    {
+        return new()
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            Article = entity.Article,
+            Email = entity.Email,
+            PhoneNumber = entity.PhoneNumber,
+            UserId = entity.UserId,
+        };
+    }
+    
+    public static SellerEntity ToSellerDto(SellerDto dto)
+    {
+        return new()
+        {
+            Id = dto.Id,
+            Name = dto.Name,
+            Article = dto.Article,
+            Email = dto.Email,
+            PhoneNumber = dto.PhoneNumber,
+            UserId = dto.UserId,
+        };
+    }
 }
