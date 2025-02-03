@@ -1,6 +1,4 @@
-﻿using eShop.Reviews.Api.Data;
-
-namespace eShop.Reviews.Api.Behaviours;
+﻿namespace eShop.Reviews.Api.Behaviours;
 
 public class TransactionBehaviour<TRequest, TResponse>(
     AppDbContext context, 

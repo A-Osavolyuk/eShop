@@ -1,10 +1,4 @@
-﻿using eShop.Domain.Interfaces;
-using eShop.Reviews.Api.Behaviours;
-using eShop.Reviews.Api.Data;
-using eShop.Reviews.Api.Receivers;
-using eShop.Reviews.Api.Services.Implementation;
-
-namespace eShop.Reviews.Api.Extensions;
+﻿namespace eShop.Reviews.Api.Extensions;
 
 public static class BuilderExtensions
 {

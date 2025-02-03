@@ -1,9 +1,4 @@
-﻿using eShop.Domain.DTOs.Api.Review;
-using eShop.Domain.Entities;
-using eShop.Domain.Entities.Api.Review;
-using eShop.Domain.Requests.Api.Comments;
-
-namespace eShop.Application.Mapping;
+﻿namespace eShop.Reviews.Api.Mapping;
 
 public static class CommentMapper
 {

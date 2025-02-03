@@ -1,8 +1,4 @@
-﻿using eShop.Domain.Interfaces;
-using Microsoft.Extensions.Caching.Distributed;
-using Newtonsoft.Json;
-
-namespace eShop.Reviews.Api.Services.Implementation;
+﻿namespace eShop.Reviews.Api.Services.Implementation;
 
 public class CacheService(IDistributedCache cache) : ICacheService
 {

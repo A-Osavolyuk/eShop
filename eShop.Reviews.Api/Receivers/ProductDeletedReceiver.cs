@@ -1,8 +1,4 @@
-﻿using eShop.Domain.Requests.Api.Comments;
-using eShop.Domain.Responses.Api.Comments;
-using eShop.Reviews.Api.Data;
-
-namespace eShop.Reviews.Api.Receivers;
+﻿namespace eShop.Reviews.Api.Receivers;
 
 public class ProductDeletedReceiver(
     ISender sender, 

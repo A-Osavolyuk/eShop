@@ -1,4 +1,4 @@
-﻿namespace eShop.Domain.Entities.Api.Review;
+﻿namespace eShop.Reviews.Api.Data.Entities;
 
 public record class CommentEntity
 {

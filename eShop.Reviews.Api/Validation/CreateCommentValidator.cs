@@ -1,6 +1,4 @@
-﻿using eShop.Reviews.Api.Commands.Comments;
-
-namespace eShop.Reviews.Api.Validation;
+﻿namespace eShop.Reviews.Api.Validation;
 
 internal sealed class CreateCommentValidator : AbstractValidator<CreateCommentCommand>
 {

@@ -58,7 +58,17 @@ else
                 var data = ResponseConverter.Deserialize<GetCommentsResponse>(response.Result!);
                 commentsList = await data.Comments
                     .AsQueryable()
-                    .Select(x => CommentMapper.ToCommentModel(x))
+                    .Select(x => new CommentModel()
+                    {
+                        UpdatedAt = x.UpdatedAt,
+                        CommentId = x.CommentId,
+                        UserId = x.UserId,
+                        CreatedAt = x.CreatedAt,
+                        Rating = x.Rating,
+                        CommentText = x.CommentText,
+                        Images = x.Images,
+                        Username = x.Username
+                    })
                     .ToListAsync();
             }
             else
