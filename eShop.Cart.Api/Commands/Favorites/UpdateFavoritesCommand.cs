@@ -1,9 +1,4 @@
-﻿using eShop.Cart.Api.Data;
-using eShop.Domain.Entities.Api.Cart;
-using eShop.Domain.Requests.Api.Favorites;
-using eShop.Domain.Responses.Api.Cart;
-
-namespace eShop.Cart.Api.Commands.Favorites;
+﻿namespace eShop.Cart.Api.Commands.Favorites;
 
 internal sealed record UpdateFavoritesCommand(UpdateFavoritesRequest Request)
     : IRequest<Result<UpdateFavoritesResponse>>;

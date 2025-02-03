@@ -1,7 +1,4 @@
-﻿using eShop.Cart.Api.Commands.Favorites;
-using eShop.Cart.Api.Queries.Favorites;
-using eShop.Domain.Requests.Api.Favorites;
-using Response = eShop.Domain.Common.Api.Response;
+﻿using Response = eShop.Domain.Common.Api.Response;
 
 namespace eShop.Cart.Api.Controllers;
 

@@ -1,4 +1,4 @@
-﻿namespace eShop.Domain.Entities.Api.Cart;
+﻿namespace eShop.Domain.Types;
 
 public class FavoritesItem
 {

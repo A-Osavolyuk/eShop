@@ -1,4 +1,4 @@
-﻿using eShop.Domain.Entities.Api.Cart;
+﻿using eShop.Domain.Types;
 
 namespace eShop.Domain.DTOs.Api.Cart;
 

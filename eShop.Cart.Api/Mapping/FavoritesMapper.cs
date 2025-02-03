@@ -1,9 +1,6 @@
-﻿using eShop.Domain.DTOs.Api.Cart;
-using eShop.Domain.Entities.Api.Cart;
-using eShop.Domain.Models.Store;
-using eShop.Domain.Requests.Api.Favorites;
+﻿using eShop.Domain.Models.Store;
 
-namespace eShop.Application.Mapping;
+namespace eShop.Cart.Api.Mapping;
 
 public static class FavoritesMapper
 {
