@@ -1,15 +1,10 @@
 ﻿namespace eShop.Infrastructure.Services;
 
-public class HttpClientService : IHttpClientService
+public class HttpClientService(IHttpClientFactory clientFactory, ITokenProvider tokenProvider)
+    : IHttpClientService
 {
-    private readonly HttpClient httpClient;
-    private readonly ITokenProvider tokenProvider;
-
-    public HttpClientService(IHttpClientFactory clientFactory, ITokenProvider tokenProvider)
-    {
-        httpClient = clientFactory.CreateClient("eShop.Client");
-        this.tokenProvider = tokenProvider;
-    }
+    private readonly HttpClient httpClient = clientFactory.CreateClient("eShop.Client");
+    private readonly ITokenProvider tokenProvider = tokenProvider;
 
     public async ValueTask<Response> SendAsync(Request request, bool withBearer = true)
     {
@@ -31,13 +26,14 @@ public class HttpClientService : IHttpClientService
                 message.Content = new StringContent(JsonConvert.SerializeObject(request.Data),
                     Encoding.UTF8, "application/json");
 
-            HttpResponseMessage httpResponse = default!;
+            HttpResponseMessage httpResponse = null!;
 
             message.Method = request.Methods switch
             {
                 HttpMethods.Post => HttpMethod.Post,
                 HttpMethods.Delete => HttpMethod.Delete,
                 HttpMethods.Put => HttpMethod.Put,
+                HttpMethods.Patch => HttpMethod.Patch,
                 _ => HttpMethod.Get,
             };
 
