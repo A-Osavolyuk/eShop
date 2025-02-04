@@ -1,8 +1,4 @@
-﻿using eShop.Domain.Common.Api;
-using eShop.Domain.Interfaces.Client;
-using HttpMethods = eShop.Domain.Enums.HttpMethods;
-
-namespace eShop.Infrastructure.Services;
+﻿namespace eShop.Infrastructure.Services;
 
 public class HttpClientService : IHttpClientService
 {
@@ -37,7 +33,7 @@ public class HttpClientService : IHttpClientService
 
             HttpResponseMessage httpResponse = default!;
 
-            message.Method = request.Method switch
+            message.Method = request.Methods switch
             {
                 HttpMethods.Post => HttpMethod.Post,
                 HttpMethods.Delete => HttpMethod.Delete,
@@ -66,12 +62,12 @@ public class HttpClientService : IHttpClientService
 
             message.Headers.Add("Accept", "multipart/form-data");
             message.RequestUri = new Uri(request.Url);
-            message.Method = request.Method switch
+            message.Method = request.Methods switch
             {
-                HttpMethods.Post => HttpMethod.Post,
-                HttpMethods.Put => HttpMethod.Put,
-                HttpMethods.Delete => HttpMethod.Delete,
-                HttpMethods.Get => HttpMethod.Get,
+                Domain.Enums.HttpMethods.Post => HttpMethod.Post,
+                Domain.Enums.HttpMethods.Put => HttpMethod.Put,
+                Domain.Enums.HttpMethods.Delete => HttpMethod.Delete,
+                Domain.Enums.HttpMethods.Get => HttpMethod.Get,
                 _ => throw new Exception("Invalid HTTP method"),
             };
 

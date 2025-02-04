@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Interfaces.Client;
-
-namespace eShop.Infrastructure.Services;
+﻿namespace eShop.Infrastructure.Services;
 
 public class TokenProvider : ITokenProvider
 {

@@ -1,9 +1,4 @@
-﻿using eShop.Domain.Common.Api;
-using eShop.Domain.Interfaces.Client;
-using eShop.Domain.Requests.Api.Cart;
-using HttpMethods = eShop.Domain.Enums.HttpMethods;
-
-namespace eShop.Infrastructure.Services;
+﻿namespace eShop.Infrastructure.Services;
 
 internal class CartService(IHttpClientService httpClient, IConfiguration configuration) : ICartService
 {
@@ -12,10 +7,10 @@ internal class CartService(IHttpClientService httpClient, IConfiguration configu
 
     public async ValueTask<Response> GetCartAsync(Guid userId) => await httpClient.SendAsync(
         new Request(
-            Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Carts/get-cart/{userId}", Method: HttpMethods.Get));
+            Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Carts/get-cart/{userId}", Methods: HttpMethods.Get));
 
     public async ValueTask<Response> UpdateCartAsync(UpdateCartRequest request) => await httpClient.SendAsync(
         new Request(
             Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Carts/update-cart",
-            Method: HttpMethods.Put, Data: request));
+            Methods: HttpMethods.Put, Data: request));
 }

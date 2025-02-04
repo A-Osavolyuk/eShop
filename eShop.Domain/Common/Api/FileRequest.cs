@@ -2,7 +2,7 @@
 
 public record FileRequest(
     FileData Data,
-    HttpMethods Method,
+    HttpMethods Methods,
     string Url);
 
 public class FileData

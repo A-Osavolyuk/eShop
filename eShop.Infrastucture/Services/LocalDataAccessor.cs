@@ -1,8 +1,4 @@
-﻿using eShop.Domain.Interfaces.Client;
-using eShop.Domain.Models.Store;
-using eShop.Domain.Types;
-
-namespace eShop.Infrastructure.Services;
+﻿namespace eShop.Infrastructure.Services;
 
 public class LocalDataAccessor(ILocalStorageService localStorageService) : ILocalDataAccessor
 {

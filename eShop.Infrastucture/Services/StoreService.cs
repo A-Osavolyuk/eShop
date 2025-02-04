@@ -1,18 +1,14 @@
-﻿using Azure.Storage.Blobs;
-using eShop.Domain.Common.Api;
-using eShop.Domain.Interfaces.Client;
-using HttpMethods = eShop.Domain.Enums.HttpMethods;
-
-namespace eShop.Infrastructure.Services;
+﻿namespace eShop.Infrastructure.Services;
 
 class StoreService(IConfiguration configuration, IHttpClientService clientService) : IStoreService
 {
     private readonly IConfiguration configuration = configuration;
     private readonly IHttpClientService clientService = clientService;
 
-    public async ValueTask<Response> GetUserAvatarAsync(string userId)=>
+    public async ValueTask<Response> GetUserAvatarAsync(string userId) =>
         await clientService.SendAsync(
-            new Request($"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Files/get-user-avatar/{userId}",
+            new Request(
+                $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Files/get-user-avatar/{userId}",
                 HttpMethods.Get));
 
     public async ValueTask<Response>
@@ -23,7 +19,8 @@ class StoreService(IConfiguration configuration, IHttpClientService clientServic
 
     public async ValueTask<Response> RemoveUserAvatarAsync(string userId) =>
         await clientService.SendAsync(
-            new Request($"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Files/remove-user-avatar/{userId}",
+            new Request(
+                $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Files/remove-user-avatar/{userId}",
                 HttpMethods.Delete));
 
     public async ValueTask<Response> UploadUserAvatarAsync(string userId, IBrowserFile file) =>
