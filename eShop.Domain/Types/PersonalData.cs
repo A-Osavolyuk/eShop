@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.Types;
 
-public class PersonalData
+public record PersonalData
 {
     public Guid Id { get; set; }
     public string FirstName { get; set; } = string.Empty;

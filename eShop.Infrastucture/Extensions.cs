@@ -1,4 +1,5 @@
 ﻿using eShop.Infrastructure.State;
+using eShop.Infrastructure.Storage;
 
 namespace eShop.Infrastructure;
 
@@ -39,6 +40,7 @@ public static class Extensions
         builder.Services.AddScoped<IProductService, ProductService>();
         builder.Services.AddScoped<IBrandService, BrandSevice>();
         builder.Services.AddScoped<ILocalDataAccessor, LocalDataAccessor>();
+        builder.Services.AddScoped<IUserStorage, UserStorage>();
         builder.Services.AddScoped<IStoreService, StoreService>();
         builder.Services.AddScoped<IReviewService, ReviewService>();
         builder.Services.AddScoped<ICartService, CartService>();

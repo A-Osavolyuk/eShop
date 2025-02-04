@@ -22,8 +22,4 @@
     <ProjectReference Include="..\eShop.Domain\eShop.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Storage\" />
-  </ItemGroup>
-
 </Project>

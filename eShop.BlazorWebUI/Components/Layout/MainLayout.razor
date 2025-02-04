@@ -1,9 +1,7 @@
 ﻿using eShop.Application.Mapping
 @using eShop.Domain.Interfaces.Client
-@using eShop.Domain.Models.Store
-@using eShop.Infrastructure.Services
+@using eShop.Domain.Models.Profile
 @using eShop.Infrastructure.State
-@using Cart = eShop.Domain.Models.Store.CartModel
 @inherits LayoutComponentBase
 
 @implements IDisposable
@@ -13,15 +11,12 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NotificationsStateContainer NotificationsStateContainer
 @inject INotificationService NotificationService
-@inject ICartService CartService
-@inject IFavoritesService FavoritesService
 @inject ISnackbar Snackbar
-@inject IJSRuntime Js
 @inject IStoreService StoreService
-@inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationState
 @inject IConfiguration Configuration
+@inject IUserStorage UserStore
 
 @using Severity = MudBlazor.Severity
 
@@ -129,7 +124,7 @@
     {
         NotificationsStateContainer.OnNotificationsChanged += NotificationCountChanged;
 
-        user = await LocalDataAccessor.ReadUserDataAsync();
+        
 
         //await GetAvatarAsync();
     }
@@ -146,7 +141,7 @@
             }
         }
 
-        user = await LocalDataAccessor.ReadUserDataAsync();
+        var user = (await UserStore.GetUserAsync())!;
         
         notificationsCount = await NotificationService.GetNotificationsCountAsync();
     }
@@ -164,13 +159,14 @@
 
     private async Task GetAvatarAsync()
     {
-        user = await LocalDataAccessor.ReadUserDataAsync();
+        var user = (await UserStore.GetUserAsync())!;
 
         avatarUri = await LocalDataAccessor.ReadAvatarLinkAsync();
 
         if (string.IsNullOrEmpty(avatarUri))
         {
-            var response = await StoreService.GetUserAvatarAsync(user.UserId);
+            var userId = user.AccountData.Id.ToString();
+            var response = await StoreService.GetUserAvatarAsync(userId);
 
             if (response.Success)
             {

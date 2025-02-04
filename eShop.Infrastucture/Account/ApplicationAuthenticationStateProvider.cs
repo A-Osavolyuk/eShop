@@ -1,14 +1,18 @@
-﻿namespace eShop.Infrastructure.Account;
+﻿using UserModel = eShop.Domain.Models.Profile.UserModel;
+
+namespace eShop.Infrastructure.Account;
 
 public class ApplicationAuthenticationStateProvider(
     ITokenProvider tokenProvider,
     IAuthenticationService authenticationService,
-    ILocalDataAccessor localDataAccessor) : AuthenticationStateProvider
+    ILocalDataAccessor localDataAccessor,
+    IUserStorage userStorage) : AuthenticationStateProvider
 {
     private readonly AuthenticationState anonymous = new(new ClaimsPrincipal());
     private readonly ITokenProvider tokenProvider = tokenProvider;
     private readonly IAuthenticationService authenticationService = authenticationService;
     private readonly ILocalDataAccessor localDataAccessor = localDataAccessor;
+    private readonly IUserStorage userStorage = userStorage;
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
@@ -148,17 +152,21 @@ public class ApplicationAuthenticationStateProvider(
         var username = claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)!.Value;
         var phoneNumber = claims.FirstOrDefault(x => x.Type == ClaimTypes.MobilePhone)!.Value;
         var id = claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value;
+        
+        //TODO: Implement storing roles and permissions in local storage
+        
         var roles = claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToList();
         var permissions = claims.Where(x => x.Type == CustomClaimTypes.Permission).Select(x => x.Value).ToList();
 
-        await localDataAccessor.WriteUserDataAsync(new UserModel()
+        await userStorage.SetUserAsync(new UserModel()
         {
-            PhoneNumber = phoneNumber,
-            Email = email,
-            UserName = username,
-            UserId = id,
-            Roles = roles,
-            Permissions = permissions
+            AccountData = new ()
+            {
+                Email = email,
+                UserName = username,
+                PhoneNumber = phoneNumber,
+                Id = Guid.Parse(id),
+            }
         });
     }
 

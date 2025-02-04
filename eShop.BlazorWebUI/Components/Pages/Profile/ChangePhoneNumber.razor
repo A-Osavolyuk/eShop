@@ -9,6 +9,7 @@
 @inject ChangePhoneNumberValidator Validator
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ITokenProvider TokenProvider
+@inject IUserStorage UserStorage
 
 <Title Text="change phone number" />
 
@@ -43,16 +44,15 @@
 
 @code {
     private ChangePhoneNumberRequest request = new();
-    private UserModel user = new();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            user = await LocalDataAccessor.ReadUserDataAsync();
+            var phoneNumber = await UserStorage.GetPhoneNumberAsync();
             request = new()
             {
-                CurrentPhoneNumber = user.PhoneNumber,
+                CurrentPhoneNumber = phoneNumber!,
             };
             StateHasChanged();
         }

@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.Types;
 
-public class PermissionsData
+public record PermissionsData
 {
     [JsonIgnore]
     public Guid Id { get; set; }

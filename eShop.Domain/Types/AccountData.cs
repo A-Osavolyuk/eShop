@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.Types;
 
-public class AccountData
+public record AccountData
 {
     public Guid Id { get; set; }
     public string Email { get; set; } = string.Empty;

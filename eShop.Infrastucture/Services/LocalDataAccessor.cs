@@ -10,51 +10,7 @@ public class LocalDataAccessor(ILocalStorageService localStorageService) : ILoca
         var key = "cart";
         await localStorageService.SetItemAsync(key, cartModel);
     }
-
-    public async ValueTask WriteUserDataAsync(UserModel user)
-    {
-        if (user is null)
-        {
-            throw new ArgumentNullException(nameof(user));
-        }
-
-        await localStorageService.SetItemAsync("user", user);
-    }
-
-    public async ValueTask<UserModel> ReadUserDataAsync()
-    {
-        var user = await localStorageService.GetItemAsync<UserModel>("user");
-
-        if (user is null)
-        {
-            return null;
-        }
-
-        return user;
-    }
-
-    public async ValueTask WritePersonalDataAsync(PersonalDataModel personalDataModel)
-    {
-        if (personalDataModel is null)
-        {
-            throw new ArgumentNullException(nameof(personalDataModel));
-        }
-
-        await localStorageService.SetItemAsync("personal-data", personalDataModel);
-    }
-
-    public async ValueTask<PersonalDataModel?> ReadPersonalDataAsync()
-    {
-        var personalData = await localStorageService.GetItemAsync<PersonalDataModel>("personal-data");
-
-        if (personalData is null)
-        {
-            return new();
-        }
-
-        return personalData;
-    }
-
+    
     public async ValueTask WriteSecurityDataAsync(SecurityData securityData)
     {
         if (securityData is null)

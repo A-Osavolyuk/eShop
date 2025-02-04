@@ -9,6 +9,7 @@
 @inject ChangeEmailValidator Validator
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ITokenProvider TokenProvider
+@inject IUserStorage UserStorage
 
 <Title Text="Change email" />
 
@@ -44,14 +45,13 @@
 
 @code {
     private ChangeEmailRequest Request = new();
-    private UserModel User = new();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            User = await LocalDataAccessor.ReadUserDataAsync();
-            Request = new() { CurrentEmail = User.Email };
+            var email = await UserStorage.GetEmailAsync();
+            Request = new() { CurrentEmail = email! };
             StateHasChanged();
         }
     }

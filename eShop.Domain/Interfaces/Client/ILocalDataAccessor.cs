@@ -19,10 +19,6 @@ public interface ILocalDataAccessor
     public ValueTask RemoveAvatarLinkAsync();
     public ValueTask WriteAvatarLinkAsync(string link);
     public ValueTask<string> ReadAvatarLinkAsync();
-    public ValueTask WriteUserDataAsync(UserModel user);
-    public ValueTask<UserModel> ReadUserDataAsync();
-    public ValueTask WritePersonalDataAsync(PersonalDataModel personalDataModel);
-    public ValueTask<PersonalDataModel?> ReadPersonalDataAsync();
     public ValueTask WriteSecurityDataAsync(SecurityData securityData);
     public ValueTask<SecurityData> ReadSecurityDataAsync();
     public ValueTask ClearAsync();

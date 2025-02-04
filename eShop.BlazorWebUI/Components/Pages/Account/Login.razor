@@ -8,6 +8,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject LoginValidator Validator
 @inject IConfiguration Configuration
+@inject IUserStorage UserStorage
 
 <Title Text="Login"/>
 
@@ -91,7 +92,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var user = await LocalDataAccessor.ReadUserDataAsync();
+        var user = await UserStorage.GetUserAsync();
 
         if (user is not null)
         {

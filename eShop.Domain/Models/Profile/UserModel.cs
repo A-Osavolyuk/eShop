@@ -2,7 +2,7 @@
 
 namespace eShop.Domain.Models.Profile;
 
-public class UserModel
+public record UserModel
 {
     public AccountData AccountData { get; set; } = null!;
     public PersonalData PersonalData { get; set; } = null!;

@@ -10,6 +10,7 @@
 @inject UserNameValidator Validator
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ITokenProvider TokenProvider
+@inject IUserStorage UserStorage
 
 <Title Text="Change username" />
 
@@ -44,14 +45,13 @@
 
 @code {
     private ChangeUserNameRequest Request = new();
-    private UserModel User = new();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            User = await LocalDataAccessor.ReadUserDataAsync();
-            Request = new() { Email = User.Email, UserName = User.UserName };
+            var accountData = await UserStorage.GetAccountDataAsync();
+            Request = new() { Email = accountData!.Email, UserName = accountData.UserName };
             StateHasChanged();
         }
     }

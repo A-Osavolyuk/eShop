@@ -10,14 +10,10 @@
 
 @code {
     private RegisterSellerRequest Model { get; set; } = new();
-    private UserModel user = new();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-        {
-            user = await LocalDataAccessor.ReadUserDataAsync();
-        }
+
     }
 
     private async Task OnSubmit()

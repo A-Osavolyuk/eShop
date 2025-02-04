@@ -5,6 +5,7 @@
 @inherits PageBase
 
 @inject IStoreService StoreService
+@inject IUserStorage UserStorage
 
 <Title Text="Change avatar" />
 
@@ -93,8 +94,8 @@
 
     private async Task UploadClick()
     {
-        var userData = await LocalDataAccessor.ReadUserDataAsync();
-        var response = await StoreService.UploadUserAvatarAsync(userData.UserId, file!);
+        var userId = await UserStorage.GetUserIdAsync();
+        var response = await StoreService.UploadUserAvatarAsync(userId!, file!);
 
         if (response.Success)
         {
