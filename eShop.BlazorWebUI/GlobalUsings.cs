@@ -14,7 +14,6 @@ global using eShop.BlazorWebUI.Components.Shared;
 global using eShop.BlazorWebUI.Components.Shared.Products;
 global using eShop.Domain.Common;
 global using eShop.Domain.DTOs;
-global using eShop.Domain.Entities;
 global using eShop.Domain.Enums;
 global using eShop.Domain.Interfaces;
 global using eShop.Infrastructure;

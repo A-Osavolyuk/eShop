@@ -1,7 +1,6 @@
 ﻿global using eShop.Application;
 global using eShop.Application.Behaviours;
 global using eShop.Application.Extensions;
-global using eShop.Application.Mapping;
 global using eShop.Application.Middlewares;
 global using eShop.Application.Utilities;
 global using eShop.Cart.Api.Commands.Carts;
