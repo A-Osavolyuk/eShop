@@ -25,7 +25,6 @@ global using eShop.Domain.Responses.Api.Auth;
 global using eShop.Domain.Types;
 global using eShop.Infrastructure.Account;
 global using eShop.Infrastructure.Services;
-global using eShop.Infrastructure.StateContainers;
 global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.AspNetCore.Components.Authorization;
 global using Microsoft.AspNetCore.Components.Forms;

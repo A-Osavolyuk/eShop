@@ -151,7 +151,7 @@ public class ApplicationAuthenticationStateProvider(
         var roles = claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToList();
         var permissions = claims.Where(x => x.Type == CustomClaimTypes.Permission).Select(x => x.Value).ToList();
 
-        await localDataAccessor.WriteUserDataAsync(new UserStore()
+        await localDataAccessor.WriteUserDataAsync(new UserModel()
         {
             PhoneNumber = phoneNumber,
             Email = email,

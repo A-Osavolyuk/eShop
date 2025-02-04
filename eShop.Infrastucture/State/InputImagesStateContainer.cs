@@ -1,4 +1,4 @@
-﻿namespace eShop.Infrastructure.StateContainers;
+﻿namespace eShop.Infrastructure.State;
 
 public class InputImagesStateContainer
 {

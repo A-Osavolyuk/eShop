@@ -14,7 +14,7 @@ public static class Mapper
         };
     }
 
-    public static FavoritesStore ToFavoritesModel(FavoritesDto dto)
+    public static FavoritesModel ToFavoritesModel(FavoritesDto dto)
     {
         return new()
         {
@@ -24,13 +24,13 @@ public static class Mapper
         };
     }
 
-    public static UpdateFavoritesRequest ToUpdateFavoritesRequest(FavoritesStore store)
+    public static UpdateFavoritesRequest ToUpdateFavoritesRequest(FavoritesModel model)
     {
         return new()
         {
-            Items = store.Items,
-            FavoritesId = store.FavoritesId,
-            ItemsCount = store.ItemsCount,
+            Items = model.Items,
+            FavoritesId = model.FavoritesId,
+            ItemsCount = model.ItemsCount,
         };
     }
     
@@ -44,9 +44,9 @@ public static class Mapper
         };
     }
 
-    public static CartStore ToCartModel(CartDto cartDto)
+    public static CartModel ToCartModel(CartDto cartDto)
     {
-        return new CartStore()
+        return new CartModel()
         {
             CartId = cartDto.CartId,
             ItemsCount = cartDto.ItemsCount,
@@ -54,13 +54,13 @@ public static class Mapper
         };
     }
 
-    public static UpdateCartRequest ToUpdateCartRequest(CartStore store)
+    public static UpdateCartRequest ToUpdateCartRequest(CartModel model)
     {
         return new()
         {
-            CartId = store.CartId,
-            ItemsCount = store.ItemsCount,
-            Items = store.Items
+            CartId = model.CartId,
+            ItemsCount = model.ItemsCount,
+            Items = model.Items
         };
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace eShop.Infrastructure.Services;
+﻿using eShop.Infrastructure.State;
+
+namespace eShop.Infrastructure.Services;
 
 public class NotificationService(
     ILocalStorageService storageService, 

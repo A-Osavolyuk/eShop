@@ -19,7 +19,7 @@
         <MudGrid Justify="Justify.Center">
             <MudItem xs="8">
                 <MudPaper Class="pa-3" Outlined>
-                    @if (userStore is null)
+                    @if (userModel is null)
                     {
                         <MudText Typo="Typo.h3">Loading...</MudText>
                     }
@@ -45,11 +45,11 @@
                                 <MudPaper Outlined Class="pa-3 mb-3">
                                     <MudText Typo="Typo.h6">Account Information</MudText>
                                     <MudGrid Spacing="3" Class="mt-3">
-                                        <ProfileField Divided Label="User name" Text="@userStore.UserName" HasButton
+                                        <ProfileField Divided Label="User name" Text="@userModel.UserName" HasButton
                                                       Tooltip="Change user name" OnEditClick="@(() => NavigationManager.NavigateTo("/profile/change-username"))" />
-                                        <ProfileField Divided Label="Email address" Text="@userStore.Email" HasButton
+                                        <ProfileField Divided Label="Email address" Text="@userModel.Email" HasButton
                                                       Tooltip="Change email address" OnEditClick="@(() => NavigationManager.NavigateTo("/profile/change-email"))" />
-                                        <ProfileField Divided Label="Phone number" Text="@userStore.PhoneNumber" HasButton
+                                        <ProfileField Divided Label="Phone number" Text="@userModel.PhoneNumber" HasButton
                                                       Tooltip="Change phone number" OnEditClick="@(() => NavigationManager.NavigateTo("/profile/change-phone-number"))" />
                                     </MudGrid>
                                 </MudPaper>
@@ -110,14 +110,14 @@
 </AuthorizeView>
 
 @code {
-    private UserStore userStore;
+    private UserModel userModel;
     private PersonalDataModel personalDataModel = null!;
     private SecurityData securityData = null!;
     private string avatarUri = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        userStore = await LocalDataAccessor.ReadUserDataAsync();
+        userModel = await LocalDataAccessor.ReadUserDataAsync();
         await GetPersonalData();
         await GetSecurityData();
         await GetAvatar();
@@ -133,7 +133,7 @@
 
         if (string.IsNullOrEmpty(personalDataModel.FirstName) || string.IsNullOrEmpty(personalDataModel.LastName) || string.IsNullOrEmpty(personalDataModel.Gender))
         {
-            var response = await ProfileService.GetPersonalDataAsync(userStore!.Email);
+            var response = await ProfileService.GetPersonalDataAsync(userModel!.Email);
 
             if (response.Success)
             {
@@ -165,7 +165,7 @@
 
         if (securityData.PasswordUpdatedDate == new DateTime(1, 1, 1))
         {
-            var response = await AuthService.GetTwoFactorStateAsync(userStore.Email);
+            var response = await AuthService.GetTwoFactorStateAsync(userModel.Email);
 
             if (response.Success)
             {
@@ -192,7 +192,7 @@
 
         if (string.IsNullOrEmpty(avatarUri))
         {
-            var response = await StoreService.GetUserAvatarAsync(userStore.UserId);
+            var response = await StoreService.GetUserAvatarAsync(userModel.UserId);
 
             if (response.Success)
             {
@@ -208,7 +208,7 @@
 
     private async Task ChangeTwoFactorAuthenticationState()
     {
-        var response = await AuthService.ChangeTwoFactorAuthenticationStateAsync(new() { Email = userStore.Email });
+        var response = await AuthService.ChangeTwoFactorAuthenticationStateAsync(new() { Email = userModel.Email });
 
         if (response.Success)
         {
@@ -226,7 +226,7 @@
     private async Task RemoveAvatar()
     {
         avatarUri = Configuration["DefaultAvatar"]!;
-        await StoreService.RemoveUserAvatarAsync(userStore.UserId);
+        await StoreService.RemoveUserAvatarAsync(userModel.UserId);
         await LocalDataAccessor.RemoveAvatarLinkAsync();
         StateHasChanged();
     }

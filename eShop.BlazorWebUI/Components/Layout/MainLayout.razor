@@ -2,8 +2,8 @@
 @using eShop.Domain.Interfaces.Client
 @using eShop.Domain.Models.Store
 @using eShop.Infrastructure.Services
-@using eShop.Infrastructure.StateContainers
-@using Cart = eShop.Domain.Models.Store.CartStore
+@using eShop.Infrastructure.State
+@using Cart = eShop.Domain.Models.Store.CartModel
 @inherits LayoutComponentBase
 
 @implements IDisposable
@@ -117,7 +117,7 @@
 
     private bool drawerOpen = true;
     private string avatarUri = string.Empty;
-    private UserStore user = new();
+    private UserModel user = new();
     private int notificationsCount = 0;
 
     void DrawerToggle()

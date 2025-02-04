@@ -17,6 +17,5 @@ global using eShop.Domain.DTOs;
 global using eShop.Domain.Enums;
 global using eShop.Domain.Interfaces;
 global using eShop.Infrastructure;
-global using eShop.Infrastructure.StateContainers;
 global using eShop.ServiceDefaults;
 global using MudBlazor;

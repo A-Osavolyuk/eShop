@@ -1,4 +1,6 @@
-﻿namespace eShop.Infrastructure;
+﻿using eShop.Infrastructure.State;
+
+namespace eShop.Infrastructure;
 
 public static class Extensions
 {
