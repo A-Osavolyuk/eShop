@@ -33,7 +33,7 @@ public class ProfileController(ISender sender) : ControllerBase
     }
     
     [Authorize(Policy = "ManageAccountPolicy")]
-    [HttpPut("change-user-name")]
+    [HttpPatch("change-user-name")]
     [ValidationFilter]
     public async ValueTask<ActionResult<Response>> ChangeUserName(
         [FromBody] ChangeUserNameRequest changeUserNameRequest)

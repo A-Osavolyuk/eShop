@@ -3,10 +3,12 @@
 @using eShop.Domain.Models.Store
 @using eShop.Domain.Responses.Api.Auth
 @using eShop.Domain.Types
+@using eShop.Infrastructure.Services
 @using Severity = MudBlazor.Severity
 @inherits PageBase
 
 @inject IAuthenticationService AuthService
+@inject IProfileService ProfileService
 @inject IConfiguration Configuration
 @inject IStoreService StoreService
 
@@ -131,7 +133,7 @@
 
         if (string.IsNullOrEmpty(personalDataModel.FirstName) || string.IsNullOrEmpty(personalDataModel.LastName) || string.IsNullOrEmpty(personalDataModel.Gender))
         {
-            var response = await AuthService.GetPersonalDataAsync(userStore!.Email);
+            var response = await ProfileService.GetPersonalDataAsync(userStore!.Email);
 
             if (response.Success)
             {

@@ -29,6 +29,7 @@ public static class Extensions
         builder.Services.AddHttpClient<IFavoritesService, FavoritesService>();
         builder.Services.AddHttpClient<IStoreService, StoreService>();
         builder.Services.AddHttpClient<ISellerService, SellerService>();
+        builder.Services.AddHttpClient<IProfileService, ProfileService>();
 
         builder.Services.AddScoped<IHttpClientService, HttpClientService>();
         builder.Services.AddScoped<ITokenProvider, TokenProvider>();
@@ -41,6 +42,7 @@ public static class Extensions
         builder.Services.AddScoped<ICartService, CartService>();
         builder.Services.AddScoped<IFavoritesService, FavoritesService>();
         builder.Services.AddScoped<ISellerService, SellerService>();
+        builder.Services.AddScoped<IProfileService, ProfileService>();
 
         builder.Services.AddScoped<INotificationService, NotificationService>();
         builder.Services.AddSingleton<InputImagesStateContainer>();

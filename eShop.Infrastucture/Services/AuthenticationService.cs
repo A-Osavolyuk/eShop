@@ -26,12 +26,6 @@ public class AuthenticationService(
         new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/register",
             Methods: HttpMethods.Post, Data: request));
 
-    public async ValueTask<Response> ChangePersonalDataAsync(ChangePersonalDataRequest request) =>
-        await clientService.SendAsync(
-            new Request(
-                Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/change-personal-data",
-                Methods: HttpMethods.Put, Data: request));
-
     public async ValueTask<Response> RequestResetPasswordAsync(ResetPasswordRequest request) =>
         await clientService.SendAsync(
             new Request(
@@ -47,11 +41,6 @@ public class AuthenticationService(
     public async ValueTask<Response> VerifyEmailAsync(VerifyEmailRequest request) => await clientService.SendAsync(
         new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/verify-email",
             Methods: HttpMethods.Post, Data: request));
-
-    public async ValueTask<Response> GetPersonalDataAsync(string email) => await clientService.SendAsync(
-        new Request(
-            Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/get-personal-data/{email}",
-            Methods: HttpMethods.Get));
 
     public async ValueTask<Response> GetExternalProvidersAsync() => await clientService.SendAsync(
         new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/get-external-providers",
@@ -81,11 +70,6 @@ public class AuthenticationService(
             new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/change-password",
                 Methods: HttpMethods.Put, Data: request));
 
-    public async ValueTask<Response> ChangeUserNameAsync(ChangeUserNameRequest request) =>
-        await clientService.SendAsync(
-            new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/change-user-name",
-                Methods: HttpMethods.Put, Data: request));
-
     public async ValueTask<Response> ChangeTwoFactorAuthenticationStateAsync(
         ChangeTwoFactorAuthenticationRequest request) => await clientService.SendAsync(
         new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/change-2fa-state",
@@ -110,9 +94,5 @@ public class AuthenticationService(
             new Request(
                 Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/confirm-change-phone-number",
                 Methods: HttpMethods.Post, Data: request));
-
-    public async ValueTask<Response> GetPhoneNumber(string email) => await clientService.SendAsync(
-        new Request(
-            Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Auth/get-phone-number/{email}",
-            Methods: HttpMethods.Get));
+    
 }

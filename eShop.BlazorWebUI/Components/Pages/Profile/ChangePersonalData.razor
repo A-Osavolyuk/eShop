@@ -7,6 +7,7 @@
 @inherits PageBase
 
 @inject IAuthenticationService AuthService
+@inject IProfileService ProfileService
 @inject PersonalDataValidator Validator
 
 <Title Text="Change personal data" />
@@ -73,7 +74,7 @@
 
     private async Task OnValidSubmit()
     {
-        var response = await AuthService.ChangePersonalDataAsync(request);
+        var response = await ProfileService.ChangePersonalDataAsync(request);
 
         if (response.Success)
         {

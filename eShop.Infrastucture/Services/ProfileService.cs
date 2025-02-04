@@ -14,7 +14,7 @@ public class ProfileService(
 
     public async ValueTask<Response> ChangeUserNameAsync(ChangeUserNameRequest request) => await clientService.SendAsync(
         new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Profile/change-user-name",
-            Methods: HttpMethods.Put, Data: request));
+            Methods: HttpMethods.Patch, Data: request));
 
     public async ValueTask<Response> ChangePersonalDataAsync(ChangePersonalDataRequest request) => await clientService.SendAsync(
         new Request(Url: $"{configuration["Configuration:Services:Proxy:Gateway"]}/api/v1/Profile/change-personal-data",
