@@ -1,4 +1,4 @@
-﻿namespace eShop.TelegramService.Api.Services;
+﻿namespace eShop.TelegramBot.Api.Services;
 
 public interface IUpdateHandler
 {

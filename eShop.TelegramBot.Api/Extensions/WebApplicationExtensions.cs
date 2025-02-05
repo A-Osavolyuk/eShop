@@ -1,4 +1,4 @@
-﻿namespace eShop.TelegramService.Api.Extensions;
+﻿namespace eShop.TelegramBot.Api.Extensions;
 
 public static class WebApplicationExtensions
 {

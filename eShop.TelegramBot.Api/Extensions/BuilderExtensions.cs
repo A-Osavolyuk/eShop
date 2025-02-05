@@ -1,4 +1,7 @@
-﻿namespace eShop.TelegramService.Api.Extensions;
+﻿using eShop.TelegramBot.Api.Options;
+using eShop.TelegramBot.Api.Services;
+
+namespace eShop.TelegramBot.Api.Extensions;
 
 public static class BuilderExtensions
 {

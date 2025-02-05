@@ -1,4 +1,4 @@
-﻿namespace eShop.TelegramService.Api.Options;
+﻿namespace eShop.TelegramBot.Api.Options;
 
 public class BotOptions
 {
