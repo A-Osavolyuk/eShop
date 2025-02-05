@@ -1,5 +1,4 @@
-﻿using eShop.Domain.DTOs.Api.Auth;
-using eShop.Domain.Types;
+﻿using eShop.Domain.Types;
 
 namespace eShop.Domain.Responses.Api.Auth;
 

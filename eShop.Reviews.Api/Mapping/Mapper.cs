@@ -1,4 +1,6 @@
-﻿namespace eShop.Reviews.Api.Mapping;
+﻿using eShop.Domain.DTOs;
+
+namespace eShop.Reviews.Api.Mapping;
 
 public static class Mapper
 {

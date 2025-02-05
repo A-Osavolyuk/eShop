@@ -1,6 +1,6 @@
 ﻿using eShop.Domain.Types;
 
-namespace eShop.Domain.DTOs.Api.Auth;
+namespace eShop.Domain.DTOs;
 
 public class UserDto
 {

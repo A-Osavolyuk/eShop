@@ -1,4 +1,5 @@
 ﻿using eShop.Cart.Api.Mapping;
+using eShop.Domain.DTOs;
 
 namespace eShop.Cart.Api.Queries.Favorites;
 

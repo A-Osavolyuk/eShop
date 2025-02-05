@@ -1,4 +1,4 @@
-﻿using eShop.Domain.DTOs.Api.Product;
+﻿using eShop.Domain.DTOs;
 
 namespace eShop.Domain.Requests.Api.Product;
 

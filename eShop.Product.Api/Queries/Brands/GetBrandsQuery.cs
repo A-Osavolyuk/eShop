@@ -1,4 +1,6 @@
-﻿namespace eShop.Product.Api.Queries.Brands;
+﻿using eShop.Domain.DTOs;
+
+namespace eShop.Product.Api.Queries.Brands;
 
 internal sealed record GetBrandsQuery() : IRequest<Result<List<BrandDto>>>;
 

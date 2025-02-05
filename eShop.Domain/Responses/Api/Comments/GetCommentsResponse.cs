@@ -1,4 +1,4 @@
-﻿using eShop.Domain.DTOs.Api.Review;
+﻿using eShop.Domain.DTOs;
 
 namespace eShop.Domain.Responses.Api.Comments;
 

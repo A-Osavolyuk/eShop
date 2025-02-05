@@ -1,4 +1,4 @@
-﻿namespace eShop.Domain.DTOs.Api.Auth;
+﻿namespace eShop.Domain.DTOs;
 
 public class ExternalProviderDto
 {

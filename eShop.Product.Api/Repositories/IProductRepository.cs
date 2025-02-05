@@ -1,4 +1,6 @@
-﻿namespace eShop.Product.Api.Repositories;
+﻿using eShop.Domain.DTOs;
+
+namespace eShop.Product.Api.Repositories;
 
 public interface IProductRepository
 {

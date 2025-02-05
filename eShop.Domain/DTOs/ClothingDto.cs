@@ -1,6 +1,6 @@
-﻿namespace eShop.Domain.DTOs.Api.Product;
+﻿namespace eShop.Domain.DTOs;
 
-public record ShoesDto() : ProductDto
+public record ClothingDto() : ProductDto
 {
     public ProductColor Color { get; set; } = ProductColor.None;
     public List<ProductSize> Size { get; set; } = new List<ProductSize>();

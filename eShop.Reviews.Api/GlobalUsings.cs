@@ -4,7 +4,6 @@ global using eShop.Application.Filters;
 global using eShop.Application.Middlewares;
 global using eShop.Application.Utilities;
 global using eShop.Domain.Common.Api;
-global using eShop.Domain.DTOs.Api.Review;
 global using eShop.Domain.Exceptions;
 global using eShop.Domain.Interfaces;
 global using eShop.Domain.Models;

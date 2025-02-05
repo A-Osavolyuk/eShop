@@ -1,4 +1,4 @@
-﻿namespace eShop.Domain.DTOs.Api.Review;
+﻿namespace eShop.Domain.DTOs;
 
 public class CommentDto
 {

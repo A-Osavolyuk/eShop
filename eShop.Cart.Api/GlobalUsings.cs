@@ -13,7 +13,6 @@ global using eShop.Cart.Api.Queries.Favorites;
 global using eShop.Cart.Api.Rpc;
 global using eShop.Cart.Api.Services.Implementation;
 global using eShop.Domain.Common.Api;
-global using eShop.Domain.DTOs.Api.Cart;
 global using eShop.Domain.Exceptions;
 global using eShop.Domain.Interfaces;
 global using eShop.Domain.Requests.Api.Cart;

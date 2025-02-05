@@ -1,6 +1,6 @@
 ﻿using eShop.Domain.Types;
 
-namespace eShop.Domain.DTOs.Api.Cart;
+namespace eShop.Domain.DTOs;
 
 public class CartDto
 {
