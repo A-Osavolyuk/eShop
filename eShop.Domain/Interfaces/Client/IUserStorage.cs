@@ -20,4 +20,9 @@ public interface IUserStorage
     public ValueTask SetPersonalDataAsync(PersonalData data);
     public ValueTask SetPermissionDataAsync(PermissionsData data);
     public ValueTask SetSecurityDataAsync(SecurityData data);
+    public ValueTask SetUserNameAsync(string userName);
+    public ValueTask SetEmailAsync(string email);
+    public ValueTask SetPhoneNumberAsync(string phoneNumber);
+    
+    public ValueTask ClearStorageAsync();
 }

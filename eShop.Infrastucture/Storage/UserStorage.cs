@@ -104,6 +104,31 @@ public class UserStorage(ILocalStorageService localStorage) : IUserStorage
         await SetModelAsync(newModel);
     }
 
+    public async ValueTask SetUserNameAsync(string userName)
+    {
+        var model = await GetModelAsync();
+        var accountData = model!.AccountData with { UserName = userName };
+        var newModel = model! with { AccountData = accountData };
+        await SetModelAsync(newModel);
+    }
+
+    public async ValueTask SetEmailAsync(string email)
+    {
+        var model = await GetModelAsync();
+        var accountData = model!.AccountData with { Email = email };
+        var newModel = model! with { AccountData = accountData };
+        await SetModelAsync(newModel);
+    }
+
+    public async ValueTask SetPhoneNumberAsync(string phoneNumber)
+    {
+        var model = await GetModelAsync();
+        var accountData = model!.AccountData with { PhoneNumber = phoneNumber };
+        var newModel = model! with { AccountData = accountData };
+        await SetModelAsync(newModel);
+    }
+
+    public async ValueTask ClearStorageAsync() => await localStorage.RemoveItemAsync(UserKey);
     private async ValueTask<UserModel?> GetModelAsync() => await localStorage.GetItemAsync<UserModel>(UserKey);
     private async ValueTask SetModelAsync(UserModel model) => await localStorage.SetItemAsync(UserKey, model);
 }
