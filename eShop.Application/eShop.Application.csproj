@@ -47,8 +47,4 @@
     <Protobuf Include="Protos\auth.proto" GrpcServices="None" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Mapping\" />
-  </ItemGroup>
-
 </Project>

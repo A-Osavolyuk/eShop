@@ -1,10 +1,7 @@
-﻿// Global using directives
-
-global using System.Reflection;
+﻿global using System.Reflection;
 global using System.Text;
 global using eShop.Domain.Enums;
 global using eShop.Domain.Exceptions;
-global using eShop.Domain.Models;
 global using FluentValidation;
 global using MediatR;
 global using Microsoft.AspNetCore.Authentication.JwtBearer;

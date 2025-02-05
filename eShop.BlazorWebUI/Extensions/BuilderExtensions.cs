@@ -10,18 +10,12 @@ public static class BuilderExtensions
     public static void AddAppServices(this IHostApplicationBuilder builder)
     {
         builder.AddServiceDefaults();
-
-        builder.Logging.AddConfiguration(builder.Configuration.GetSection("Configuration:Logging"));
-
-        builder.Services.AddCascadingAuthenticationState();
-
-        builder.Services.AddRazorComponents()
-            .AddInteractiveServerComponents();
-
         builder.AddValidation();
         builder.AddInfrastructureLayer();
+        
+        builder.Logging.AddConfiguration(builder.Configuration.GetSection("Configuration:Logging"));
+        builder.Services.AddCascadingAuthenticationState();
         builder.Services.AddMudExtensions();
-
         builder.Services.AddMudServices(config =>
         {
             config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomLeft;
@@ -35,5 +29,7 @@ public static class BuilderExtensions
             config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
         });
         builder.Services.AddBlazoredToast();
+        builder.Services.AddRazorComponents()
+            .AddInteractiveServerComponents();
     }
 }

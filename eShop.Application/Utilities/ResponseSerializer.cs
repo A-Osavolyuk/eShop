@@ -5,7 +5,7 @@ namespace eShop.Application.Utilities;
 
 public static class ResponseConverter
 {
-    public static T Deserialize<T> ([NotNull] object obj)
+    public static T Deserialize<T> (object obj)
     {
         return JsonConvert.DeserializeObject<T>(Convert.ToString(obj)!)!;
     } 
