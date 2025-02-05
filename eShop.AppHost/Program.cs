@@ -41,7 +41,7 @@ var emailService = builder.AddProject<Projects.eShop_EmailSender_Api>("email-sen
 var smsService = builder.AddProject<Projects.eShop_SmsSender_Api>("sms-service-api")
     .WaitForReference(rabbitMq);
 
-var telegramService = builder.AddProject<Projects.eShop_TelegramService_Api>("telegram-service-api")
+var telegramService = builder.AddProject<Projects.eShop_TelegramBot_Api>("telegram-service-api")
     .WaitForReference(rabbitMq);
 
 var authApi = builder.AddProject<Projects.eShop_Auth_Api>("auth-api")
