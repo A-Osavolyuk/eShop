@@ -1,4 +1,4 @@
-﻿using UserModel = eShop.Domain.Models.Profile.UserModel;
+﻿using UserModel = eShop.Domain.Models.UserModel;
 
 namespace eShop.Infrastructure.Account;
 

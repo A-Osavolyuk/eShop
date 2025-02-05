@@ -13,7 +13,6 @@ global using eShop.Domain.Common.Security;
 global using eShop.Domain.Interfaces;
 global using eShop.Domain.Interfaces.Client;
 global using eShop.Domain.Models;
-global using eShop.Domain.Models.Store;
 global using eShop.Domain.Requests.Api.Auth;
 global using eShop.Domain.Requests.Api.Cart;
 global using eShop.Domain.Requests.Api.Comments;

@@ -3,5 +3,5 @@
 public class SecurityData
 {
     public bool TwoFactorAuthenticationState { get; set; }
-    public DateTime PasswordUpdatedDate { get; set; }
+    public DateTime PasswordUpdateDate { get; set; }
 }

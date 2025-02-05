@@ -1,4 +1,4 @@
-﻿using eShop.Domain.Models.Store;
+﻿using eShop.Domain.Models;
 
 namespace eShop.Cart.Api.Mapping;
 

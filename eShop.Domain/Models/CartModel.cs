@@ -1,6 +1,6 @@
 ﻿using eShop.Domain.Types;
 
-namespace eShop.Domain.Models.Store;
+namespace eShop.Domain.Models;
 
 public class CartModel
 {

@@ -1,4 +1,4 @@
-﻿using UserModel = eShop.Domain.Models.Profile.UserModel;
+﻿using UserModel = eShop.Domain.Models.UserModel;
 
 namespace eShop.Infrastructure.Storage;
 
@@ -57,6 +57,20 @@ public class UserStorage(ILocalStorageService localStorage) : IUserStorage
         return model?.PersonalData;
     }
 
+    public async ValueTask<PermissionsData?> GetPermissionDataAsync()
+    {
+        var model = await GetModelAsync();
+
+        return model?.PermissionsData;
+    }
+
+    public async ValueTask<SecurityData?> GetSecurityDataAsync()
+    {
+        var model = await GetModelAsync();
+
+        return model?.SecurityData;
+    }
+
     public async ValueTask SetUserAsync(UserModel model)
     {
         await SetModelAsync(model);
@@ -73,6 +87,20 @@ public class UserStorage(ILocalStorageService localStorage) : IUserStorage
     {
         var model = await GetModelAsync();
         var newModel = model! with { PersonalData = data };
+        await SetModelAsync(newModel);
+    }
+
+    public async ValueTask SetPermissionDataAsync(PermissionsData data)
+    {
+        var model = await GetModelAsync();
+        var newModel = model! with { PermissionsData = data };
+        await SetModelAsync(newModel);
+    }
+
+    public async ValueTask SetSecurityDataAsync(SecurityData data)
+    {
+        var model = await GetModelAsync();
+        var newModel = model! with { SecurityData = data };
         await SetModelAsync(newModel);
     }
 
