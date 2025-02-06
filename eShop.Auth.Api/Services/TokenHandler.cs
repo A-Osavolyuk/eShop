@@ -1,6 +1,7 @@
 ﻿using eShop.Auth.Api.Data.Entities;
 using eShop.Auth.Api.Interfaces;
 using eShop.Auth.Api.Options;
+using ClaimTypes = eShop.Domain.Common.Security.ClaimTypes;
 
 namespace eShop.Auth.Api.Services;
 
@@ -51,17 +52,17 @@ internal sealed class TokenHandler : ITokenHandler
     {
         var claims = new List<Claim>()
         {
-            new(CustomClaimTypes.UserName, user.UserName ?? "None"),
+            new(ClaimTypes.UserName, user.UserName ?? "None"),
             new(JwtRegisteredClaimNames.Email, user.Email ?? "None"),
-            new(CustomClaimTypes.Id, user.Id),
-            new(ClaimTypes.MobilePhone, user.PhoneNumber ?? "")
+            new(ClaimTypes.Id, user.Id),
+            new(System.Security.Claims.ClaimTypes.MobilePhone, user.PhoneNumber ?? "")
         };
 
         if (roles.Any())
         {
             foreach (var role in roles)
             {
-                claims.Add(new Claim(ClaimTypes.Role, role));
+                claims.Add(new Claim(System.Security.Claims.ClaimTypes.Role, role));
             }
         }
 
@@ -69,7 +70,7 @@ internal sealed class TokenHandler : ITokenHandler
         {
             foreach (var permission in permissions)
             {
-                claims.Add(new Claim(CustomClaimTypes.Permission, permission));
+                claims.Add(new Claim(ClaimTypes.Permission, permission));
             }
         }
 
@@ -106,22 +107,22 @@ internal sealed class TokenHandler : ITokenHandler
 
         var claims = new List<Claim>()
         {
-            new(CustomClaimTypes.UserName,
-                token.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.UserName)!.Value),
+            new(ClaimTypes.UserName,
+                token.Claims.FirstOrDefault(x => x.Type == ClaimTypes.UserName)!.Value),
             new(JwtRegisteredClaimNames.Email,
                 token.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email)!.Value),
-            new(CustomClaimTypes.Id, token.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value),
-            new(ClaimTypes.MobilePhone, token.Claims.FirstOrDefault(x => x.Type == ClaimTypes.MobilePhone)!.Value),
+            new(ClaimTypes.Id, token.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Id)!.Value),
+            new(System.Security.Claims.ClaimTypes.MobilePhone, token.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.MobilePhone)!.Value),
         };
 
-        var roles = token.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToList();
-        var permissions = token.Claims.Where(x => x.Type == CustomClaimTypes.Permission).Select(x => x.Value).ToList();
+        var roles = token.Claims.Where(x => x.Type == System.Security.Claims.ClaimTypes.Role).Select(x => x.Value).ToList();
+        var permissions = token.Claims.Where(x => x.Type == ClaimTypes.Permission).Select(x => x.Value).ToList();
 
         if (roles.Any())
         {
             foreach (var role in roles)
             {
-                claims.Add(new Claim(ClaimTypes.Role, role));
+                claims.Add(new Claim(System.Security.Claims.ClaimTypes.Role, role));
             }
         }
 
@@ -129,7 +130,7 @@ internal sealed class TokenHandler : ITokenHandler
         {
             foreach (var permission in permissions)
             {
-                claims.Add(new Claim(CustomClaimTypes.Permission, permission));
+                claims.Add(new Claim(ClaimTypes.Permission, permission));
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using eShop.Auth.Api.Data.Entities;
 using eShop.Auth.Api.Interfaces;
+using ClaimTypes = System.Security.Claims.ClaimTypes;
 
 namespace eShop.Auth.Api.Queries.Auth;
 

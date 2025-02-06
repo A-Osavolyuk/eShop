@@ -1,4 +1,5 @@
-﻿using UserModel = eShop.Domain.Models.UserModel;
+﻿using ClaimTypes = eShop.Domain.Common.Security.ClaimTypes;
+using UserModel = eShop.Domain.Models.UserModel;
 
 namespace eShop.Infrastructure.Account;
 
@@ -118,20 +119,20 @@ public class ApplicationAuthenticationStateProvider(
 
         var output = new List<Claim>()
         {
-            new(CustomClaimTypes.Id, claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value),
-            new(ClaimTypes.Name, claims.FirstOrDefault(x => x.Type == CustomClaimTypes.UserName)!.Value),
-            new(ClaimTypes.Email, claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email)!.Value),
-            new(ClaimTypes.MobilePhone, claims.FirstOrDefault(x => x.Type == ClaimTypes.MobilePhone)!.Value),
+            new(ClaimTypes.Id, claims.FirstOrDefault(x => x.Type == ClaimTypes.Id)!.Value),
+            new(System.Security.Claims.ClaimTypes.Name, claims.FirstOrDefault(x => x.Type == ClaimTypes.UserName)!.Value),
+            new(System.Security.Claims.ClaimTypes.Email, claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email)!.Value),
+            new(System.Security.Claims.ClaimTypes.MobilePhone, claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.MobilePhone)!.Value),
         };
 
-        var roles = claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToList();
-        var permissions = claims.Where(x => x.Type == CustomClaimTypes.Permission).Select(x => x.Value).ToList();
+        var roles = claims.Where(x => x.Type == System.Security.Claims.ClaimTypes.Role).Select(x => x.Value).ToList();
+        var permissions = claims.Where(x => x.Type == ClaimTypes.Permission).Select(x => x.Value).ToList();
 
         if (roles.Any())
         {
             foreach (var role in roles)
             {
-                output.Add(new Claim(ClaimTypes.Role, role));
+                output.Add(new Claim(System.Security.Claims.ClaimTypes.Role, role));
             }
         }
 
@@ -139,7 +140,7 @@ public class ApplicationAuthenticationStateProvider(
         {
             foreach (var permission in permissions)
             {
-                output.Add(new Claim(CustomClaimTypes.Permission, permission));
+                output.Add(new Claim(ClaimTypes.Permission, permission));
             }
         }
 
@@ -148,15 +149,15 @@ public class ApplicationAuthenticationStateProvider(
 
     private async Task WriteToLocalStorageAsync(List<Claim> claims)
     {
-        var email = claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value;
-        var username = claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)!.Value;
-        var phoneNumber = claims.FirstOrDefault(x => x.Type == ClaimTypes.MobilePhone)!.Value;
-        var id = claims.FirstOrDefault(x => x.Type == CustomClaimTypes.Id)!.Value;
+        var email = claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.Email)!.Value;
+        var username = claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.Name)!.Value;
+        var phoneNumber = claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.MobilePhone)!.Value;
+        var id = claims.FirstOrDefault(x => x.Type == ClaimTypes.Id)!.Value;
         
         //TODO: Implement storing roles and permissions in local storage
         
-        var roles = claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToList();
-        var permissions = claims.Where(x => x.Type == CustomClaimTypes.Permission).Select(x => x.Value).ToList();
+        var roles = claims.Where(x => x.Type == System.Security.Claims.ClaimTypes.Role).Select(x => x.Value).ToList();
+        var permissions = claims.Where(x => x.Type == ClaimTypes.Permission).Select(x => x.Value).ToList();
 
         await userStorage.SetUserAsync(new UserModel()
         {
