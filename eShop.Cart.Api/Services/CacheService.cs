@@ -1,4 +1,4 @@
-﻿namespace eShop.Cart.Api.Services.Implementation;
+﻿namespace eShop.Cart.Api.Services;
 
 public class CacheService(IDistributedCache cache) : ICacheService
 {

@@ -1,4 +1,6 @@
-﻿namespace eShop.Auth.Api.Services.Implementation;
+﻿using eShop.Auth.Api.Interfaces;
+
+namespace eShop.Auth.Api.Services;
 
 public class MessageService(IBus bus) : IMessageService
 {

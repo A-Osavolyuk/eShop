@@ -17,7 +17,6 @@ global using eShop.Reviews.Api.Extensions;
 global using eShop.Reviews.Api.Mapping;
 global using eShop.Reviews.Api.Queries.Comments;
 global using eShop.Reviews.Api.Receivers;
-global using eShop.Reviews.Api.Services.Implementation;
 global using eShop.ServiceDefaults;
 global using FluentValidation;
 global using LanguageExt.Common;

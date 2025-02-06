@@ -1,5 +1,6 @@
 ﻿using eShop.Domain.Requests.Api.Sms;
 using eShop.Domain.Responses.Api.Sms;
+using eShop.SmsSender.Api.Interfaces;
 
 namespace eShop.SmsSender.Api.Services;
 

@@ -1,4 +1,6 @@
-﻿namespace eShop.Reviews.Api.Extensions;
+﻿using eShop.Reviews.Api.Services;
+
+namespace eShop.Reviews.Api.Extensions;
 
 public static class BuilderExtensions
 {

@@ -1,4 +1,6 @@
-﻿namespace eShop.Product.Api.Extensions;
+﻿using eShop.Product.Api.Services;
+
+namespace eShop.Product.Api.Extensions;
 
 public static class BuilderExtensions
 {

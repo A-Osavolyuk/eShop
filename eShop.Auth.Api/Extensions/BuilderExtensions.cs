@@ -1,5 +1,7 @@
 ﻿using eShop.Auth.Api.Data.Entities;
+using eShop.Auth.Api.Interfaces;
 using eShop.Auth.Api.Options;
+using eShop.Auth.Api.Services;
 
 namespace eShop.Auth.Api.Extensions;
 

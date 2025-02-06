@@ -1,4 +1,4 @@
-﻿namespace eShop.Auth.Api.Services.Interfaces;
+﻿namespace eShop.Auth.Api.Interfaces;
 
 public interface IMessageService
 {

@@ -25,7 +25,6 @@ global using eShop.Product.Api.Mapping;
 global using eShop.Product.Api.Queries.Brands;
 global using eShop.Product.Api.Queries.Products;
 global using eShop.Product.Api.Rpc;
-global using eShop.Product.Api.Services.Implementation;
 global using eShop.ServiceDefaults;
 global using Grpc.Net.Client;
 global using LanguageExt.Common;

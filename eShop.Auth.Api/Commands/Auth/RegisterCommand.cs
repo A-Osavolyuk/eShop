@@ -1,4 +1,5 @@
-﻿using eShop.Auth.Api.Mapping;
+﻿using eShop.Auth.Api.Interfaces;
+using eShop.Auth.Api.Mapping;
 
 namespace eShop.Auth.Api.Commands.Auth;
 

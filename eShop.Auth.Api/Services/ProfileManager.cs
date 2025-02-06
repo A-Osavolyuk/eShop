@@ -1,7 +1,8 @@
 ﻿using eShop.Auth.Api.Data.Entities;
+using eShop.Auth.Api.Interfaces;
 using eShop.Auth.Api.Mapping;
 
-namespace eShop.Auth.Api.Services.Implementation;
+namespace eShop.Auth.Api.Services;
 
 internal sealed class ProfileManager(AuthDbContext context) : IProfileManager
 {

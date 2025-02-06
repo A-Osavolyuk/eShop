@@ -2,9 +2,9 @@
 using eShop.Domain.Common.Api;
 using eShop.Domain.DTOs;
 using eShop.FilesStorage.Api.Commands;
+using eShop.FilesStorage.Api.Interfaces;
 using eShop.FilesStorage.Api.Queries;
 using eShop.FilesStorage.Api.Services;
-using eShop.FilesStorage.Api.Services.Interfaces;
 
 namespace eShop.FilesStorage.Api.Controllers;
 
