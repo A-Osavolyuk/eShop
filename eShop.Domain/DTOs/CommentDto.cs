@@ -1,6 +1,8 @@
-﻿namespace eShop.Domain.DTOs;
+﻿using eShop.Domain.Interfaces;
 
-public class CommentDto
+namespace eShop.Domain.DTOs;
+
+public class CommentDto : IAuditable
 {
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
@@ -8,6 +10,6 @@ public class CommentDto
     public string Text { get; set; } = string.Empty;
     public List<string> Images { get; set; } =  new List<string>();
     public int Rating { get; set; }
-    public DateTime CreatedDate { get; set; }
-    public DateTime UpdatedDate { get; set; }
+    public DateTime CreateDate { get; set; }
+    public DateTime UpdateDate { get; set; }
 }

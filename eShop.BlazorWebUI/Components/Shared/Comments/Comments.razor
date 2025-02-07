@@ -58,10 +58,10 @@ else
                     .AsQueryable()
                     .Select(x => new CommentModel()
                     {
-                        UpdatedAt = x.UpdatedDate,
+                        UpdatedAt = x.UpdateDate,
                         CommentId = x.Id,
                         UserId = x.UserId,
-                        CreatedAt = x.CreatedDate,
+                        CreatedAt = x.CreateDate,
                         Rating = x.Rating,
                         CommentText = x.Text,
                         Images = x.Images,
