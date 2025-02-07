@@ -24,16 +24,6 @@ public static class Mapper
             ItemsCount = dto.Cound,
         };
     }
-
-    public static UpdateFavoritesRequest ToUpdateFavoritesRequest(FavoritesModel model)
-    {
-        return new()
-        {
-            Items = model.Items,
-            FavoritesId = model.FavoritesId,
-            ItemsCount = model.ItemsCount,
-        };
-    }
     
     public static CartDto ToCartDto(CartEntity entity)
     {
@@ -42,26 +32,6 @@ public static class Mapper
             Items = entity.Items,
             Id = entity.CartId,
             Count = entity.ItemsCount,
-        };
-    }
-
-    public static CartModel ToCartModel(CartDto cartDto)
-    {
-        return new CartModel()
-        {
-            CartId = cartDto.Id,
-            ItemsCount = cartDto.Count,
-            Items = cartDto.Items
-        };
-    }
-
-    public static UpdateCartRequest ToUpdateCartRequest(CartModel model)
-    {
-        return new()
-        {
-            CartId = model.CartId,
-            ItemsCount = model.ItemsCount,
-            Items = model.Items
         };
     }
 }

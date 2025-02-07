@@ -19,21 +19,6 @@ public static class Mapper
         };
     }
 
-    public static CommentModel ToCommentModel(CommentDto dto)
-    {
-        return new()
-        {
-            UpdatedAt = dto.UpdateDate,
-            CommentId = dto.Id,
-            UserId = dto.UserId,
-            CreatedAt = dto.CreateDate,
-            Rating = dto.Rating,
-            CommentText = dto.Text,
-            Images = dto.Images,
-            Username = dto.Username
-        };
-    }
-
     public static CommentEntity ToCommentEntity(CreateCommentRequest request)
     {
         return new()
