@@ -2,7 +2,7 @@
 
 public class ReviewDto
 {
-    public Guid ReviewId { get; set; }
+    public Guid Id { get; set; }
     public Guid ProductId { get; set; }
     public Guid UserId { get; set; }
     public string UserName { get; set; } = string.Empty;

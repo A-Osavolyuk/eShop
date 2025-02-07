@@ -9,11 +9,11 @@ public static class Mapper
         return new()
         {
             UpdatedAt = entity.UpdatedAt,
-            CommentId = entity.CommentId,
+            Id = entity.CommentId,
             UserId = entity.UserId,
             CreatedAt = entity.CreatedAt,
             Rating = entity.Rating,
-            CommentText = entity.CommentText,
+            Text = entity.CommentText,
             Images = entity.Images,
             Username = entity.Username
         };
@@ -24,11 +24,11 @@ public static class Mapper
         return new()
         {
             UpdatedAt = dto.UpdatedAt,
-            CommentId = dto.CommentId,
+            CommentId = dto.Id,
             UserId = dto.UserId,
             CreatedAt = dto.CreatedAt,
             Rating = dto.Rating,
-            CommentText = dto.CommentText,
+            CommentText = dto.Text,
             Images = dto.Images,
             Username = dto.Username
         };

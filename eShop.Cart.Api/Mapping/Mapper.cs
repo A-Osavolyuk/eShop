@@ -10,8 +10,8 @@ public static class Mapper
         return new()
         {
             Items = entity.Items,
-            FavoritesId = entity.FavoritesId,
-            ItemsCount = entity.ItemsCount,
+            Id = entity.FavoritesId,
+            Cound = entity.ItemsCount,
         };
     }
 
@@ -20,8 +20,8 @@ public static class Mapper
         return new()
         {
             Items = dto.Items,
-            FavoritesId = dto.FavoritesId,
-            ItemsCount = dto.ItemsCount,
+            FavoritesId = dto.Id,
+            ItemsCount = dto.Cound,
         };
     }
 
@@ -40,8 +40,8 @@ public static class Mapper
         return new()
         {
             Items = entity.Items,
-            CartId = entity.CartId,
-            ItemsCount = entity.ItemsCount,
+            Id = entity.CartId,
+            Count = entity.ItemsCount,
         };
     }
 
@@ -49,8 +49,8 @@ public static class Mapper
     {
         return new CartModel()
         {
-            CartId = cartDto.CartId,
-            ItemsCount = cartDto.ItemsCount,
+            CartId = cartDto.Id,
+            ItemsCount = cartDto.Count,
             Items = cartDto.Items
         };
     }

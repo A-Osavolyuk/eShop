@@ -59,11 +59,11 @@ else
                     .Select(x => new CommentModel()
                     {
                         UpdatedAt = x.UpdatedAt,
-                        CommentId = x.CommentId,
+                        CommentId = x.Id,
                         UserId = x.UserId,
                         CreatedAt = x.CreatedAt,
                         Rating = x.Rating,
-                        CommentText = x.CommentText,
+                        CommentText = x.Text,
                         Images = x.Images,
                         Username = x.Username
                     })

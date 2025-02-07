@@ -4,7 +4,7 @@ namespace eShop.Domain.DTOs;
 
 public class CartDto
 {
-    public Guid CartId { get; set; }
-    public int ItemsCount { get; set; }
+    public Guid Id { get; set; }
+    public int Count { get; set; }
     public List<CartItem> Items { get; set; } = new List<CartItem>();
 }
