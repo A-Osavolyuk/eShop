@@ -6,7 +6,6 @@ global using eShop.Application.Utilities;
 global using eShop.Domain.Common.Api;
 global using eShop.Domain.Exceptions;
 global using eShop.Domain.Interfaces;
-global using eShop.Domain.Models;
 global using eShop.Domain.Requests.Api.Comments;
 global using eShop.Domain.Responses.Api.Comments;
 global using eShop.Reviews.Api.Behaviours;
