@@ -11,7 +11,7 @@ public static class Mapper
             FirstName = entity.FirstName,
             LastName = entity.LastName,
             Gender = entity.Gender,
-            DateOfBirth = entity.DateOfBirth
+            DateOfBirth = entity.BirthDate
         };
     }
 
@@ -45,7 +45,7 @@ public static class Mapper
             FirstName = data.FirstName,
             LastName = data.LastName,
             Gender = data.Gender,
-            DateOfBirth = data.DateOfBirth,
+            BirthDate = data.DateOfBirth,
         };
     }
     

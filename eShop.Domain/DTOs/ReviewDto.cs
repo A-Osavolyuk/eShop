@@ -7,8 +7,8 @@ public class ReviewDto
     public Guid UserId { get; set; }
     public string UserName { get; set; } = string.Empty;
     public string Text { get; set; } = string.Empty;
-    public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
+    public DateTime CreatedDate { get; set; }
+    public DateTime UpdatedDate { get; set; }
     public int Rating { get; set; }
     public List<CommentDto> Comments { get; set; } = [];
 }

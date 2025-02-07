@@ -8,10 +8,10 @@ public static class Mapper
     {
         return new()
         {
-            UpdatedAt = entity.UpdatedAt,
+            UpdatedDate = entity.UpdatedAt,
             Id = entity.CommentId,
             UserId = entity.UserId,
-            CreatedAt = entity.CreatedAt,
+            CreatedDate = entity.CreatedAt,
             Rating = entity.Rating,
             Text = entity.CommentText,
             Images = entity.Images,
@@ -23,10 +23,10 @@ public static class Mapper
     {
         return new()
         {
-            UpdatedAt = dto.UpdatedAt,
+            UpdatedAt = dto.UpdatedDate,
             CommentId = dto.Id,
             UserId = dto.UserId,
-            CreatedAt = dto.CreatedAt,
+            CreatedAt = dto.CreatedDate,
             Rating = dto.Rating,
             CommentText = dto.Text,
             Images = dto.Images,

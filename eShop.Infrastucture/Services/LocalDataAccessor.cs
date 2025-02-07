@@ -147,9 +147,9 @@ public class LocalDataAccessor(ILocalStorageService localStorageService) : ILoca
                     {
                         var newItem = new CartItem()
                         {
-                            UpdatedAt = DateTime.UtcNow,
+                            UpdateDate = DateTime.UtcNow,
                             Amount = oldItem.Amount + item.Amount,
-                            ProductArticle = oldItem.ProductArticle,
+                            Article = oldItem.Article,
                             ProductId = oldItem.ProductId
                         };
                         cart.Items.Remove(oldItem);
