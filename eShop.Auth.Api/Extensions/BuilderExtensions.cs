@@ -61,6 +61,8 @@ public static class BuilderExtensions
             {
                 options.ClientId = builder.Configuration["Configuration:Security:Authentication:Providers:Google:ClientId"] ?? "";
                 options.ClientSecret = builder.Configuration["Configuration:Security:Authentication:Providers:Google:ClientSecret"] ?? "";
+                options.SaveTokens = true;
+                options.CallbackPath = "/signin-google";  
             })
             .AddFacebook(options =>
             {

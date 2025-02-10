@@ -22,8 +22,7 @@ internal sealed class HandleExternalLoginResponseQueryHandler(
     private readonly string frontendUri = configuration["Configuration:General:Frontend:Clients:BlazorServer:Uri"]!;
     private readonly string defaultRole = configuration["Configuration:General:DefaultValues:DefaultRole"]!;
 
-    private readonly List<string> defaultPermissions =
-        configuration.GetValue<List<string>>("Configuration:General:DefaultValues:DefaultPermissions")!;
+    private readonly List<string> defaultPermissions = ["Permission.Account.ManageAccount"];
 
     public async Task<Result<string>> Handle(HandleExternalLoginResponseQuery request,
         CancellationToken cancellationToken)
@@ -90,7 +89,7 @@ internal sealed class HandleExternalLoginResponseQueryHandler(
 
             var issuingPermissionsResult =
                 await appManager.PermissionManager.IssuePermissionsAsync(user, defaultPermissions);
-
+           
             if (!issuingPermissionsResult.Succeeded)
             {
                 return new(new FailedOperationException(
