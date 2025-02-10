@@ -29,7 +29,8 @@
 
                 <MudLoadingButton LoadingAdornment="Adornment.End" ButtonType="ButtonType.Button"
                                   OnClick="async () => await LoginClick()"
-                                  StartIcon="@Icons.Material.Filled.Login" Disabled="form.IsValid"
+                                  StartIcon="@Icons.Material.Filled.Login" 
+                                  Disabled="@(string.IsNullOrEmpty(LoginRequest.Password) || string.IsNullOrEmpty(LoginRequest.Email))"
                                   Variant="Variant.Filled" Color="Color.Primary" Class="mt-3" FullWidth>
                     Log In
                 </MudLoadingButton>
