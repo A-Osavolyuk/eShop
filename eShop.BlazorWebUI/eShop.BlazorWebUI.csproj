@@ -13,10 +13,10 @@
 		<PackageReference Include="Azure.Storage.Queues" Version="12.21.0" />
 		<PackageReference Include="Blazored.FluentValidation" Version="2.2.0" />
 		<PackageReference Include="Blazored.Toast" Version="4.2.1" />
-		<PackageReference Include="CodeBeam.MudBlazor.Extensions" Version="8.0.0-preview.1" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Azure" Version="1.9.0" />
-		<PackageReference Include="MudBlazor" Version="8.0.0-preview.6" />
+		<PackageReference Include="CodeBeam.MudBlazor.Extensions" Version="8.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Azure" Version="1.10.0" />
+		<PackageReference Include="MudBlazor" Version="8.2.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	</ItemGroup>
 
