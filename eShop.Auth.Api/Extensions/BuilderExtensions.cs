@@ -14,7 +14,6 @@ public static class BuilderExtensions
         builder.AddVersioning();
         builder.AddValidation();
         builder.AddMessageBus();
-        builder.AddSwaggerWithSecurity();
         builder.AddServiceDefaults();
         builder.AddSecurity();
         builder.AddDependencyInjection();

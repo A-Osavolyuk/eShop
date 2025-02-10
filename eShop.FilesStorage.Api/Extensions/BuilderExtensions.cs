@@ -15,7 +15,6 @@ public static class BuilderExtensions
         
         builder.AddJwtAuthentication();
         builder.AddVersioning();
-        builder.AddSwaggerWithSecurity();
         builder.AddDependencyInjection();
         builder.AddServiceDefaults();
         builder.AddRedisCache();

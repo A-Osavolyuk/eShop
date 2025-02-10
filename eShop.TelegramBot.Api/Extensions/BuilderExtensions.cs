@@ -12,7 +12,6 @@ public static class BuilderExtensions
         builder.AddJwtAuthentication();
         builder.AddVersioning();
         builder.AddValidation();
-        builder.AddSwaggerWithSecurity();
         builder.AddDependencyInjection();
         builder.AddMessageBus();
         builder.Services.AddControllers();
