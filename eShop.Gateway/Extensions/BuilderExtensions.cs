@@ -8,8 +8,9 @@ public static class BuilderExtensions
     public static void AppApiServices(this IHostApplicationBuilder builder)
     {
         builder.AddServiceDefaults();
+        builder.AddJwtAuthentication();
         builder.Logging.AddConfiguration(builder.Configuration.GetSection("Configuration:Logging"));
         builder.Services.AddReverseProxy().LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
-        builder.AddJwtAuthentication();
+        builder.Services.AddOpenApi();
     }
 }

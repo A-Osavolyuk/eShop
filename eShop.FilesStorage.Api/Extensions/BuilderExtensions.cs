@@ -30,6 +30,7 @@ public static class BuilderExtensions
         builder.Services.AddValidatorsFromAssemblyContaining(typeof(IAssemblyMarker));
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
         builder.Services.AddProblemDetails();
+        builder.Services.AddOpenApi();
     }
 
     private static void AddDependencyInjection(this IHostApplicationBuilder builder)

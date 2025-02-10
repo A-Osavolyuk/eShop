@@ -14,7 +14,8 @@ public static class BuilderExtensions
         builder.Logging.AddConfiguration(builder.Configuration.GetSection("Configuration:Logging"));
 
         builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("Configuration:Services:SMTP"));
-
+        builder.Services.AddOptions();
+        
         builder.Services.AddMassTransit(x =>
         {
             x.UsingRabbitMq((context, cfg) =>

@@ -30,6 +30,7 @@ public static class BuilderExtensions
         });
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
         builder.Services.AddProblemDetails();
+        builder.Services.AddOpenApi();
 
         return builder;
     }

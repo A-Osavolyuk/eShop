@@ -10,9 +10,10 @@ public static class WebApplicationBuilder
         {
             app.UseSwagger();
             app.UseSwaggerUI();
+            app.MapOpenApi();
             await app.ConfigureDatabaseAsync<AuthDbContext>();
         }
-
+        
         app.UseHttpsRedirection();
         app.UseCors();
         app.UseAuthorization();

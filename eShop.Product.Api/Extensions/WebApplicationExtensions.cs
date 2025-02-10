@@ -10,6 +10,7 @@ public static class WebApplicationExtensions
         {
             app.UseSwagger();
             app.UseSwaggerUI();
+            app.MapOpenApi();
             await app.ConfigureDatabaseAsync<AppDbContext>();
         }
 
@@ -17,11 +18,11 @@ public static class WebApplicationExtensions
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
-        app.ConfigureMongoDB();
+        app.ConfigureMongoDb();
         app.UseExceptionHandler();
     }
     
-    public static void ConfigureMongoDB(this WebApplication app)
+    private static void ConfigureMongoDb(this WebApplication app)
     {
         RegisterClassMaps();
     }
