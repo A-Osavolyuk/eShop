@@ -1,4 +1,6 @@
-﻿using eShop.SmsSender.Api.Interfaces;
+﻿using eShop.Application.Documentation.Transformers;
+using eShop.SmsSender.Api.Interfaces;
+using Microsoft.OpenApi.Models;
 
 namespace eShop.SmsSender.Api.Extensions;
 
@@ -23,7 +25,18 @@ public static class BuilderExtensions
         });
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
         builder.Services.AddProblemDetails();
-        builder.Services.AddOpenApi();
+        builder.Services.AddOpenApi(options =>
+        {
+            options.AddDocumentTransformer<BearerTokenTransformer>();
+            options.AddDocumentTransformer((document, context, cancellationToken) =>
+            {
+                document.Info.Title = "SMS sender API";
+                document.Info.Version = "1.0.0";
+                document.Info.Description = "This API contains methods for sending SMS messages";
+                
+                return Task.CompletedTask;
+            });
+        });
         
         return builder;
     }
