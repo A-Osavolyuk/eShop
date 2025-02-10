@@ -68,6 +68,8 @@ public static class BuilderExtensions
             {
                 options.ClientId = builder.Configuration["Configuration:Security:Authentication:Providers:Facebook:ClientId"] ?? "";
                 options.ClientSecret = builder.Configuration["Configuration:Security:Authentication:Providers:Facebook:ClientSecret"] ?? "";
+                options.SaveTokens = true;
+                options.CallbackPath = "/signin-facebook";  
             });
 
         builder.Services.AddAuthentication(options =>
