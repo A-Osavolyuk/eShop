@@ -70,6 +70,13 @@ public static class BuilderExtensions
                 options.ClientSecret = builder.Configuration["Configuration:Security:Authentication:Providers:Facebook:ClientSecret"] ?? "";
                 options.SaveTokens = true;
                 options.CallbackPath = "/signin-facebook";  
+            })
+            .AddMicrosoftAccount(options =>
+            {
+                options.ClientId = builder.Configuration["Configuration:Security:Authentication:Providers:Microsoft:ClientId"] ?? "";
+                options.ClientSecret = builder.Configuration["Configuration:Security:Authentication:Providers:Microsoft:ClientSecret"] ?? "";
+                options.SaveTokens = true;
+                options.CallbackPath = "/signin-microsoft";  
             });
 
         builder.Services.AddAuthentication(options =>
