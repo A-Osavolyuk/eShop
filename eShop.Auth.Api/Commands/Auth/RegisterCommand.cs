@@ -14,11 +14,7 @@ internal sealed class RegisterCommandHandler(
     private readonly IMessageService messageService = messageService;
     private readonly string frontendUri = configuration["Configuration:General:Frontend:Clients:BlazorServer:Uri"]!;
     private readonly string defaultRole = configuration["Configuration:General:DefaultValues:DefaultRole"]!;
-
-    private readonly List<string> defaultPermissions =
-    [
-        "Permission.Account.ManageAccount"
-    ];
+    private readonly string defaultPermission = configuration["Configuration:General:DefaultValues:DefaultPermission"]!;
 
     public async Task<Result<RegistrationResponse>> Handle(RegisterCommand request,
         CancellationToken cancellationToken)
@@ -49,7 +45,7 @@ internal sealed class RegisterCommandHandler(
         }
 
         var issuingPermissionsResult =
-            await appManager.PermissionManager.IssuePermissionsAsync(newUser, defaultPermissions);
+            await appManager.PermissionManager.IssuePermissionsAsync(newUser, [defaultPermission]);
 
         if (!issuingPermissionsResult.Succeeded)
         {
