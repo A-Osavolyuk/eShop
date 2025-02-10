@@ -1,4 +1,6 @@
-﻿namespace eShop.SmsSender.Api.Extensions;
+﻿using Scalar.AspNetCore;
+
+namespace eShop.SmsSender.Api.Extensions;
 
 public static class WebApplicationExtensions
 {
@@ -7,6 +9,7 @@ public static class WebApplicationExtensions
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
+            app.MapScalarApiReference();
         }
 
         app.MapDefaultEndpoints();

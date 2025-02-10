@@ -1,4 +1,5 @@
 ﻿using eShop.ServiceDefaults;
+using Scalar.AspNetCore;
 
 namespace eShop.EmailSender.Api.Extensions;
 
@@ -9,5 +10,6 @@ public static class WebApplicationBuilder
         app.MapDefaultEndpoints();
         app.UseHttpsRedirection();
         app.MapOpenApi();
+        app.MapScalarApiReference();
     }
 }

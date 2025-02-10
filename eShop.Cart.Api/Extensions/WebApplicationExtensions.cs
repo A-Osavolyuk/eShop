@@ -1,4 +1,5 @@
 ﻿using eShop.Domain.Types;
+using Scalar.AspNetCore;
 
 namespace eShop.Cart.Api.Extensions;
 
@@ -9,6 +10,7 @@ public static class WebApplicationExtensions
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
+            app.MapScalarApiReference();
             await app.SeedDataAsync();
         }
 
@@ -18,8 +20,8 @@ public static class WebApplicationExtensions
         app.UseExceptionHandler();
         app.MapGrpcService<CartServer>();
     }
-    
-    public static async Task SeedDataAsync(this WebApplication app)
+
+    private static async Task SeedDataAsync(this WebApplication app)
     {
         using var scope = app.Services.CreateScope();
         var client = scope.ServiceProvider.GetRequiredService<DbClient>();

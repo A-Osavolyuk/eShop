@@ -1,4 +1,6 @@
-﻿namespace eShop.Auth.Api.Extensions;
+﻿using Scalar.AspNetCore;
+
+namespace eShop.Auth.Api.Extensions;
 
 public static class WebApplicationBuilder
 {
@@ -9,6 +11,7 @@ public static class WebApplicationBuilder
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
+            app.MapScalarApiReference();
             await app.ConfigureDatabaseAsync<AuthDbContext>();
         }
         
