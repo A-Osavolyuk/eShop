@@ -1,6 +1,5 @@
 ﻿using eShop.Domain.Responses.Api.Files;
 using eShop.FilesStorage.Api.Interfaces;
-using eShop.FilesStorage.Api.Services;
 
 namespace eShop.FilesStorage.Api.Commands;
 

@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Common.Api;
-
-namespace eShop.Domain.Common.Security;
+﻿namespace eShop.Domain.Common.Security;
 
 public static class ClaimTypes
 {

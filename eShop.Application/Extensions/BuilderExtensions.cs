@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
 
 namespace eShop.Application.Extensions;

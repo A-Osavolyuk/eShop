@@ -1,7 +1,4 @@
-﻿using eShop.EmailSender.Api.Options;
-using eShop.EmailSender.Api.Receivers;
-using eShop.ServiceDefaults;
-using MassTransit;
+﻿using eShop.EmailSender.Api.Services;
 
 namespace eShop.EmailSender.Api.Extensions;
 
@@ -14,6 +11,7 @@ public static class BuilderExtensions
         builder.Logging.AddConfiguration(builder.Configuration.GetSection("Configuration:Logging"));
 
         builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("Configuration:Services:SMTP"));
+        builder.Services.AddScoped<IEmailService, EmailService>();
         builder.Services.AddOptions();
         
         builder.Services.AddMassTransit(x =>

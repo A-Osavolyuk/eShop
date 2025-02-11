@@ -1,6 +1,5 @@
 ﻿using eShop.Application.Documentation.Transformers;
 using eShop.SmsSender.Api.Interfaces;
-using Microsoft.OpenApi.Models;
 
 namespace eShop.SmsSender.Api.Extensions;
 

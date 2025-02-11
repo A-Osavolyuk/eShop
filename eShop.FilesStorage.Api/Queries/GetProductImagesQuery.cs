@@ -1,7 +1,5 @@
-﻿using System.Net.Mime;
-using eShop.Domain.Exceptions;
+﻿using eShop.Domain.Exceptions;
 using eShop.FilesStorage.Api.Interfaces;
-using eShop.FilesStorage.Api.Services;
 
 namespace eShop.FilesStorage.Api.Queries;
 

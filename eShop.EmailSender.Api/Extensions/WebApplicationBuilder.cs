@@ -1,7 +1,4 @@
-﻿using eShop.ServiceDefaults;
-using Scalar.AspNetCore;
-
-namespace eShop.EmailSender.Api.Extensions;
+﻿namespace eShop.EmailSender.Api.Extensions;
 
 public static class WebApplicationBuilder
 {

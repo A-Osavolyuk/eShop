@@ -1,38 +1,14 @@
-﻿using eShop.Domain.Messages;
-using eShop.Domain.Messages.Email;
-using eShop.EmailSender.Api.Options;
-using MailKit.Net.Smtp;
-using MassTransit;
-using Microsoft.Extensions.Options;
-using MimeKit;
+﻿namespace eShop.EmailSender.Api.Receivers;
 
-namespace eShop.EmailSender.Api.Receivers;
-
-public class ExternalLoginConsumer(IOptions<EmailOptions> options)
-    : IConsumer<ExternalRegistrationMessage>
+public class ExternalLoginConsumer(IEmailService emailService) : IConsumer<ExternalRegistrationMessage>
 {
-    private readonly EmailOptions options = options.Value;
+    private readonly IEmailService emailService = emailService;
 
     public async Task Consume(ConsumeContext<ExternalRegistrationMessage> context)
     {
-        var emailMessage = new MimeMessage();
-
-        emailMessage.From.Add(new MailboxAddress(options.DisplayName, options.Email));
-        emailMessage.To.Add(new MailboxAddress(context.Message.To, context.Message.To));
-        emailMessage.Subject = context.Message.Subject;
-
-        var builder = new BodyBuilder();
-        builder.HtmlBody = GetEmailBody(context.Message.To, context.Message.ProviderName, context.Message.TempPassword);
-
-        emailMessage.Body = builder.ToMessageBody();
-
-        using (var client = new SmtpClient())
-        {
-            await client.ConnectAsync(options.Host, options.Port, false);
-            await client.AuthenticateAsync(options.Email, options.Password);
-            await client.SendAsync(emailMessage);
-            await client.DisconnectAsync(true);
-        }
+        var htmlBody = GetEmailBody(context.Message.To, context.Message.ProviderName, context.Message.TempPassword);
+        var messageOptions = Mapper.ToMessageOptions(context.Message);
+        await emailService.SendMessageAsync(htmlBody, messageOptions);
     }
 
     private string GetEmailBody(string userName, string providerName, string tempPassword)

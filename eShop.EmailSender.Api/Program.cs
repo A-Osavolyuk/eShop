@@ -1,5 +1,3 @@
-using eShop.EmailSender.Api.Extensions;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddApiServices();

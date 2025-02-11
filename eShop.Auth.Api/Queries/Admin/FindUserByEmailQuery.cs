@@ -1,5 +1,4 @@
-﻿using eShop.Auth.Api.Data.Entities;
-using eShop.Auth.Api.Mapping;
+﻿using eShop.Auth.Api.Mapping;
 using eShop.Domain.DTOs;
 
 namespace eShop.Auth.Api.Queries.Admin;
