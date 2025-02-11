@@ -9,6 +9,9 @@ public class FavoritesController(ISender sender) : ControllerBase
 {
     private readonly ISender sender = sender;
     
+    [EndpointSummary("Update favorites")]
+    [EndpointDescription("Updates favorites")]
+    [ProducesResponseType(200)]
     [HttpPut("update-favorites")]
     public async ValueTask<ActionResult<Response>> UpdateCartAsync([FromBody] UpdateFavoritesRequest request)
     {
@@ -19,6 +22,9 @@ public class FavoritesController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
     
+    [EndpointSummary("Get favorites")]
+    [EndpointDescription("Gets favorites")]
+    [ProducesResponseType(200)]
     [HttpGet("get-favorites/{userId:guid}")]
     public async ValueTask<ActionResult<Response>> GetCartAsync(Guid userId)
     {

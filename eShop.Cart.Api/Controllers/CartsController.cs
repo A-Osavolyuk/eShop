@@ -9,6 +9,9 @@ public class CartsController(ISender sender) : ControllerBase
 {
     private readonly ISender sender = sender;
 
+    [EndpointSummary("Update cart")]
+    [EndpointDescription("Updates cart")]
+    [ProducesResponseType(200)]
     [HttpPut("update-cart")]
     public async ValueTask<ActionResult<Response>> UpdateCartAsync([FromBody] UpdateCartRequest request)
     {
@@ -19,6 +22,9 @@ public class CartsController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
         
+    [EndpointSummary("Get cart")]
+    [EndpointDescription("Gets cart")]
+    [ProducesResponseType(200)]
     [HttpGet("get-cart/{userId:guid}")]
     public async ValueTask<ActionResult<Response>> GetCartAsync(Guid userId)
     {
