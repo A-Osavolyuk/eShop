@@ -15,6 +15,9 @@ public class FilesController(IStoreService storeService,
     private readonly IStoreService storeService = storeService;
     private readonly ISender sender = sender;
 
+    [EndpointSummary("Get product images")]
+    [EndpointDescription("Getting product images")]
+    [ProducesResponseType(200)]
     [HttpGet("get-product-images/{productId:guid}")]
     public async ValueTask<ActionResult> GetProductImagesAsync(Guid productId)
     {
@@ -24,6 +27,9 @@ public class FilesController(IStoreService storeService,
             ExceptionHandler.HandleException);
     }
     
+    [EndpointSummary("Get user avatar")]
+    [EndpointDescription("Getting user avatar")]
+    [ProducesResponseType(200)]
     [HttpGet("get-user-avatar/{userId:guid}")]
     public async ValueTask<ActionResult> GetUserAvatarAsync(Guid userId)
     {
@@ -33,6 +39,9 @@ public class FilesController(IStoreService storeService,
             ExceptionHandler.HandleException);
     }
     
+    [EndpointSummary("Upload product images")]
+    [EndpointDescription("Uploading product images")]
+    [ProducesResponseType(200)]
     [HttpPost("upload-product-images/{productId:guid}")]
     public async ValueTask<ActionResult<Response>> UploadProductImagesAsync(IFormFileCollection files, Guid productId)
     {
@@ -42,6 +51,9 @@ public class FilesController(IStoreService storeService,
             ExceptionHandler.HandleException);
     }
     
+    [EndpointSummary("Upload user avatar")]
+    [EndpointDescription("Uploading user avatar")]
+    [ProducesResponseType(200)]
     [HttpPost("upload-user-avatar/{userId:guid}")]
     public async ValueTask<ActionResult<Response>> UploadUserAvatarAsync(IFormFile file, Guid userId)
     {
@@ -51,6 +63,9 @@ public class FilesController(IStoreService storeService,
             ExceptionHandler.HandleException);
     }
     
+    [EndpointSummary("Delete product images")]
+    [EndpointDescription("Deleting product images")]
+    [ProducesResponseType(200)]
     [HttpDelete("delete-product-images/{productId:guid}")]
     public async ValueTask<ActionResult<Response>> DeleteProductImagesAsync(Guid productId)
     {
@@ -60,6 +75,9 @@ public class FilesController(IStoreService storeService,
             ExceptionHandler.HandleException);
     }
     
+    [EndpointSummary("Delete user avatar")]
+    [EndpointDescription("Deleting user avatar")]
+    [ProducesResponseType(200)]
     [HttpDelete("delete-user-avatar/{userId:guid}")]
     public async ValueTask<ActionResult<Response>> DeleteUserAvatarAsync(Guid userId)
     {
