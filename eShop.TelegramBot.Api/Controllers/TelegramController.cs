@@ -16,6 +16,9 @@ public class TelegramController(
     private readonly UpdateHandler updateHandler = updateHandler;
     private readonly BotOptions options = options.Value;
     
+    [EndpointSummary("Set webhook")]
+    [EndpointDescription("Sets the webhook")]
+    [ProducesResponseType(200)]
     [HttpGet("setWebhook")]
     public async ValueTask<IActionResult> SetWebHookAsync(CancellationToken ct)
     {
@@ -24,7 +27,10 @@ public class TelegramController(
         return Ok($"Webhook set to {webhookUrl}");
     }
     
-    [HttpPost]
+    [EndpointSummary("Update")]
+    [EndpointDescription("Handles any changes related with bot")]
+    [ProducesResponseType(200)]
+    [HttpPost("update")]
     public async ValueTask<IActionResult> UpdateAsync([FromBody] Update update, CancellationToken ct)
     {
         if (Request.Headers["X-Telegram-Bot-Api-Secret-Token"] != options.Secret)
@@ -40,7 +46,10 @@ public class TelegramController(
         return Ok();
     }
 
-    [HttpPost("send")]
+    [EndpointSummary("Send message")]
+    [EndpointDescription("Sends a message via Telegram")]
+    [ProducesResponseType(200)]
+    [HttpPost("send-message")]
     public async ValueTask<ActionResult<Response>> SendAsync([FromBody] SendMessageRequest request)
     {
         await bot.SendMessage(chatId: new ChatId(request.ChatId), text: request.Message);
