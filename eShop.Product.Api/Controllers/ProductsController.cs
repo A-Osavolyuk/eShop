@@ -9,6 +9,9 @@ public class ProductsController(ISender sender) : ControllerBase
 {
     private readonly ISender sender = sender;
         
+    [EndpointSummary("Get products")]
+    [EndpointDescription("Getting all products")]
+    [ProducesResponseType(200)]
     [HttpGet("get-products")]
     public async ValueTask<ActionResult<Response>> GetProductsAsync()
     {
@@ -19,6 +22,9 @@ public class ProductsController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
         
+    [EndpointSummary("Get product by name")]
+    [EndpointDescription("Getting product by name")]
+    [ProducesResponseType(200)]
     [HttpGet("get-product-by-name/{name}")]
     public async ValueTask<ActionResult<Response>> GetProductByNameAsync(string name)
     {
@@ -29,6 +35,9 @@ public class ProductsController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
         
+    [EndpointSummary("Get product by article")]
+    [EndpointDescription("Getting product by article")]
+    [ProducesResponseType(200)]
     [HttpGet("get-product-by-article/{article}")]
     public async ValueTask<ActionResult<Response>> GetProductByArticleAsync(string article)
     {
@@ -38,7 +47,10 @@ public class ProductsController(ISender sender) : ControllerBase
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
             ExceptionHandler.HandleException);
     }
-        
+    
+    [EndpointSummary("Get product by id")]
+    [EndpointDescription("Getting product by id")]
+    [ProducesResponseType(200)]
     [HttpGet("get-product-by-id/{id:guid}")]
     public async ValueTask<ActionResult<Response>> GetProductByIdAsync(Guid id)
     {
@@ -49,6 +61,9 @@ public class ProductsController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
         
+    [EndpointSummary("Create product")]
+    [EndpointDescription("Creating a product")]
+    [ProducesResponseType(200)]
     [HttpPost("create-product")]
     [ValidationFilter]
     public async ValueTask<ActionResult<Response>> CreateProductAsync([FromBody] CreateProductRequest request)
@@ -60,6 +75,9 @@ public class ProductsController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
         
+    [EndpointSummary("Update product")]
+    [EndpointDescription("Updating the product")]
+    [ProducesResponseType(200)]
     [HttpPut("update-product")]
     [ValidationFilter]
     public async ValueTask<ActionResult<Response>> UpdateProductAsync([FromBody] UpdateProductRequest request)
@@ -71,6 +89,9 @@ public class ProductsController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
         
+    [EndpointSummary("Delete product")]
+    [EndpointDescription("Deleting the product")]
+    [ProducesResponseType(200)]
     [HttpDelete("delete-product")]
     public async ValueTask<ActionResult<Response>> DeleteProductAsync([FromBody] DeleteProductRequest request)
     {

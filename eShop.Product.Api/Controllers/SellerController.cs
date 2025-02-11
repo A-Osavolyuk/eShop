@@ -9,6 +9,9 @@ public class SellerController(ISender sender) : ControllerBase
 {
     private readonly ISender sender = sender;
 
+    [EndpointSummary("Register seller")]
+    [EndpointDescription("Registering new seller")]
+    [ProducesResponseType(200)]
     [HttpPost("register-seller")]
     public async ValueTask<ActionResult<Response>> RegisterSeller([FromBody] RegisterSellerRequest request)
     {
