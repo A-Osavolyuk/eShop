@@ -9,6 +9,9 @@ public class CommentsController(ISender sender) : ControllerBase
 {
     private readonly ISender sender = sender;
 
+    [EndpointSummary("Get comments")]
+    [EndpointDescription("Getting comments of a product")]
+    [ProducesResponseType(200)]
     [HttpGet("get-comments/{productId:guid}")]
     public async ValueTask<ActionResult<Response>> GetCommentAsync(Guid productId)
     {
@@ -18,7 +21,10 @@ public class CommentsController(ISender sender) : ControllerBase
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
             ExceptionHandler.HandleException);
     }
-        
+    
+    [EndpointSummary("Creating a comment")]
+    [EndpointDescription("Create comments")]
+    [ProducesResponseType(200)]
     [HttpPost("create-comment")]
     [ValidationFilter]
     public async ValueTask<ActionResult<Response>> CreateCommentAsync([FromBody] CreateCommentRequest request)
@@ -29,7 +35,10 @@ public class CommentsController(ISender sender) : ControllerBase
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
             ExceptionHandler.HandleException);
     }
-        
+    
+    [EndpointSummary("Update comment")]
+    [EndpointDescription("Updating the text of comment")]
+    [ProducesResponseType(200)]
     [HttpPut("update-comment")]
     [ValidationFilter]
     public async ValueTask<ActionResult<Response>> UpdateCommentAsync([FromBody] UpdateCommentRequest request)
@@ -40,7 +49,10 @@ public class CommentsController(ISender sender) : ControllerBase
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
             ExceptionHandler.HandleException);
     }
-        
+    
+    [EndpointSummary("Delete comment")]
+    [EndpointDescription("Deleting the comment")]
+    [ProducesResponseType(200)]
     [HttpDelete("delete-comment")]
     public async ValueTask<ActionResult<Response>> DeleteCommentAsync([FromBody] DeleteCommentRequest request)
     {
