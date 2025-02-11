@@ -12,7 +12,7 @@ public class SmsController(ISmsService smsService) : ControllerBase
 
     [HttpPost("send-single-sms")]
     [EndpointSummary("Send single SMS")]
-    [EndpointDescription("Sends SMS message for single number")]
+    [EndpointDescription("Sends SMS message")]
     [ProducesResponseType(200)]
     public async Task<ActionResult<Response>> SendSingleMessageAsync([FromBody] SingleMessageRequest request)
     {

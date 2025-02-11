@@ -49,7 +49,7 @@ public class ProductsController(ISender sender) : ControllerBase
     }
     
     [EndpointSummary("Get product by id")]
-    [EndpointDescription("Getting product by id")]
+    [EndpointDescription("Gets product by id")]
     [ProducesResponseType(200)]
     [HttpGet("get-product-by-id/{id:guid}")]
     public async ValueTask<ActionResult<Response>> GetProductByIdAsync(Guid id)
@@ -62,7 +62,7 @@ public class ProductsController(ISender sender) : ControllerBase
     }
         
     [EndpointSummary("Create product")]
-    [EndpointDescription("Creating a product")]
+    [EndpointDescription("Creates a product")]
     [ProducesResponseType(200)]
     [HttpPost("create-product")]
     [ValidationFilter]
@@ -76,7 +76,7 @@ public class ProductsController(ISender sender) : ControllerBase
     }
         
     [EndpointSummary("Update product")]
-    [EndpointDescription("Updating the product")]
+    [EndpointDescription("Updates the product")]
     [ProducesResponseType(200)]
     [HttpPut("update-product")]
     [ValidationFilter]
@@ -90,7 +90,7 @@ public class ProductsController(ISender sender) : ControllerBase
     }
         
     [EndpointSummary("Delete product")]
-    [EndpointDescription("Deleting the product")]
+    [EndpointDescription("Deletes the product")]
     [ProducesResponseType(200)]
     [HttpDelete("delete-product")]
     public async ValueTask<ActionResult<Response>> DeleteProductAsync([FromBody] DeleteProductRequest request)

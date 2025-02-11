@@ -10,7 +10,7 @@ public class BrandsController(ISender sender) : ControllerBase
     private readonly ISender sender = sender;
         
     [EndpointSummary("Get brands")]
-    [EndpointDescription("Getting all brands")]
+    [EndpointDescription("Gets all brands")]
     [ProducesResponseType(200)]
     [HttpGet("get-brands")]
     public async ValueTask<ActionResult<Response>> GetBrandAsync()
@@ -27,7 +27,7 @@ public class BrandsController(ISender sender) : ControllerBase
     }
 
     [EndpointSummary("Create brand")]
-    [EndpointDescription("Creating a brand")]
+    [EndpointDescription("Creates a brand")]
     [ProducesResponseType(200)]
     [HttpPost("create-brand")]
     [ValidationFilter]
@@ -41,7 +41,7 @@ public class BrandsController(ISender sender) : ControllerBase
     }
         
     [EndpointSummary("Update brand")]
-    [EndpointDescription("Updating the brand")]
+    [EndpointDescription("Updates the brand")]
     [ProducesResponseType(200)]
     [HttpPut("update-brand")]
     [ValidationFilter]
@@ -55,7 +55,7 @@ public class BrandsController(ISender sender) : ControllerBase
     }
     
     [EndpointSummary("Delete brand")]
-    [EndpointDescription("Deleting the brand")]
+    [EndpointDescription("Deletes the brand")]
     [ProducesResponseType(200)]
     [HttpDelete("delete-brand")]
     public async ValueTask<ActionResult<Response>> DeleteBrandAsync([FromBody] DeleteBrandRequest request)

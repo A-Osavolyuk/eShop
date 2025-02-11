@@ -10,7 +10,7 @@ public class EmailController(IEmailService emailService) : ControllerBase
 {
     [HttpPost("send-message")]
     [EndpointSummary("Send email message")]
-    [EndpointDescription("This endpoint can send email message")]
+    [EndpointDescription("Sends email message")]
     [ProducesResponseType(200)]
     public async ValueTask<ActionResult<Response>> SendMessageAsync([FromBody] SendMessageRequest request)
     {
