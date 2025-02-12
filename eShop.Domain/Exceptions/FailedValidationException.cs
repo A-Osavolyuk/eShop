@@ -4,9 +4,9 @@ namespace eShop.Domain.Exceptions;
 
 public class FailedValidationException : Exception, IFailedValidationException
 {
-    public FailedValidationException(IEnumerable<ValidationFailure> Errors, string ErrorMessage = "Validation error(s)") : base(ErrorMessage)
+    public FailedValidationException(IEnumerable<ValidationFailure> errors, string errorMessage = "Validation error(s)") : base(errorMessage)
     {
-        this.Errors = Errors.Select(x => x.ErrorMessage);
+        this.Errors = errors.Select(x => x.ErrorMessage);
     }
 
     public IEnumerable<string> Errors { get; }

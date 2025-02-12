@@ -3,14 +3,14 @@
 public enum ProductSize
 {
     None,
-    XXS,
-    XS,
+    Xxs,
+    Xs,
     S,
     M,
     L,
-    XL,
-    XXL,
-    XXXL,
-    XXXXL,
-    XXXXXL
+    Xl,
+    Xxl,
+    Xxxl,
+    Xxxxl,
+    Xxxxxl
 }

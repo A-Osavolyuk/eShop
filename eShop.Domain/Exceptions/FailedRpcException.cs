@@ -1,3 +1,3 @@
 ﻿namespace eShop.Domain.Exceptions;
 
-public class FailedRpcException(string Message) : Exception(Message);
+public class FailedRpcException(string message) : Exception(message);
