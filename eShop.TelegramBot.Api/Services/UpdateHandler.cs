@@ -10,7 +10,7 @@ public class UpdateHandler(ITelegramBotClient bot, ILogger<UpdateHandler> logger
     public Task OnUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        
+
         return Task.CompletedTask;
     }
 
@@ -18,7 +18,7 @@ public class UpdateHandler(ITelegramBotClient bot, ILogger<UpdateHandler> logger
         CancellationToken cancellationToken)
     {
         logger.LogInformation("Handling error: {exception}", exception);
-        
+
         return Task.CompletedTask;
     }
 }

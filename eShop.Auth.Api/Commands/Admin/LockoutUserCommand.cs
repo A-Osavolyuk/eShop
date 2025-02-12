@@ -1,5 +1,4 @@
-﻿
-namespace eShop.Auth.Api.Commands.Admin;
+﻿namespace eShop.Auth.Api.Commands.Admin;
 
 internal sealed record LockoutUserCommand(LockoutUserRequest Request) : IRequest<Result<LockoutUserResponse>>;
 
@@ -8,7 +7,8 @@ internal sealed class LockoutUserCommandHandler(
 {
     private readonly AppManager appManager = appManager;
 
-    public async Task<Result<LockoutUserResponse>> Handle(LockoutUserCommand request, CancellationToken cancellationToken)
+    public async Task<Result<LockoutUserResponse>> Handle(LockoutUserCommand request,
+        CancellationToken cancellationToken)
     {
         var user = await appManager.UserManager.FindByIdAsync(request.Request.UserId);
 
@@ -22,7 +22,7 @@ internal sealed class LockoutUserCommandHandler(
             var lockoutEndDate = DateTime.UtcNow.AddYears(100);
             await appManager.UserManager.SetLockoutEnabledAsync(user, true);
             await appManager.UserManager.SetLockoutEndDateAsync(user, lockoutEndDate);
-                    
+
             return new(new LockoutUserResponse()
             {
                 LockoutEnabled = true,
@@ -35,7 +35,7 @@ internal sealed class LockoutUserCommandHandler(
         {
             await appManager.UserManager.SetLockoutEnabledAsync(user, true);
             await appManager.UserManager.SetLockoutEndDateAsync(user, request.Request.LockoutEnd);
-                    
+
             return new(new LockoutUserResponse()
             {
                 LockoutEnabled = true,

@@ -27,10 +27,10 @@ public static class WebApplicationExtensions
         var client = scope.ServiceProvider.GetRequiredService<DbClient>();
         var cartCollection = client.GetCollection<CartEntity>("Carts");
         var favoritesCollection = client.GetCollection<FavoritesEntity>("Favorites");
-        
+
         await cartCollection.InsertOneAsync(new CartEntity()
         {
-            CartId = Guid.NewGuid(), 
+            CartId = Guid.NewGuid(),
             UserId = Guid.Parse("abb9d2ed-c3d2-4df9-ba88-eab018b95bc3"),
             ItemsCount = 0,
             Items = new List<CartItem>(),
@@ -40,7 +40,7 @@ public static class WebApplicationExtensions
 
         await favoritesCollection.InsertOneAsync(new FavoritesEntity()
         {
-            FavoritesId = Guid.NewGuid(), 
+            FavoritesId = Guid.NewGuid(),
             UserId = Guid.Parse("abb9d2ed-c3d2-4df9-ba88-eab018b95bc3"),
             ItemsCount = 0,
             Items = new List<FavoritesItem>(),

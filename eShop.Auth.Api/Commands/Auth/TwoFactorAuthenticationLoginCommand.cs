@@ -36,7 +36,7 @@ internal sealed class TwoFactorAuthenticationLoginCommandHandler(
         if (securityToken is not null)
         {
             var tokens = tokenHandler.RefreshToken(securityToken.Token);
-                    
+
             return new(new LoginResponse()
             {
                 User = userDto,

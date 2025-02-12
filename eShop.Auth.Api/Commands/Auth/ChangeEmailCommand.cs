@@ -26,10 +26,11 @@ internal sealed class RequestChangeEmailCommandHandler(
 
         var destination = new DestinationSet()
         {
-            Current = request.Request.CurrentEmail, 
+            Current = request.Request.CurrentEmail,
             Next = request.Request.NewEmail
         };
-        var code = await appManager.SecurityManager.GenerateVerificationCodeSetAsync(destination, VerificationCodeType.ChangeEmail);
+        var code = await appManager.SecurityManager.GenerateVerificationCodeSetAsync(destination,
+            VerificationCodeType.ChangeEmail);
 
         await messageService.SendMessageAsync("email-change", new ChangeEmailMessage()
         {

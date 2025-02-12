@@ -7,14 +7,17 @@ internal sealed class StoreService(IConfiguration configuration) : IStoreService
     private readonly IConfiguration configuration = configuration;
 
     private readonly string avatarContainer = configuration["Configuration:Storage:Azure:Containers:AvatarContainer"]!;
-    private readonly string productContainer = configuration["Configuration:Storage:Azure:Containers:ProductContainer"]!;
+
+    private readonly string productContainer =
+        configuration["Configuration:Storage:Azure:Containers:ProductContainer"]!;
+
     private readonly string connectionString = configuration["Configuration:Storage:Azure:ConnectionString"]!;
 
     public async ValueTask<List<string>> GetProductImagesAsync(Guid productId)
     {
         var uriList = new List<string>();
         var blobContainerClient = GetContainerClient(productContainer);
-        
+
         for (int i = 0; true; i++)
         {
             var blobClient = blobContainerClient.GetBlobClient($"{productId}_{i}");
@@ -28,7 +31,7 @@ internal sealed class StoreService(IConfiguration configuration) : IStoreService
                 break;
             }
         }
-        
+
         return uriList;
     }
 

@@ -13,7 +13,7 @@ public static class BuilderExtensions
         builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("Configuration:Services:SMTP"));
         builder.Services.AddScoped<IEmailService, EmailService>();
         builder.Services.AddOptions();
-        
+
         builder.Services.AddMassTransit(x =>
         {
             x.UsingRabbitMq((context, cfg) =>
@@ -33,7 +33,8 @@ public static class BuilderExtensions
                 cfg.ReceiveEndpoint("email-verification", e => e.ConfigureConsumer<VerifyEmailConsumer>(context));
                 cfg.ReceiveEndpoint("email-verified", e => e.ConfigureConsumer<EmailVerifiedConsumer>(context));
                 cfg.ReceiveEndpoint("2fa-code", e => e.ConfigureConsumer<TwoFactorAuthenticationCodeConsumer>(context));
-                cfg.ReceiveEndpoint("external-provider-registration", e => e.ConfigureConsumer<ExternalLoginConsumer>(context));
+                cfg.ReceiveEndpoint("external-provider-registration",
+                    e => e.ConfigureConsumer<ExternalLoginConsumer>(context));
             });
 
             x.AddConsumer<ResetPasswordConsumer>();

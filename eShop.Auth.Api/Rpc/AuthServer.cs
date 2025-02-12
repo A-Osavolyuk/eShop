@@ -53,7 +53,8 @@ internal sealed class AuthServer(AppManager manager, ILogger<AuthServer> logger)
         }
     }
 
-    public override async Task<InitiateSellerResponse> InitiateSeller(InitiateSellerRequest request, ServerCallContext context)
+    public override async Task<InitiateSellerResponse> InitiateSeller(InitiateSellerRequest request,
+        ServerCallContext context)
     {
         try
         {

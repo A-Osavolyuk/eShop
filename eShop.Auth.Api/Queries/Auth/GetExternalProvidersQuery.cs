@@ -5,8 +5,8 @@ namespace eShop.Auth.Api.Queries.Auth;
 internal sealed record GetExternalProvidersQuery() : IRequest<Result<IEnumerable<ExternalProviderDto>>>;
 
 internal sealed class GetExternalProvidersQueryHandler(
-    AppManager appManager, 
-    ICacheService cacheService) 
+    AppManager appManager,
+    ICacheService cacheService)
     : IRequestHandler<GetExternalProvidersQuery, Result<IEnumerable<ExternalProviderDto>>>
 {
     private readonly AppManager appManager = appManager;

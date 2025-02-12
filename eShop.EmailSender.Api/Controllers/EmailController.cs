@@ -15,7 +15,7 @@ public class EmailController(IEmailService emailService) : ControllerBase
     public async ValueTask<ActionResult<Response>> SendMessageAsync([FromBody] SendMessageRequest request)
     {
         await emailService.SendMessageAsync(request.HtmlBody, request.Options);
-        
+
         return Ok(new ResponseBuilder().Succeeded().WithMessage("Message sent successfully").Build());
     }
 }

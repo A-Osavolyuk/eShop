@@ -16,7 +16,7 @@ public class SellerController(ISender sender) : ControllerBase
     public async ValueTask<ActionResult<Response>> RegisterSeller([FromBody] RegisterSellerRequest request)
     {
         var response = await sender.Send(new RegisterSellerCommand(request));
-       
+
         return response.Match(
             s => StatusCode(201, new ResponseBuilder().Succeeded().WithMessage(s.Message).Build()),
             ExceptionHandler.HandleException);

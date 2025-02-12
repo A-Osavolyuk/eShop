@@ -145,14 +145,14 @@ internal sealed class SecurityManager(
         var entity = await context.Codes
             .AsNoTracking()
             .SingleOrDefaultAsync(
-            x => x.SentTo == sentTo
-                 && x.Code == code
-                 && x.VerificationCodeType == codeType 
-                 && x.ExpiresAt < DateTime.UtcNow);
+                x => x.SentTo == sentTo
+                     && x.Code == code
+                     && x.VerificationCodeType == codeType
+                     && x.ExpiresAt < DateTime.UtcNow);
 
         if (entity is null)
         {
-            return IdentityResult.Failed(new IdentityError {Code = "404", Description = "Cannot find code"});
+            return IdentityResult.Failed(new IdentityError { Code = "404", Description = "Cannot find code" });
         }
 
         return IdentityResult.Success;

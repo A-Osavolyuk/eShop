@@ -1,7 +1,7 @@
 ﻿namespace eShop.Reviews.Api.Receivers;
 
 public class ProductDeletedReceiver(
-    ISender sender, 
+    ISender sender,
     ILogger<ProductDeletedReceiver> logger,
     AppDbContext dbContext)
     : IConsumer<DeleteCommentsRequest>
@@ -14,7 +14,7 @@ public class ProductDeletedReceiver(
     {
         logger.LogInformation("Got message with command to delete comments with product ID: {id}.",
             context.Message.ProductId);
-            
+
         var comments = await dbContext.Comments
             .AsNoTracking()
             .Where(c => c.ProductId == context.Message.ProductId)
@@ -25,12 +25,12 @@ public class ProductDeletedReceiver(
             dbContext.Comments.RemoveRange(comments);
             await dbContext.SaveChangesAsync();
         }
-                
+
         await context.RespondAsync<DeleteCommentResponse>(new DeleteCommentResponse()
         {
             Message = "Comments were successfully deleted.",
         });
-            
+
         logger.LogInformation($"Response was successfully sent.");
     }
 }

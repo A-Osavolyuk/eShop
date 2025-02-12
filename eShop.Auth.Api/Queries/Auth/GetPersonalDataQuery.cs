@@ -25,7 +25,7 @@ internal sealed class GetPersonalDataQueryHandler(
             {
                 return new(new NotFoundException($"Cannot find user with email {request.Email}."));
             }
-            
+
             var personalData = await appManager.ProfileManager.FindPersonalDataAsync(user);
 
             if (personalData is null)
@@ -35,10 +35,10 @@ internal sealed class GetPersonalDataQueryHandler(
             }
 
             await cacheService.SetAsync(key, personalData, TimeSpan.FromHours(6));
-            
+
             return new(Mapper.ToPersonalDataResponse(personalData));
         }
 
-        return new (Mapper.ToPersonalDataResponse(data));
+        return new(Mapper.ToPersonalDataResponse(data));
     }
 }

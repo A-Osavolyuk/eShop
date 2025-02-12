@@ -42,8 +42,6 @@ internal sealed class GetProductByIdQueryHandler(AppDbContext context, ICacheSer
         }
 
         return new(cachedEntity);
-
-        
     }
 
     private async Task<ProductDto> Map(ProductEntity entity)

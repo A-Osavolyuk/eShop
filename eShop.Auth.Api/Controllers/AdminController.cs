@@ -229,7 +229,8 @@ public class AdminController(ISender sender) : ControllerBase
     [ProducesResponseType(200)]
     [Authorize(Policy = "ManagePermissionsPolicy")]
     [HttpDelete("delete-user-from-permission")]
-    public async ValueTask<ActionResult<Response>> DeleteUserFromPermissionAsync([FromBody] RemoveUserFromPermissionRequest request)
+    public async ValueTask<ActionResult<Response>> DeleteUserFromPermissionAsync(
+        [FromBody] RemoveUserFromPermissionRequest request)
     {
         var result = await sender.Send(new RemoveUserFromPermissionCommand(request));
         return result.Match(

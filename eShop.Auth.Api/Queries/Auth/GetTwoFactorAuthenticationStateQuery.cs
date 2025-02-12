@@ -4,7 +4,8 @@ internal sealed record GetTwoFactorAuthenticationStateQuery(string Email)
     : IRequest<Result<TwoFactorAuthenticationStateResponse>>;
 
 internal sealed class GetTwoFactorAuthenticationStateQueryHandler(
-    AppManager appManager, ICacheService cacheService)
+    AppManager appManager,
+    ICacheService cacheService)
     : IRequestHandler<GetTwoFactorAuthenticationStateQuery, Result<TwoFactorAuthenticationStateResponse>>
 {
     private readonly AppManager appManager = appManager;
@@ -15,7 +16,7 @@ internal sealed class GetTwoFactorAuthenticationStateQueryHandler(
     {
         var key = $"2fa-stata-{request.Email}";
         var state = await cacheService.GetAsync<TwoFactorAuthenticationState>(key);
-        
+
         if (state is null)
         {
             var user = await appManager.UserManager.FindByEmailAsync(request.Email);

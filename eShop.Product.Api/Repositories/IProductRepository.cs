@@ -12,5 +12,7 @@ public interface IProductRepository
     public ValueTask<ProductDto?> FindProductByNameAsync(string name);
     public ValueTask CreateProductAsync(CreateProductRequest request, CancellationToken cancellationToken = default);
     public ValueTask UpdateProductAsync(UpdateProductRequest request, CancellationToken cancellationToken = default);
-    public ValueTask<bool> DeleteProductAsync(DeleteProductRequest request, CancellationToken cancellationToken = default);
+
+    public ValueTask<bool> DeleteProductAsync(DeleteProductRequest request,
+        CancellationToken cancellationToken = default);
 }

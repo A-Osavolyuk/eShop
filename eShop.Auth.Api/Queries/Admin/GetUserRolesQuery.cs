@@ -42,7 +42,7 @@ internal sealed class GetUserRolesQueryHandler(
                 NormalizedName = roleInfo.NormalizedName!
             });
         }
-        
+
         return result;
     }
 }

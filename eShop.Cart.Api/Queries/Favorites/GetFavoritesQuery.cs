@@ -5,7 +5,8 @@ namespace eShop.Cart.Api.Queries.Favorites;
 
 internal sealed record GetFavoritesQuery(Guid UserId) : IRequest<Result<FavoritesDto>>;
 
-internal sealed class GetFavoritesQueryHandler(DbClient client) : IRequestHandler<GetFavoritesQuery, Result<FavoritesDto>>
+internal sealed class GetFavoritesQueryHandler(DbClient client)
+    : IRequestHandler<GetFavoritesQuery, Result<FavoritesDto>>
 {
     private readonly DbClient client = client;
 

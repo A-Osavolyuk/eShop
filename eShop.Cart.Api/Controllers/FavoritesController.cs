@@ -8,7 +8,7 @@ namespace eShop.Cart.Api.Controllers;
 public class FavoritesController(ISender sender) : ControllerBase
 {
     private readonly ISender sender = sender;
-    
+
     [EndpointSummary("Update favorites")]
     [EndpointDescription("Updates favorites")]
     [ProducesResponseType(200)]
@@ -21,7 +21,7 @@ public class FavoritesController(ISender sender) : ControllerBase
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
             ExceptionHandler.HandleException);
     }
-    
+
     [EndpointSummary("Get favorites")]
     [EndpointDescription("Gets favorites")]
     [ProducesResponseType(200)]

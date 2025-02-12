@@ -1,6 +1,7 @@
 ﻿namespace eShop.Auth.Api.Commands.Admin;
 
 internal sealed record AssignRoleCommand(AssignRoleRequest Request) : IRequest<Result<AssignRoleResponse>>;
+
 internal sealed class AssignRoleCommandHandler(
     AppManager appManager,
     ILogger<AssignRoleCommandHandler> logger) : IRequestHandler<AssignRoleCommand, Result<AssignRoleResponse>>
@@ -30,7 +31,7 @@ internal sealed class AssignRoleCommandHandler(
             return new(new FailedOperationException(
                 $"Cannot assign role due to server error: {result.Errors.First().Description}"));
         }
-                
+
         return new(new AssignRoleResponse() { Succeeded = true, Message = "Role was successfully assigned" });
     }
 }

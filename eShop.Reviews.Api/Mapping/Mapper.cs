@@ -32,7 +32,7 @@ public static class Mapper
             UserId = request.UserId
         };
     }
-    
+
     public static CommentEntity ToCommentEntity(UpdateCommentRequest request)
     {
         return new()

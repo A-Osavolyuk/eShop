@@ -10,7 +10,7 @@ public static class BuilderExtensions
     public static void AddApiServices(this IHostApplicationBuilder builder)
     {
         builder.Logging.AddConfiguration(builder.Configuration.GetSection("Configuration:Logging"));
-        
+
         builder.AddJwtAuthentication();
         builder.AddVersioning();
         builder.AddDependencyInjection();
@@ -23,7 +23,7 @@ public static class BuilderExtensions
             x.RegisterServicesFromAssemblyContaining<IAssemblyMarker>();
             x.AddOpenBehavior(typeof(LoggingBehaviour<,>), ServiceLifetime.Transient);
         });
-            
+
         builder.Services.AddValidatorsFromAssemblyContaining(typeof(IAssemblyMarker));
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
         builder.Services.AddProblemDetails();

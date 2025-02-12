@@ -2,7 +2,8 @@
 
 public static class RoleManagerExtensions
 {
-    public static async Task<IEnumerable<RoleData>?> GetRolesInfoAsync<TRole>(this RoleManager<TRole> roleManager, IEnumerable<string> roles) where TRole : IdentityRole
+    public static async Task<IEnumerable<RoleData>?> GetRolesInfoAsync<TRole>(this RoleManager<TRole> roleManager,
+        IEnumerable<string> roles) where TRole : IdentityRole
     {
         var rolesList = roles.ToList();
         if (!rolesList.Any())

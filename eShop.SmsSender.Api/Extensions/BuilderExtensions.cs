@@ -8,7 +8,7 @@ public static class BuilderExtensions
     public static IHostApplicationBuilder AddApiServices(this IHostApplicationBuilder builder)
     {
         builder.Logging.AddConfiguration(builder.Configuration.GetSection("Configuration:Logging"));
-        
+
         builder.AddServiceDefaults();
         builder.AddJwtAuthentication();
         builder.AddVersioning();
@@ -32,18 +32,19 @@ public static class BuilderExtensions
                 document.Info.Title = "SMS sender API";
                 document.Info.Version = "1.0.0";
                 document.Info.Description = "This API contains methods for sending SMS messages";
-                
+
                 return Task.CompletedTask;
             });
         });
-        
+
         return builder;
     }
 
     private static void AddDependencyInjection(this IHostApplicationBuilder builder)
     {
         builder.Services.AddScoped<ISmsService, SmsService>();
-        builder.Services.AddSingleton<IAmazonSimpleNotificationService>(sp => new AmazonSimpleNotificationServiceClient(RegionEndpoint.EUNorth1));
+        builder.Services.AddSingleton<IAmazonSimpleNotificationService>(sp =>
+            new AmazonSimpleNotificationServiceClient(RegionEndpoint.EUNorth1));
     }
 
     private static void AddMessageBus(this IHostApplicationBuilder builder)
@@ -61,11 +62,13 @@ public static class BuilderExtensions
                     h.Username(username);
                     h.Password(password);
                 });
-                
-                cfg.ReceiveEndpoint("phone-number-verification", e => e.ConfigureConsumer<VerifyPhoneNumberConsumer>(context));
-                cfg.ReceiveEndpoint("change-phone-number", e => e.ConfigureConsumer<ChangePhoneNumberConsumer>(context));
+
+                cfg.ReceiveEndpoint("phone-number-verification",
+                    e => e.ConfigureConsumer<VerifyPhoneNumberConsumer>(context));
+                cfg.ReceiveEndpoint("change-phone-number",
+                    e => e.ConfigureConsumer<ChangePhoneNumberConsumer>(context));
             });
-            
+
             x.AddConsumer<VerifyPhoneNumberConsumer>();
             x.AddConsumer<ChangePhoneNumberConsumer>();
         });

@@ -7,7 +7,7 @@ public static class BuilderExtensions
     public static void AddApiServices(this IHostApplicationBuilder builder)
     {
         builder.Logging.AddConfiguration(builder.Configuration.GetSection("Configuration:Logging"));
-        
+
         builder.AddServiceDefaults();
         builder.AddJwtAuthentication();
         builder.AddDependencyInjection();
@@ -35,7 +35,7 @@ public static class BuilderExtensions
     private static void AddDependencyInjection(this IHostApplicationBuilder builder)
     {
         builder.Services.AddScoped<ICacheService, CacheService>();
-        
+
         builder.Services.AddScoped<AuthClient>();
     }
 

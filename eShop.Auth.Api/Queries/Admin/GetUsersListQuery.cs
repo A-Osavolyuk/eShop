@@ -34,7 +34,8 @@ internal sealed class GetUsersListQueryHandler(
                 return new(new NotFoundException($"Cannot find roles for user with ID {user.Id}."));
             }
 
-            var rolesData = (await appManager.RoleManager.GetRolesInfoAsync(rolesList) ?? Array.Empty<RoleData>()).ToList();
+            var rolesData = (await appManager.RoleManager.GetRolesInfoAsync(rolesList) ?? Array.Empty<RoleData>())
+                .ToList();
             var permissions = await appManager.PermissionManager.GetUserPermissionsAsync(user);
             var roleInfos = rolesData.ToList();
 

@@ -67,7 +67,8 @@ internal sealed class ProfileManager(AuthDbContext context) : IProfileManager
 
         if (data is null)
         {
-            return IdentityResult.Failed(new IdentityError() {Code = "404", Description = "Cannot find personal data"});
+            return IdentityResult.Failed(
+                new IdentityError() { Code = "404", Description = "Cannot find personal data" });
         }
 
         context.PersonalData.Remove(data);

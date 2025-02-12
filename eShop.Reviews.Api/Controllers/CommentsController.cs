@@ -16,12 +16,12 @@ public class CommentsController(ISender sender) : ControllerBase
     public async ValueTask<ActionResult<Response>> GetCommentAsync(Guid productId)
     {
         var result = await sender.Send(new GetCommentsQuery(productId));
-            
+
         return result.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
             ExceptionHandler.HandleException);
     }
-    
+
     [EndpointSummary("Creating a comment")]
     [EndpointDescription("Creates comments")]
     [ProducesResponseType(200)]
@@ -30,12 +30,12 @@ public class CommentsController(ISender sender) : ControllerBase
     public async ValueTask<ActionResult<Response>> CreateCommentAsync([FromBody] CreateCommentRequest request)
     {
         var result = await sender.Send(new CreateCommentCommand(request));
-            
+
         return result.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
             ExceptionHandler.HandleException);
     }
-    
+
     [EndpointSummary("Update comment")]
     [EndpointDescription("Updates the text of comment")]
     [ProducesResponseType(200)]
@@ -44,12 +44,12 @@ public class CommentsController(ISender sender) : ControllerBase
     public async ValueTask<ActionResult<Response>> UpdateCommentAsync([FromBody] UpdateCommentRequest request)
     {
         var result = await sender.Send(new UpdateCommentCommand(request));
-            
+
         return result.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
             ExceptionHandler.HandleException);
     }
-    
+
     [EndpointSummary("Delete comment")]
     [EndpointDescription("Deletes the comment")]
     [ProducesResponseType(200)]
@@ -57,7 +57,7 @@ public class CommentsController(ISender sender) : ControllerBase
     public async ValueTask<ActionResult<Response>> DeleteCommentAsync([FromBody] DeleteCommentRequest request)
     {
         var result = await sender.Send(new DeleteCommentCommand(request));
-            
+
         return result.Match(
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
             ExceptionHandler.HandleException);

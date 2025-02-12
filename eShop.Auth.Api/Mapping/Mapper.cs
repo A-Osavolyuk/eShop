@@ -34,7 +34,6 @@ public static class Mapper
             LastName = request.LastName,
             Gender = request.Gender,
             DateOfBirth = request.BirthDate,
-            
         };
     }
 
@@ -48,7 +47,7 @@ public static class Mapper
             BirthDate = data.DateOfBirth,
         };
     }
-    
+
     public static AppUser ToAppUser(RegistrationRequest request)
     {
         return new AppUser()

@@ -21,7 +21,7 @@ public static class BuilderExtensions
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
         builder.Services.AddProblemDetails();
         builder.Services.AddOpenApi();
-        
+
         return builder;
     }
 
@@ -31,7 +31,8 @@ public static class BuilderExtensions
         builder.Services.Configure<BotOptions>(section);
         builder.Services.AddHttpClient("tgwebhook")
             .RemoveAllLoggers()
-            .AddTypedClient<ITelegramBotClient>(client => new TelegramBotClient(section.Get<BotOptions>()!.Token, client));
+            .AddTypedClient<ITelegramBotClient>(client =>
+                new TelegramBotClient(section.Get<BotOptions>()!.Token, client));
         builder.Services.ConfigureTelegramBotMvc();
         builder.Services.AddSingleton<UpdateHandler>();
     }

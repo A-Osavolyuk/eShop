@@ -9,7 +9,8 @@ public class HostedCodeValidator(IServiceScopeFactory scopeFactory) : IHostedSer
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        timer = new Timer(async (state) => await ValidateTokensAsync(), null, TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(15));
+        timer = new Timer(async (state) => await ValidateTokensAsync(), null, TimeSpan.FromMinutes(5),
+            TimeSpan.FromMinutes(15));
         return Task.CompletedTask;
     }
 
@@ -29,10 +30,10 @@ public class HostedCodeValidator(IServiceScopeFactory scopeFactory) : IHostedSer
         if (codes.Any())
         {
             var codesToRemove = new List<CodeEntity>();
-        
-            foreach (var code in codes) 
-            { 
-                if(code.ExpiresAt <= DateTime.UtcNow)
+
+            foreach (var code in codes)
+            {
+                if (code.ExpiresAt <= DateTime.UtcNow)
                 {
                     codesToRemove.Add(code);
                 }

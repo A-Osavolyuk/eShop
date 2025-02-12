@@ -20,7 +20,8 @@ internal sealed class ConfirmChangePhoneNumberCommandHandler(
 
         if (user is null)
         {
-            return new(new NotFoundException($"Cannot find user with phone number {request.Request.CurrentPhoneNumber}."));
+            return new(new NotFoundException(
+                $"Cannot find user with phone number {request.Request.CurrentPhoneNumber}."));
         }
 
         var result =

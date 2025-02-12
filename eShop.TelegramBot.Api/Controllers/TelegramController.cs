@@ -15,7 +15,7 @@ public class TelegramController(
     private readonly ITelegramBotClient bot = bot;
     private readonly UpdateHandler updateHandler = updateHandler;
     private readonly BotOptions options = options.Value;
-    
+
     [EndpointSummary("Set webhook")]
     [EndpointDescription("Sets the webhook")]
     [ProducesResponseType(200)]
@@ -26,7 +26,7 @@ public class TelegramController(
         await bot.SetWebhook(webhookUrl, allowedUpdates: [], secretToken: options.Secret, cancellationToken: ct);
         return Ok($"Webhook set to {webhookUrl}");
     }
-    
+
     [EndpointSummary("Update")]
     [EndpointDescription("Handles any changes related with bot")]
     [ProducesResponseType(200)]
@@ -43,6 +43,7 @@ public class TelegramController(
         {
             await updateHandler.OnErrorAsync(bot, exception, HandleErrorSource.HandleUpdateError, ct);
         }
+
         return Ok();
     }
 
@@ -53,7 +54,7 @@ public class TelegramController(
     public async ValueTask<ActionResult<Response>> SendAsync([FromBody] SendMessageRequest request)
     {
         await bot.SendMessage(chatId: new ChatId(request.ChatId), text: request.Message);
-        
+
         return Ok(new ResponseBuilder().WithMessage("Message was successfully sent!").Build());
     }
 }

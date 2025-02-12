@@ -21,7 +21,7 @@ public class CartsController(ISender sender) : ControllerBase
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
             ExceptionHandler.HandleException);
     }
-        
+
     [EndpointSummary("Get cart")]
     [EndpointDescription("Gets cart")]
     [ProducesResponseType(200)]

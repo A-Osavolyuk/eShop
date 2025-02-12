@@ -4,7 +4,6 @@ public static class UrlGenerator
 {
     public static string ActionLink(string action, string controller, object values, string scheme, HostString host)
     {
-
         var queryParams = new StringBuilder("");
 
         if (values is not null)
@@ -19,7 +18,6 @@ public static class UrlGenerator
                     queryParams.Append($"{props[i].Name}={props[i].GetValue(values)}");
                 else
                     queryParams.Append($"{props[i].Name}={props[i].GetValue(values)}&");
-
             }
         }
 
@@ -42,7 +40,6 @@ public static class UrlGenerator
                     query.Append($"{props[i].Name}={props[i].GetValue(values)}");
                 else
                     query.Append($"{props[i].Name}={props[i].GetValue(values)}&");
-
             }
         }
 
@@ -65,7 +62,6 @@ public static class UrlGenerator
                     query.Append($"{props[i].Name}={props[i].GetValue(values)}");
                 else
                     query.Append($"{props[i].Name}={props[i].GetValue(values)}&");
-
             }
         }
 

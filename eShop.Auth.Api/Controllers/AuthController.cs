@@ -12,7 +12,7 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
     private readonly ISender sender = sender;
 
     #region Get methods
-    
+
     [EndpointSummary("Get 2FA state")]
     [EndpointDescription("Get 2FA state")]
     [ProducesResponseType(200)]
@@ -77,7 +77,7 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
             ExceptionHandler.HandleException);
     }
-    
+
     #endregion
 
     #region Post methods
@@ -95,7 +95,7 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
             succ => Ok(new ResponseBuilder().Succeeded().WithMessage(succ.Message).Build()),
             ExceptionHandler.HandleException);
     }
-    
+
     [EndpointSummary("Resend verification code")]
     [EndpointDescription("Resends verification code")]
     [ProducesResponseType(200)]
@@ -110,7 +110,7 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
             succ => Ok(new ResponseBuilder().Succeeded().WithMessage(succ.Message).Build()),
             ExceptionHandler.HandleException);
     }
-    
+
     [EndpointSummary("Register")]
     [EndpointDescription("Register")]
     [ProducesResponseType(200)]
@@ -140,7 +140,7 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
             succ => Ok(new ResponseBuilder().Succeeded().WithResult(succ).WithMessage(succ.Message).Build()),
             ExceptionHandler.HandleException);
     }
-        
+
     [EndpointSummary("Request reset password")]
     [EndpointDescription("Requests reset password")]
     [ProducesResponseType(200)]
@@ -154,7 +154,7 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
             s => Ok(new ResponseBuilder().Succeeded().WithMessage(s.Message).Build()),
             ExceptionHandler.HandleException);
     }
-        
+
     [EndpointSummary("Verify email")]
     [EndpointDescription("Verifies email")]
     [ProducesResponseType(200)]
@@ -200,7 +200,7 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
             succ => Ok(new ResponseBuilder().Succeeded().WithResult(succ).WithMessage(succ.Message).Build()),
             ExceptionHandler.HandleException);
     }
-        
+
     [EndpointSummary("Confirm change email")]
     [EndpointDescription("Confirms an email change")]
     [ProducesResponseType(200)]
@@ -215,7 +215,7 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
             s => Ok(new ResponseBuilder().Succeeded().WithMessage(s.Message).Build()),
             ExceptionHandler.HandleException);
     }
-        
+
     [EndpointSummary("Confirm change phone number")]
     [EndpointDescription("Confirm a phone number change")]
     [ProducesResponseType(200)]
@@ -250,7 +250,7 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
             s => Ok(new ResponseBuilder().Succeeded().WithMessage(s.Message).Build()),
             ExceptionHandler.HandleException);
     }
-        
+
     [EndpointSummary("Request change email")]
     [EndpointDescription("Request an email change")]
     [ProducesResponseType(200)]
@@ -266,7 +266,7 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
             s => Ok(new ResponseBuilder().Succeeded().WithMessage(s.Message).WithResult(s).Build()),
             ExceptionHandler.HandleException);
     }
-        
+
     [EndpointSummary("Request change phone number")]
     [EndpointDescription("Request a phone number change")]
     [ProducesResponseType(200)]

@@ -8,7 +8,7 @@ namespace eShop.Product.Api.Controllers;
 public class ProductsController(ISender sender) : ControllerBase
 {
     private readonly ISender sender = sender;
-        
+
     [EndpointSummary("Get products")]
     [EndpointDescription("Getting all products")]
     [ProducesResponseType(200)]
@@ -21,7 +21,7 @@ public class ProductsController(ISender sender) : ControllerBase
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
             ExceptionHandler.HandleException);
     }
-        
+
     [EndpointSummary("Get product by name")]
     [EndpointDescription("Getting product by name")]
     [ProducesResponseType(200)]
@@ -34,7 +34,7 @@ public class ProductsController(ISender sender) : ControllerBase
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
             ExceptionHandler.HandleException);
     }
-        
+
     [EndpointSummary("Get product by article")]
     [EndpointDescription("Getting product by article")]
     [ProducesResponseType(200)]
@@ -47,7 +47,7 @@ public class ProductsController(ISender sender) : ControllerBase
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
             ExceptionHandler.HandleException);
     }
-    
+
     [EndpointSummary("Get product by id")]
     [EndpointDescription("Gets product by id")]
     [ProducesResponseType(200)]
@@ -60,7 +60,7 @@ public class ProductsController(ISender sender) : ControllerBase
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
             ExceptionHandler.HandleException);
     }
-        
+
     [EndpointSummary("Create product")]
     [EndpointDescription("Creates a product")]
     [ProducesResponseType(200)]
@@ -74,7 +74,7 @@ public class ProductsController(ISender sender) : ControllerBase
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).WithMessage(s.Message).Build()),
             ExceptionHandler.HandleException);
     }
-        
+
     [EndpointSummary("Update product")]
     [EndpointDescription("Updates the product")]
     [ProducesResponseType(200)]
@@ -88,7 +88,7 @@ public class ProductsController(ISender sender) : ControllerBase
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).WithMessage(s.Message).Build()),
             ExceptionHandler.HandleException);
     }
-        
+
     [EndpointSummary("Delete product")]
     [EndpointDescription("Deletes the product")]
     [ProducesResponseType(200)]

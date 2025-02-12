@@ -9,7 +9,8 @@ namespace eShop.FilesStorage.Api.Controllers;
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
 [ApiVersion("1.0")]
-public class FilesController(IStoreService storeService,
+public class FilesController(
+    IStoreService storeService,
     ISender sender) : ControllerBase
 {
     private readonly IStoreService storeService = storeService;
@@ -26,7 +27,7 @@ public class FilesController(IStoreService storeService,
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
             ExceptionHandler.HandleException);
     }
-    
+
     [EndpointSummary("Get user avatar")]
     [EndpointDescription("Gets user avatar")]
     [ProducesResponseType(200)]
@@ -38,7 +39,7 @@ public class FilesController(IStoreService storeService,
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
             ExceptionHandler.HandleException);
     }
-    
+
     [EndpointSummary("Upload product images")]
     [EndpointDescription("Uploads product images")]
     [ProducesResponseType(200)]
@@ -50,7 +51,7 @@ public class FilesController(IStoreService storeService,
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).WithMessage(s.Message).Build()),
             ExceptionHandler.HandleException);
     }
-    
+
     [EndpointSummary("Upload user avatar")]
     [EndpointDescription("Uploads user avatar")]
     [ProducesResponseType(200)]
@@ -62,7 +63,7 @@ public class FilesController(IStoreService storeService,
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).WithMessage(s.Message).Build()),
             ExceptionHandler.HandleException);
     }
-    
+
     [EndpointSummary("Delete product images")]
     [EndpointDescription("Deletes product images")]
     [ProducesResponseType(200)]
@@ -74,7 +75,7 @@ public class FilesController(IStoreService storeService,
             s => Ok(new ResponseBuilder().Succeeded().WithMessage(s.Message).Build()),
             ExceptionHandler.HandleException);
     }
-    
+
     [EndpointSummary("Delete user avatar")]
     [EndpointDescription("Deletes user avatar")]
     [ProducesResponseType(200)]

@@ -19,8 +19,10 @@ internal sealed class ConfirmResetPasswordCommandHandler(
         {
             return new(new NotFoundException($"Cannot find user with email {request.Request.Email}."));
         }
-        
-        var resetResult = await appManager.SecurityManager.ResetPasswordAsync(user, request.Request.Code, request.Request.NewPassword);
+
+        var resetResult =
+            await appManager.SecurityManager.ResetPasswordAsync(user, request.Request.Code,
+                request.Request.NewPassword);
 
         if (!resetResult.Succeeded)
         {

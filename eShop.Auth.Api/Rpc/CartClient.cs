@@ -10,16 +10,16 @@ public class CartClient
         var channel = GrpcChannel.ForAddress(uri);
         client = new CartService.CartServiceClient(channel);
     }
-    
+
     private readonly ILogger<CartClient> logger;
     private readonly CartService.CartServiceClient client;
 
     public async ValueTask<InitiateUserResponse> InitiateUserAsync(InitiateUserRequest request)
     {
         logger.LogInformation("Calling RPC InitiateUser");
-        
+
         var response = await client.InitiateUserAsync(request);
-        
+
         logger.LogInformation("Called RPC InitiateUser");
         return response;
     }

@@ -2,7 +2,8 @@
 
 internal sealed record UpdatedCartCommand(UpdateCartRequest Request) : IRequest<Result<UpdateCartResponse>>;
 
-internal sealed class UpdatedCartCommandHandler(DbClient client) : IRequestHandler<UpdatedCartCommand, Result<UpdateCartResponse>>
+internal sealed class UpdatedCartCommandHandler(DbClient client)
+    : IRequestHandler<UpdatedCartCommand, Result<UpdateCartResponse>>
 {
     private readonly DbClient client = client;
 

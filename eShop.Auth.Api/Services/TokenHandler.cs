@@ -112,10 +112,12 @@ internal sealed class TokenHandler : ITokenHandler
             new(JwtRegisteredClaimNames.Email,
                 token.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email)!.Value),
             new(ClaimTypes.Id, token.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Id)!.Value),
-            new(System.Security.Claims.ClaimTypes.MobilePhone, token.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.MobilePhone)!.Value),
+            new(System.Security.Claims.ClaimTypes.MobilePhone,
+                token.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.MobilePhone)!.Value),
         };
 
-        var roles = token.Claims.Where(x => x.Type == System.Security.Claims.ClaimTypes.Role).Select(x => x.Value).ToList();
+        var roles = token.Claims.Where(x => x.Type == System.Security.Claims.ClaimTypes.Role).Select(x => x.Value)
+            .ToList();
         var permissions = token.Claims.Where(x => x.Type == ClaimTypes.Permission).Select(x => x.Value).ToList();
 
         if (roles.Any())

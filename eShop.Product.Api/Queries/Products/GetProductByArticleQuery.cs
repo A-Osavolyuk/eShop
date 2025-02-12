@@ -19,7 +19,8 @@ internal sealed class GetProductByArticleQueryHandler(AppDbContext context, ICac
         {
             if (string.IsNullOrEmpty(request.ProductArticle) || !decimal.TryParse(request.ProductArticle, out _))
             {
-                return new Result<ProductDto>(new BadRequestException($"You must provide a product article in request"));
+                return new Result<ProductDto>(
+                    new BadRequestException($"You must provide a product article in request"));
             }
 
             var entity = await context.Products

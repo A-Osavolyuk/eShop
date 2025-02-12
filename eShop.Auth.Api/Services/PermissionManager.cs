@@ -31,7 +31,8 @@ internal sealed class PermissionManager(AuthDbContext context) : IPermissionMana
 
         foreach (var permission in permissions)
         {
-            var permissionName = (await context.Permissions.AsNoTracking().SingleOrDefaultAsync(x => x.Id == permission.PermissionId))!.Name;
+            var permissionName = (await context.Permissions.AsNoTracking()
+                .SingleOrDefaultAsync(x => x.Id == permission.PermissionId))!.Name;
             result.Add(permissionName);
         }
 
@@ -42,12 +43,14 @@ internal sealed class PermissionManager(AuthDbContext context) : IPermissionMana
     {
         if (!permissions.Any())
         {
-            return IdentityResult.Failed(new IdentityError() { Code = "400", Description = "Cannot add permissions. Empty permission list." });
+            return IdentityResult.Failed(new IdentityError()
+                { Code = "400", Description = "Cannot add permissions. Empty permission list." });
         }
 
         foreach (var permission in permissions)
         {
-            var permisisonId = (await context.Permissions.AsNoTracking().SingleOrDefaultAsync(x => x.Name == permission))!.Id;
+            var permisisonId =
+                (await context.Permissions.AsNoTracking().SingleOrDefaultAsync(x => x.Name == permission))!.Id;
             await context.UserPermissions.AddAsync(new() { UserId = user.Id, PermissionId = permisisonId });
         }
 
@@ -57,7 +60,8 @@ internal sealed class PermissionManager(AuthDbContext context) : IPermissionMana
 
     public async ValueTask<IdentityResult> IssuePermissionAsync(AppUser user, string permission)
     {
-        var permissionId = (await context.Permissions.AsNoTracking().SingleOrDefaultAsync(x => x.Name == permission))!.Id;
+        var permissionId = (await context.Permissions.AsNoTracking().SingleOrDefaultAsync(x => x.Name == permission))!
+            .Id;
         await context.UserPermissions.AddAsync(new() { UserId = user.Id, PermissionId = permissionId });
         await context.SaveChangesAsync();
         return IdentityResult.Success;
@@ -65,12 +69,18 @@ internal sealed class PermissionManager(AuthDbContext context) : IPermissionMana
 
     public async ValueTask<IdentityResult> RemoveFromPermissionAsync(AppUser user, PermissionEntity permissionEntity)
     {
-        var userPermission = await context.UserPermissions.AsNoTracking().SingleOrDefaultAsync(x => x.UserId == user.Id && x.PermissionId == permissionEntity.Id);
+        var userPermission = await context.UserPermissions.AsNoTracking()
+            .SingleOrDefaultAsync(x => x.UserId == user.Id && x.PermissionId == permissionEntity.Id);
 
         if (userPermission is null)
         {
             return IdentityResult.Failed(
-                new IdentityError() { Code = "404", Description = string.Format("Cannot find permission {0} for user with ID {1}", permissionEntity.Name, user.Id) });
+                new IdentityError()
+                {
+                    Code = "404",
+                    Description = string.Format("Cannot find permission {0} for user with ID {1}",
+                        permissionEntity.Name, user.Id)
+                });
         }
 
         context.UserPermissions.Remove(userPermission);
@@ -91,7 +101,7 @@ internal sealed class PermissionManager(AuthDbContext context) : IPermissionMana
             context.UserPermissions.RemoveRange(userPermissions);
             await context.SaveChangesAsync();
         }
-            
+
         return IdentityResult.Success;
     }
 
@@ -109,12 +119,14 @@ internal sealed class PermissionManager(AuthDbContext context) : IPermissionMana
             return false;
         }
 
-        var hasUserPermission = await context.UserPermissions.AsNoTracking().AnyAsync(x => x.UserId == user.Id && x.PermissionId == permission.Id);
+        var hasUserPermission = await context.UserPermissions.AsNoTracking()
+            .AnyAsync(x => x.UserId == user.Id && x.PermissionId == permission.Id);
 
         if (hasUserPermission)
         {
             return true;
         }
+
         return false;
     }
 }

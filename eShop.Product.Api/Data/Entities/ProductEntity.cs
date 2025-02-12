@@ -3,7 +3,7 @@
 public class ProductEntity
 {
     public ProductEntity() => Article = GenerateArticle();
-    
+
     public Guid Id { get; set; } = Guid.NewGuid();
     public ProductTypes ProductType { get; set; } = ProductTypes.None;
     public string Article { get; set; }

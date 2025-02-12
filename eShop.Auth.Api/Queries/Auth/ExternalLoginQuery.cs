@@ -1,5 +1,4 @@
-﻿
-namespace eShop.Auth.Api.Queries.Auth;
+﻿namespace eShop.Auth.Api.Queries.Auth;
 
 internal sealed record ExternalLoginQuery(string Provider, string? ReturnUri) : IRequest<Result<ExternalLoginResponse>>;
 
@@ -8,7 +7,8 @@ internal sealed class ExternalLoginQueryHandler(
 {
     private readonly AppManager appManager = appManager;
 
-    public async Task<Result<ExternalLoginResponse>> Handle(ExternalLoginQuery request, CancellationToken cancellationToken)
+    public async Task<Result<ExternalLoginResponse>> Handle(ExternalLoginQuery request,
+        CancellationToken cancellationToken)
     {
         var providers = await appManager.SignInManager.GetExternalAuthenticationSchemesAsync();
 
@@ -19,9 +19,11 @@ internal sealed class ExternalLoginQueryHandler(
             return new(new BadRequestException($"Invalid external provider {request.Provider}."));
         }
 
-        var handlerUri = UrlGenerator.Action("handle-external-login-response", "Auth", new { ReturnUri = request.ReturnUri ?? "/" });
-        var properties = appManager.SignInManager.ConfigureExternalAuthenticationProperties(request.Provider, handlerUri);
-                
+        var handlerUri = UrlGenerator.Action("handle-external-login-response", "Auth",
+            new { ReturnUri = request.ReturnUri ?? "/" });
+        var properties =
+            appManager.SignInManager.ConfigureExternalAuthenticationProperties(request.Provider, handlerUri);
+
         return new(new ExternalLoginResponse()
         {
             Provider = request.Provider,

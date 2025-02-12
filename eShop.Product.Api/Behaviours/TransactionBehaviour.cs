@@ -1,13 +1,15 @@
 ﻿namespace eShop.Product.Api.Behaviours;
 
 public class TransactionBehaviour<TRequest, TResponse>(
-    AppDbContext context, 
-    ILogger<TransactionBehaviour<TRequest, TResponse>> logger) : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
+    AppDbContext context,
+    ILogger<TransactionBehaviour<TRequest, TResponse>> logger)
+    : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {
     private readonly AppDbContext context = context;
     private readonly ILogger<TransactionBehaviour<TRequest, TResponse>> logger = logger;
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
+        CancellationToken cancellationToken)
     {
         var executionStrategy = context.Database.CreateExecutionStrategy();
 
@@ -18,7 +20,7 @@ public class TransactionBehaviour<TRequest, TResponse>(
             try
             {
                 var result = await next();
-                
+
                 await transaction.CommitAsync(cancellationToken);
                 logger.LogInformation("Committed transaction");
                 return result;

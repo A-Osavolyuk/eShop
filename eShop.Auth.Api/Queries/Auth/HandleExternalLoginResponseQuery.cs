@@ -88,7 +88,7 @@ internal sealed class HandleExternalLoginResponseQueryHandler(
 
             var issuingPermissionsResult =
                 await appManager.PermissionManager.IssuePermissionsAsync(user, [defaultPermission]);
-           
+
             if (!issuingPermissionsResult.Succeeded)
             {
                 return new(new FailedOperationException(
@@ -97,13 +97,13 @@ internal sealed class HandleExternalLoginResponseQueryHandler(
             }
 
             await messageService.SendMessageAsync("external-provider-registration", new ExternalRegistrationMessage()
-                {
-                    To = email,
-                    Subject = $"Account registered with {request.ExternalLoginInfo!.ProviderDisplayName}",
-                    TempPassword = tempPassword,
-                    UserName = email,
-                    ProviderName = request.ExternalLoginInfo!.ProviderDisplayName!
-                });
+            {
+                To = email,
+                Subject = $"Account registered with {request.ExternalLoginInfo!.ProviderDisplayName}",
+                TempPassword = tempPassword,
+                UserName = email,
+                ProviderName = request.ExternalLoginInfo!.ProviderDisplayName!
+            });
 
             var roles = (await appManager.UserManager.GetRolesAsync(user)).ToList();
             var permissions = (await appManager.PermissionManager.GetUserPermissionsAsync(user)).ToList();

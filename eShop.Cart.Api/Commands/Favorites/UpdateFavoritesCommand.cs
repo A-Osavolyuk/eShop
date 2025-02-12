@@ -3,7 +3,8 @@
 internal sealed record UpdateFavoritesCommand(UpdateFavoritesRequest Request)
     : IRequest<Result<UpdateFavoritesResponse>>;
 
-internal sealed class UpdateFavoritesCommandHandler(DbClient client) : IRequestHandler<UpdateFavoritesCommand, Result<UpdateFavoritesResponse>>
+internal sealed class UpdateFavoritesCommandHandler(DbClient client)
+    : IRequestHandler<UpdateFavoritesCommand, Result<UpdateFavoritesResponse>>
 {
     private readonly DbClient client = client;
 

@@ -32,10 +32,10 @@ internal sealed class RemoveUserRoleCommandHandler(
             return new(new FailedOperationException(
                 $"Cannot remove user with ID {user.Id} from role {request.Request.Role}."));
         }
-                
+
         return new(new RemoveUserRoleResponse()
         {
-            Succeeded = true, 
+            Succeeded = true,
             Message = "User was successfully removed from role."
         });
     }

@@ -22,12 +22,12 @@ public static class WebApplicationExtensions
         app.ConfigureMongoDb();
         app.UseExceptionHandler();
     }
-    
+
     private static void ConfigureMongoDb(this WebApplication app)
     {
         RegisterClassMaps();
     }
-    
+
     private static void RegisterClassMaps()
     {
         if (!BsonClassMap.IsClassMapRegistered(typeof(ProductEntity)))
@@ -38,7 +38,7 @@ public static class WebApplicationExtensions
                 cm.SetIsRootClass(true);
                 cm.SetDiscriminator("Product");
             });
-            
+
             BsonClassMap.RegisterClassMap<ShoesEntity>(cm =>
             {
                 cm.AutoMap();

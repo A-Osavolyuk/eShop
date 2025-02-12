@@ -147,10 +147,10 @@ public class ProductRepository(AppDbContext context) : IProductRepository
             ProductTypes.Clothing => Mapper.ToProductEntity(request),
             _ or ProductTypes.None => Mapper.ToProductEntity(request!),
         };
-        
+
         return entity;
     }
-    
+
     private ProductEntity MapToEntity(UpdateProductRequest request)
     {
         var entity = request?.ProductType switch
@@ -159,7 +159,7 @@ public class ProductRepository(AppDbContext context) : IProductRepository
             ProductTypes.Clothing => Mapper.ToProductEntity(request),
             _ or ProductTypes.None => Mapper.ToProductEntity(request!),
         };
-        
+
         return entity;
     }
 }

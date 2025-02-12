@@ -28,7 +28,7 @@ internal sealed class GetProductsQueryHandler(AppDbContext context, ICacheServic
                 .ToList();
 
             await cacheService.SetAsync(key, response, TimeSpan.FromMinutes(30));
-            
+
             return new Result<List<ProductDto>>(response);
         }
 

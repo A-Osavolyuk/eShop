@@ -14,7 +14,7 @@ public static class WebApplicationBuilder
             app.MapScalarApiReference();
             await app.ConfigureDatabaseAsync<AuthDbContext>();
         }
-        
+
         app.UseHttpsRedirection();
         app.UseCors();
         app.UseAuthorization();

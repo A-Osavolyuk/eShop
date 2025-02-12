@@ -12,14 +12,16 @@ internal sealed class CreateProductCommandHandler(
     {
         if (!await context.Brands.AsNoTracking().AnyAsync(x => x.Id == request.Request.Brand.Id, cancellationToken))
         {
-            return new Result<CreateProductResponse>(new NotFoundException($"Cannot find brand with ID {request.Request.Brand.Id}"));
+            return new Result<CreateProductResponse>(
+                new NotFoundException($"Cannot find brand with ID {request.Request.Brand.Id}"));
         }
-        
+
         if (!await context.Sellers.AsNoTracking().AnyAsync(x => x.Id == request.Request.Seller.Id, cancellationToken))
         {
-            return new Result<CreateProductResponse>(new NotFoundException($"Cannot find seller with ID {request.Request.Seller.Id}"));
+            return new Result<CreateProductResponse>(
+                new NotFoundException($"Cannot find seller with ID {request.Request.Seller.Id}"));
         }
-        
+
         var entity = request.Request.ProductType switch
         {
             ProductTypes.Clothing => Mapper.ToClothingEntity(request.Request),

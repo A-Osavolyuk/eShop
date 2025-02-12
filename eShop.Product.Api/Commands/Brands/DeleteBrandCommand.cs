@@ -7,13 +7,16 @@ internal sealed class DeleteBrandCommandHandler(
 {
     private readonly AppDbContext context = context;
 
-    public async Task<Result<DeleteBrandResponse>> Handle(DeleteBrandCommand request, CancellationToken cancellationToken)
+    public async Task<Result<DeleteBrandResponse>> Handle(DeleteBrandCommand request,
+        CancellationToken cancellationToken)
     {
-        var entity = await context.Brands.AsNoTracking().FirstOrDefaultAsync(x => x.Id == request.Request.Id, cancellationToken);
-            
+        var entity = await context.Brands.AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == request.Request.Id, cancellationToken);
+
         if (entity is null)
         {
-            return new Result<DeleteBrandResponse>(new NotFoundException($"Cannot find brand with ID {request.Request.Id}"));
+            return new Result<DeleteBrandResponse>(
+                new NotFoundException($"Cannot find brand with ID {request.Request.Id}"));
         }
 
         context.Brands.Remove(entity);

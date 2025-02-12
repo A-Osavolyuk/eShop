@@ -25,7 +25,7 @@ public class CacheService(IDistributedCache cache) : ICacheService
         }
 
         await cache.RefreshAsync(key);
-        
+
         var result = JsonConvert.DeserializeObject<T>(data);
 
         return result;

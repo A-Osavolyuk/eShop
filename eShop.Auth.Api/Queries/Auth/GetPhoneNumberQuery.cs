@@ -3,7 +3,8 @@
 internal sealed record GetPhoneNumberQuery(string Email) : IRequest<Result<GetPhoneNumberResponse>>;
 
 internal sealed class GetPhoneNumberQueryHandler(
-    AppManager appManager, ICacheService cacheService) : IRequestHandler<GetPhoneNumberQuery, Result<GetPhoneNumberResponse>>
+    AppManager appManager,
+    ICacheService cacheService) : IRequestHandler<GetPhoneNumberQuery, Result<GetPhoneNumberResponse>>
 {
     private readonly AppManager appManager = appManager;
     private readonly ICacheService cacheService = cacheService;

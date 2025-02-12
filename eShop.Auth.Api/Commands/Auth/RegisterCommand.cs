@@ -53,8 +53,9 @@ internal sealed class RegisterCommandHandler(
                 $"Cannot issue permissions for user with email {request.Request.Email} " +
                 $"due to server errors: {issuingPermissionsResult.Errors.First().Description}"));
         }
-        
-        var code = await appManager.SecurityManager.GenerateVerificationCodeAsync(newUser.Email!, VerificationCodeType.VerifyEmail);
+
+        var code = await appManager.SecurityManager.GenerateVerificationCodeAsync(newUser.Email!,
+            VerificationCodeType.VerifyEmail);
 
         await messageService.SendMessageAsync("email-verification", new EmailVerificationMessage()
         {

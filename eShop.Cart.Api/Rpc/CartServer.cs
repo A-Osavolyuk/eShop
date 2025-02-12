@@ -5,7 +5,8 @@ public class CartServer(IMongoDatabase database, ILogger<CartServer> logger) : C
     private readonly IMongoDatabase database = database;
     private readonly ILogger<CartServer> logger = logger;
 
-    public override async Task<InitiateUserResponse> InitiateUser(InitiateUserRequest request, ServerCallContext context)
+    public override async Task<InitiateUserResponse> InitiateUser(InitiateUserRequest request,
+        ServerCallContext context)
     {
         try
         {

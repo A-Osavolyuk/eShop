@@ -9,7 +9,7 @@ public static class UserManagerExtensions
         var user = await userManager.FindByIdAsync(id.ToString());
         return user;
     }
-    
+
     public static async Task<AppUser?> FindByPhoneNumberAsync(this UserManager<AppUser> userManager, string phoneNumber)
     {
         var user = await userManager.Users.FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber);
@@ -31,7 +31,7 @@ public static class UserManagerExtensions
 
         return IdentityResult.Success;
     }
-    
+
     public static async Task<IdentityResult> RemoveFromRolesAsync(this UserManager<AppUser> userManager, AppUser user)
     {
         var roles = await userManager.GetRolesAsync(user);
@@ -49,7 +49,8 @@ public static class UserManagerExtensions
         return IdentityResult.Success;
     }
 
-    public static async Task<IdentityResult> ResetPasswordAsync(this UserManager<AppUser> userManager, AppUser user, string password)
+    public static async Task<IdentityResult> ResetPasswordAsync(this UserManager<AppUser> userManager, AppUser user,
+        string password)
     {
         var token = await userManager.GeneratePasswordResetTokenAsync(user);
         var result = await userManager.ResetPasswordAsync(user, token, password);
@@ -63,14 +64,16 @@ public static class UserManagerExtensions
         return result;
     }
 
-    public static async Task<IdentityResult> ConfirmPhoneNumberAsync(this UserManager<AppUser> userManager, AppUser user)
+    public static async Task<IdentityResult> ConfirmPhoneNumberAsync(this UserManager<AppUser> userManager,
+        AppUser user)
     {
         user.PhoneNumberConfirmed = true;
         await userManager.UpdateAsync(user);
         return IdentityResult.Success;
     }
 
-    public static async Task<IdentityResult> ChangeEmailAsync(this UserManager<AppUser> userManager, AppUser user, string newEmail)
+    public static async Task<IdentityResult> ChangeEmailAsync(this UserManager<AppUser> userManager, AppUser user,
+        string newEmail)
     {
         var token = await userManager.GenerateChangeEmailTokenAsync(user, newEmail);
         var result = await userManager.ChangeEmailAsync(user, newEmail, token);

@@ -24,7 +24,7 @@ public static class Mapper
             ItemsCount = dto.Cound,
         };
     }
-    
+
     public static CartDto ToCartDto(CartEntity entity)
     {
         return new()

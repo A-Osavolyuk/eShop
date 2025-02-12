@@ -9,7 +9,8 @@ internal sealed class RegisterSellerCommandHandler(
     private readonly AppDbContext context = context;
     private readonly AuthClient client = client;
 
-    public async Task<Result<RegisterSellerResponse>> Handle(RegisterSellerCommand request, CancellationToken cancellationToken)
+    public async Task<Result<RegisterSellerResponse>> Handle(RegisterSellerCommand request,
+        CancellationToken cancellationToken)
     {
         var userResponse = await client.GetUserAsync(request.Request.UserId);
 
@@ -17,7 +18,7 @@ internal sealed class RegisterSellerCommandHandler(
         {
             return new Result<RegisterSellerResponse>(new NotFoundException(userResponse.Message));
         }
-        
+
         var initiateSellerResponse = await client.InitiateSellerAsync(request.Request.UserId);
 
         if (!initiateSellerResponse.IsSucceeded)

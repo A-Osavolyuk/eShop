@@ -7,7 +7,7 @@
 public class ProfileController(ISender sender) : ControllerBase
 {
     private readonly ISender sender = sender;
-    
+
     [EndpointSummary("Get personal data")]
     [EndpointDescription("Gets personal data")]
     [ProducesResponseType(200)]
@@ -21,7 +21,7 @@ public class ProfileController(ISender sender) : ControllerBase
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
             ExceptionHandler.HandleException);
     }
-    
+
     [EndpointSummary("Get phone number")]
     [EndpointDescription("Gets a phone number")]
     [ProducesResponseType(200)]
@@ -35,7 +35,7 @@ public class ProfileController(ISender sender) : ControllerBase
             s => Ok(new ResponseBuilder().Succeeded().WithResult(s).Build()),
             ExceptionHandler.HandleException);
     }
-    
+
     [EndpointSummary("Change username")]
     [EndpointDescription("Changes username")]
     [ProducesResponseType(200)]
@@ -48,10 +48,11 @@ public class ProfileController(ISender sender) : ControllerBase
         var result = await sender.Send(new ChangeUserNameCommand(changeUserNameRequest));
 
         return result.Match(
-            s => Ok(new ResponseBuilder().Succeeded().WithMessage(s.Message).WithResult(s).Build()),
+            s => Ok(new ResponseBuilder().Succeeded().WithMessage(s.Message)
+                .WithResult(s).Build()),
             ExceptionHandler.HandleException);
     }
-    
+
     [EndpointSummary("Change personal data")]
     [EndpointDescription("Changes personal data")]
     [ProducesResponseType(200)]
@@ -64,7 +65,8 @@ public class ProfileController(ISender sender) : ControllerBase
         var result = await sender.Send(new ChangePersonalDataCommand(changePersonalDataRequest));
 
         return result.Match(
-            s => Ok(new ResponseBuilder().Succeeded().WithMessage("Personal data was successfully changed.")
+            s => Ok(new ResponseBuilder().Succeeded()
+                .WithMessage("Personal data was successfully changed.")
                 .WithResult(s).Build()),
             ExceptionHandler.HandleException);
     }

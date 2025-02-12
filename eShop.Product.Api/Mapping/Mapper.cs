@@ -26,7 +26,7 @@ public static class Mapper
             Size = request.Size.ToList(),
         };
     }
-    
+
     public static ShoesEntity ToShoesEntity(CreateProductRequest request)
     {
         ArgumentNullException.ThrowIfNull(request, nameof(request));
@@ -47,7 +47,7 @@ public static class Mapper
             Size = request.Size.ToList(),
         };
     }
-    
+
     public static ProductEntity ToProductEntity(CreateProductRequest request)
     {
         ArgumentNullException.ThrowIfNull(request, nameof(request));
@@ -59,7 +59,7 @@ public static class Mapper
             ProductCurrency = request.ProductCurrency,
             ProductType = request.ProductType,
             Article = request.Article,
-            Brand = ToBrandEntity(request.Brand), 
+            Brand = ToBrandEntity(request.Brand),
             Seller = ToSellerDto(request.Seller),
             Description = request.Description,
             Images = request.Images,
@@ -67,9 +67,9 @@ public static class Mapper
     }
 
     #endregion
-    
+
     #region Update request to entities
-    
+
     public static ClothingEntity ToClothingEntity(UpdateProductRequest request)
     {
         ArgumentNullException.ThrowIfNull(request, nameof(request));
@@ -89,7 +89,7 @@ public static class Mapper
             Size = request.Size,
         };
     }
-    
+
     public static ShoesEntity ToShoesEntity(UpdateProductRequest request)
     {
         ArgumentNullException.ThrowIfNull(request, nameof(request));
@@ -109,7 +109,7 @@ public static class Mapper
             Size = request.Size,
         };
     }
-    
+
     public static ProductEntity ToProductEntity(UpdateProductRequest request)
     {
         ArgumentNullException.ThrowIfNull(request, nameof(request));
@@ -126,7 +126,7 @@ public static class Mapper
             Images = request.Images,
         };
     }
-    
+
     #endregion
 
     #region Entities to DTOs
@@ -147,7 +147,7 @@ public static class Mapper
             Currency = entity.ProductCurrency,
         };
     }
-    
+
     public static ClothingDto ToClothingDto(ClothingEntity entity)
     {
         return new ClothingDto()
@@ -167,7 +167,7 @@ public static class Mapper
             Size = entity.Size,
         };
     }
-    
+
     public static ShoesDto ToShoesDto(ShoesEntity entity)
     {
         return new ShoesDto()
@@ -188,7 +188,7 @@ public static class Mapper
     }
 
     #endregion
-    
+
     public static BrandEntity ToBrandEntity(CreateBrandRequest request)
     {
         return new()
@@ -216,7 +216,7 @@ public static class Mapper
             Country = entity.Country,
         };
     }
-    
+
     public static BrandEntity ToBrandEntity(BrandDto dto)
     {
         return new()
@@ -226,7 +226,7 @@ public static class Mapper
             Country = dto.Country,
         };
     }
-    
+
     public static SellerDto ToSellerDto(SellerEntity entity)
     {
         return new()
@@ -239,7 +239,7 @@ public static class Mapper
             UserId = entity.UserId,
         };
     }
-    
+
     public static SellerEntity ToSellerDto(SellerDto dto)
     {
         return new()

@@ -10,7 +10,7 @@ public static class BuilderExtensions
     public static void AddApiServices(this IHostApplicationBuilder builder)
     {
         builder.Logging.AddConfiguration(builder.Configuration.GetSection("Configuration:Logging"));
-        
+
         builder.AddVersioning();
         builder.AddValidation();
         builder.AddMessageBus();
@@ -22,10 +22,7 @@ public static class BuilderExtensions
         {
             cfg.UseSqlServer(builder.Configuration["Configuration:Storage:Databases:SQL:MSSQL:ConnectionString"]!);
         });
-        builder.Services.AddGrpc(options =>
-        {
-            options.EnableDetailedErrors = true;
-        });
+        builder.Services.AddGrpc(options => { options.EnableDetailedErrors = true; });
         builder.Services.AddMediatR(x =>
         {
             x.RegisterServicesFromAssemblyContaining<IAssemblyMarker>();
@@ -40,7 +37,8 @@ public static class BuilderExtensions
                 p.AllowAnyOrigin();
             });
         });
-        builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Configuration:Security:Authentication:JWT"));
+        builder.Services.Configure<JwtOptions>(
+            builder.Configuration.GetSection("Configuration:Security:Authentication:JWT"));
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -59,24 +57,32 @@ public static class BuilderExtensions
         builder.Services.AddAuthentication()
             .AddGoogle(options =>
             {
-                options.ClientId = builder.Configuration["Configuration:Security:Authentication:Providers:Google:ClientId"] ?? "";
-                options.ClientSecret = builder.Configuration["Configuration:Security:Authentication:Providers:Google:ClientSecret"] ?? "";
+                options.ClientId =
+                    builder.Configuration["Configuration:Security:Authentication:Providers:Google:ClientId"] ?? "";
+                options.ClientSecret =
+                    builder.Configuration["Configuration:Security:Authentication:Providers:Google:ClientSecret"] ?? "";
                 options.SaveTokens = true;
-                options.CallbackPath = "/signin-google";  
+                options.CallbackPath = "/signin-google";
             })
             .AddFacebook(options =>
             {
-                options.ClientId = builder.Configuration["Configuration:Security:Authentication:Providers:Facebook:ClientId"] ?? "";
-                options.ClientSecret = builder.Configuration["Configuration:Security:Authentication:Providers:Facebook:ClientSecret"] ?? "";
+                options.ClientId =
+                    builder.Configuration["Configuration:Security:Authentication:Providers:Facebook:ClientId"] ?? "";
+                options.ClientSecret =
+                    builder.Configuration["Configuration:Security:Authentication:Providers:Facebook:ClientSecret"] ??
+                    "";
                 options.SaveTokens = true;
-                options.CallbackPath = "/signin-facebook";  
+                options.CallbackPath = "/signin-facebook";
             })
             .AddMicrosoftAccount(options =>
             {
-                options.ClientId = builder.Configuration["Configuration:Security:Authentication:Providers:Microsoft:ClientId"] ?? "";
-                options.ClientSecret = builder.Configuration["Configuration:Security:Authentication:Providers:Microsoft:ClientSecret"] ?? "";
+                options.ClientId =
+                    builder.Configuration["Configuration:Security:Authentication:Providers:Microsoft:ClientId"] ?? "";
+                options.ClientSecret =
+                    builder.Configuration["Configuration:Security:Authentication:Providers:Microsoft:ClientSecret"] ??
+                    "";
                 options.SaveTokens = true;
-                options.CallbackPath = "/signin-microsoft";  
+                options.CallbackPath = "/signin-microsoft";
             });
 
         builder.Services.AddAuthentication(options =>
@@ -95,7 +101,9 @@ public static class BuilderExtensions
                     ValidAudience = builder.Configuration["Configuration:Security:Authentication:JWT:Audience"],
                     ValidIssuer = builder.Configuration["Configuration:Security:Authentication:JWT:Issuer"],
                     IssuerSigningKey =
-                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Configuration:Security:Authentication:JWT:Key"]!))
+                        new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(
+                                builder.Configuration["Configuration:Security:Authentication:JWT:Key"]!))
                 };
             });
 
@@ -122,9 +130,9 @@ public static class BuilderExtensions
         builder.Services.AddScoped<IProfileManager, ProfileManager>();
         builder.Services.AddScoped<ICacheService, CacheService>();
         builder.Services.AddScoped<IMessageService, MessageService>();
-        
+
         builder.Services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
-        
+
         builder.Services.AddHostedService<HostedTokenValidator>();
         builder.Services.AddHostedService<HostedCodeValidator>();
 

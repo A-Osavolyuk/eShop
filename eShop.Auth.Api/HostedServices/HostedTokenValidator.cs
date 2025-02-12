@@ -1,5 +1,4 @@
-﻿
-using eShop.Auth.Api.Data.Entities;
+﻿using eShop.Auth.Api.Data.Entities;
 
 namespace eShop.Auth.Api.HostedServices;
 
@@ -10,7 +9,8 @@ public class HostedTokenValidator(IServiceScopeFactory scopeFactory) : IHostedSe
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        timer = new Timer(async (state) => await ValidateTokensAsync(), null, TimeSpan.FromMinutes(5), TimeSpan.FromHours(12));
+        timer = new Timer(async (state) => await ValidateTokensAsync(), null, TimeSpan.FromMinutes(5),
+            TimeSpan.FromHours(12));
         return Task.CompletedTask;
     }
 
@@ -27,10 +27,10 @@ public class HostedTokenValidator(IServiceScopeFactory scopeFactory) : IHostedSe
 
         var tokens = await context.SecurityTokens.AsNoTracking().ToListAsync();
         var tokensToRemove = new List<SecurityTokenEntity>();
-        
-        foreach (var userToken in tokens) 
-        { 
-            if(userToken.ExpiredAt <= DateTime.UtcNow)
+
+        foreach (var userToken in tokens)
+        {
+            if (userToken.ExpiredAt <= DateTime.UtcNow)
             {
                 tokensToRemove.Add(userToken);
             }

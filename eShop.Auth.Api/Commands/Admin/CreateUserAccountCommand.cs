@@ -11,6 +11,7 @@ internal sealed class CreateUserAccountCommandHandler(
 {
     private readonly AppManager appManager = appManager;
     private readonly string defaultRole = configuration["Configuration:General:DefaultValues:DefaultRole"]!;
+
     private readonly List<string> defaultPermissions =
         configuration.GetValue<List<string>>("Configuration:General:DefaultValues:DefaultPermissions")!;
 

@@ -18,7 +18,7 @@ internal sealed class GetUserLockoutStatusQueryHandler(
         {
             return new(new NotFoundException($"Cannot find user with email {request.Email}."));
         }
-            
+
         var lockoutStatus = await appManager.UserManager.GetLockoutStatusAsync(user);
         return new(Mapper.ToUserLockoutStatusResponse(lockoutStatus));
     }

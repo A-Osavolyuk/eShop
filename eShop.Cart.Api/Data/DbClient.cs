@@ -9,7 +9,7 @@ public class DbClient
         var client = new MongoClient(connectionString);
         database = client.GetDatabase(databaseName);
     }
-    
+
     private readonly IMongoDatabase database;
 
     public IMongoCollection<T> GetCollection<T>(string collectionName)
@@ -18,7 +18,7 @@ public class DbClient
         {
             throw new MongoException("Cannot get collection with empty or null collection name");
         }
-        
+
         return database.GetCollection<T>(collectionName);
     }
 }

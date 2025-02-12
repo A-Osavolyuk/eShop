@@ -18,8 +18,9 @@ public class SmsController(ISmsService smsService) : ControllerBase
     {
         var response = await smsService.SendSingleMessage(request);
 
-        return response.IsSucceeded ? 
-            Ok(new ResponseBuilder().Succeeded().WithMessage(response.Message).Build()) : 
-            StatusCode((int)response.StatusCode, new ResponseBuilder().Failed().WithMessage(response.Message).Build());
+        return response.IsSucceeded
+            ? Ok(new ResponseBuilder().Succeeded().WithMessage(response.Message).Build())
+            : StatusCode((int)response.StatusCode,
+                new ResponseBuilder().Failed().WithMessage(response.Message).Build());
     }
 }
