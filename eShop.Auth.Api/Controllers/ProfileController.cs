@@ -8,6 +8,9 @@ public class ProfileController(ISender sender) : ControllerBase
 {
     private readonly ISender sender = sender;
     
+    [EndpointSummary("Get personal data")]
+    [EndpointDescription("Gets personal data")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManageAccountPolicy")]
     [HttpGet("get-personal-data/{email}")]
     public async ValueTask<ActionResult<Response>> GetPersonalData(string email)
@@ -19,6 +22,9 @@ public class ProfileController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
     
+    [EndpointSummary("Get phone number")]
+    [EndpointDescription("Gets a phone number")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManageAccountPolicy")]
     [HttpGet("get-phone-number/{email}")]
     public async ValueTask<ActionResult<Response>> GetPhoneNumber(string email)
@@ -30,6 +36,9 @@ public class ProfileController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
     
+    [EndpointSummary("Change username")]
+    [EndpointDescription("Changes username")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManageAccountPolicy")]
     [HttpPatch("change-user-name")]
     [ValidationFilter]
@@ -43,6 +52,9 @@ public class ProfileController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
     
+    [EndpointSummary("Change personal data")]
+    [EndpointDescription("Changes personal data")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManageAccountPolicy")]
     [HttpPut("change-personal-data")]
     [ValidationFilter]

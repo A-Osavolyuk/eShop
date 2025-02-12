@@ -13,6 +13,9 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
 
     #region Get methods
     
+    [EndpointSummary("Get 2FA state")]
+    [EndpointDescription("Get 2FA state")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManageAccountPolicy")]
     [HttpGet("get-2fa-state/{email}")]
     public async ValueTask<ActionResult<Response>> GetTwoFactorAuthenticationState(string email)
@@ -30,6 +33,9 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
             ExceptionHandler.HandleException);
     }
 
+    [EndpointSummary("External login")]
+    [EndpointDescription("External login")]
+    [ProducesResponseType(200)]
     [AllowAnonymous]
     [HttpGet("external-login/{provider}")]
     public async ValueTask<ActionResult<Response>> ExternalLogin(string provider, string? returnUri = null)
@@ -41,6 +47,9 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
             ExceptionHandler.HandleException);
     }
 
+    [EndpointSummary("Handle external login response")]
+    [EndpointDescription("Handles external login response")]
+    [ProducesResponseType(200)]
     [AllowAnonymous]
     [HttpGet("handle-external-login-response")]
     public async ValueTask<ActionResult<Response>> HandleExternalLoginResponse(string? remoteError = null,
@@ -55,6 +64,9 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
             ExceptionHandler.HandleException);
     }
 
+    [EndpointSummary("Get external login providers")]
+    [EndpointDescription("Gets external login providers")]
+    [ProducesResponseType(200)]
     [AllowAnonymous]
     [HttpGet("get-external-providers")]
     public async ValueTask<ActionResult<Response>> GetExternalProvidersList()
@@ -70,6 +82,9 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
 
     #region Post methods
 
+    [EndpointSummary("Verify code")]
+    [EndpointDescription("Verifies code")]
+    [ProducesResponseType(200)]
     [AllowAnonymous]
     [HttpPost("verify-code")]
     public async ValueTask<ActionResult<Response>> VerifyCodeAsync([FromBody] VerifyCodeRequest request)
@@ -81,6 +96,9 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
             ExceptionHandler.HandleException);
     }
     
+    [EndpointSummary("Resend verification code")]
+    [EndpointDescription("Resends verification code")]
+    [ProducesResponseType(200)]
     [AllowAnonymous]
     [HttpPost("resend-verification-code")]
     public async ValueTask<ActionResult<Response>> ResendVerificationCode(
@@ -93,6 +111,9 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
             ExceptionHandler.HandleException);
     }
     
+    [EndpointSummary("Register")]
+    [EndpointDescription("Register")]
+    [ProducesResponseType(200)]
     [AllowAnonymous]
     [HttpPost("register")]
     [ValidationFilter]
@@ -105,6 +126,9 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
             ExceptionHandler.HandleException);
     }
 
+    [EndpointSummary("Login")]
+    [EndpointDescription("Login")]
+    [ProducesResponseType(200)]
     [AllowAnonymous]
     [HttpPost("login")]
     [ValidationFilter]
@@ -117,6 +141,9 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
             ExceptionHandler.HandleException);
     }
         
+    [EndpointSummary("Request reset password")]
+    [EndpointDescription("Requests reset password")]
+    [ProducesResponseType(200)]
     [AllowAnonymous]
     [HttpPost("request-reset-password")]
     public async ValueTask<ActionResult<Response>> ResetPasswordRequest(ResetPasswordRequest request)
@@ -128,7 +155,9 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
             ExceptionHandler.HandleException);
     }
         
-
+    [EndpointSummary("Verify email")]
+    [EndpointDescription("Verifies email")]
+    [ProducesResponseType(200)]
     [AllowAnonymous]
     [HttpPost("verify-email")]
     public async ValueTask<ActionResult<Response>> ConfirmEmail(
@@ -141,6 +170,9 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
             ExceptionHandler.HandleException);
     }
 
+    [EndpointSummary("Change 2FA state")]
+    [EndpointDescription("Changes 2FA state")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManageAccountPolicy")]
     [HttpPost("change-2fa-state")]
     public async ValueTask<ActionResult<Response>> ChangeTwoFactorAuthentication(
@@ -153,6 +185,9 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
             ExceptionHandler.HandleException);
     }
 
+    [EndpointSummary("Login 2FA")]
+    [EndpointDescription("Login with 2FA")]
+    [ProducesResponseType(200)]
     [AllowAnonymous]
     [HttpPost("2fa-login")]
     public async ValueTask<ActionResult<Response>> LoginWithTwoFactorAuthenticationCode(
@@ -166,6 +201,9 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
             ExceptionHandler.HandleException);
     }
         
+    [EndpointSummary("Confirm change email")]
+    [EndpointDescription("Confirms an email change")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManageAccountPolicy")]
     [HttpPost("confirm-change-email")]
     public async ValueTask<ActionResult<Response>> ConfirmChangeEmail(
@@ -178,6 +216,9 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
             ExceptionHandler.HandleException);
     }
         
+    [EndpointSummary("Confirm change phone number")]
+    [EndpointDescription("Confirm a phone number change")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManageAccountPolicy")]
     [HttpPost("confirm-change-phone-number")]
     public async ValueTask<ActionResult<Response>> ConfirmChangePhoneNumber(
@@ -194,6 +235,9 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
 
     #region Put methods
 
+    [EndpointSummary("Confirm reset password")]
+    [EndpointDescription("Confirm password reset")]
+    [ProducesResponseType(200)]
     [AllowAnonymous]
     [HttpPut("confirm-reset-password")]
     [ValidationFilter]
@@ -207,6 +251,9 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
             ExceptionHandler.HandleException);
     }
         
+    [EndpointSummary("Request change email")]
+    [EndpointDescription("Request an email change")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManageAccountPolicy")]
     [HttpPut("request-change-email")]
     [ValidationFilter]
@@ -220,6 +267,9 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
             ExceptionHandler.HandleException);
     }
         
+    [EndpointSummary("Request change phone number")]
+    [EndpointDescription("Request a phone number change")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManageAccountPolicy")]
     [HttpPut("request-change-phone-number")]
     [ValidationFilter]
@@ -233,6 +283,9 @@ public class AuthController(SignInManager<AppUser> signInManager, ISender sender
             ExceptionHandler.HandleException);
     }
 
+    [EndpointSummary("Change password")]
+    [EndpointDescription("Change password")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManageAccountPolicy")]
     [HttpPut("change-password")]
     [ValidationFilter]

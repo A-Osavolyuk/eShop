@@ -8,6 +8,9 @@ public class AdminController(ISender sender) : ControllerBase
 {
     private readonly ISender sender = sender;
 
+    [EndpointSummary("Find user by email")]
+    [EndpointDescription("Finds user by email")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManageUsersPolicy")]
     [HttpGet("find-user-by-email/{email}")]
     public async ValueTask<ActionResult<Response>> FindUserByEmailAsync(string email)
@@ -19,6 +22,9 @@ public class AdminController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
 
+    [EndpointSummary("Find user by id")]
+    [EndpointDescription("Finds user by id")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManageUsersPolicy")]
     [HttpGet("find-user-by-id/{id:guid}")]
     public async ValueTask<ActionResult<Response>> FindUserByIdAsync(Guid id)
@@ -30,6 +36,9 @@ public class AdminController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
 
+    [EndpointSummary("Get all users")]
+    [EndpointDescription("Gets all users")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManageUsersPolicy")]
     [HttpGet("get-all-users")]
     public async ValueTask<ActionResult<Response>> GetAllUsersAsync()
@@ -41,6 +50,9 @@ public class AdminController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
 
+    [EndpointSummary("Get roles")]
+    [EndpointDescription("Gets all roles")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManageRolesPolicy")]
     [HttpGet("get-roles")]
     public async ValueTask<ActionResult<Response>> GetRolesListAsync()
@@ -52,6 +64,9 @@ public class AdminController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
 
+    [EndpointSummary("Get user roles")]
+    [EndpointDescription("Gets user roles")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManageRolesPolicy")]
     [HttpGet("get-user-roles/{id:guid}")]
     public async ValueTask<ActionResult<Response>> GetUserRolesAsync(Guid id)
@@ -63,6 +78,9 @@ public class AdminController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
 
+    [EndpointSummary("Get lockout status")]
+    [EndpointDescription("Gets lockout status")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManageLockoutPolicy")]
     [HttpGet("get-lockout-status/{email}")]
     public async ValueTask<ActionResult<Response>> GetRolesListAsync(string email)
@@ -74,6 +92,9 @@ public class AdminController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
 
+    [EndpointSummary("Get permissions")]
+    [EndpointDescription("Gets all permissions")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManagePermissionsPolicy")]
     [HttpGet("get-permissions")]
     public async ValueTask<ActionResult<Response>> GetPermissionsListAsync()
@@ -85,6 +106,9 @@ public class AdminController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
 
+    [EndpointSummary("Assign role")]
+    [EndpointDescription("Assigns role to user")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManageRolesPolicy")]
     [HttpPost("assign-role")]
     public async ValueTask<ActionResult<Response>> AssignRoleAsync([FromBody] AssignRoleRequest request)
@@ -95,6 +119,9 @@ public class AdminController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
 
+    [EndpointSummary("Issue permissions")]
+    [EndpointDescription("Issue permission to user")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManagePermissionsPolicy")]
     [HttpPost("issue-permissions")]
     public async ValueTask<ActionResult<Response>> IssuePermissionsAsync([FromBody] IssuePermissionRequest request)
@@ -105,6 +132,9 @@ public class AdminController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
 
+    [EndpointSummary("Create role")]
+    [EndpointDescription("Creates a role")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManageRolesPolicy")]
     [HttpPost("create-role")]
     [ValidationFilter]
@@ -116,6 +146,9 @@ public class AdminController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
 
+    [EndpointSummary("Create user account")]
+    [EndpointDescription("Create a user account")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManageUsersPolicy")]
     [HttpPost("create-user-account")]
     public async ValueTask<ActionResult<Response>> CreateUserAccount([FromBody] CreateUserAccountRequest request)
@@ -126,6 +159,9 @@ public class AdminController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
 
+    [EndpointSummary("Lockout user")]
+    [EndpointDescription("Lockouts user")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManageLockoutPolicy")]
     [HttpPost("lockout-user")]
     public async ValueTask<ActionResult<Response>> LockoutUserAsync([FromBody] LockoutUserRequest request)
@@ -136,6 +172,9 @@ public class AdminController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
 
+    [EndpointSummary("Unlock user")]
+    [EndpointDescription("Unlocks user")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManageLockoutPolicy")]
     [HttpPost("unlock-user")]
     public async ValueTask<ActionResult<Response>> UnlockUserAsync([FromBody] UnlockUserRequest request)
@@ -146,6 +185,9 @@ public class AdminController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
 
+    [EndpointSummary("Remove user roles")]
+    [EndpointDescription("Removes user roles")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManageRolesPolicy")]
     [HttpDelete("remove-user-roles")]
     public async ValueTask<ActionResult<Response>> RemoveUserRolesAsync([FromBody] RemoveUserRolesRequest request)
@@ -156,6 +198,9 @@ public class AdminController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
 
+    [EndpointSummary("Remove user role")]
+    [EndpointDescription("Removes user role")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManageRolesPolicy")]
     [HttpDelete("remove-user-role")]
     public async ValueTask<ActionResult<Response>> RemoveUserRoleAsync([FromBody] RemoveUserRoleRequest request)
@@ -166,6 +211,9 @@ public class AdminController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
 
+    [EndpointSummary("Delete role")]
+    [EndpointDescription("Deletes role")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManageRolesPolicy")]
     [HttpDelete("delete-role")]
     public async ValueTask<ActionResult<Response>> DeleteRoleAsync([FromBody] DeleteRoleRequest request)
@@ -176,6 +224,9 @@ public class AdminController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
 
+    [EndpointSummary("Release user from permission")]
+    [EndpointDescription("Releases user from permission")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManagePermissionsPolicy")]
     [HttpDelete("delete-user-from-permission")]
     public async ValueTask<ActionResult<Response>> DeleteUserFromPermissionAsync([FromBody] RemoveUserFromPermissionRequest request)
@@ -186,6 +237,9 @@ public class AdminController(ISender sender) : ControllerBase
             ExceptionHandler.HandleException);
     }
 
+    [EndpointSummary("Delete user account")]
+    [EndpointDescription("Deletes user account")]
+    [ProducesResponseType(200)]
     [Authorize(Policy = "ManageUsersPolicy")]
     [HttpDelete("delete-user-account")]
     public async ValueTask<ActionResult<Response>> DeleteUserAccountAsync([FromBody] DeleteUserAccountRequest request)
