@@ -8,13 +8,15 @@ public class MessageService(IBus bus) : IMessageService
 
     public async ValueTask SendMessageAsync(string queryName, EmailBase message)
     {
-        var endpoint = await bus.GetSendEndpoint(CreateQueryUri(queryName));
+        var address = CreateQueryUri(queryName);
+        var endpoint = await bus.GetSendEndpoint(address);
         await endpoint.Send(message);
     }
 
     public async ValueTask SendMessageAsync(string queryName, SmsBase message)
     {
-        var endpoint = await bus.GetSendEndpoint(CreateQueryUri(queryName));
+        var address = CreateQueryUri(queryName);
+        var endpoint = await bus.GetSendEndpoint(address);
         await endpoint.Send(message);
     }
 
