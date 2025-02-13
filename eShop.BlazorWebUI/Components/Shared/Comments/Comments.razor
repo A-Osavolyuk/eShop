@@ -56,12 +56,12 @@ else
                     .AsQueryable()
                     .Select(x => new CommentModel()
                     {
-                        UpdatedAt = x.UpdateDate,
-                        CommentId = x.Id,
+                        UpdateDate = x.UpdateDate,
+                        Id = x.Id,
                         UserId = x.UserId,
-                        CreatedAt = x.CreateDate,
+                        CreateDate = x.CreateDate,
                         Rating = x.Rating,
-                        CommentText = x.Text,
+                        Text = x.Text,
                         Images = x.Images,
                         Username = x.Username
                     })

@@ -3,8 +3,8 @@
 public class ResponseBuilder
 {
     private string resultMessage = string.Empty;
-    private object? result = null!;
-    private bool isSucceeded = false;
+    private object? result;
+    private bool isSucceeded;
 
     public ResponseBuilder WithResult(object value)
     {

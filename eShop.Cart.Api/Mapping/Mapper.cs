@@ -19,8 +19,8 @@ public static class Mapper
     {
         return new()
         {
+            Id = dto.Id,
             Items = dto.Items,
-            FavoritesId = dto.Id,
             ItemsCount = dto.Count,
         };
     }
