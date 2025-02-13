@@ -24,5 +24,5 @@ public interface IUserStorage
     public ValueTask SetEmailAsync(string email);
     public ValueTask SetPhoneNumberAsync(string phoneNumber);
     
-    public ValueTask ClearStorageAsync();
+    public ValueTask ClearAsync();
 }

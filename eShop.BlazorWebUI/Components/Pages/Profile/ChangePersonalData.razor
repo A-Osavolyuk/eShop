@@ -1,14 +1,9 @@
 ﻿@page "/profile/change-personal-data"
-
-@using eShop.Domain.Interfaces.Client
-@using eShop.Domain.Requests.Api.Auth
-@using eShop.Domain.Responses.Api.Auth
 @inherits PageBase
 
 @inject IAuthenticationService AuthService
 @inject IProfileService ProfileService
 @inject PersonalDataValidator Validator
-@inject IUserStorage UserStorage
 
 <Title Text="Change personal data"/>
 

@@ -1,7 +1,5 @@
-﻿@using eShop.Domain.Interfaces.Client
-
-@inject NavigationManager NavigationManager
-@inject ILocalDataAccessor LocalDataAccessor
+﻿@inject NavigationManager NavigationManager
+@inject ILocalStorage LocalStorage
 @inject ISnackbar Snackbar
 @inject INotificationService NotificationService
 @inject IFavoritesService FavoritesService
@@ -207,7 +205,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        isFavorite = await LocalDataAccessor.IsInFavoriteGoodsAsync(Model.Id.ToString());
+        isFavorite = await LocalStorage.IsInFavoriteGoodsAsync(Model.Id.ToString());
     }
 
     private async Task AddToCartAsync()

@@ -19,7 +19,7 @@ public class UserStorage(ILocalStorageService localStorage) : IUserStorage
     {
         var model = await GetModelAsync();
 
-        return model?.AccountData.Id.ToString();
+        return model?.AccountData.Id;
     }
 
     public async ValueTask<string?> GetEmailAsync()
@@ -128,7 +128,7 @@ public class UserStorage(ILocalStorageService localStorage) : IUserStorage
         await SetModelAsync(newModel);
     }
 
-    public async ValueTask ClearStorageAsync() => await localStorage.RemoveItemAsync(UserKey);
+    public async ValueTask ClearAsync() => await localStorage.RemoveItemAsync(UserKey);
     private async ValueTask<UserModel?> GetModelAsync() => await localStorage.GetItemAsync<UserModel>(UserKey);
     private async ValueTask SetModelAsync(UserModel model) => await localStorage.SetItemAsync(UserKey, model);
 }

@@ -1,6 +1,6 @@
-﻿namespace eShop.Infrastructure.Services;
+﻿namespace eShop.Infrastructure.Storage;
 
-public class LocalDataAccessor(ILocalStorageService localStorageService) : ILocalDataAccessor
+public class LocalStorage(ILocalStorageService localStorageService) : ILocalStorage
 {
     private readonly ILocalStorageService localStorageService = localStorageService;
 
@@ -9,48 +9,6 @@ public class LocalDataAccessor(ILocalStorageService localStorageService) : ILoca
     {
         var key = "cart";
         await localStorageService.SetItemAsync(key, cartModel);
-    }
-    
-    public async ValueTask WriteSecurityDataAsync(SecurityData securityData)
-    {
-        if (securityData is null)
-        {
-            throw new ArgumentNullException(nameof(securityData));
-        }
-
-        await localStorageService.SetItemAsync("security-data", securityData);
-    }
-
-    public async ValueTask<SecurityData> ReadSecurityDataAsync()
-    {
-        var securityData = await localStorageService.GetItemAsync<SecurityData>("security-data");
-
-        if (securityData is null)
-        {
-            return new();
-        }
-
-        return securityData;
-    }
-
-    public async ValueTask WriteAvatarLinkAsync(string link)
-    {
-        if (string.IsNullOrEmpty(link))
-        {
-            throw new ArgumentNullException(nameof(link));
-        }
-
-        await localStorageService.SetItemAsStringAsync("avatar-link", link);
-    }
-
-    public async ValueTask<string> ReadAvatarLinkAsync()
-    {
-        return await localStorageService.GetItemAsStringAsync("avatar-link") ?? string.Empty;
-    }
-
-    public async ValueTask RemoveAvatarLinkAsync()
-    {
-        await localStorageService.RemoveItemAsync("avatar-link");
     }
 
     public async ValueTask<FavoritesModel> ReadFavoritesAsync()

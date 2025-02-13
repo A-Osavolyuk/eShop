@@ -1,7 +1,4 @@
 ﻿@page "/profile/change-username"
-@using eShop.Domain.Interfaces.Client
-@using eShop.Domain.Requests.Api.Auth
-@using eShop.Domain.Responses.Api.Auth
 @inherits PageBase
 
 @inject IAuthenticationService AuthService
@@ -9,7 +6,6 @@
 @inject UserNameValidator Validator
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ITokenProvider TokenProvider
-@inject IUserStorage UserStorage
 
 <Title Text="Change username" />
 

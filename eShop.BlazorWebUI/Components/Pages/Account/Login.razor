@@ -1,14 +1,12 @@
 ﻿@page "/account/login"
-@using eShop.Domain.Interfaces.Client
-@using eShop.Domain.Requests.Api.Auth
-@using eShop.Domain.Responses.Api.Auth
+
+
 @inherits PageBase
 
 @inject IAuthenticationService AuthenticationService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject LoginValidator Validator
 @inject IConfiguration Configuration
-@inject IUserStorage UserStorage
 
 <Title Text="Login"/>
 

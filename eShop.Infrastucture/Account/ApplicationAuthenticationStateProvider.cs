@@ -6,13 +6,13 @@ namespace eShop.Infrastructure.Account;
 public class ApplicationAuthenticationStateProvider(
     ITokenProvider tokenProvider,
     IAuthenticationService authenticationService,
-    ILocalDataAccessor localDataAccessor,
+    ILocalStorage localStorage,
     IUserStorage userStorage) : AuthenticationStateProvider
 {
     private readonly AuthenticationState anonymous = new(new ClaimsPrincipal());
     private readonly ITokenProvider tokenProvider = tokenProvider;
     private readonly IAuthenticationService authenticationService = authenticationService;
-    private readonly ILocalDataAccessor localDataAccessor = localDataAccessor;
+    private readonly ILocalStorage localStorage = localStorage;
     private readonly IUserStorage userStorage = userStorage;
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
@@ -166,7 +166,7 @@ public class ApplicationAuthenticationStateProvider(
                 Email = email,
                 UserName = username,
                 PhoneNumber = phoneNumber,
-                Id = Guid.Parse(id),
+                Id = id,
             }
         });
     }
@@ -214,7 +214,8 @@ public class ApplicationAuthenticationStateProvider(
     public async Task LogOutAsync()
     {
         await tokenProvider.ClearAsync();
-        await localDataAccessor.ClearAsync();
+        await localStorage.ClearAsync();
+        await userStorage.ClearAsync();
         await UpdateAuthenticationStateAsync(string.Empty);
     }
 }

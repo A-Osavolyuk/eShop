@@ -6,7 +6,7 @@
 @implements IDisposable
 
 @inject ITokenProvider TokenProvider
-@inject ILocalDataAccessor LocalDataAccessor
+@inject ILocalStorage LocalStorage
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NotificationsStateContainer NotificationsStateContainer
 @inject INotificationService NotificationService
@@ -111,7 +111,6 @@
 
     private bool drawerOpen = true;
     private string avatarUri = string.Empty;
-    private UserModel user = new();
     private int notificationsCount = 0;
 
     void DrawerToggle()
@@ -122,10 +121,6 @@
     protected override async Task OnInitializedAsync()
     {
         NotificationsStateContainer.OnNotificationsChanged += NotificationCountChanged;
-
-        
-
-        //await GetAvatarAsync();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -139,8 +134,6 @@
                 await (AuthenticationStateProvider as ApplicationAuthenticationStateProvider)!.UpdateAuthenticationStateAsync(token);
             }
         }
-
-        var user = (await UserStore.GetUserAsync())!;
         
         notificationsCount = await NotificationService.GetNotificationsCountAsync();
     }
@@ -160,23 +153,7 @@
     {
         var user = (await UserStore.GetUserAsync())!;
 
-        avatarUri = await LocalDataAccessor.ReadAvatarLinkAsync();
-
-        if (string.IsNullOrEmpty(avatarUri))
-        {
-            var userId = user.AccountData.Id.ToString();
-            var response = await StoreService.GetUserAvatarAsync(userId);
-
-            if (response.Success)
-            {
-                avatarUri = response!.Result?.ToString() ?? Configuration["Configuration:General:DefaultValues:DefaultAvatar"]!;
-            }
-            else
-            {
-                Snackbar.Add(response.Message, Severity.Error);
-                avatarUri = Configuration["Configuration:General:DefaultValues:DefaultAvatar"]!;
-            }
-        }
+        avatarUri = Configuration["Configuration:General:DefaultValues:DefaultAvatar"]!;
     }
 
     private async Task LogoutClick()

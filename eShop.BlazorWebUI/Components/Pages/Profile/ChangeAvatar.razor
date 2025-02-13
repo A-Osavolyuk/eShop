@@ -1,11 +1,8 @@
 ﻿@page "/profile/change-avatar"
-@using eShop.Domain.Interfaces.Client
-@using eShop.Domain.Responses.Api.Files
 @using Severity = MudBlazor.Severity
 @inherits PageBase
 
 @inject IStoreService StoreService
-@inject IUserStorage UserStorage
 
 <Title Text="Change avatar" />
 
@@ -39,8 +36,8 @@
                                            Hidden="@false"
                                            InputClass="absolute m-auto cursor-pointer mud-width-full mud-height-full z-20"
                                            InputStyle="opacity:0"
-                                           @bind-Files="@file"
-                                           For="@(() => file)"
+                                           @bind-Files="@browserFile"
+                                           For="@(() => browserFile)"
                                            SuppressOnChangeWhenInvalid>
                                 <ActivatorContent>
                                     <MudButton Class="cursor-pointer" FullWidth HtmlTag="button" Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.FileOpen">
@@ -50,12 +47,12 @@
                             </MudFileUpload>
                         </MudItem>
                         <MudItem xs="4" Style="margin-top:6px">
-                            <MudButton FullWidth ButtonType="ButtonType.Button" Disabled="@(file is null ? true : false)" Color="Color.Success" Variant="Variant.Filled" OnClick="UploadClick" StartIcon="@Icons.Material.Filled.Upload">
+                            <MudButton FullWidth ButtonType="ButtonType.Button" Disabled="@(browserFile is null ? true : false)" Color="Color.Success" Variant="Variant.Filled" OnClick="UploadClick" StartIcon="@Icons.Material.Filled.Upload">
                                 Upload file
                             </MudButton>
                         </MudItem>
                         <MudItem xs="4" Style="margin-top:6px">
-                            <MudButton FullWidth ButtonType="ButtonType.Button" Disabled="@(file is null ? true : false)" Color="Color.Error" Variant="Variant.Filled" OnClick="ClearClick" StartIcon="@Icons.Material.Filled.Clear">
+                            <MudButton FullWidth ButtonType="ButtonType.Button" Disabled="@(browserFile is null ? true : false)" Color="Color.Error" Variant="Variant.Filled" OnClick="ClearClick" StartIcon="@Icons.Material.Filled.Clear">
                                 Clear
                             </MudButton>
                         </MudItem>
@@ -70,13 +67,13 @@
 </AuthorizeView>
 
 @code {
-    private IBrowserFile? file;
+    private IBrowserFile? browserFile;
     private string currentImage = "";
 
     private async void OnInputFileChanged(InputFileChangeEventArgs e)
     {
-        file = e.File;
-        currentImage = await CreateImageUrl(file);
+        browserFile = e.File;
+        currentImage = await CreateImageUrl(browserFile);
         StateHasChanged();
     }
 
@@ -95,12 +92,12 @@
     private async Task UploadClick()
     {
         var userId = await UserStorage.GetUserIdAsync();
-        var response = await StoreService.UploadUserAvatarAsync(userId!, file!);
+        var response = await StoreService.UploadUserAvatarAsync(userId!, browserFile!);
 
         if (response.Success)
         {
             var data = ResponseConverter.Deserialize<UploadAvatarResponse>(response.Result!);
-            await LocalDataAccessor.WriteAvatarLinkAsync(data.Uri);
+            //TODO: Added saving an avatar
             NavigationManager.NavigateTo("/profile");
         }
         else

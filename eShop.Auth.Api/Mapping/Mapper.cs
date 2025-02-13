@@ -63,7 +63,7 @@ public static class Mapper
     {
         return new AccountData()
         {
-            Id = Guid.Parse(user.Id),
+            Id = user.Id,
             Email = user.Email!,
             UserName = user.UserName!,
             PhoneNumber = user.PhoneNumber!,
