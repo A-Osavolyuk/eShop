@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Types;
-
-namespace eShop.Domain.Interfaces.Client;
+﻿namespace eShop.Domain.Interfaces.Client;
 
 public interface ILocalStorage
 {

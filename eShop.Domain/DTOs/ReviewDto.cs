@@ -1,8 +1,6 @@
-﻿using eShop.Domain.Interfaces;
+﻿namespace eShop.Domain.DTOs;
 
-namespace eShop.Domain.DTOs;
-
-public class ReviewDto : IAuditable
+public class ReviewDto : IAuditable, IIdentifiable<Guid>
 {
     public Guid Id { get; set; }
     public Guid ProductId { get; set; }

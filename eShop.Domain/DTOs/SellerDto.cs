@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.DTOs;
 
-public class SellerDto
+public class SellerDto : IIdentifiable<Guid>
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public Guid UserId { get; set; } = Guid.NewGuid();

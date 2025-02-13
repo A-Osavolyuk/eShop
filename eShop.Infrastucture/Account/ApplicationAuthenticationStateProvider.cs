@@ -166,7 +166,7 @@ public class ApplicationAuthenticationStateProvider(
                 Email = email,
                 UserName = username,
                 PhoneNumber = phoneNumber,
-                Id = id,
+                Id = Guid.Parse(id),
             }
         });
     }

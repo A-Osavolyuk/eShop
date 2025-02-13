@@ -15,11 +15,11 @@ public class UserStorage(ILocalStorageService localStorage) : IUserStorage
         return model?.AccountData.UserName;
     }
 
-    public async ValueTask<string?> GetUserIdAsync()
+    public async ValueTask<Guid> GetUserIdAsync()
     {
         var model = await GetModelAsync();
 
-        return model?.AccountData.Id;
+        return model!.AccountData.Id;
     }
 
     public async ValueTask<string?> GetEmailAsync()

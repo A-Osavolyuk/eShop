@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace eShop.Domain.Responses.Api.Sms;
+﻿namespace eShop.Domain.Responses.Api.Sms;
 
 public class MultiMessageResponse : ResponseBase
 {

@@ -1,12 +1,11 @@
-﻿using eShop.Domain.Types;
-using UserModel = eShop.Domain.Models.UserModel;
+﻿using UserModel = eShop.Domain.Models.UserModel;
 
 namespace eShop.Domain.Interfaces.Client;
 
 public interface IUserStorage
 {
     public ValueTask<string?> GetUserNameAsync();
-    public ValueTask<string?> GetUserIdAsync();
+    public ValueTask<Guid> GetUserIdAsync();
     public ValueTask<string?> GetEmailAsync();
     public ValueTask<string?> GetPhoneNumberAsync();
     public ValueTask<UserModel?> GetUserAsync();

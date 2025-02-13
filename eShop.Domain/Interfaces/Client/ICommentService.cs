@@ -1,7 +1,4 @@
-﻿using eShop.Domain.Common.Api;
-using eShop.Domain.Requests.Api.Comments;
-
-namespace eShop.Domain.Interfaces.Client;
+﻿namespace eShop.Domain.Interfaces.Client;
 
 public interface ICommentService
 {

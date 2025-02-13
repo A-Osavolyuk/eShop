@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Common.Api;
-
-namespace eShop.Domain.Interfaces.Client;
+﻿namespace eShop.Domain.Interfaces.Client;
 
 public interface IHttpClientService
 {

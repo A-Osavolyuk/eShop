@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Types;
-
-namespace eShop.Domain.Responses.Api.Admin;
+﻿namespace eShop.Domain.Responses.Api.Admin;
 
 public record class FindUserResponse
 {

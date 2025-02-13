@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Types;
-
-namespace eShop.Domain.Requests.Api.Favorites;
+﻿namespace eShop.Domain.Requests.Api.Favorites;
 
 public record UpdateFavoritesRequest
 {

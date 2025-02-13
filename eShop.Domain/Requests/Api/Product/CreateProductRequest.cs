@@ -1,6 +1,4 @@
-﻿using eShop.Domain.DTOs;
-
-namespace eShop.Domain.Requests.Api.Product;
+﻿namespace eShop.Domain.Requests.Api.Product;
 
 public record CreateProductRequest
 {

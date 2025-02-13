@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace eShop.Domain.Common.Api;
+﻿namespace eShop.Domain.Common.Api;
 
 public class Response
 {

@@ -1,6 +1,4 @@
-﻿using eShop.Domain.Types;
-
-namespace eShop.Domain.Requests.Api.Cart;
+﻿namespace eShop.Domain.Requests.Api.Cart;
 
 public record UpdateCartRequest
 {

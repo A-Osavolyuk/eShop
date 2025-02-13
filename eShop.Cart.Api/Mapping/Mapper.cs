@@ -11,7 +11,7 @@ public static class Mapper
         {
             Items = entity.Items,
             Id = entity.FavoritesId,
-            Cound = entity.ItemsCount,
+            Count = entity.ItemsCount,
         };
     }
 
@@ -21,7 +21,7 @@ public static class Mapper
         {
             Items = dto.Items,
             FavoritesId = dto.Id,
-            ItemsCount = dto.Cound,
+            ItemsCount = dto.Count,
         };
     }
 

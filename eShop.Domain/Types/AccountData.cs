@@ -1,8 +1,8 @@
 ﻿namespace eShop.Domain.Types;
 
-public record AccountData
+public record AccountData : IIdentifiable<Guid>
 {
-    public string Id { get; set; }
+    public Guid Id { get; set; }
     public string Email { get; set; } = string.Empty;
     public string UserName { get; set; } = string.Empty;
     public string PhoneNumber { get; set; } = string.Empty;

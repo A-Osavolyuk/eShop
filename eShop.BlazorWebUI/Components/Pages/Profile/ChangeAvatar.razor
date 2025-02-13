@@ -92,7 +92,7 @@
     private async Task UploadClick()
     {
         var userId = await UserStorage.GetUserIdAsync();
-        var response = await StoreService.UploadUserAvatarAsync(userId!, browserFile!);
+        var response = await StoreService.UploadUserAvatarAsync(userId.ToString(), browserFile!);
 
         if (response.Success)
         {

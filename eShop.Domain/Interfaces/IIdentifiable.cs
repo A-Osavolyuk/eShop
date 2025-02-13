@@ -1,6 +1,6 @@
 ﻿namespace eShop.Domain.Interfaces;
 
-public interface IEntity<TKey>
+public interface IIdentifiable<TKey>
 {
     public TKey Id { get; set; }
 }

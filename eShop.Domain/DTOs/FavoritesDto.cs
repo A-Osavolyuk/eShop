@@ -1,10 +1,8 @@
-﻿using eShop.Domain.Types;
+﻿namespace eShop.Domain.DTOs;
 
-namespace eShop.Domain.DTOs;
-
-public class FavoritesDto
+public class FavoritesDto : IIdentifiable<Guid>
 {
     public Guid Id { get; set; }
-    public int Cound { get; set; }
+    public int Count { get; set; }
     public List<FavoritesItem> Items { get; set; } = new List<FavoritesItem>();
 }

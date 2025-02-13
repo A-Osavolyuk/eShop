@@ -1,8 +1,6 @@
-﻿using eShop.Domain.Types;
+﻿namespace eShop.Domain.DTOs;
 
-namespace eShop.Domain.DTOs;
-
-public class CartDto
+public class CartDto : IIdentifiable<Guid>
 {
     public Guid Id { get; set; }
     public int Count { get; set; }

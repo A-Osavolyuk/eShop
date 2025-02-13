@@ -1,6 +1,4 @@
-﻿using eShop.Domain.DTOs;
-
-namespace eShop.Domain.Responses.Api.Comments;
+﻿namespace eShop.Domain.Responses.Api.Comments;
 
 public class GetCommentsResponse : ResponseBase
 {

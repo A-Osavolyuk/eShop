@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
-
-namespace eShop.Domain.Responses.Api.Auth;
+﻿namespace eShop.Domain.Responses.Api.Auth;
 
 public class ExternalLoginResponse
 {

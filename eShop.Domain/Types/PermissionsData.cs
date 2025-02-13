@@ -1,6 +1,8 @@
-﻿namespace eShop.Domain.Types;
+﻿using JsonIgnoreAttribute = Newtonsoft.Json.JsonIgnoreAttribute;
 
-public record PermissionsData
+namespace eShop.Domain.Types;
+
+public record PermissionsData : IIdentifiable<Guid>
 {
     [JsonIgnore]
     public Guid Id { get; set; }

@@ -1,8 +1,6 @@
-﻿using eShop.Domain.Interfaces;
+﻿namespace eShop.Domain.DTOs;
 
-namespace eShop.Domain.DTOs;
-
-public class CommentDto : IAuditable
+public class CommentDto : IAuditable, IIdentifiable<Guid>
 {
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
