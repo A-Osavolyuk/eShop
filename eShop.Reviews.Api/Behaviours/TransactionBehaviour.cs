@@ -28,7 +28,7 @@ public class TransactionBehaviour<TRequest, TResponse>(
             catch (Exception ex)
             {
                 await transaction.RollbackAsync(cancellationToken);
-                logger.LogInformation("Rollback transaction");
+                logger.LogInformation("Rollback transaction with error message: {ex}", ex.Message);
                 throw;
             }
         });

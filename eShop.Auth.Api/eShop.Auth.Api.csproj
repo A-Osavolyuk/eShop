@@ -47,7 +47,11 @@
     </ItemGroup>
     
     <ItemGroup>
-        <Protobuf Include="..\eShop.Application\Protos\cart.proto" GrpcServices="Client" />
-        <Protobuf Include="..\eShop.Application\Protos\auth.proto" GrpcServices="Server" />
+        <Protobuf Include="..\eShop.Application\Protos\cart.proto" GrpcServices="Client">
+            <GrpcCSharpNamespace>eShop.Auth.Api</GrpcCSharpNamespace>
+        </Protobuf>
+        <Protobuf Include="..\eShop.Application\Protos\auth.proto" GrpcServices="Server">
+            <GrpcCSharpNamespace>eShop.Auth.Api</GrpcCSharpNamespace>
+        </Protobuf>
     </ItemGroup>
 </Project>

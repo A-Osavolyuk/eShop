@@ -2,5 +2,5 @@
 
 public class TwoFactorAuthenticationStateResponse
 {
-    public TwoFactorAuthenticationState State { get; set; }
+    public TwoFactorAuthenticationState State { get; set; } = null!;
 }

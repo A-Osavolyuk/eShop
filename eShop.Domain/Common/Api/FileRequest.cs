@@ -13,10 +13,12 @@ public class FileData
     public FileData(IReadOnlyList<IBrowserFile> files)
     {
         Files = files;
+        File = null!;
     }
 
     public FileData(IBrowserFile file)
     {
         File = file;
+        File = null!;
     }
 }
