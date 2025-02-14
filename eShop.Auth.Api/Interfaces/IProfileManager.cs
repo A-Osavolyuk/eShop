@@ -1,6 +1,4 @@
-﻿using eShop.Auth.Api.Data.Entities;
-
-namespace eShop.Auth.Api.Interfaces;
+﻿namespace eShop.Auth.Api.Interfaces;
 
 public interface IProfileManager
 {

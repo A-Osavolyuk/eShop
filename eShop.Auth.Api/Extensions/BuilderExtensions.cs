@@ -1,9 +1,4 @@
-﻿using eShop.Auth.Api.Data.Entities;
-using eShop.Auth.Api.Interfaces;
-using eShop.Auth.Api.Options;
-using eShop.Auth.Api.Services;
-
-namespace eShop.Auth.Api.Extensions;
+﻿namespace eShop.Auth.Api.Extensions;
 
 public static class BuilderExtensions
 {
@@ -15,30 +10,13 @@ public static class BuilderExtensions
         builder.AddValidation();
         builder.AddMessageBus();
         builder.AddServiceDefaults();
-        builder.AddSecurity();
+        builder.AddIdentity();
         builder.AddDependencyInjection();
         builder.AddRedisCache();
-        builder.Services.AddDbContext<AuthDbContext>(cfg =>
-        {
-            cfg.UseSqlServer(builder.Configuration["Configuration:Storage:Databases:SQL:MSSQL:ConnectionString"]!);
-        });
-        builder.Services.AddGrpc(options => { options.EnableDetailedErrors = true; });
-        builder.Services.AddMediatR(x =>
-        {
-            x.RegisterServicesFromAssemblyContaining<IAssemblyMarker>();
-            x.AddOpenBehavior(typeof(LoggingBehaviour<,>));
-        });
-        builder.Services.AddCors(o =>
-        {
-            o.AddDefaultPolicy(p =>
-            {
-                p.AllowAnyHeader();
-                p.AllowAnyMethod();
-                p.AllowAnyOrigin();
-            });
-        });
-        builder.Services.Configure<JwtOptions>(
-            builder.Configuration.GetSection("Configuration:Security:Authentication:JWT"));
+        builder.AddCors();
+        builder.AddMediatR();
+        builder.AddSqlDb();
+        builder.AddGrpc();
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -46,15 +24,47 @@ public static class BuilderExtensions
         builder.Services.AddOpenApi();
     }
 
-    private static void AddSecurity(this IHostApplicationBuilder builder)
+    private static void AddMediatR(this IHostApplicationBuilder builder)
     {
+        builder.Services.AddMediatR(x =>
+        {
+            x.RegisterServicesFromAssemblyContaining<IAssemblyMarker>();
+            x.AddOpenBehavior(typeof(LoggingBehaviour<,>));
+        });
+    }
+
+    private static void AddGrpc(this IHostApplicationBuilder builder)
+    {
+        builder.Services.AddGrpc(options =>
+        {
+            options.EnableDetailedErrors = true; 
+        });
+    }
+
+    private static void AddSqlDb(this IHostApplicationBuilder builder)
+    {
+        builder.Services.AddDbContext<AuthDbContext>(cfg =>
+        {
+            cfg.UseSqlServer(builder.Configuration["Configuration:Storage:Databases:SQL:MSSQL:ConnectionString"]!);
+        });
+    }
+
+    private static void AddIdentity(this IHostApplicationBuilder builder)
+    {
+        builder.Services.Configure<JwtOptions>(
+            builder.Configuration.GetSection("Configuration:Security:Authentication:JWT"));
+        
         builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
         {
             options.User.RequireUniqueEmail = true;
             options.SignIn.RequireConfirmedEmail = true;
         }).AddDefaultTokenProviders().AddEntityFrameworkStores<AuthDbContext>();
 
-        builder.Services.AddAuthentication()
+        builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
             .AddGoogle(options =>
             {
                 options.ClientId =
@@ -83,12 +93,6 @@ public static class BuilderExtensions
                     "";
                 options.SaveTokens = true;
                 options.CallbackPath = "/signin-microsoft";
-            });
-
-        builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(options =>
             {
@@ -119,6 +123,19 @@ public static class BuilderExtensions
                 policy => policy.Requirements.Add(new PermissionRequirement("Permission.Admin.ManagePermissions")));
             cfg.AddPolicy("ManageAccountPolicy",
                 policy => policy.Requirements.Add(new PermissionRequirement("Permission.Account.ManageAccount")));
+        });
+    }
+
+    private static void AddCors(this IHostApplicationBuilder builder)
+    {
+        builder.Services.AddCors(o =>
+        {
+            o.AddDefaultPolicy(p =>
+            {
+                p.AllowAnyHeader();
+                p.AllowAnyMethod();
+                p.AllowAnyOrigin();
+            });
         });
     }
 

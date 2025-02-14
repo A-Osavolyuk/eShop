@@ -1,6 +1,4 @@
-﻿using eShop.Auth.Api.Interfaces;
-
-namespace eShop.Auth.Api.Services;
+﻿namespace eShop.Auth.Api.Services;
 
 public class MessageService(IBus bus) : IMessageService
 {

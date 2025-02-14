@@ -1,6 +1,4 @@
-﻿using Scalar.AspNetCore;
-
-namespace eShop.Auth.Api.Extensions;
+﻿namespace eShop.Auth.Api.Extensions;
 
 public static class WebApplicationBuilder
 {

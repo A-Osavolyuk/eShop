@@ -1,6 +1,4 @@
-﻿using eShop.Domain.DTOs;
-
-namespace eShop.Auth.Api.Queries.Auth;
+﻿namespace eShop.Auth.Api.Queries.Auth;
 
 internal sealed record GetExternalProvidersQuery() : IRequest<Result<IEnumerable<ExternalProviderDto>>>;
 

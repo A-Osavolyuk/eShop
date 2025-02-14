@@ -1,6 +1,4 @@
-﻿using eShop.Auth.Api.Mapping;
-
-namespace eShop.Auth.Api.Queries.Auth;
+﻿namespace eShop.Auth.Api.Queries.Auth;
 
 internal sealed record GetPersonalDataQuery(string Email) : IRequest<Result<PersonalDataResponse>>;
 
