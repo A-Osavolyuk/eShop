@@ -1,4 +1,5 @@
-﻿using eShop.Domain.Types;
+﻿using eShop.Cart.Api.Entities;
+using eShop.Domain.Types;
 using Scalar.AspNetCore;
 
 namespace eShop.Cart.Api.Extensions;

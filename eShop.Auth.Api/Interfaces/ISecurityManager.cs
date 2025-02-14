@@ -1,4 +1,6 @@
-﻿namespace eShop.Auth.Api.Interfaces;
+﻿using eShop.Auth.Api.Entities;
+
+namespace eShop.Auth.Api.Interfaces;
 
 public interface ISecurityManager
 {

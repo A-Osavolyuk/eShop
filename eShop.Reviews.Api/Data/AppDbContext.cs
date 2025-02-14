@@ -1,4 +1,6 @@
-﻿namespace eShop.Reviews.Api.Data;
+﻿using eShop.Reviews.Api.Entities;
+
+namespace eShop.Reviews.Api.Data;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {

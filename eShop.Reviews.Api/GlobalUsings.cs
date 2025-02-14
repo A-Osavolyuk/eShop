@@ -11,7 +11,6 @@ global using eShop.Domain.Responses.Api.Comments;
 global using eShop.Reviews.Api.Behaviours;
 global using eShop.Reviews.Api.Commands.Comments;
 global using eShop.Reviews.Api.Data;
-global using eShop.Reviews.Api.Data.Entities;
 global using eShop.Reviews.Api.Extensions;
 global using eShop.Reviews.Api.Mapping;
 global using eShop.Reviews.Api.Queries.Comments;

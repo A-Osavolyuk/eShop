@@ -1,4 +1,4 @@
-﻿namespace eShop.Product.Api.Data.Entities;
+﻿namespace eShop.Product.Api.Entities;
 
 public class BrandEntity
 {

@@ -1,4 +1,5 @@
 ﻿using eShop.Domain.DTOs;
+using eShop.Reviews.Api.Entities;
 
 namespace eShop.Reviews.Api.Mapping;
 

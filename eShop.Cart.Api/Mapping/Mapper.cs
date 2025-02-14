@@ -1,4 +1,5 @@
-﻿using eShop.Domain.DTOs;
+﻿using eShop.Cart.Api.Entities;
+using eShop.Domain.DTOs;
 using eShop.Domain.Models;
 
 namespace eShop.Cart.Api.Mapping;

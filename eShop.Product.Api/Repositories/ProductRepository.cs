@@ -1,4 +1,5 @@
 ﻿using eShop.Domain.DTOs;
+using eShop.Product.Api.Entities;
 
 namespace eShop.Product.Api.Repositories;
 

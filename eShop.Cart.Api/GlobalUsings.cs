@@ -6,7 +6,6 @@ global using eShop.Application.Utilities;
 global using eShop.Cart.Api.Commands.Carts;
 global using eShop.Cart.Api.Commands.Favorites;
 global using eShop.Cart.Api.Data;
-global using eShop.Cart.Api.Data.Entities;
 global using eShop.Cart.Api.Extensions;
 global using eShop.Cart.Api.Queries.Carts;
 global using eShop.Cart.Api.Queries.Favorites;

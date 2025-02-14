@@ -1,16 +1,16 @@
 ﻿using eShop.Domain.Types;
 
-namespace eShop.Cart.Api.Data.Entities;
+namespace eShop.Cart.Api.Entities;
 
-public class FavoritesEntity
+public class CartEntity
 {
     [BsonId]
     [BsonRepresentation(BsonType.String)]
-    public Guid FavoritesId { get; set; }
+    public Guid CartId { get; set; }
 
     [BsonRepresentation(BsonType.String)] public Guid UserId { get; set; }
     public int ItemsCount { get; set; }
     public DateTime UpdatedAt { get; set; } = DateTime.Now;
     public DateTime CreatedAt { get; set; } = DateTime.Now;
-    public List<FavoritesItem> Items { get; set; } = new List<FavoritesItem>();
+    public List<CartItem> Items { get; set; } = new List<CartItem>();
 }

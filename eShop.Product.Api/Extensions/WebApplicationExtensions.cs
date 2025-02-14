@@ -1,4 +1,5 @@
-﻿using Scalar.AspNetCore;
+﻿using eShop.Product.Api.Entities;
+using Scalar.AspNetCore;
 
 namespace eShop.Product.Api.Extensions;
 

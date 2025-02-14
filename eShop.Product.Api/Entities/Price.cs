@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace eShop.Product.Api.Data.Entities;
+namespace eShop.Product.Api.Entities;
 
 public class Price
 {

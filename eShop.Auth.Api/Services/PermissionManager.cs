@@ -1,4 +1,6 @@
-﻿namespace eShop.Auth.Api.Services;
+﻿using eShop.Auth.Api.Entities;
+
+namespace eShop.Auth.Api.Services;
 
 internal sealed class PermissionManager(AuthDbContext context) : IPermissionManager
 {

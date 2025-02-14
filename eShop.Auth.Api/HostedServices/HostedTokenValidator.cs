@@ -1,4 +1,6 @@
-﻿namespace eShop.Auth.Api.HostedServices;
+﻿using eShop.Auth.Api.Entities;
+
+namespace eShop.Auth.Api.HostedServices;
 
 public class HostedTokenValidator(IServiceScopeFactory scopeFactory) : IHostedService, IDisposable
 {

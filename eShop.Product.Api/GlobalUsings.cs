@@ -19,7 +19,6 @@ global using eShop.Product.Api.Commands.Brands;
 global using eShop.Product.Api.Commands.Products;
 global using eShop.Product.Api.Commands.Sellers;
 global using eShop.Product.Api.Data;
-global using eShop.Product.Api.Data.Entities;
 global using eShop.Product.Api.Extensions;
 global using eShop.Product.Api.Mapping;
 global using eShop.Product.Api.Queries.Brands;

@@ -1,4 +1,4 @@
-﻿namespace eShop.Auth.Api.Data.Entities;
+﻿namespace eShop.Auth.Api.Entities;
 
 public class SecurityTokenEntity
 {
