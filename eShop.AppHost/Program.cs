@@ -1,5 +1,3 @@
-using eShop.AppHost.Extensions;
-
 var builder = DistributedApplication.CreateBuilder(args);
 
 var defaultPassword = builder.AddParameter("password", "atpDWGvDb4jR5pE7rT59c7");
@@ -10,11 +8,11 @@ var redisCache = builder.AddRedis("redis", 40001)
     .WithDataVolume()
     .WithRedisInsight(containerName: "redis-insights");
 
-var sqlServer = builder.AddSqlServer("mssql-server", port: 40002, password: defaultPassword)
+var sqlServer = builder.AddSqlServer("mssql-server", defaultPassword, 40002)
     .WithLifetime(ContainerLifetime.Persistent)
     .WithDataVolume();
 
-var mongo = builder.AddMongoDB("mongo", port: 40004, userName: defaultUser, password: defaultPassword)
+var mongo = builder.AddMongoDB("mongo", 40004, defaultUser, defaultPassword)
     .WithLifetime(ContainerLifetime.Persistent)
     .WithDataVolume()
     .WithMongoExpress(cfg =>
@@ -30,7 +28,7 @@ var authDb = sqlServer.AddDatabase("auth-db", "AuthDB");
 var reviewsDb = sqlServer.AddDatabase("reviews-db", "ReviewsDB");
 var productDb = sqlServer.AddDatabase("product-db", "ProductDB");
 
-var rabbitMq = builder.AddRabbitMQ("rabbit-mq", port: 40003, userName: defaultUser, password: defaultPassword)
+var rabbitMq = builder.AddRabbitMQ("rabbit-mq", defaultUser, defaultPassword, 40003)
     .WithLifetime(ContainerLifetime.Persistent)
     .WithManagementPlugin()
     .WithDataVolume();
@@ -77,4 +75,6 @@ var angularClient = builder.AddNpmApp("angular-webui",
     .WithExternalHttpEndpoints()
     .PublishAsDockerFile();
 
-builder.Build().Run();
+var app = builder.Build();
+
+app.Run();
